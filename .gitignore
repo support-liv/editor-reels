@@ -1,0 +1,14 @@
+# vídeos e saídas
+*.MOV
+*.mov
+*.MP4
+*.mp4
+*.wav
+prontos/
+# gerados
+editor/transcricoes/
+editor/rostos
+editor/emoji
+editor/bandeira_*.png
+__pycache__/
+.DS_Store

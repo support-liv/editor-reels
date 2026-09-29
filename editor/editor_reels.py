@@ -1,0 +1,875 @@
+#!/usr/bin/env python3
+"""
+Editor automático de Reels (IN26).
+
+Etapas:
+  1. transcreve com Whisper (timestamps por palavra, cache em JSON)
+  2. corta as perguntas do entrevistador e os silêncios
+  3. enquadra 9:16 seguindo o rosto (detector Vision do macOS), direto do 4K,
+     com punch-in alternado a cada corte
+  4. queima legenda palavra a palavra, gancho no topo e CTA no final
+  5. exporta 1080x1920, 30fps, áudio normalizado, pronto pra postar
+
+Uso rápido:
+  python3 editor_reels.py VIDEO.MOV --marca imigrar --gancho "Texto do gancho"
+Veja COMO_USAR.md pra todas as opções.
+"""
+import argparse, json, os, re, shutil, subprocess, sys, tempfile, unicodedata
+import numpy as np
+import cv2
+from PIL import Image, ImageDraw, ImageFont
+
+AQUI = os.path.dirname(os.path.abspath(__file__))
+OUT_W, OUT_H, FPS = 1080, 1920, 30
+TAM_LEGENDA = 38                      # fonte da legenda (era 58; 35% menor)
+Y_CAIXA = 290                         # abaixo da barra do Instagram (topo ~250px)
+LIMIAR_VOZ = 200                      # Hz: acima disso considera voz aguda
+AMOSTRAS_POR_SEG = 5                  # frequência da detecção de rosto
+
+MARCAS = {
+    "imigrar": {"destaque": (249, 13, 91), "caixa": (255, 255, 255), "texto_caixa": (20, 20, 20)},
+    "liv":     {"destaque": (255, 110, 31), "caixa": (44, 54, 66), "texto_caixa": (255, 255, 255)},
+}
+FONTE = "/System/Library/Fonts/Supplemental/Arial Black.ttf"
+FONTE_CAIXA = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+
+
+# ---------------------------------------------------------------- utilidades
+def norm(s):
+    s = unicodedata.normalize("NFD", s.lower())
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    return re.sub(r"[^a-z0-9 ]", "", s)
+
+
+def run(cmd):
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    if r.returncode != 0:
+        sys.exit(f"Erro rodando {' '.join(cmd[:3])}...\n{r.stderr[-2000:]}")
+    return r.stdout
+
+
+def duracao(path):
+    return float(run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                      "-of", "csv=p=0", path]).strip())
+
+
+def tamanho_real(path):
+    """largura x altura já com a rotação do iPhone aplicada."""
+    out = run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+               "stream=width,height:stream_side_data=rotation", "-of", "json", path])
+    st = json.loads(out)["streams"][0]
+    w, h = st["width"], st["height"]
+    rot = next((abs(int(sd.get("rotation", 0))) for sd in st.get("side_data_list", []) if "rotation" in sd), 0)
+    return (h, w) if rot in (90, 270) else (w, h)
+
+
+def entrada_video(path):
+    """argumentos de entrada + filtro inicial pra decodificar em SDR BT.709 com a orientação certa.
+    iPhone grava em HDR (HLG/Dolby Vision, BT.2020): sem converter, a imagem fica lavada.
+    A conversão (com tone mapping) é feita pelo VideoToolbox do macOS."""
+    out = run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+               "stream=width,height,color_transfer:stream_side_data=rotation", "-of", "json", path])
+    st = json.loads(out)["streams"][0]
+    hdr = st.get("color_transfer") in ("arib-std-b67", "smpte2084")
+    if not hdr:
+        return [], ""
+    rot = next((int(sd.get("rotation", 0)) for sd in st.get("side_data_list", []) if "rotation" in sd), 0) % 360
+    gira = {90: "transpose=2,", 270: "transpose=1,", 180: "hflip,vflip,"}.get(rot, "")
+    args = ["-hwaccel", "videotoolbox", "-hwaccel_output_format", "videotoolbox_vld", "-noautorotate"]
+    filtro = (f"scale_vt=w={st['width']}:h={st['height']}:color_matrix=bt709:color_primaries=bt709:"
+              f"color_transfer=bt709,hwdownload,format=p010le,{gira}")
+    return args, filtro
+
+
+# ---------------------------------------------------------------- 1. transcrição
+def transcrever(video, cache):
+    if os.path.exists(cache):
+        return json.load(open(cache))
+    import whisper
+    wav = cache.replace(".json", ".wav")
+    run(["ffmpeg", "-v", "error", "-y", "-i", video, "-vn", "-ac", "1", "-ar", "16000", wav])
+    print("Transcrevendo (pode levar uns minutos)...")
+    model = whisper.load_model("medium")
+    res = model.transcribe(wav, language="pt", word_timestamps=True, fp16=False,
+                           condition_on_previous_text=False)
+    palavras = []
+    for seg in res["segments"]:
+        for w in seg.get("words", []):
+            palavras.append({"w": w["word"].strip(), "s": round(w["start"], 3), "e": round(w["end"], 3)})
+    dados = {"texto": res["text"].strip(), "palavras": palavras,
+             "segmentos": [{"s": s["start"], "e": s["end"], "t": s["text"].strip()} for s in res["segments"]]}
+    json.dump(dados, open(cache, "w"), ensure_ascii=False, indent=1)
+    os.remove(wav)
+    return dados
+
+
+def achar_frase(palavras, frase, depois=0):
+    alvo = norm(frase).split()
+    toks = [norm(p["w"]) for p in palavras]
+    for i in range(depois, len(toks) - len(alvo) + 1):
+        if toks[i:i + len(alvo)] == alvo:
+            return i
+    return None
+
+
+# ---------------------------------------------------------------- 2. cortes
+def plano_de_cortes(dados, comecar=None, terminar=None, remover=(), trechos=None,
+                    tirar_perguntas=True, max_pausa=0.35, folga=0.10, perguntas=()):
+    P = dados["palavras"]
+    ini, fim = 0, len(P) - 1
+    if comecar:
+        i = achar_frase(P, comecar)
+        if i is None:
+            sys.exit(f'Não achei "{comecar}" na fala. Veja o .json da transcrição.')
+        ini = i
+    if terminar:
+        i = achar_frase(P, terminar, ini)
+        if i is None:
+            sys.exit(f'Não achei "{terminar}" na fala.')
+        fim = i + len(norm(terminar).split()) - 1
+
+    manter = [ini <= k <= fim for k in range(len(P))]
+    if trechos:
+        for k, p in enumerate(P):
+            if not any(a - 0.05 <= p["s"] and p["e"] <= b + 0.05 for a, b in trechos):
+                manter[k] = False
+    if tirar_perguntas:
+        # pergunta do entrevistador: segmento que termina em "?" (e o recomeço "..." logo antes)
+        segs = dados["segmentos"]
+        for j, sg in enumerate(segs):
+            t = sg["t"].strip()
+            eh_pergunta = t.endswith("?") and len(t.split()) >= 4
+            recomeco = t.endswith("...") and j + 1 < len(segs) and segs[j + 1]["t"].strip().endswith("?")
+            if eh_pergunta or recomeco:
+                for k, p in enumerate(P):
+                    if p["s"] >= sg["s"] - 0.05 and p["e"] <= sg["e"] + 0.05:
+                        manter[k] = False
+    for trecho in remover:
+        i = achar_frase(P, trecho, ini)
+        if i is None:
+            print(f'  aviso: não achei "{trecho}" pra remover')
+            continue
+        for k in range(i, i + len(norm(trecho).split())):
+            manter[k] = False
+
+    eh_perg = lambda p: any(a - 0.05 <= p["s"] and p["e"] <= b + 0.05 for a, b in perguntas)
+    blocos, atual = [], None
+    for k, p in enumerate(P):
+        if not manter[k]:
+            atual = None
+            continue
+        if atual and p["s"] - atual["e_word"] <= max_pausa and eh_perg(p) == atual["perg"]:
+            atual["e_word"] = p["e"]
+            atual["idx"].append(k)
+        else:
+            atual = {"s_word": p["s"], "e_word": p["e"], "idx": [k], "perg": eh_perg(p)}
+            blocos.append(atual)
+    cortes = []
+    for b in blocos:
+        s = max(0.0, b["s_word"] - folga)
+        e = b["e_word"] + folga + 0.05
+        if cortes and cortes[-1].get("perg") != b["perg"]:
+            s = max(s, cortes[-1]["e"])                  # pergunta e resposta nunca se misturam
+            cortes.append({"s": round(s, 3), "e": round(e, 3), "idx": b["idx"], "perg": b["perg"]})
+        elif cortes and s <= cortes[-1]["e"]:
+            cortes[-1]["e"] = e
+            cortes[-1]["idx"] += b["idx"]
+        else:
+            cortes.append({"s": round(s, 3), "e": round(e, 3), "idx": b["idx"], "perg": b["perg"]})
+    for c in cortes:
+        c["texto"] = " ".join(P[k]["w"] for k in c["idx"])
+    return cortes
+
+
+# ---------------------------------------------------------------- 2b. ajuste fino pelo áudio e pelo olhar
+_cache_energia = {}
+
+
+def energia_db(video):
+    """energia da fala em dB a cada 20 ms (cache por vídeo)."""
+    if video not in _cache_energia:
+        sr = 16000
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", video, "-vn", "-ac", "1", "-ar", str(sr),
+                              "-f", "s16le", "-"], capture_output=True).stdout
+        x = np.frombuffer(raw, np.int16).astype(np.float32) / 32768
+        hop = int(0.02 * sr)
+        n = len(x) // hop - 1
+        e = np.sqrt(np.array([np.mean(x[i * hop:(i + 2) * hop] ** 2) for i in range(n)]) + 1e-10)
+        db = 20 * np.log10(e)
+        lim = np.percentile(db, 10) + 0.45 * (np.percentile(db, 95) - np.percentile(db, 10))
+        _cache_energia[video] = (db, lim)
+    return _cache_energia[video]
+
+
+def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
+    """corta onde a voz começa/termina de verdade e tira pausas internas (respiro, olhada pro lado).
+    O Whisper costuma esticar o fim da última palavra pro silêncio: é isso que denuncia o corte."""
+    db, lim = energia_db(video)
+    suave = lambda m: np.convolve(m.astype(int), np.ones(3, int), "same") >= 2   # ignora estalos < 60 ms
+    fala_normal = suave(db > lim)
+    fala_baixa = suave(db > lim - 8)          # pergunta do entrevistador costuma sair mais baixa no microfone
+    novos = []
+    for gi_orig, c in enumerate(cortes):
+        fala = fala_baixa if c.get("perg") else fala_normal
+        i0, i1 = int(c["s"] / 0.02), min(len(fala), int(c["e"] / 0.02) + 1)
+        idx = np.where(fala[i0:i1])[0]
+        if len(idx) == 0:
+            continue
+        # blocos de fala separados por silêncios maiores que pausa_max
+        blocos, ini, ant = [], idx[0], idx[0]
+        for j in idx[1:]:
+            if (j - ant) * 0.02 > pausa_max:
+                blocos.append((ini, ant)); ini = j
+            ant = j
+        blocos.append((ini, ant))
+        for a, b in blocos:
+            s = max(c["s"], (i0 + a) * 0.02 - antes)
+            e = min(c["e"] + 0.05, (i0 + b + 1) * 0.02 + depois)
+            if e - s < 0.25:
+                continue
+            ids = [q for q in c["idx"] if s - 0.15 <= (P[q]["s"] + P[q]["e"]) / 2 <= e + 0.15]
+            if not ids:
+                continue
+            n = dict(c); n.update({"s": round(s, 3), "e": round(e, 3), "idx": ids})
+            n.setdefault("grupo", gi_orig)                 # zoom alterna por bloco original, não por pedaço
+            n["texto"] = " ".join(P[q]["w"] for q in ids)
+            novos.append(n)
+    # palavra que ficou em dois pedaços vai só pro primeiro
+    vistos = set()
+    for n in novos:
+        n["idx"] = [q for q in n["idx"] if q not in vistos]
+        vistos.update(n["idx"])
+    return [n for n in novos if n["idx"]]
+
+
+_cache_olhar = {}
+
+
+def olhar(video, fps=4):
+    """inclinação da cabeça ao longo do vídeo: [(t, pitch, yaw)] do rosto principal."""
+    if video in _cache_olhar:
+        return _cache_olhar[video]
+    garantir_detector()
+    tmp = tempfile.mkdtemp()
+    run(["ffmpeg", "-v", "error", "-i", video, "-vf", f"fps={fps},scale=360:-2", "-q:v", "5",
+         os.path.join(tmp, "%05d.jpg")])
+    imgs = sorted(os.listdir(tmp))
+    pontos = []
+    for i in range(0, len(imgs), 400):
+        lote = imgs[i:i + 400]
+        for j, ln in enumerate(run([DETECTOR] + [os.path.join(tmp, f) for f in lote]).strip().splitlines()):
+            faces = [f for f in json.loads(ln) if len(f) >= 6]
+            if faces:
+                f = max(faces, key=lambda f: f[2])
+                pontos.append(((i + j + 0.5) / fps, f[4], f[5]))
+    shutil.rmtree(tmp)
+    _cache_olhar[video] = pontos
+    return pontos
+
+
+def olhando_pra_baixo(video, s, e):
+    """fração do trecho com a cabeça baixa (lendo o celular) ou virada pro lado."""
+    pts = olhar(video)
+    if not pts:
+        return 0.0
+    base_p = np.percentile([p for _, p, _ in pts], 25)
+    base_y = np.median([y for _, _, y in pts])
+    trecho = [(p, y) for t, p, y in pts if s <= t <= e]
+    if not trecho:
+        return 0.0
+    return float(np.mean([(p > base_p + 0.16) or (abs(y - base_y) > 0.28) for p, y in trecho]))
+
+
+# ---------------------------------------------------------------- 3. enquadramento
+DETECTOR = os.path.join(AQUI, "rostos")
+
+
+def garantir_detector():
+    fonte = DETECTOR + ".swift"
+    if not os.path.exists(DETECTOR) or os.path.getmtime(DETECTOR) < os.path.getmtime(fonte):
+        print("Compilando o detector de rostos...")
+        run(["swiftc", "-O", fonte, "-o", DETECTOR])
+
+
+def trajetoria(video, c, pessoa, alvo_x=None):
+    """posição (cx, cy normalizados) do rosto escolhido ao longo do corte, já suavizada."""
+    tmp = tempfile.mkdtemp()
+    run(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}", "-i", video,
+         "-vf", f"fps={AMOSTRAS_POR_SEG},scale=540:-2", "-q:v", "4", os.path.join(tmp, "%04d.jpg")])
+    imgs = sorted(os.listdir(tmp))
+    linhas = run([DETECTOR] + [os.path.join(tmp, f) for f in imgs]).strip().splitlines() if imgs else []
+    shutil.rmtree(tmp)
+    if isinstance(alvo_x, int):
+        return _trajetoria_por_ordem([json.loads(ln) for ln in linhas], alvo_x)
+    pontos = []
+    for ln in linhas:
+        faces = [f for f in json.loads(ln) if f[2] > 0.03]       # ignora rosto minúsculo no fundo
+        if alvo_x is not None:                                 # fecha em quem está nessa posição
+            faces = [f for f in faces if abs(f[0] - alvo_x) < 0.13]
+        if pessoa == "direita":                                # nunca pega quem está do outro lado
+            faces = [f for f in faces if f[0] > 0.45]
+        elif pessoa == "esquerda":
+            faces = [f for f in faces if f[0] < 0.55]
+        if faces:                                              # só os rostos principais (gente do fundo sai)
+            maior = max(f[2] for f in faces)
+            faces = [f for f in faces if f[2] >= maior * 0.6]
+        if not faces:
+            pontos.append(None)
+        elif pessoa == "direita":
+            pontos.append(max(faces, key=lambda f: f[0]))
+        elif pessoa == "esquerda":
+            pontos.append(min(faces, key=lambda f: f[0]))
+        else:
+            pontos.append(max(faces, key=lambda f: f[2]))      # o maior = mais perto da câmera
+    # ignora saltos bruscos (detector trocou de pessoa); só aceita se o salto durar mais de 2s
+    ref, fila = None, []
+    for i, p in enumerate(pontos):
+        if not p:
+            continue
+        if ref is None or abs(p[0] - ref[0]) < 0.18:
+            ref, fila = p, []
+            continue
+        fila.append(i)
+        if len(fila) > 2 * AMOSTRAS_POR_SEG:
+            ref, fila = p, []
+        else:
+            pontos[i] = None
+    validos = [p for p in pontos if p]
+    if not validos:
+        return np.array([0.0]), np.array([[0.5, 0.35]])
+    ultimo = validos[0]
+    for i, p in enumerate(pontos):                             # preenche buracos
+        pontos[i] = ultimo = p or ultimo
+    xy = np.array([[p[0], p[1]] for p in pontos])
+    k = min(len(xy), 7)                                        # média móvel ~1,4s
+    if k > 1:
+        pad = np.pad(xy, ((k // 2, k // 2), (0, 0)), mode="edge")
+        xy = np.stack([np.convolve(pad[:, d], np.ones(k) / k, mode="valid") for d in (0, 1)], axis=1)[:len(pontos)]
+    ts = (np.arange(len(xy)) + 0.5) / AMOSTRAS_POR_SEG
+    return ts, xy
+
+
+def _suavizar(pontos):
+    validos = [p for p in pontos if p]
+    if not validos:
+        return np.array([0.0]), np.array([[0.5, 0.35]])
+    ultimo = validos[0]
+    for i, p in enumerate(pontos):
+        pontos[i] = ultimo = p or ultimo
+    xy = np.array([[p[0], p[1]] for p in pontos])
+    k = min(len(xy), 7)
+    if k > 1:
+        pad = np.pad(xy, ((k // 2, k // 2), (0, 0)), mode="edge")
+        xy = np.stack([np.convolve(pad[:, d], np.ones(k) / k, mode="valid") for d in (0, 1)], axis=1)[:len(pontos)]
+    return (np.arange(len(xy)) + 0.5) / AMOSTRAS_POR_SEG, xy
+
+
+def _trajetoria_por_ordem(amostras, ordem):
+    """identifica as pessoas pela ordem da esquerda pra direita no frame com mais rostos
+    e segue cada uma pelo vizinho mais próximo (pra frente e pra trás)."""
+    amostras = [[f for f in fs if f[2] > 0.03] for fs in amostras]
+    amostras = [[f for f in fs if f[2] >= max(g[2] for g in fs) * 0.6] if fs else [] for fs in amostras]
+    if not any(amostras):
+        return _suavizar([None])
+    ref = max(range(len(amostras)), key=lambda i: len(amostras[i]))
+    pessoas = sorted(amostras[ref], key=lambda f: f[0])
+    if len(pessoas) < ordem:
+        return _suavizar([None] * len(amostras))
+    pontos = [None] * len(amostras)
+    for sentido in (range(ref, len(amostras)), range(ref, -1, -1)):
+        pos = [p[:] for p in pessoas]
+        for i in sentido:
+            usados = set()
+            for j, p in enumerate(pos):
+                cands = [(abs(f[0] - p[0]) + abs(f[1] - p[1]), k) for k, f in enumerate(amostras[i]) if k not in usados]
+                if cands:
+                    d, k = min(cands)
+                    if d < 0.10:
+                        usados.add(k)
+                        pos[j] = amostras[i][k]
+                        if j == ordem - 1:
+                            pontos[i] = amostras[i][k]
+    return _suavizar(pontos)
+
+
+def posicoes_pessoas(video, n_amostras=16):
+    """x (0-1) de cada pessoa em cena, da esquerda pra direita."""
+    dur = duracao(video)
+    tmp = tempfile.mkdtemp()
+    for i, t in enumerate(np.linspace(dur * 0.05, dur * 0.95, n_amostras)):
+        subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{t:.2f}", "-i", video, "-frames:v", "1",
+                        "-vf", "scale=540:-2", os.path.join(tmp, f"{i:03d}.jpg")])
+    imgs = sorted(os.listdir(tmp))
+    xs = []
+    for ln in run([DETECTOR] + [os.path.join(tmp, f) for f in imgs]).strip().splitlines():
+        faces = [f for f in json.loads(ln) if f[2] > 0.03]
+        if faces:
+            maior = max(f[2] for f in faces)
+            xs += [f[0] for f in faces if f[2] >= maior * 0.6]
+    shutil.rmtree(tmp)
+    xs = sorted(xs)
+    grupos, g = [], [xs[0]] if xs else []
+    for x in xs[1:]:
+        if x - g[-1] > 0.08:
+            grupos.append(g); g = [x]
+        else:
+            g.append(x)
+    if g:
+        grupos.append(g)
+    grupos = [g for g in grupos if len(g) >= n_amostras * 0.3]      # só quem aparece bastante
+    return [float(np.median(g)) for g in grupos]
+
+
+def tom_de_voz(video, c):
+    """frequência fundamental mediana (Hz) da fala no corte: ~100-150 grave, ~180-250 aguda."""
+    sr = 16000
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}",
+                          "-i", video, "-vn", "-ac", "1", "-ar", str(sr), "-f", "s16le", "-"],
+                         capture_output=True).stdout
+    x = np.frombuffer(raw, np.int16).astype(np.float32)
+    if len(x) < sr // 4:
+        return 0.0
+    win, hop = int(0.05 * sr), int(0.02 * sr)
+    quadros = [x[i:i + win] for i in range(0, len(x) - win, hop)]
+    energia = np.array([np.sqrt(np.mean(q ** 2)) for q in quadros])
+    lim = np.percentile(energia, 60)
+    f0s = []
+    lo, hi = sr // 400, sr // 70
+    for q, e in zip(quadros, energia):
+        if e < lim:
+            continue
+        q = q - q.mean()
+        ac = np.correlate(q, q, "full")[win - 1:]
+        if ac[0] <= 0:
+            continue
+        lag = lo + int(np.argmax(ac[lo:hi]))
+        if 2 * lag < hi and ac[2 * lag] > 0.9 * ac[lag]:
+            lag *= 2                                   # o pico real era o dobro do período
+        if ac[lag] / ac[0] > 0.35:
+            f0s.append(sr / lag)
+    return float(np.median(f0s)) if f0s else 0.0
+
+
+def caixa(cx, cy, frac, W, H):
+    """crop 9:16 com 'frac' da largura, rosto a ~38% do topo."""
+    cw = int(W * frac) // 2 * 2
+    ch = min(H, int(cw * 16 / 9)) // 2 * 2
+    x0 = int(np.clip(cx * W - cw / 2, 0, W - cw))
+    y0 = int(np.clip(cy * H - ch * 0.38, 0, H - ch))
+    return x0, y0, cw, ch
+
+
+# ---------------------------------------------------------------- 4. legenda e caixas
+CORRECOES = {  # erros comuns do Whisper nesses vídeos
+    "ENBDE": "INBDE", "ENBD": "INBDE", "INBD": "INBDE", "NBD": "INBDE", "INBDI": "INBDE",
+    "TOFEL": "TOEFL", "BORG": "BOARD", "BORDER": "BOARD", "BORDE": "BOARD", "BORNEI": "BOARD", "BORDEN": "BOARD",
+    "GREENCARD": "GREEN CARD", "EMIGRAR": "IMIGRAR", "IMIGRARIUA": "IMIGRAR EUA", "EMIGRARIUA": "IMIGRAR EUA",
+    "ALIVE": "LIV", "EB2": "EB-2", "O1": "O-1", "VCB1": "EB-1", "VISTUA": "VISTO",
+    "ODOTOLOGIA": "ODONTOLOGIA", "ONONTOLOGIA": "ODONTOLOGIA", "ESPATRIAR": "EXPATRIAR", "BORDS": "BOARD", "HIDROGENISTAS": "HIGIENISTAS",
+    "DOUTOLOGIA": "ODONTOLOGIA", "DENTOLOGIA": "ODONTOLOGIA", "PRESADORA": "FRESADORA", "APROPILAXIA": "PROFILAXIA",
+    "RB2": "EB-2", "EB2NW": "EB-2 NIW", "INBZ": "INBDE", "ANVD": "INBDE", "NBDI": "INBDE", "UNBD": "INBDE", "JULIE": "JÚLIA", "MERITOGRAFIA": "MERITOCRACIA",
+}
+
+
+def limpar(w):
+    w = re.sub(r"[.,!:;?]+$", "", w).upper()
+    return CORRECOES.get(w, w)
+
+
+def aplicar_trocas(pal, trocas):
+    for troca in trocas:
+        de, para = troca.split("=", 1)
+        alvo, novas = norm(de).split(), para.split()
+        i = 0
+        while i <= len(pal) - len(alvo):
+            if [norm(p["w"]) for p in pal[i:i + len(alvo)]] == alvo:
+                s0, e0 = pal[i]["s"], pal[i + len(alvo) - 1]["e"]
+                passo = (e0 - s0) / len(novas)
+                pal[i:i + len(alvo)] = [{"w": w, "s": s0 + k * passo, "e": s0 + (k + 1) * passo}
+                                        for k, w in enumerate(novas)]
+                i += len(novas)
+            else:
+                i += 1
+    return pal
+
+
+def grupos_legenda(palavras_saida, max_palavras=3, max_chars=18):
+    grupos, g = [], []
+    for p in palavras_saida:
+        texto = " ".join(x["w"] for x in g + [p])
+        pontua = g and re.search(r"[.,?!:]$", g[-1]["w"])
+        if g and (len(g) >= max_palavras or len(texto) > max_chars or pontua):
+            grupos.append(g)
+            g = []
+        g.append(p)
+    if g:
+        grupos.append(g)
+    return grupos
+
+
+class Legenda:
+    def __init__(self, marca, tam=TAM_LEGENDA):
+        self.cor = MARCAS[marca]["destaque"]
+        self.tam = tam
+        self.f = ImageFont.truetype(FONTE, tam)
+        self.cache = {}
+
+    def render(self, gi, grupo, ativo):
+        if (gi, ativo) in self.cache:
+            return self.cache[(gi, ativo)]
+        img = Image.new("RGBA", (OUT_W, 200), (0, 0, 0, 0))
+        d = ImageDraw.Draw(img)
+        palavras = [limpar(p["w"]) for p in grupo]
+        esp = int(self.tam * 0.28)
+        larg = [d.textlength(w, font=self.f) for w in palavras]
+        linhas, linha, lw = [], [], 0
+        for i in range(len(palavras)):
+            if linha and lw + larg[i] > OUT_W - 140:
+                linhas.append(linha); linha, lw = [], 0
+            linha.append(i); lw += larg[i] + esp
+        linhas.append(linha)
+        passo = int(self.tam * 1.24)
+        y = 100 - len(linhas) * passo // 2
+        for ln in linhas:
+            total = sum(larg[i] for i in ln) + esp * (len(ln) - 1)
+            x = (OUT_W - total) / 2
+            for i in ln:
+                d.text((x, y), palavras[i], font=self.f, fill=self.cor if i == ativo else (255, 255, 255),
+                       stroke_width=max(4, round(self.tam * 0.12)), stroke_fill=(0, 0, 0))
+                x += larg[i] + esp
+            y += passo
+        self.cache[(gi, ativo)] = img
+        return img
+
+
+EMOJIS = {"🇺🇸": os.path.join(AQUI, "bandeira_eua.png"), "🇧🇷": os.path.join(AQUI, "bandeira_brasil.png")}
+
+
+def _emoji(tok, altura):
+    if not os.path.exists(EMOJIS[tok]):
+        gerador = os.path.join(AQUI, "emoji")
+        if not os.path.exists(gerador):
+            run(["swiftc", "-O", gerador + ".swift", "-o", gerador])
+        run([gerador, tok, EMOJIS[tok]])
+    im = Image.open(EMOJIS[tok]).convert("RGBA")
+    im = im.crop(im.getbbox())
+    return im.resize((int(im.width * altura / im.height), altura), Image.LANCZOS)
+
+
+def caixa_texto(texto, marca, tam=52):
+    """caixa com texto em CAIXA ALTA; aceita 🇺🇸 e 🇧🇷 no meio do texto."""
+    m = MARCAS[marca]
+    f = ImageFont.truetype(FONTE, tam)
+    d0 = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+    toks = texto.upper().replace("🇺🇸", " 🇺🇸 ").replace("🇧🇷", " 🇧🇷 ").split()
+    esp = d0.textlength(" ", font=f)
+    alt_emoji = int(tam * 1.05)
+    larg = lambda t: _emoji(t, alt_emoji).width if t in EMOJIS else d0.textlength(t, font=f)
+    # pontuação que sobrou sozinha depois da bandeira ("EUA 🇺🇸?") cola sem espaço
+    cola = lambda t: bool(re.fullmatch(r"[?!.,:;]+", t))
+    linhas, l, lw = [], [], 0
+    for t in toks:
+        w = larg(t)
+        if l and not cola(t) and lw + esp + w > OUT_W - 200:
+            linhas.append(l); l, lw = [], 0
+        lw += (esp if l and not cola(t) else 0) + w
+        l.append(t)
+    linhas.append(l)
+    lh = int(tam * 1.3)
+    h = lh * len(linhas) + 50
+    wl = [sum(larg(t) for t in ln) + esp * sum(1 for k, t in enumerate(ln) if k and not cola(t)) for ln in linhas]
+    img = Image.new("RGBA", (OUT_W, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    x0 = (OUT_W - max(wl)) / 2 - 36
+    d.rounded_rectangle([x0, 0, OUT_W - x0, h], radius=26, fill=m["caixa"] + (245,))
+    for i, ln in enumerate(linhas):
+        x, y = (OUT_W - wl[i]) / 2, 25 + i * lh
+        for k, t in enumerate(ln):
+            if k and cola(t):
+                x -= esp
+            if t in EMOJIS:
+                e = _emoji(t, alt_emoji)
+                img.alpha_composite(e, (int(x), int(y + (tam - alt_emoji) / 2 + tam * 0.12)))
+            else:
+                d.text((x, y), t, font=f, fill=m["texto_caixa"])
+            x += larg(t) + esp
+    return img
+
+
+def colar(frame_bgr, rgba, y):
+    arr = np.asarray(rgba)
+    h, w = arr.shape[:2]
+    alpha = arr[:, :, 3:4].astype(np.float32) / 255
+    rgb = arr[:, :, 2::-1].astype(np.float32)
+    reg = frame_bgr[y:y + h, 0:w].astype(np.float32)
+    frame_bgr[y:y + h, 0:w] = (rgb * alpha + reg * (1 - alpha)).astype(np.uint8)
+
+
+# ---------------------------------------------------------------- 5. render
+def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=None,
+               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62):
+    garantir_detector()
+    W, H = tamanho_real(video)
+    ent_args, ent_filtro = entrada_video(video)
+    if ent_filtro:
+        print("  vídeo HDR: convertendo pra SDR (BT.709)")
+    if frac_base is None:
+        frac_base = 0.34 if pessoa == "voz" else 0.55 if pessoa else 0.93
+    if frac_punch is None:
+        frac_punch = frac_base * (0.85 if pessoa else 0.82)
+    mapa_voz = None
+    if pessoa == "voz":
+        # conversa: pessoa 1 (esquerda) voz grave, pessoa 2 voz aguda (ex.: André e Julia)
+        mapa_voz = {"grave": 1, "aguda": 2}
+        pessoa = None
+
+    P = dados["palavras"]
+    pal_saida, offset = [], 0.0
+    for c in cortes:
+        for k in c["idx"]:
+            p = P[k]
+            pal_saida.append({"w": p["w"], "s": offset + max(0, p["s"] - c["s"]), "e": offset + min(c["e"], p["e"]) - c["s"]})
+        offset += c["e"] - c["s"]
+    total = offset
+    grupos = grupos_legenda(aplicar_trocas(pal_saida, trocas))
+    leg = Legenda(marca)
+    img_gancho = caixa_texto(gancho, marca) if gancho else None
+    img_cta = caixa_texto(cta, marca) if cta else None
+
+    # 1) planeja o enquadramento de todos os cortes
+    planos, voz_grupo = [], {}
+    for ci, c in enumerate(cortes):
+        frac = frac_punch if c.get("grupo", ci) % 2 == 1 else frac_base
+        alvo_x = None
+        if c.get("quem") and not c.get("perg"):
+            alvo_x = c["quem"]
+            if pessoa in ("esquerda", "direita"):
+                pessoa = None
+        elif mapa_voz and not c.get("perg"):
+            g = c.get("grupo", ci)
+            if g not in voz_grupo:                       # mede no bloco original inteiro (pedaço curto engana)
+                irmaos = [x for x in cortes if x.get("grupo", -1) == g] or [c]
+                f0 = tom_de_voz(video, {"s": min(x["s"] for x in irmaos), "e": max(x["e"] for x in irmaos)})
+                voz_grupo[g] = "aguda" if f0 > LIMIAR_VOZ else "grave"
+                print(f"    bloco {g + 1}: voz {f0:.0f} Hz -> {voz_grupo[g]}")
+            alvo_x = mapa_voz[voz_grupo[g]]
+        if c.get("perg") and (pessoa or mapa_voz):
+            frac, ts, xy = 1.0, np.array([0.0]), np.array([[0.5, 0.5]])   # quadro aberto com todos
+        else:
+            ts, xy = trajetoria(video, c, pessoa, alvo_x)
+        planos.append((frac, ts, xy))
+
+    def quadro_saida(t_out):
+        """o frame final (sem textos) num instante do vídeo de saída."""
+        acc = 0.0
+        for c, (frac, ts, xy) in zip(cortes, planos):
+            d = c["e"] - c["s"]
+            if t_out < acc + d or c is cortes[-1]:
+                tl = min(max(0.0, t_out - acc), d - 0.05)
+                break
+            acc += d
+        cx, cy = np.interp(tl, ts, xy[:, 0]), np.interp(tl, ts, xy[:, 1])
+        x0, y0, cw, ch = caixa(cx, cy, frac, W, H)
+        raw = subprocess.run(["ffmpeg", "-v", "error"] + ent_args + ["-ss", f"{c['s'] + tl:.3f}", "-i", video,
+                              "-frames:v", "1", "-vf", f"{ent_filtro}crop={cw}:{ch}:{x0}:{y0},scale=540:960",
+                              "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], capture_output=True).stdout
+        return np.frombuffer(raw, np.uint8).reshape(960, 540, 3) if len(raw) == 540 * 960 * 3 else None
+
+    def rostos_em(tempos):
+        tmp = tempfile.mkdtemp()
+        arqs = []
+        for i, t in enumerate(tempos):
+            fr = quadro_saida(t)
+            if fr is not None:
+                arqs.append(os.path.join(tmp, f"{i}.jpg")); cv2.imwrite(arqs[-1], fr)
+        linhas = run([DETECTOR] + arqs).strip().splitlines() if arqs else []
+        shutil.rmtree(tmp)
+        return [f for ln in linhas for f in json.loads(ln) if f[2] >= 0.04]
+
+    def sobrepoe(y0, y1, faces, parte):
+        """quanto (px) a faixa [y0, y1] cobre dos rostos. parte: 'cabeca' (testa ao queixo) ou 'miolo' (olhos à boca)."""
+        tot = 0.0
+        for f in faces:
+            fy, fh = f[1] * OUT_H, f[3] * OUT_H
+            a, b = (fy - fh * 0.75, fy + fh * 0.5) if parte == "cabeca" else (fy - fh * 0.3, fy + fh * 0.35)
+            tot += max(0.0, min(y1, b) - max(y0, a))
+        return tot
+
+    def escolher_posicao(img, tempos):
+        """em cima se não encostar na cabeça; senão no lugar da legenda; senão onde cobrir menos olhos e boca."""
+        if img is None:
+            return Y_CAIXA, False
+        faces = rostos_em(tempos)
+        h = img.height
+        cand = [(Y_CAIXA, False), (y_leg + 100 - h // 2, True)]
+        for y, meio in cand:
+            if sobrepoe(y - 20, y + h + 20, faces, "cabeca") == 0:
+                return y, meio
+        return min(cand, key=lambda c: (sobrepoe(c[0], c[0] + h, faces, "miolo"), c[1]))
+
+    # 2) gancho e CTA: em cima, ou no lugar da legenda se forem tapar um rosto
+    y_leg = int(OUT_H * y_legenda)
+    y_g, baixo_g = escolher_posicao(img_gancho, [t for t in (0.3, 1.6, 2.9) if t < total])
+    y_c, baixo_c = escolher_posicao(img_cta, [max(0, total - x) for x in (3.2, 1.8, 0.4)])
+    desc = lambda y, meio: "embaixo (tapava rosto)" if meio else "em cima"
+    print(f"  gancho: {desc(y_g, baixo_g)} | cta: {desc(y_c, baixo_c)}")
+    if so_checar:
+        return {"gancho_baixo": baixo_g, "cta_baixo": baixo_c}
+
+    tmp_v = saida + ".video.mp4"
+    enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
+                            "-s", f"{OUT_W}x{OUT_H}", "-r", str(FPS), "-i", "-",
+                            "-c:v", "h264_videotoolbox", "-b:v", "14M", "-pix_fmt", "yuv420p",
+                            "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
+                            "-color_range", "tv", tmp_v],
+                           stdin=subprocess.PIPE)
+    # 3) renderiza
+    n_out, gi = 0, 0
+    for ci, c in enumerate(cortes):
+        frac, ts, xy = planos[ci]
+        # região que cobre todos os crops desse corte: o ffmpeg já entrega só ela (menos dados no pipe)
+        caixas = [caixa(x, y, frac, W, H) for x, y in xy]
+        bx0 = min(b[0] for b in caixas) // 2 * 2
+        by0 = min(b[1] for b in caixas) // 2 * 2
+        bx1 = min(W, max(b[0] + b[2] for b in caixas) + 2) // 2 * 2
+        by1 = min(H, max(b[1] + b[3] for b in caixas) + 2) // 2 * 2
+        bw, bh = bx1 - bx0, by1 - by0
+        dec = subprocess.Popen(["ffmpeg", "-v", "error"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}",
+                                "-i", video, "-vf", f"{ent_filtro}crop={bw}:{bh}:{bx0}:{by0},fps={FPS}",
+                                "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], stdout=subprocess.PIPE)
+        fsize, fi = bw * bh * 3, 0
+        while True:
+            buf = dec.stdout.read(fsize)
+            if len(buf) < fsize:
+                break
+            fr = np.frombuffer(buf, np.uint8).reshape(bh, bw, 3)
+            tl = fi / FPS
+            cx, cy = np.interp(tl, ts, xy[:, 0]), np.interp(tl, ts, xy[:, 1])
+            x0, y0, cw, ch = caixa(cx, cy, frac, W, H)
+            x0 = int(np.clip(x0 - bx0, 0, bw - cw)); y0 = int(np.clip(y0 - by0, 0, bh - ch))
+            out = cv2.resize(fr[y0:y0 + ch, x0:x0 + cw], (OUT_W, OUT_H), interpolation=cv2.INTER_AREA)
+            t = n_out / FPS
+            while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
+                gi += 1
+            g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
+            mostra_g = img_gancho is not None and t < seg_gancho
+            mostra_c = img_cta is not None and t > total - seg_cta
+            ocupa_leg = (mostra_g and baixo_g) or (mostra_c and baixo_c)
+            if g and not ocupa_leg:
+                ativo = max((i for i, p in enumerate(g) if p["s"] <= t), default=0)
+                colar(out, leg.render(gi, g, ativo), y_leg)
+            if mostra_g:
+                colar(out, img_gancho, y_g)
+            if mostra_c:
+                colar(out, img_cta, y_c)
+            enc.stdin.write(out.tobytes())
+            fi, n_out = fi + 1, n_out + 1
+        dec.wait()
+        print(f"  corte {ci + 1}/{len(cortes)} ok")
+    enc.stdin.close(); enc.wait()
+
+    partes, filtros = [], []
+    for i, c in enumerate(cortes):
+        d = c["e"] - c["s"]
+        filtros.append(f"[0:a]atrim={c['s']:.3f}:{c['e']:.3f},asetpts=PTS-STARTPTS,"
+                       f"afade=t=in:d=0.02,afade=t=out:st={max(0, d - 0.03):.3f}:d=0.03[a{i}]")
+        partes.append(f"[a{i}]")
+    fc = ";".join(filtros) + f";{''.join(partes)}concat=n={len(cortes)}:v=0:a=1,dynaudnorm=f=250:g=15:p=0.9,loudnorm=I=-14:TP=-1.5:LRA=11[aout]"
+    run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", tmp_v, "-filter_complex", fc,
+         "-map", "1:v", "-map", "[aout]", "-c:v", "copy",
+         "-bsf:v", "h264_metadata=colour_primaries=1:transfer_characteristics=1:matrix_coefficients=1:video_full_range_flag=0",
+         "-c:a", "aac", "-b:a", "192k",
+         "-ar", "48000", "-shortest", "-movflags", "+faststart", saida])
+    os.remove(tmp_v)
+    return total
+
+
+# ---------------------------------------------------------------- main
+def main():
+    ap = argparse.ArgumentParser(description="Editor automático de Reels")
+    ap.add_argument("video")
+    ap.add_argument("--marca", choices=MARCAS, default="imigrar")
+    ap.add_argument("--gancho", default="", help="texto no topo nos primeiros 3s")
+    ap.add_argument("--cta", default="", help="texto no topo nos últimos 3,5s")
+    ap.add_argument("--trechos", help='faixas do original em segundos, ex: "124-166.6,1048-1053"')
+    ap.add_argument("--comecar")
+    ap.add_argument("--terminar")
+    ap.add_argument("--remover", action="append", default=[])
+    ap.add_argument("--pessoa", choices=["esquerda", "direita", "voz"],
+                    help="cena com duas pessoas: fecha nessa. 'voz': conversa, fecha em quem fala (esquerda=grave, 2a=aguda)")
+    ap.add_argument("--aperto", type=float, help="fração da largura original mantida (menor = mais fechado)")
+    ap.add_argument("--manter-perguntas", action="store_true", help="não tira as falas que terminam em ?")
+    ap.add_argument("--pergunta", help='faixas que são a pergunta do entrevistador (ficam em quadro aberto), ex: "169.8-173.5"')
+    ap.add_argument("--trocar", action="append", default=[], help='corrige a legenda: "um gente sério=com gente séria"')
+    ap.add_argument("--nome", help="nome do arquivo final (sem extensão)")
+    ap.add_argument("--saida", default=os.path.join(os.getcwd(), "prontos"), help="pasta do arquivo final (padrão: ./prontos)")
+    ap.add_argument("--so-cortes", action="store_true", help="só mostra o plano de cortes")
+    ap.add_argument("--sem-ajuste-audio", action="store_true", help="não corta pelo áudio (usa só o tempo do Whisper)")
+    ap.add_argument("--checar-olhar", action="store_true", help="avisa trechos em que a pessoa olha pra baixo (lendo) ou pro lado")
+    ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
+    ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
+    a = ap.parse_args()
+
+    base = os.path.splitext(os.path.basename(a.video))[0]
+    cache_dir = os.path.join(AQUI, "transcricoes")
+    os.makedirs(cache_dir, exist_ok=True)
+    os.makedirs(a.saida, exist_ok=True)
+    dados = transcrever(a.video, os.path.join(cache_dir, base + ".json"))
+    forcar = {}
+    trechos = None
+    perguntas_inline = []
+    if a.trechos:
+        trechos = []
+        for x in a.trechos.split(","):
+            faixa, _, quem = x.partition("@")
+            if faixa.endswith("?"):                      # "a-b?" = pergunta do entrevistador nessa posição
+                faixa = faixa[:-1]
+                perguntas_inline.append(tuple(map(float, faixa.split("-"))))
+            t = tuple(map(float, faixa.split("-")))
+            trechos.append(t)
+            if quem:
+                forcar[t] = int(quem)
+    if not trechos and not a.comecar and dados["segmentos"] and dados["segmentos"][0]["t"].endswith("?"):
+        pass  # a primeira pergunta já sai pelo filtro de perguntas
+    perguntas = [tuple(map(float, x.split("-"))) for x in a.pergunta.split(",")] if a.pergunta else []
+    ordem = perguntas + (trechos or [])
+    perguntas = perguntas + perguntas_inline
+    if trechos or perguntas:
+        # respeita a ordem escrita (pergunta, resposta, outra pergunta... podem estar fora de ordem)
+        cortes = []
+        for t in ordem:
+            novos = plano_de_cortes(dados, a.comecar, a.terminar, a.remover, [t], perguntas=perguntas,
+                                    tirar_perguntas=False)
+            for c in novos:
+                if t in forcar:
+                    c["quem"] = forcar[t]
+            cortes += novos
+    else:
+        cortes = plano_de_cortes(dados, a.comecar, a.terminar, a.remover,
+                                 tirar_perguntas=not a.manter_perguntas)
+    if not a.sem_ajuste_audio:
+        cortes = refinar_cortes(a.video, cortes, dados["palavras"])
+    if not cortes:
+        sys.exit("Nenhum trecho sobrou depois dos cortes.")
+
+    dur = sum(c["e"] - c["s"] for c in cortes)
+    print(f"\nPlano: {len(cortes)} cortes, {dur:.1f}s (original {duracao(a.video):.1f}s)")
+    for c in cortes:
+        aviso = ""
+        if a.checar_olhar:
+            fr = olhando_pra_baixo(a.video, c["s"], c["e"])
+            aviso = f"  [olhando pra baixo/lado {fr:.0%}]" if fr > 0.4 else ""
+        print(f"  {c['s']:7.2f}-{c['e']:7.2f}  {c['texto'][:80]}{aviso}")
+    if a.so_cortes:
+        return
+    nome = a.nome or f"{base}_{a.marca}"
+    saida = os.path.abspath(os.path.join(a.saida, nome + ".mp4"))
+    print("\nRenderizando...")
+    renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
+               so_checar=a.so_checar_caixas, y_legenda=a.y_legenda)
+    if not a.so_checar_caixas:
+        print(f"\nPronto: {saida}")
+
+
+if __name__ == "__main__":
+    main()
