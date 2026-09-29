@@ -46,6 +46,12 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - Fundo: a própria cena desfocada e escurecida. Gancho acima do quadro, legenda abaixo, nunca sobre o rosto.
 - Enquadramento fixo, como na tela dividida.
 
+## WhatsApp (layout "quadrado")
+- 1080x1080, 6 Mbps (arquivo leve pra mandar no WhatsApp), enquadramento fixo (câmera em tripé).
+- Sem gancho e sem CTA: é mensagem direta pra quem agendou.
+- Legenda na cor da marca, a 80% da altura.
+- Câmera torta: `--girar` com o ângulo medido nas verticais da cena (portas, janelas, prateleiras). O recorte deixa folga pra não aparecer canto preto.
+
 ## Enquadramento
 - Solo: 93% da largura, com punch-in de 82% alternando **por bloco de fala** (não por pedaço, senão o zoom pisca).
 - Entrevistado de um lado (`--pessoa direita`): 55% da largura, centrado no rosto dele.

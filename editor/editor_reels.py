@@ -628,7 +628,7 @@ def colar(frame_bgr, rgba, y):
 
 # ---------------------------------------------------------------- 5. render
 def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=None,
-               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda"):
+               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda", girar=0.0):
     garantir_detector()
     W, H = tamanho_real(video)
     ent_args, ent_filtro = entrada_video(video)
@@ -659,6 +659,9 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     leg = Legenda(marca)
     img_gancho = caixa_texto(gancho, marca, estilo=estilo_caixa) if gancho else None
     img_cta = caixa_texto(cta, marca, estilo=estilo_caixa) if cta else None
+    if layout == "quadrado":
+        return renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta, total,
+                                   seg_gancho, seg_cta, so_checar, girar=girar)
     if layout == "quadro":
         return renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, total,
                                  seg_gancho, seg_cta, so_checar)
@@ -981,6 +984,87 @@ def renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, to
     return total
 
 
+# ---------------------------------------------------------------- 5d. quadrado (WhatsApp), câmera em tripé
+def rosto_principal(video, cortes, por_corte=3):
+    """posição mediana (x, y normalizados) do maior rosto ao longo dos cortes."""
+    garantir_detector()
+    tmp = tempfile.mkdtemp()
+    for i, c in enumerate(cortes[::max(1, len(cortes) // 10)]):
+        for k, t in enumerate(np.linspace(c["s"], c["e"], por_corte + 2)[1:-1]):
+            subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{t:.2f}", "-i", video, "-frames:v", "1",
+                            "-vf", "scale=640:-2", os.path.join(tmp, f"{i:03d}_{k}.jpg")])
+    imgs = sorted(os.listdir(tmp))
+    pts = []
+    for ln in (run([DETECTOR] + [os.path.join(tmp, f) for f in imgs]).strip().splitlines() if imgs else []):
+        faces = json.loads(ln)
+        if faces:
+            f = max(faces, key=lambda f: f[2]); pts.append(f[:2])
+    shutil.rmtree(tmp)
+    return tuple(np.median(np.array(pts), axis=0)) if pts else (0.5, 0.35)
+
+
+def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta, total, seg_gancho, seg_cta,
+                        so_checar=False, girar=0.0, lado_px=1080, frac=0.85):
+    """vídeo quadrado 1080x1080, enquadramento fixo na pessoa, com correção de câmera torta (girar em graus).
+    Legenda na cor da marca, perto da base, sem cobrir o rosto."""
+    W, H = tamanho_real(video)
+    cx, cy = rosto_principal(video, cortes)
+    cx, cy = cx * W, cy * H
+    if girar:                                   # posição do rosto depois de girar (anti-horário, em volta do centro)
+        import math
+        a = math.radians(girar)
+        dx, dy = cx - W / 2, cy - H / 2
+        cx, cy = W / 2 + dx * math.cos(a) + dy * math.sin(a), H / 2 - dx * math.sin(a) + dy * math.cos(a)
+    s = int(H * frac) // 2 * 2                                        # lado do recorte na imagem original
+    import math
+    folga = int(s * math.sin(math.radians(abs(girar)))) + 8           # rotação: não deixa canto preto
+    x0 = int(np.clip(cx - s / 2, folga, W - s - folga)) // 2 * 2
+    y0 = int(np.clip(cy - s * 0.30, folga, H - s - folga)) // 2 * 2
+    print(f"  quadrado: {len(cortes)} cortes | girar {girar:+.1f}° | recorte {s}x{s} em ({x0},{y0})")
+    if so_checar:
+        return {}
+    leg = Legenda(marca, tam=40)
+    y_leg = int(lado_px * 0.80) - 100
+    # o rotate do ffmpeg gira no sentido horário: sinal invertido pra "positivo = anti-horário"
+    filtro = (f"rotate={-math.radians(girar):.5f}:fillcolor=black," if girar else "") + \
+             f"crop={s}:{s}:{x0}:{y0},scale={lado_px}:{lado_px}:flags=lanczos,fps={FPS}"
+    tmp_v = saida + ".video.mp4"
+    enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
+                            "-s", f"{lado_px}x{lado_px}", "-r", str(FPS), "-i", "-",
+                            "-c:v", "h264_videotoolbox", "-b:v", "6M", "-pix_fmt", "yuv420p",
+                            "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
+                            "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
+    n_out, gi = 0, 0
+    fsize = lado_px * lado_px * 3
+    for ci, c in enumerate(cortes):
+        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}",
+                                "-i", video, "-vf", filtro, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                               stdout=subprocess.PIPE)
+        while True:
+            buf = dec.stdout.read(fsize)
+            if len(buf) < fsize:
+                break
+            out = np.frombuffer(buf, np.uint8).reshape(lado_px, lado_px, 3).copy()
+            t = n_out / FPS
+            while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
+                gi += 1
+            g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
+            if g:
+                ativo = max((i for i, p in enumerate(g) if p["s"] <= t), default=0)
+                colar(out, leg.render(gi, g, ativo), y_leg)
+            if img_gancho is not None and t < seg_gancho:
+                colar(out, img_gancho, 40)
+            if img_cta is not None and t > total - seg_cta:
+                colar(out, img_cta, 40)
+            enc.stdin.write(out.tobytes())
+            n_out += 1
+        dec.wait()
+        print(f"  corte {ci + 1}/{len(cortes)} ok")
+    enc.stdin.close(); enc.wait()
+    montar_audio(video, cortes, tmp_v, saida)
+    return total
+
+
 # ---------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser(description="Editor automático de Reels")
@@ -1006,7 +1090,8 @@ def main():
     ap.add_argument("--cor-caixa", choices=list(ESTILOS_CAIXA), help="estilo da tarja do gancho/CTA: branco, azul ou rosa")
     ap.add_argument("--cima", choices=["esquerda", "direita"], default="esquerda",
                     help="tela dividida: quem da live vai em cima (a pessoa da esquerda ou da direita)")
-    ap.add_argument("--layout", choices=["dividido", "quadro"], help="dividido: live com duas pessoas lado a lado vira uma em cima e outra embaixo")
+    ap.add_argument("--girar", type=float, default=0.0, help="corrige câmera torta: graus (positivo = anti-horário)")
+    ap.add_argument("--layout", choices=["dividido", "quadro", "quadrado"], help="dividido: live com duas pessoas lado a lado vira uma em cima e outra embaixo")
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
     a = ap.parse_args()
@@ -1067,7 +1152,7 @@ def main():
     saida = os.path.abspath(os.path.join(a.saida, nome + ".mp4"))
     print("\nRenderizando...")
     renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
-               so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima)
+               so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima, girar=a.girar)
     if not a.so_checar_caixas:
         print(f"\nPronto: {saida}")
 

@@ -2,6 +2,10 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.9 (29/09/2026) - WhatsApp
+- `--layout quadrado` (1080x1080) e `--girar` pra corrigir câmera torta. O `rotate` do ffmpeg gira no sentido horário: o sinal é invertido pra "positivo = anti-horário", e a posição do rosto é recalculada depois de girar.
+- Projeto `whatsapp_liv`: boas-vindas do Thiago (câmera corrigida em 5°) e da Marinna, na cor da LIV.
+
 ## 0.8 (29/09/2026) - live com uma pessoa
 - `--layout quadro`: imagem da live nítida no meio, fundo desfocado da própria cena, gancho acima e legenda abaixo, enquadramento fixo. Escolhido no lugar do recorte vertical, que ampliava 2,7x a imagem 720p e ficava borrado.
 - Recorte do quadro sem a faixa de baixo da live (chat).
