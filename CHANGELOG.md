@@ -2,6 +2,10 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.12 (29/09/2026) - perspectiva e ajustes finos
+- `--endireitar`: câmera inclinada pra baixo/cima faz as verticais abrirem em leque (no Thiago: 0° na parede da esquerda, −5° no centro, −7° na direita). Girar deixava uma parte reta e a outra torta. Agora o editor acha o ponto de fuga das verticais e corrige a perspectiva, e todas as verticais saem retas (medido: mediana 0°).
+- `--tirar "a-b"`: tira um trecho exato do bruto (palavra repetida, travada). O pedaço vira dois e o zoom muda na emenda.
+
 ## 0.11 (29/09/2026) - emendas e zoom dinâmico
 - **Pedaços sem sobreposição:** quando o fim de um pedaço passava do começo do seguinte, o começo da palavra tocava duas vezes (no Thiago: "LIV vi vi"). Agora o pedaço anterior termina onde o próximo começa.
 - `--dinamico`: quebra pedaços longos entre palavras (de preferência na vírgula ou no ponto) a cada ~2,5s e alterna 3 níveis de zoom (aberto, fechado, médio). A fala continua sem corte e o áudio emenda sem fade. Bom pra quem fala mais travado.

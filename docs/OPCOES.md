@@ -14,6 +14,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `a-b@1` / `a-b@2` | Força quem aparece nessa faixa (1 = pessoa mais à esquerda). Use quando o tom de voz errar |
 | `--pergunta "a-b"` | Pergunta que abre o vídeo (equivale a `a-b?` no começo) |
 | `--comecar "palavras"` / `--terminar "palavras"` | Começa ou termina nessas palavras |
+| `--tirar "96.52-97.07"` | Tira um trecho exato do bruto, em segundos (gagueira, palavra repetida, travada). Pode repetir |
 | `--remover "trecho"` | Tira uma frase específica (pode repetir) |
 | `--manter-perguntas` | Sem `--trechos`, o editor tira sozinho as falas que terminam em "?". Isso desliga esse filtro |
 | `--trocar "errado=certo"` | Corrige a legenda (pode repetir). Ex.: `--trocar "um gente sério=com gente séria"` |
@@ -30,6 +31,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--cima esquerda` / `direita` | Na tela dividida, quem da live vai em cima |
 | `--layout quadrado` | WhatsApp: 1080x1080, punch-in alternando por bloco de fala, legenda perto da base |
 | `--dinamico` | Troca o zoom a cada ~2,5s entre palavras, em 3 níveis, sem cortar a fala. Pra quem fala mais travado |
+| `--endireitar` | Quadrado: mede as verticais da cena e corrige a perspectiva (câmera inclinada). Melhor que `--girar` quando as linhas não ficam retas todas juntas |
 | `--girar 5` | Corrige câmera torta, em graus (positivo = anti-horário). Use as linhas verticais da cena como referência |
 | `--layout quadro` | Live com uma pessoa: imagem nítida no meio (sem a faixa do chat), fundo desfocado, gancho acima e legenda abaixo, enquadramento fixo |
 
