@@ -3,7 +3,8 @@
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
 ## 0.12 (29/09/2026) - perspectiva e ajustes finos
-- `--endireitar`: câmera inclinada pra baixo/cima faz as verticais abrirem em leque (no Thiago: 0° na parede da esquerda, −5° no centro, −7° na direita). Girar deixava uma parte reta e a outra torta. Agora o editor acha o ponto de fuga das verticais e corrige a perspectiva, e todas as verticais saem retas (medido: mediana 0°).
+- `--endireitar`: mede as verticais da cena e escolhe sozinho o ângulo de `--girar` (a vertical fica reta na altura do rosto; no Thiago, +3,4° em vez dos 5° no olho).
+- **Regra: nunca distorcer a imagem.** A primeira versão do `--endireitar` corrigia perspectiva e deformou o rosto do Thiago. Foi removida: câmera torta se corrige só girando.
 - `--tirar "a-b"`: tira um trecho exato do bruto (palavra repetida, travada). O pedaço vira dois e o zoom muda na emenda.
 
 ## 0.11 (29/09/2026) - emendas e zoom dinâmico

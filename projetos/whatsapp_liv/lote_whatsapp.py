@@ -17,7 +17,7 @@ VIDEOS = [
     # id, nome, arquivo, trechos (take bom de cada frase), girar (graus), respiro (s; None = padrão 0.25), dinâmico (zoom a cada ~2,5s), extras
     ("W01", "thiago_boas_vindas", "C1251-001.MP4",
      "58.2-60.6,60.8-66.0,66.6-72.7,77.1-87.7,95.0-110.9,118.8-135.5", 5.0, 0.35, True,
-     ["--endireitar",                      # câmera inclinada: verticais em leque, girar não bastava
+     ["--endireitar",                      # mede as verticais e escolhe o ângulo (só gira: nunca distorcer)
       "--tirar", "96.52-97.07",            # "muito de... de como": fica um "de" só
       "--tirar", "128.12-128.36"]),        # travada entre "reunião" e "porque"   # Thiago fala mais pausado: corte seco ficava robótico
     ("W02", "marinna_boas_vindas", "C1253-002.MP4",

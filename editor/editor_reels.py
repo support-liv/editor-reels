@@ -1077,7 +1077,7 @@ def rosto_principal(video, cortes, por_corte=3):
 
 def ponto_de_fuga(video, cortes):
     """ponto onde as verticais da cena (portas, paredes, prateleiras) se encontram, em frações da largura.
-    Câmera inclinada pra cima/baixo faz as verticais abrirem em leque: girar não resolve, precisa de perspectiva."""
+    Com câmera inclinada as verticais abrem em leque; o editor gira pelo ângulo da vertical na posição do rosto."""
     import math
     tmp = tempfile.mkdtemp()
     for i, c in enumerate(cortes[::max(1, len(cortes) // 5)]):
@@ -1110,29 +1110,19 @@ def ponto_de_fuga(video, cortes):
     return v
 
 
-def filtro_perspectiva(v, W, H):
-    """perspective do ffmpeg que deixa as verticais retas (os cantos saem um pouco da imagem: o recorte evita)."""
-    vx, vy = v
-    hn, ym = H / W, H / W / 2
-    quad = []
-    for y in (0, hn):
-        for x in (0.0, 1.0):
-            quad += [(x + (vx - x) * (y - ym) / (vy - ym)) * W, y * W]
-    return "perspective=" + ":".join(f"{q:.1f}" for q in quad) + ":interpolation=cubic:sense=source,"
-
-
 def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta, total, seg_gancho, seg_cta,
                         so_checar=False, girar=0.0, lado_px=1080, frac=0.85, dinamico=False, endireitar=False):
     """vídeo quadrado 1080x1080, enquadramento dinâmico (punch-in por bloco), com correção de câmera torta (girar em graus).
     Legenda na cor da marca, perto da base, sem cobrir o rosto."""
     W, H = tamanho_real(video)
     import math
-    persp, margem = "", 8
-    if endireitar:                                  # corrige perspectiva (verticais em leque) no lugar de girar
+    margem = 8
+    if endireitar:                                  # só GIRA: nunca distorcer a imagem (perspectiva deformava o rosto)
         v = ponto_de_fuga(video, cortes)
         if v is not None:
-            persp, girar = filtro_perspectiva(v, W, H), 0.0
-            margem = int(W * abs((1 - v[0]) * (H / W / 2) / (v[1] - H / W / 2))) + 8
+            fx, fy = rosto_principal(video, cortes)
+            girar = round(math.degrees(math.atan((fx - v[0]) / (v[1] - fy * H / W))), 2)   # vertical reta na altura do rosto
+            print(f"  endireitar: girando {girar:+.2f}°")
     a_rad = math.radians(girar)
     # não é live: punch-in alternando por bloco de fala e enquadramento refeito em cada bloco
     planos, ult_g = [], None
@@ -1148,7 +1138,7 @@ def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta
         niveis = (1.0, 0.70, 0.84) if dinamico else (1.0, 0.80)     # aberto, fechado, médio
         f = frac * niveis[g % len(niveis)]
         lado = int(H * f) // 2 * 2                                    # lado do recorte na imagem original
-        folga = int(lado * math.sin(abs(a_rad))) + margem              # rotação/perspectiva: não deixa canto preto
+        folga = int(lado * math.sin(abs(a_rad))) + margem              # rotação: não deixa canto preto
         x0 = int(np.clip(cx - lado / 2, folga, W - lado - folga)) // 2 * 2
         y0 = int(np.clip(cy - lado * (0.34 if f < frac else 0.30), folga, H - lado - folga)) // 2 * 2
         planos.append((lado, x0, y0))
@@ -1158,7 +1148,7 @@ def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta
     leg = Legenda(marca, tam=30)
     y_leg = int(lado_px * 0.84) - 100
     # o rotate do ffmpeg gira no sentido horário: sinal invertido pra "positivo = anti-horário"
-    gira = persp + (f"rotate={-a_rad:.5f}:fillcolor=black," if girar else "")
+    gira = f"rotate={-a_rad:.5f}:fillcolor=black," if girar else ""
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{lado_px}x{lado_px}", "-r", str(FPS), "-i", "-",
@@ -1220,7 +1210,7 @@ def main():
     ap.add_argument("--cor-caixa", choices=list(ESTILOS_CAIXA), help="estilo da tarja do gancho/CTA: branco, azul ou rosa")
     ap.add_argument("--cima", choices=["esquerda", "direita"], default="esquerda",
                     help="tela dividida: quem da live vai em cima (a pessoa da esquerda ou da direita)")
-    ap.add_argument("--endireitar", action="store_true", help="quadrado: mede as verticais da cena e corrige a perspectiva (substitui --girar)")
+    ap.add_argument("--endireitar", action="store_true", help="quadrado: mede as verticais da cena e escolhe o ângulo de --girar sozinho (só gira, não distorce)")
     ap.add_argument("--tirar", action="append", default=[], help='tira um trecho exato do bruto, ex: "96.52-97.07" (gagueira, travada). Pode repetir')
     ap.add_argument("--dinamico", action="store_true", help="troca o zoom a cada ~2,5s (entre palavras), com 3 níveis")
     ap.add_argument("--respiro", type=float, help="mantém pausas internas até esse tamanho (s). Padrão 0.25; fala mais natural: 0.5")
