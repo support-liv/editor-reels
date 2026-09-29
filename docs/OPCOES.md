@@ -25,6 +25,8 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--gancho "texto"` | Caixa nos primeiros 3,2s, em caixa alta. Aceita 🇺🇸 e 🇧🇷 |
 | `--cta "texto"` | Caixa nos últimos 3,5s |
 | `--y-legenda 0.62` | Altura da legenda (fração da tela). Orgânico 0.62, anúncio 0.55, selfie 0.64 |
+| `--cor-caixa branco` / `azul` / `rosa` | Estilo da tarja do gancho/CTA (Imigrar: branco com texto preto, azul #0E59C5 ou rosa #F90D5B com texto branco) |
+| `--layout dividido` | Live com duas pessoas lado a lado: a da esquerda em cima, a da direita embaixo, legenda e tarja na divisa |
 
 ### Enquadramento
 | Opção | O que faz |

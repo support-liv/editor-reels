@@ -31,6 +31,13 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - Nunca usar take em que a pessoa está lendo o celular (auditoria de olhar).
 - Pergunta do entrevistador: fica no vídeo quando vira gancho ("pergunta + resposta"). Em cena com várias pessoas, aparece em quadro aberto.
 
+## Tela dividida (live com duas pessoas)
+- Pessoa da esquerda da live em cima, da direita embaixo. Cada metade é 1080x960.
+- Rosto de cima a ~42% do quadro dela e o de baixo a ~56%, pra sobrar fundo na divisa.
+- **Legenda e tarja ficam na divisa** (y = 960). A legenda some enquanto a tarja aparece.
+- **Tarja alternando branco, azul e rosa** entre os cortes. A legenda corrida continua rosa.
+- O recorte fica nos **70% de cima** da imagem da live: abaixo disso o StreamYard mostra comentários e banners (medido: até 73% da altura).
+
 ## Enquadramento
 - Solo: 93% da largura, com punch-in de 82% alternando **por bloco de fala** (não por pedaço, senão o zoom pisca).
 - Entrevistado de um lado (`--pessoa direita`): 55% da largura, centrado no rosto dele.

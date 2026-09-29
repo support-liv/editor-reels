@@ -2,6 +2,14 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.7 (28/09/2026) - tela dividida para lives
+- `--layout dividido`: live com duas pessoas lado a lado vira uma em cima e outra embaixo, com legenda e tarja na divisa, sem tapar rosto.
+- Recorte limitado aos 70% de cima da live: os balões de comentário do chat sobem até 73% da altura quando entram vários.
+- `--cor-caixa branco|azul|rosa`: variação da tarja na identidade Imigrar.
+- Bandeiras novas no gancho: 🇪🇺, 🇵🇹, 🇮🇹.
+- **Nenhuma palavra se perde no corte pelo áudio:** o Whisper às vezes marca a palavra no silêncio entre dois pedaços (um "não" sumiu da legenda e invertia o sentido da frase). Agora cada palavra vai pro pedaço mais próximo.
+- Projeto `projetos/plano_eua_2027`: 17 cortes da live.
+
 ## 0.6 (28/09/2026) - cortes pelo áudio e auditorias
 - **Cortes pelo áudio:** o Whisper estica o fim da última palavra para o silêncio, e isso aparecia como respiro ou olhada pro lado no fim da frase. Agora o editor mede a voz (energia em dB a cada 20 ms) e corta onde a fala começa e termina, com folga de 0,05s antes e 0,10s depois. Pausas internas acima de 0,25s saem.
 - **Pergunta do entrevistador:** limite de voz 8 dB mais sensível, porque sai mais baixa no microfone.

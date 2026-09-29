@@ -23,12 +23,19 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 OUT_W, OUT_H, FPS = 1080, 1920, 30
 TAM_LEGENDA = 38                      # fonte da legenda (era 58; 35% menor)
 Y_CAIXA = 290                         # abaixo da barra do Instagram (topo ~250px)
+LIMITE_SOBREPOSICAO = 0.70            # tela dividida: abaixo disso a live mostra chat/banners (medido: até 73%)
 LIMIAR_VOZ = 200                      # Hz: acima disso considera voz aguda
 AMOSTRAS_POR_SEG = 5                  # frequência da detecção de rosto
 
 MARCAS = {
     "imigrar": {"destaque": (249, 13, 91), "caixa": (255, 255, 255), "texto_caixa": (20, 20, 20)},
     "liv":     {"destaque": (255, 110, 31), "caixa": (44, 54, 66), "texto_caixa": (255, 255, 255)},
+}
+# estilos da tarja (gancho/CTA): cor de fundo, cor do texto. Rosa #F90D5B e azul royal #0E59C5 = Imigrar
+ESTILOS_CAIXA = {
+    "branco": ((255, 255, 255), (20, 20, 20)),
+    "azul": ((14, 89, 197), (255, 255, 255)),
+    "rosa": ((249, 13, 91), (255, 255, 255)),
 }
 FONTE = "/System/Library/Fonts/Supplemental/Arial Black.ttf"
 FONTE_CAIXA = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
@@ -222,24 +229,31 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
                 blocos.append((ini, ant)); ini = j
             ant = j
         blocos.append((ini, ant))
+        faixas = []
         for a, b in blocos:
             s = max(c["s"], (i0 + a) * 0.02 - antes)
             e = min(c["e"] + 0.05, (i0 + b + 1) * 0.02 + depois)
-            if e - s < 0.25:
-                continue
-            ids = [q for q in c["idx"] if s - 0.15 <= (P[q]["s"] + P[q]["e"]) / 2 <= e + 0.15]
-            if not ids:
-                continue
-            n = dict(c); n.update({"s": round(s, 3), "e": round(e, 3), "idx": ids})
+            if e - s >= 0.25:
+                faixas.append((s, e))
+        if not faixas:
+            continue
+        # cada palavra vai pro pedaço mais próximo (o tempo do Whisper às vezes cai no silêncio: nenhuma se perde)
+        dist = lambda m, f: 0 if f[0] <= m <= f[1] else min(abs(m - f[0]), abs(m - f[1]))
+        donos = {k: [] for k in range(len(faixas))}
+        for q in c["idx"]:
+            m = (P[q]["s"] + P[q]["e"]) / 2
+            donos[min(range(len(faixas)), key=lambda k: dist(m, faixas[k]))].append(q)
+        for k, (s, e) in enumerate(faixas):
+            n = dict(c); n.update({"s": round(s, 3), "e": round(e, 3), "idx": donos[k]})
             n.setdefault("grupo", gi_orig)                 # zoom alterna por bloco original, não por pedaço
-            n["texto"] = " ".join(P[q]["w"] for q in ids)
+            n["texto"] = " ".join(P[q]["w"] for q in donos[k])
             novos.append(n)
     # palavra que ficou em dois pedaços vai só pro primeiro
     vistos = set()
     for n in novos:
         n["idx"] = [q for q in n["idx"] if q not in vistos]
         vistos.update(n["idx"])
-    return [n for n in novos if n["idx"]]
+    return novos
 
 
 _cache_olhar = {}
@@ -542,7 +556,9 @@ class Legenda:
         return img
 
 
-EMOJIS = {"🇺🇸": os.path.join(AQUI, "bandeira_eua.png"), "🇧🇷": os.path.join(AQUI, "bandeira_brasil.png")}
+EMOJIS = {"🇺🇸": os.path.join(AQUI, "bandeira_eua.png"), "🇧🇷": os.path.join(AQUI, "bandeira_brasil.png"),
+          "🇪🇺": os.path.join(AQUI, "bandeira_ue.png"), "🇵🇹": os.path.join(AQUI, "bandeira_portugal.png"),
+          "🇮🇹": os.path.join(AQUI, "bandeira_italia.png")}
 
 
 def _emoji(tok, altura):
@@ -556,12 +572,17 @@ def _emoji(tok, altura):
     return im.resize((int(im.width * altura / im.height), altura), Image.LANCZOS)
 
 
-def caixa_texto(texto, marca, tam=52):
-    """caixa com texto em CAIXA ALTA; aceita 🇺🇸 e 🇧🇷 no meio do texto."""
-    m = MARCAS[marca]
+def caixa_texto(texto, marca, tam=52, estilo=None):
+    """caixa com texto em CAIXA ALTA; aceita 🇺🇸 e 🇧🇷 no meio do texto. estilo: branco/azul/rosa."""
+    m = dict(MARCAS[marca])
+    if estilo:
+        m["caixa"], m["texto_caixa"] = ESTILOS_CAIXA[estilo]
     f = ImageFont.truetype(FONTE, tam)
     d0 = ImageDraw.Draw(Image.new("RGB", (1, 1)))
-    toks = texto.upper().replace("🇺🇸", " 🇺🇸 ").replace("🇧🇷", " 🇧🇷 ").split()
+    texto = texto.upper()
+    for bandeira in EMOJIS:
+        texto = texto.replace(bandeira, f" {bandeira} ")
+    toks = texto.split()
     esp = d0.textlength(" ", font=f)
     alt_emoji = int(tam * 1.05)
     larg = lambda t: _emoji(t, alt_emoji).width if t in EMOJIS else d0.textlength(t, font=f)
@@ -607,7 +628,7 @@ def colar(frame_bgr, rgba, y):
 
 # ---------------------------------------------------------------- 5. render
 def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=None,
-               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62):
+               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None):
     garantir_detector()
     W, H = tamanho_real(video)
     ent_args, ent_filtro = entrada_video(video)
@@ -628,13 +649,19 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     for c in cortes:
         for k in c["idx"]:
             p = P[k]
-            pal_saida.append({"w": p["w"], "s": offset + max(0, p["s"] - c["s"]), "e": offset + min(c["e"], p["e"]) - c["s"]})
+            d = c["e"] - c["s"]
+            ini = min(max(0.0, p["s"] - c["s"]), d - 0.12)            # palavra com tempo fora do pedaço fica dentro dele
+            fim = max(ini + 0.12, min(d, p["e"] - c["s"]))
+            pal_saida.append({"w": p["w"], "s": offset + ini, "e": offset + fim})
         offset += c["e"] - c["s"]
     total = offset
     grupos = grupos_legenda(aplicar_trocas(pal_saida, trocas))
     leg = Legenda(marca)
-    img_gancho = caixa_texto(gancho, marca) if gancho else None
-    img_cta = caixa_texto(cta, marca) if cta else None
+    img_gancho = caixa_texto(gancho, marca, estilo=estilo_caixa) if gancho else None
+    img_cta = caixa_texto(cta, marca, estilo=estilo_caixa) if cta else None
+    if layout == "dividido":
+        return renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, total,
+                                   seg_gancho, seg_cta, so_checar)
 
     # 1) planeja o enquadramento de todos os cortes
     planos, voz_grupo = [], {}
@@ -768,6 +795,12 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
         print(f"  corte {ci + 1}/{len(cortes)} ok")
     enc.stdin.close(); enc.wait()
 
+    montar_audio(video, cortes, tmp_v, saida)
+    return total
+
+
+def montar_audio(video, cortes, tmp_v, saida):
+    """junta o áudio dos mesmos cortes (fade curtinho), equaliza vozes, -14 LUFS, e muxa com o vídeo."""
     partes, filtros = [], []
     for i, c in enumerate(cortes):
         d = c["e"] - c["s"]
@@ -781,6 +814,95 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
          "-c:a", "aac", "-b:a", "192k",
          "-ar", "48000", "-shortest", "-movflags", "+faststart", saida])
     os.remove(tmp_v)
+
+# ---------------------------------------------------------------- 5b. tela dividida (live com duas pessoas lado a lado)
+def rostos_por_lado(video, c, fps=2):
+    """posição mediana do rosto da esquerda e da direita no corte (webcam: quase parado)."""
+    garantir_detector()
+    tmp = tempfile.mkdtemp()
+    run(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{max(0.5, c['e'] - c['s']):.3f}", "-i", video,
+         "-vf", f"fps={fps},scale=640:-2", os.path.join(tmp, "%04d.jpg")])
+    imgs = sorted(os.listdir(tmp))
+    esq, dir_ = [], []
+    if imgs:
+        for ln in run([DETECTOR] + [os.path.join(tmp, f) for f in imgs]).strip().splitlines():
+            for f in json.loads(ln):
+                if f[2] < 0.06:
+                    continue
+                (esq if f[0] < 0.5 else dir_).append(f[:2])
+    shutil.rmtree(tmp)
+    med = lambda l, padrao: tuple(np.median(np.array(l), axis=0)) if l else padrao
+    return med(esq, (0.25, 0.38)), med(dir_, (0.75, 0.40))
+
+
+def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, total, seg_gancho, seg_cta,
+                        so_checar=False, frac_base=0.88, frac_punch=0.78):
+    """pessoa da esquerda em cima, da direita embaixo; legenda e tarja na divisa, sem tapar rosto."""
+    W, H = tamanho_real(video)
+    PW, PH = OUT_W, OUT_H // 2
+    y_meio = OUT_H // 2
+    y_leg = y_meio - 100
+    pos_caixa = lambda img: y_meio - img.height // 2
+
+    def recorte(face, lado, pos_rosto, frac):
+        x_min = 0 if lado == "esq" else W // 2
+        cw = int(W / 2 * frac) // 2 * 2
+        ch = int(cw * PH / PW) // 2 * 2
+        x0 = int(np.clip(face[0] * W - cw / 2, x_min, x_min + W // 2 - cw))
+        # a faixa de baixo da live tem comentários do chat e banners: o recorte fica acima dela
+        y_max = max(0, int(H * LIMITE_SOBREPOSICAO) - ch)
+        y0 = int(np.clip(face[1] * H - pos_rosto * ch, 0, y_max))
+        return x0, y0, cw, ch
+
+    planos = []
+    for ci, c in enumerate(cortes):
+        frac = frac_punch if c.get("grupo", ci) % 2 == 1 else frac_base
+        fe, fd = rostos_por_lado(video, c)
+        planos.append((recorte(fe, "esq", 0.42, frac), recorte(fd, "dir", 0.56, frac)))
+    print(f"  tela dividida: {len(cortes)} cortes | tarja e legenda na divisa")
+    if so_checar:
+        return {}
+
+    tmp_v = saida + ".video.mp4"
+    enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
+                            "-s", f"{OUT_W}x{OUT_H}", "-r", str(FPS), "-i", "-",
+                            "-c:v", "h264_videotoolbox", "-b:v", "14M", "-pix_fmt", "yuv420p",
+                            "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
+                            "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
+    n_out, gi = 0, 0
+    for ci, c in enumerate(cortes):
+        (ax, ay, aw, ah), (bx, by, bw, bh) = planos[ci]
+        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}",
+                                "-i", video, "-vf", f"fps={FPS}", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                               stdout=subprocess.PIPE)
+        fsize = W * H * 3
+        while True:
+            buf = dec.stdout.read(fsize)
+            if len(buf) < fsize:
+                break
+            fr = np.frombuffer(buf, np.uint8).reshape(H, W, 3)
+            cima = cv2.resize(fr[ay:ay + ah, ax:ax + aw], (PW, PH), interpolation=cv2.INTER_CUBIC)
+            baixo = cv2.resize(fr[by:by + bh, bx:bx + bw], (PW, PH), interpolation=cv2.INTER_CUBIC)
+            out = np.vstack([cima, baixo])
+            t = n_out / FPS
+            while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
+                gi += 1
+            g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
+            mostra_g = img_gancho is not None and t < seg_gancho
+            mostra_c = img_cta is not None and t > total - seg_cta
+            if g and not (mostra_g or mostra_c):
+                ativo = max((i for i, p in enumerate(g) if p["s"] <= t), default=0)
+                colar(out, leg.render(gi, g, ativo), y_leg)
+            if mostra_g:
+                colar(out, img_gancho, pos_caixa(img_gancho))
+            if mostra_c:
+                colar(out, img_cta, pos_caixa(img_cta))
+            enc.stdin.write(out.tobytes())
+            n_out += 1
+        dec.wait()
+        print(f"  corte {ci + 1}/{len(cortes)} ok")
+    enc.stdin.close(); enc.wait()
+    montar_audio(video, cortes, tmp_v, saida)
     return total
 
 
@@ -806,6 +928,8 @@ def main():
     ap.add_argument("--so-cortes", action="store_true", help="só mostra o plano de cortes")
     ap.add_argument("--sem-ajuste-audio", action="store_true", help="não corta pelo áudio (usa só o tempo do Whisper)")
     ap.add_argument("--checar-olhar", action="store_true", help="avisa trechos em que a pessoa olha pra baixo (lendo) ou pro lado")
+    ap.add_argument("--cor-caixa", choices=list(ESTILOS_CAIXA), help="estilo da tarja do gancho/CTA: branco, azul ou rosa")
+    ap.add_argument("--layout", choices=["dividido"], help="dividido: live com duas pessoas lado a lado vira uma em cima e outra embaixo")
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
     a = ap.parse_args()
@@ -866,7 +990,7 @@ def main():
     saida = os.path.abspath(os.path.join(a.saida, nome + ".mp4"))
     print("\nRenderizando...")
     renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
-               so_checar=a.so_checar_caixas, y_legenda=a.y_legenda)
+               so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout)
     if not a.so_checar_caixas:
         print(f"\nPronto: {saida}")
 
