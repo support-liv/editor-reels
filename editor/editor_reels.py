@@ -628,7 +628,7 @@ def colar(frame_bgr, rgba, y):
 
 # ---------------------------------------------------------------- 5. render
 def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=None,
-               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None):
+               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda"):
     garantir_detector()
     W, H = tamanho_real(video)
     ent_args, ent_filtro = entrada_video(video)
@@ -661,7 +661,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     img_cta = caixa_texto(cta, marca, estilo=estilo_caixa) if cta else None
     if layout == "dividido":
         return renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, total,
-                                   seg_gancho, seg_cta, so_checar)
+                                   seg_gancho, seg_cta, so_checar, cima=cima)
 
     # 1) planeja o enquadramento de todos os cortes
     planos, voz_grupo = [], {}
@@ -836,8 +836,9 @@ def rostos_por_lado(video, c, fps=2):
 
 
 def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, total, seg_gancho, seg_cta,
-                        so_checar=False, frac_base=0.88, frac_punch=0.78):
-    """pessoa da esquerda em cima, da direita embaixo; legenda e tarja na divisa, sem tapar rosto."""
+                        so_checar=False, frac=0.88, cima="esquerda"):
+    """uma pessoa em cima, a outra embaixo; legenda e tarja na divisa, sem tapar rosto.
+    Enquadramento FIXO no vídeo inteiro (live é câmera parada: zoom ou recorte mexendo fica estranho)."""
     W, H = tamanho_real(video)
     PW, PH = OUT_W, OUT_H // 2
     y_meio = OUT_H // 2
@@ -854,12 +855,18 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
         y0 = int(np.clip(face[1] * H - pos_rosto * ch, 0, y_max))
         return x0, y0, cw, ch
 
-    planos = []
-    for ci, c in enumerate(cortes):
-        frac = frac_punch if c.get("grupo", ci) % 2 == 1 else frac_base
+    # posição média de cada pessoa no vídeo inteiro -> um recorte só por pessoa
+    esqs, dirs = [], []
+    for c in cortes[::max(1, len(cortes) // 8)]:
         fe, fd = rostos_por_lado(video, c)
-        planos.append((recorte(fe, "esq", 0.42, frac), recorte(fd, "dir", 0.56, frac)))
-    print(f"  tela dividida: {len(cortes)} cortes | tarja e legenda na divisa")
+        esqs.append(fe); dirs.append(fd)
+    fe, fd = tuple(np.median(esqs, axis=0)), tuple(np.median(dirs, axis=0))
+    if cima == "esquerda":
+        caixa_cima, caixa_baixo = recorte(fe, "esq", 0.42, frac), recorte(fd, "dir", 0.56, frac)
+    else:
+        caixa_cima, caixa_baixo = recorte(fd, "dir", 0.42, frac), recorte(fe, "esq", 0.56, frac)
+    planos = [(caixa_cima, caixa_baixo)] * len(cortes)
+    print(f"  tela dividida: {len(cortes)} cortes | pessoa da {cima} em cima | enquadramento fixo")
     if so_checar:
         return {}
 
@@ -929,6 +936,8 @@ def main():
     ap.add_argument("--sem-ajuste-audio", action="store_true", help="não corta pelo áudio (usa só o tempo do Whisper)")
     ap.add_argument("--checar-olhar", action="store_true", help="avisa trechos em que a pessoa olha pra baixo (lendo) ou pro lado")
     ap.add_argument("--cor-caixa", choices=list(ESTILOS_CAIXA), help="estilo da tarja do gancho/CTA: branco, azul ou rosa")
+    ap.add_argument("--cima", choices=["esquerda", "direita"], default="esquerda",
+                    help="tela dividida: quem da live vai em cima (a pessoa da esquerda ou da direita)")
     ap.add_argument("--layout", choices=["dividido"], help="dividido: live com duas pessoas lado a lado vira uma em cima e outra embaixo")
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
@@ -990,7 +999,7 @@ def main():
     saida = os.path.abspath(os.path.join(a.saida, nome + ".mp4"))
     print("\nRenderizando...")
     renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
-               so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout)
+               so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima)
     if not a.so_checar_caixas:
         print(f"\nPronto: {saida}")
 

@@ -18,6 +18,7 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
   1. em cima, se não encostar na cabeça;
   2. senão, no lugar da legenda (a legenda some enquanto a caixa aparece);
   3. se as duas encostarem (selfie), onde cobrir menos olhos e boca.
+- **O gancho nunca entrega a resposta.** Ele é a pergunta ou a curiosidade; a resposta está no vídeo e a pessoa precisa assistir pra saber. Nada de "Mito.", "não define você", "é porque precisam" no gancho.
 - **Bandeira:** 🇺🇸 e 🇧🇷 sempre **depois** da palavra que complementam ("americano 🇺🇸", "nos EUA 🇺🇸?", "no Brasil 🇧🇷"). Nunca substituem a palavra: sozinha, a bandeira não é entendida de primeira.
 
 ## CTA
@@ -32,7 +33,8 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - Pergunta do entrevistador: fica no vídeo quando vira gancho ("pergunta + resposta"). Em cena com várias pessoas, aparece em quadro aberto.
 
 ## Tela dividida (live com duas pessoas)
-- Pessoa da esquerda da live em cima, da direita embaixo. Cada metade é 1080x960.
+- Quem vai em cima é escolhido com `--cima` (na Plano EUA 2027: a Dra. Lívia). Cada metade é 1080x960.
+- **Enquadramento fixo** no vídeo inteiro, sem zoom alternado: live é câmera parada, o recorte mexendo fica estranho.
 - Rosto de cima a ~42% do quadro dela e o de baixo a ~56%, pra sobrar fundo na divisa.
 - **Legenda e tarja ficam na divisa** (y = 960). A legenda some enquanto a tarja aparece.
 - **Tarja alternando branco, azul e rosa** entre os cortes. A legenda corrida continua rosa.

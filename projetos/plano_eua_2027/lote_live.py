@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Live "Plano EUA 2027" (28/09/2026), Marinna Damásio (Imigrar) + Dra. Lívia Leite (LIV).
-Layout dividido: Marinna em cima, Lívia embaixo, legenda e tarja na divisa.
+Layout dividido: Dra. Lívia em cima, Marinna embaixo, legenda e tarja na divisa. Enquadramento fixo.
 Só o trecho em que as duas aparecem juntas (43:30 a 81:30).
 Rodar tudo:            python3 lote_live.py
 Só conferir os cortes: python3 lote_live.py --so-cortes
@@ -52,15 +52,15 @@ CORTES = [
     ("L12", "visto_negado_lista_negra", "3881.0-3892.8?,3894.0-3931.3",
      "Visto americano 🇺🇸 negado: você entra numa lista negra?"),
     ("L13", "negativa_nao_define_voce", "4214.6-4236.0,4242.3-4261.3",
-     "Uma negativa no visto americano 🇺🇸 não define você"),
+     "Seu visto americano 🇺🇸 foi negado. E agora?"),
     ("L14", "um_oficial_nega_outro_aprova", "4148.0-4155.8,4183.2-4211.9",
-     "O mesmo processo: um oficial nega, outro aprova"),
+     "O mesmo processo com dois oficiais diferentes. O que acontece?"),
     ("L15", "premium_processing", "4322.2-4345.4,4358.8-4377.5",
      "Vale pagar o premium processing no visto americano 🇺🇸?"),
     ("L16", "outra_cidadania_ajuda", "4414.4-4418.9?,4453.7-4490.0",
      "Ter cidadania europeia 🇪🇺 ajuda no green card 🇺🇸?"),
     ("L17", "mito_da_profissao", "4525.3-4530.4?,4534.7-4565.7,4603.9-4619.6",
-     "Falta engenheiro nos EUA 🇺🇸, então vou ser aprovado? Mito."),
+     "Falta engenheiro nos EUA 🇺🇸, então vou ser aprovado?"),
 ]
 
 if __name__ == "__main__":
@@ -71,7 +71,7 @@ if __name__ == "__main__":
         if filtro and cid not in filtro:
             continue
         print(f"\n######## {cid} {nome} (tarja {CORES[i % 3]})", flush=True)
-        cmd = ["python3", EDITOR, VIDEO, "--layout", "dividido", "--marca", "imigrar", "--cor-caixa", CORES[i % 3],
+        cmd = ["python3", EDITOR, VIDEO, "--layout", "dividido", "--cima", "direita", "--marca", "imigrar", "--cor-caixa", CORES[i % 3],
                "--trechos", trechos, "--gancho", gancho, "--cta", CTA, "--nome", f"{cid}_{nome}", "--saida", SAIDA]
         for t in TROCAS:
             cmd += ["--trocar", t]
