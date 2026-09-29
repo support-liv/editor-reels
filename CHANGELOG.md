@@ -2,6 +2,12 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.10 (29/09/2026) - sincronia de áudio e WhatsApp dinâmico
+- **Correção de lip sync (todos os layouts):** cada corte gerava alguns quadros a mais ou a menos que o áudio (arredondamento de 29,97 → 30 fps e o fim do corte fora da grade de quadros). O erro somava de corte em corte: num vídeo de 17 cortes o vídeo ficava 0,49s mais longo que o áudio, e a boca descolava da fala do meio pro fim. Agora o fim de cada corte cai num quadro exato e o vídeo lê exatamente esse número de quadros. **Tudo renderizado antes da 0.10 tem esse desvio.**
+- `--layout quadrado` deixou de ser fixo: punch-in alternando por bloco de fala e rosto reenquadrado a cada bloco (não é live).
+- Legenda do quadrado menor (40 → 30 px), a 84% da altura.
+- `--respiro 0.5`: mantém pausas internas até esse tamanho, pra quem fala mais pausado (o corte seco deixava a fala robótica).
+
 ## 0.9 (29/09/2026) - WhatsApp
 - `--layout quadrado` (1080x1080) e `--girar` pra corrigir câmera torta. O `rotate` do ffmpeg gira no sentido horário: o sinal é invertido pra "positivo = anti-horário", e a posição do rosto é recalculada depois de girar.
 - Projeto `whatsapp_liv`: boas-vindas do Thiago (câmera corrigida em 5°) e da Marinna, na cor da LIV.

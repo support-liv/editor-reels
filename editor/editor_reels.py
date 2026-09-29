@@ -21,6 +21,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 OUT_W, OUT_H, FPS = 1080, 1920, 30
+RESPIRO = {}                          # --respiro: pausas mais naturais pra quem fala mais devagar
 TAM_LEGENDA = 38                      # fonte da legenda (era 58; 35% menor)
 Y_CAIXA = 290                         # abaixo da barra do Instagram (topo ~250px)
 LIMITE_SOBREPOSICAO = 0.70            # tela dividida: abaixo disso a live mostra chat/banners (medido: até 73%)
@@ -211,6 +212,7 @@ def energia_db(video):
 def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
     """corta onde a voz começa/termina de verdade e tira pausas internas (respiro, olhada pro lado).
     O Whisper costuma esticar o fim da última palavra pro silêncio: é isso que denuncia o corte."""
+    pausa_max, depois = RESPIRO.get("pausa_max", pausa_max), RESPIRO.get("depois", depois)
     db, lim = energia_db(video)
     suave = lambda m: np.convolve(m.astype(int), np.ones(3, int), "same") >= 2   # ignora estalos < 60 ms
     fala_normal = suave(db > lim)
@@ -626,6 +628,26 @@ def colar(frame_bgr, rgba, y):
     frame_bgr[y:y + h, 0:w] = (rgb * alpha + reg * (1 - alpha)).astype(np.uint8)
 
 
+def n_quadros(c):
+    """quadros exatos do corte na saída (o áudio usa a mesma duração: sem isso a boca dessincroniza aos poucos)."""
+    return max(1, int(round((c["e"] - c["s"]) * FPS)))
+
+
+def quadros(dec, fsize, n):
+    """lê exatamente n quadros do decodificador: repete o último se faltar, descarta o que sobrar."""
+    ultimo = None
+    for _ in range(n):
+        buf = dec.stdout.read(fsize)
+        if len(buf) < fsize:
+            if ultimo is None:
+                return
+            buf = ultimo
+        ultimo = buf
+        yield buf
+    dec.stdout.close()
+    dec.kill()
+
+
 # ---------------------------------------------------------------- 5. render
 def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=None,
                frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda", girar=0.0):
@@ -644,6 +666,8 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
         mapa_voz = {"grave": 1, "aguda": 2}
         pessoa = None
 
+    for c in cortes:                                   # duração em quadros inteiros: vídeo e áudio iguais
+        c["e"] = round(c["s"] + n_quadros(c) / FPS, 4)
     P = dados["palavras"]
     pal_saida, offset = [], 0.0
     for c in cortes:
@@ -767,14 +791,11 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
         bx1 = min(W, max(b[0] + b[2] for b in caixas) + 2) // 2 * 2
         by1 = min(H, max(b[1] + b[3] for b in caixas) + 2) // 2 * 2
         bw, bh = bx1 - bx0, by1 - by0
-        dec = subprocess.Popen(["ffmpeg", "-v", "error"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}",
+        dec = subprocess.Popen(["ffmpeg", "-v", "error"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
                                 "-i", video, "-vf", f"{ent_filtro}crop={bw}:{bh}:{bx0}:{by0},fps={FPS}",
                                 "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], stdout=subprocess.PIPE)
         fsize, fi = bw * bh * 3, 0
-        while True:
-            buf = dec.stdout.read(fsize)
-            if len(buf) < fsize:
-                break
+        for buf in quadros(dec, fsize, n_quadros(c)):
             fr = np.frombuffer(buf, np.uint8).reshape(bh, bw, 3)
             tl = fi / FPS
             cx, cy = np.interp(tl, ts, xy[:, 0]), np.interp(tl, ts, xy[:, 1])
@@ -885,14 +906,11 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
     n_out, gi = 0, 0
     for ci, c in enumerate(cortes):
         (ax, ay, aw, ah), (bx, by, bw, bh) = planos[ci]
-        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}",
+        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
                                 "-i", video, "-vf", f"fps={FPS}", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                                stdout=subprocess.PIPE)
         fsize = W * H * 3
-        while True:
-            buf = dec.stdout.read(fsize)
-            if len(buf) < fsize:
-                break
+        for buf in quadros(dec, fsize, n_quadros(c)):
             fr = np.frombuffer(buf, np.uint8).reshape(H, W, 3)
             cima = cv2.resize(fr[ay:ay + ah, ax:ax + aw], (PW, PH), interpolation=cv2.INTER_CUBIC)
             baixo = cv2.resize(fr[by:by + bh, bx:bx + bw], (PW, PH), interpolation=cv2.INTER_CUBIC)
@@ -951,14 +969,11 @@ def renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, to
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     n_out, gi = 0, 0
     for ci, c in enumerate(cortes):
-        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}",
+        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
                                 "-i", video, "-vf", f"fps={FPS}", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                                stdout=subprocess.PIPE)
         fsize = W * H * 3
-        while True:
-            buf = dec.stdout.read(fsize)
-            if len(buf) < fsize:
-                break
+        for buf in quadros(dec, fsize, n_quadros(c)):
             fr = np.frombuffer(buf, np.uint8).reshape(H, W, 3)
             fundo = cv2.resize(fr[:, fx0:fx0 + fw], (135, 240), interpolation=cv2.INTER_AREA)
             fundo = cv2.GaussianBlur(fundo, (0, 0), 6)
@@ -1005,29 +1020,35 @@ def rosto_principal(video, cortes, por_corte=3):
 
 def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta, total, seg_gancho, seg_cta,
                         so_checar=False, girar=0.0, lado_px=1080, frac=0.85):
-    """vídeo quadrado 1080x1080, enquadramento fixo na pessoa, com correção de câmera torta (girar em graus).
+    """vídeo quadrado 1080x1080, enquadramento dinâmico (punch-in por bloco), com correção de câmera torta (girar em graus).
     Legenda na cor da marca, perto da base, sem cobrir o rosto."""
     W, H = tamanho_real(video)
-    cx, cy = rosto_principal(video, cortes)
-    cx, cy = cx * W, cy * H
-    if girar:                                   # posição do rosto depois de girar (anti-horário, em volta do centro)
-        import math
-        a = math.radians(girar)
-        dx, dy = cx - W / 2, cy - H / 2
-        cx, cy = W / 2 + dx * math.cos(a) + dy * math.sin(a), H / 2 - dx * math.sin(a) + dy * math.cos(a)
-    s = int(H * frac) // 2 * 2                                        # lado do recorte na imagem original
     import math
-    folga = int(s * math.sin(math.radians(abs(girar)))) + 8           # rotação: não deixa canto preto
-    x0 = int(np.clip(cx - s / 2, folga, W - s - folga)) // 2 * 2
-    y0 = int(np.clip(cy - s * 0.30, folga, H - s - folga)) // 2 * 2
-    print(f"  quadrado: {len(cortes)} cortes | girar {girar:+.1f}° | recorte {s}x{s} em ({x0},{y0})")
+    a_rad = math.radians(girar)
+    # não é live: punch-in alternando por bloco de fala e enquadramento refeito em cada bloco
+    planos, ult_g = [], None
+    for ci, c in enumerate(cortes):
+        g = c.get("grupo", ci)
+        if g != ult_g:
+            irmaos = [x for x in cortes if x.get("grupo", -1) == g] or [c]
+            fx, fy = rosto_principal(video, irmaos, por_corte=2)
+            dx, dy = fx * W - W / 2, fy * H - H / 2           # posição do rosto depois de girar (anti-horário)
+            cx = W / 2 + dx * math.cos(a_rad) + dy * math.sin(a_rad)
+            cy = H / 2 - dx * math.sin(a_rad) + dy * math.cos(a_rad)
+            ult_g = g
+        f = frac * 0.80 if g % 2 == 1 else frac
+        lado = int(H * f) // 2 * 2                                    # lado do recorte na imagem original
+        folga = int(lado * math.sin(abs(a_rad))) + 8                   # rotação: não deixa canto preto
+        x0 = int(np.clip(cx - lado / 2, folga, W - lado - folga)) // 2 * 2
+        y0 = int(np.clip(cy - lado * (0.34 if f < frac else 0.30), folga, H - lado - folga)) // 2 * 2
+        planos.append((lado, x0, y0))
+    print(f"  quadrado: {len(cortes)} cortes | girar {girar:+.1f}° | zoom alternando por bloco")
     if so_checar:
         return {}
-    leg = Legenda(marca, tam=40)
-    y_leg = int(lado_px * 0.80) - 100
+    leg = Legenda(marca, tam=30)
+    y_leg = int(lado_px * 0.84) - 100
     # o rotate do ffmpeg gira no sentido horário: sinal invertido pra "positivo = anti-horário"
-    filtro = (f"rotate={-math.radians(girar):.5f}:fillcolor=black," if girar else "") + \
-             f"crop={s}:{s}:{x0}:{y0},scale={lado_px}:{lado_px}:flags=lanczos,fps={FPS}"
+    gira = f"rotate={-a_rad:.5f}:fillcolor=black," if girar else ""
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{lado_px}x{lado_px}", "-r", str(FPS), "-i", "-",
@@ -1037,13 +1058,12 @@ def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta
     n_out, gi = 0, 0
     fsize = lado_px * lado_px * 3
     for ci, c in enumerate(cortes):
-        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}",
+        lado, x0, y0 = planos[ci]
+        filtro = gira + f"crop={lado}:{lado}:{x0}:{y0},scale={lado_px}:{lado_px}:flags=lanczos,fps={FPS}"
+        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
                                 "-i", video, "-vf", filtro, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                                stdout=subprocess.PIPE)
-        while True:
-            buf = dec.stdout.read(fsize)
-            if len(buf) < fsize:
-                break
+        for buf in quadros(dec, fsize, n_quadros(c)):
             out = np.frombuffer(buf, np.uint8).reshape(lado_px, lado_px, 3).copy()
             t = n_out / FPS
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
@@ -1090,6 +1110,7 @@ def main():
     ap.add_argument("--cor-caixa", choices=list(ESTILOS_CAIXA), help="estilo da tarja do gancho/CTA: branco, azul ou rosa")
     ap.add_argument("--cima", choices=["esquerda", "direita"], default="esquerda",
                     help="tela dividida: quem da live vai em cima (a pessoa da esquerda ou da direita)")
+    ap.add_argument("--respiro", type=float, help="mantém pausas internas até esse tamanho (s). Padrão 0.25; fala mais natural: 0.5")
     ap.add_argument("--girar", type=float, default=0.0, help="corrige câmera torta: graus (positivo = anti-horário)")
     ap.add_argument("--layout", choices=["dividido", "quadro", "quadrado"], help="dividido: live com duas pessoas lado a lado vira uma em cima e outra embaixo")
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
@@ -1133,6 +1154,8 @@ def main():
     else:
         cortes = plano_de_cortes(dados, a.comecar, a.terminar, a.remover,
                                  tirar_perguntas=not a.manter_perguntas)
+    if a.respiro:
+        RESPIRO.update({"pausa_max": a.respiro, "depois": min(0.25, 0.10 + a.respiro / 4)})
     if not a.sem_ajuste_audio:
         cortes = refinar_cortes(a.video, cortes, dados["palavras"])
     if not cortes:

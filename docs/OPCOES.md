@@ -28,7 +28,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--cor-caixa branco` / `azul` / `rosa` | Estilo da tarja do gancho/CTA (Imigrar: branco com texto preto, azul #0E59C5 ou rosa #F90D5B com texto branco) |
 | `--layout dividido` | Live com duas pessoas lado a lado: uma em cima, outra embaixo, enquadramento fixo, legenda e tarja na divisa |
 | `--cima esquerda` / `direita` | Na tela dividida, quem da live vai em cima |
-| `--layout quadrado` | WhatsApp: 1080x1080, enquadramento fixo na pessoa, legenda perto da base |
+| `--layout quadrado` | WhatsApp: 1080x1080, punch-in alternando por bloco de fala, legenda perto da base |
 | `--girar 5` | Corrige câmera torta, em graus (positivo = anti-horário). Use as linhas verticais da cena como referência |
 | `--layout quadro` | Live com uma pessoa: imagem nítida no meio (sem a faixa do chat), fundo desfocado, gancho acima e legenda abaixo, enquadramento fixo |
 
@@ -44,6 +44,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | Opção | O que faz |
 |---|---|
 | (padrão) | Corta onde a voz começa e termina de verdade e tira pausas internas acima de 0,25s |
+| `--respiro 0.5` | Mantém pausas internas até esse tamanho (s). Use com quem fala mais pausado |
 | `--sem-ajuste-audio` | Usa só o tempo do Whisper (mais folgado) |
 
 ### Conferência sem renderizar

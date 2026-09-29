@@ -29,6 +29,7 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 ## Cortes
 - Pelo **áudio**, não só pelo tempo do Whisper (ele estica o fim da palavra para o silêncio, e isso aparece como respiro/olhada pro lado no fim da frase).
 - Folga de 0,05s antes da voz e 0,10s depois. Pausas internas acima de 0,25s saem.
+- **Sincronia:** cada corte tem duração em quadros inteiros, igual no vídeo e no áudio. Conferir com `ffprobe`: a duração do vídeo e a do áudio do arquivo final devem bater.
 - Nunca usar take em que a pessoa está lendo o celular (auditoria de olhar).
 - Pergunta do entrevistador: fica no vídeo quando vira gancho ("pergunta + resposta"). Em cena com várias pessoas, aparece em quadro aberto.
 
@@ -47,9 +48,10 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - Enquadramento fixo, como na tela dividida.
 
 ## WhatsApp (layout "quadrado")
-- 1080x1080, 6 Mbps (arquivo leve pra mandar no WhatsApp), enquadramento fixo (câmera em tripé).
+- 1080x1080, 6 Mbps (arquivo leve pra mandar no WhatsApp). Enquadramento dinâmico, com punch-in de 80% alternando por bloco de fala: não é live, e o corte parado ficava monótono.
 - Sem gancho e sem CTA: é mensagem direta pra quem agendou.
-- Legenda na cor da marca, a 80% da altura.
+- Legenda na cor da marca, 30 px, a 84% da altura.
+- Quem fala mais pausado: `--respiro 0.5` (no Thiago, cortar toda pausa acima de 0,25s deixava a fala robótica).
 - Câmera torta: `--girar` com o ângulo medido nas verticais da cena (portas, janelas, prateleiras). O recorte deixa folga pra não aparecer canto preto.
 
 ## Enquadramento
