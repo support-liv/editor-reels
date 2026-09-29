@@ -29,6 +29,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--layout dividido` | Live com duas pessoas lado a lado: uma em cima, outra embaixo, enquadramento fixo, legenda e tarja na divisa |
 | `--cima esquerda` / `direita` | Na tela dividida, quem da live vai em cima |
 | `--layout quadrado` | WhatsApp: 1080x1080, punch-in alternando por bloco de fala, legenda perto da base |
+| `--dinamico` | Troca o zoom a cada ~2,5s entre palavras, em 3 níveis, sem cortar a fala. Pra quem fala mais travado |
 | `--girar 5` | Corrige câmera torta, em graus (positivo = anti-horário). Use as linhas verticais da cena como referência |
 | `--layout quadro` | Live com uma pessoa: imagem nítida no meio (sem a faixa do chat), fundo desfocado, gancho acima e legenda abaixo, enquadramento fixo |
 

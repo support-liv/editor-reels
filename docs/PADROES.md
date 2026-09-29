@@ -51,7 +51,7 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - 1080x1080, 6 Mbps (arquivo leve pra mandar no WhatsApp). Enquadramento dinâmico, com punch-in de 80% alternando por bloco de fala: não é live, e o corte parado ficava monótono.
 - Sem gancho e sem CTA: é mensagem direta pra quem agendou.
 - Legenda na cor da marca, 30 px, a 84% da altura.
-- Quem fala mais pausado: `--respiro 0.5` (no Thiago, cortar toda pausa acima de 0,25s deixava a fala robótica).
+- Quem fala mais travado: `--dinamico` (zoom a cada ~2,5s) e `--respiro 0.35`. O Thiago ficou assim (no Thiago, cortar toda pausa acima de 0,25s deixava a fala robótica).
 - Câmera torta: `--girar` com o ângulo medido nas verticais da cena (portas, janelas, prateleiras). O recorte deixa folga pra não aparecer canto preto.
 
 ## Enquadramento

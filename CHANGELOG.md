@@ -2,6 +2,10 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.11 (29/09/2026) - emendas e zoom dinâmico
+- **Pedaços sem sobreposição:** quando o fim de um pedaço passava do começo do seguinte, o começo da palavra tocava duas vezes (no Thiago: "LIV vi vi"). Agora o pedaço anterior termina onde o próximo começa.
+- `--dinamico`: quebra pedaços longos entre palavras (de preferência na vírgula ou no ponto) a cada ~2,5s e alterna 3 níveis de zoom (aberto, fechado, médio). A fala continua sem corte e o áudio emenda sem fade. Bom pra quem fala mais travado.
+
 ## 0.10 (29/09/2026) - sincronia de áudio e WhatsApp dinâmico
 - **Correção de lip sync (todos os layouts):** cada corte gerava alguns quadros a mais ou a menos que o áudio (arredondamento de 29,97 → 30 fps e o fim do corte fora da grade de quadros). O erro somava de corte em corte: num vídeo de 17 cortes o vídeo ficava 0,49s mais longo que o áudio, e a boca descolava da fala do meio pro fim. Agora o fim de cada corte cai num quadro exato e o vídeo lê exatamente esse número de quadros. **Tudo renderizado antes da 0.10 tem esse desvio.**
 - `--layout quadrado` deixou de ser fixo: punch-in alternando por bloco de fala e rosto reenquadrado a cada bloco (não é live).

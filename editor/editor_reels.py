@@ -250,11 +250,45 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
             n.setdefault("grupo", gi_orig)                 # zoom alterna por bloco original, não por pedaço
             n["texto"] = " ".join(P[q]["w"] for q in donos[k])
             novos.append(n)
+    # pedaço seguinte começando antes do fim do anterior repetia o começo da palavra ("LIV vi vi")
+    for a, b in zip(novos, novos[1:]):
+        if a["s"] < b["s"] < a["e"]:
+            a["e"] = b["s"]
     # palavra que ficou em dois pedaços vai só pro primeiro
     vistos = set()
     for n in novos:
         n["idx"] = [q for q in n["idx"] if q not in vistos]
         vistos.update(n["idx"])
+    return novos
+
+
+def dividir_pra_zoom(cortes, P, alvo=2.6, minimo=1.5):
+    """--dinamico: quebra pedaços longos entre palavras (de preferência na vírgula/ponto) pra trocar o zoom
+    sem cortar a fala. Os pedaços novos são contínuos (sem fade no áudio)."""
+    novos, grupo, ult = [], -1, None
+    for c in cortes:
+        if c.get("grupo") != ult or not novos:
+            grupo += 1; ult = c.get("grupo")
+        partes, ini, idx = [], c["s"], list(c["idx"])
+        atual = []
+        for j, q in enumerate(idx):
+            atual.append(q)
+            if j + 1 >= len(idx):
+                break
+            fim = P[q]["e"]
+            corrido = fim - ini
+            pontuado = P[q]["w"].rstrip()[-1:] in ",.;:!?"
+            if corrido >= alvo * (1 if pontuado else 1.35) and c["e"] - fim >= minimo:
+                t = round(min(max((fim + P[idx[j + 1]]["s"]) / 2, ini + 0.5), c["e"] - 0.5), 3)
+                partes.append((ini, t, atual)); ini, atual = t, []
+        partes.append((ini, c["e"], atual))
+        for k, (a, b, ws) in enumerate(partes):
+            n = dict(c); n.update({"s": a, "e": b, "idx": ws, "grupo": grupo + k})
+            n["texto"] = " ".join(P[q]["w"] for q in ws)
+            if k:
+                n["continua"] = True
+            novos.append(n)
+        grupo += len(partes) - 1
     return novos
 
 
@@ -650,7 +684,7 @@ def quadros(dec, fsize, n):
 
 # ---------------------------------------------------------------- 5. render
 def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=None,
-               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda", girar=0.0):
+               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda", girar=0.0, dinamico=False):
     garantir_detector()
     W, H = tamanho_real(video)
     ent_args, ent_filtro = entrada_video(video)
@@ -666,7 +700,9 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
         mapa_voz = {"grave": 1, "aguda": 2}
         pessoa = None
 
-    for c in cortes:                                   # duração em quadros inteiros: vídeo e áudio iguais
+    for i, c in enumerate(cortes):                     # duração em quadros inteiros: vídeo e áudio iguais
+        if c.get("continua"):
+            c["s"] = cortes[i - 1]["e"]
         c["e"] = round(c["s"] + n_quadros(c) / FPS, 4)
     P = dados["palavras"]
     pal_saida, offset = [], 0.0
@@ -685,7 +721,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     img_cta = caixa_texto(cta, marca, estilo=estilo_caixa) if cta else None
     if layout == "quadrado":
         return renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta, total,
-                                   seg_gancho, seg_cta, so_checar, girar=girar)
+                                   seg_gancho, seg_cta, so_checar, girar=girar, dinamico=dinamico)
     if layout == "quadro":
         return renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, total,
                                  seg_gancho, seg_cta, so_checar)
@@ -831,8 +867,9 @@ def montar_audio(video, cortes, tmp_v, saida):
     partes, filtros = [], []
     for i, c in enumerate(cortes):
         d = c["e"] - c["s"]
-        filtros.append(f"[0:a]atrim={c['s']:.3f}:{c['e']:.3f},asetpts=PTS-STARTPTS,"
-                       f"afade=t=in:d=0.02,afade=t=out:st={max(0, d - 0.03):.3f}:d=0.03[a{i}]")
+        fade = ("" if c.get("continua") else ",afade=t=in:d=0.02") + \
+               ("" if i + 1 < len(cortes) and cortes[i + 1].get("continua") else f",afade=t=out:st={max(0, d - 0.03):.3f}:d=0.03")
+        filtros.append(f"[0:a]atrim={c['s']:.4f}:{c['e']:.4f},asetpts=PTS-STARTPTS{fade}[a{i}]")
         partes.append(f"[a{i}]")
     fc = ";".join(filtros) + f";{''.join(partes)}concat=n={len(cortes)}:v=0:a=1,dynaudnorm=f=250:g=15:p=0.9,loudnorm=I=-14:TP=-1.5:LRA=11[aout]"
     run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", tmp_v, "-filter_complex", fc,
@@ -1019,7 +1056,7 @@ def rosto_principal(video, cortes, por_corte=3):
 
 
 def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta, total, seg_gancho, seg_cta,
-                        so_checar=False, girar=0.0, lado_px=1080, frac=0.85):
+                        so_checar=False, girar=0.0, lado_px=1080, frac=0.85, dinamico=False):
     """vídeo quadrado 1080x1080, enquadramento dinâmico (punch-in por bloco), com correção de câmera torta (girar em graus).
     Legenda na cor da marca, perto da base, sem cobrir o rosto."""
     W, H = tamanho_real(video)
@@ -1036,7 +1073,8 @@ def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta
             cx = W / 2 + dx * math.cos(a_rad) + dy * math.sin(a_rad)
             cy = H / 2 - dx * math.sin(a_rad) + dy * math.cos(a_rad)
             ult_g = g
-        f = frac * 0.80 if g % 2 == 1 else frac
+        niveis = (1.0, 0.70, 0.84) if dinamico else (1.0, 0.80)     # aberto, fechado, médio
+        f = frac * niveis[g % len(niveis)]
         lado = int(H * f) // 2 * 2                                    # lado do recorte na imagem original
         folga = int(lado * math.sin(abs(a_rad))) + 8                   # rotação: não deixa canto preto
         x0 = int(np.clip(cx - lado / 2, folga, W - lado - folga)) // 2 * 2
@@ -1110,6 +1148,7 @@ def main():
     ap.add_argument("--cor-caixa", choices=list(ESTILOS_CAIXA), help="estilo da tarja do gancho/CTA: branco, azul ou rosa")
     ap.add_argument("--cima", choices=["esquerda", "direita"], default="esquerda",
                     help="tela dividida: quem da live vai em cima (a pessoa da esquerda ou da direita)")
+    ap.add_argument("--dinamico", action="store_true", help="troca o zoom a cada ~2,5s (entre palavras), com 3 níveis")
     ap.add_argument("--respiro", type=float, help="mantém pausas internas até esse tamanho (s). Padrão 0.25; fala mais natural: 0.5")
     ap.add_argument("--girar", type=float, default=0.0, help="corrige câmera torta: graus (positivo = anti-horário)")
     ap.add_argument("--layout", choices=["dividido", "quadro", "quadrado"], help="dividido: live com duas pessoas lado a lado vira uma em cima e outra embaixo")
@@ -1160,6 +1199,8 @@ def main():
         cortes = refinar_cortes(a.video, cortes, dados["palavras"])
     if not cortes:
         sys.exit("Nenhum trecho sobrou depois dos cortes.")
+    if a.dinamico:
+        cortes = dividir_pra_zoom(cortes, dados["palavras"])
 
     dur = sum(c["e"] - c["s"] for c in cortes)
     print(f"\nPlano: {len(cortes)} cortes, {dur:.1f}s (original {duracao(a.video):.1f}s)")
@@ -1175,7 +1216,8 @@ def main():
     saida = os.path.abspath(os.path.join(a.saida, nome + ".mp4"))
     print("\nRenderizando...")
     renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
-               so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima, girar=a.girar)
+               so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima, girar=a.girar,
+               dinamico=a.dinamico)
     if not a.so_checar_caixas:
         print(f"\nPronto: {saida}")
 
