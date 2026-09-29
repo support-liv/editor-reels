@@ -659,6 +659,9 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     leg = Legenda(marca)
     img_gancho = caixa_texto(gancho, marca, estilo=estilo_caixa) if gancho else None
     img_cta = caixa_texto(cta, marca, estilo=estilo_caixa) if cta else None
+    if layout == "quadro":
+        return renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, total,
+                                 seg_gancho, seg_cta, so_checar)
     if layout == "dividido":
         return renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, total,
                                    seg_gancho, seg_cta, so_checar, cima=cima)
@@ -913,6 +916,71 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
     return total
 
 
+# ---------------------------------------------------------------- 5c. quadro inteiro (live com uma pessoa, câmera parada)
+def renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, total, seg_gancho, seg_cta,
+                      so_checar=False, altura=0.66, largura=0.58):
+    """imagem da live nítida no meio, fundo desfocado da própria cena; gancho acima e legenda abaixo.
+    Enquadramento fixo. Mostra só até 'altura' da imagem (abaixo disso a live exibe chat e banners)."""
+    W, H = tamanho_real(video)
+    xs = []
+    for c in cortes[::max(1, len(cortes) // 8)]:
+        fe, fd = rostos_por_lado(video, c)
+        xs += [fe[0], fd[0]]
+    cx = float(np.median(xs)) * W if xs else W / 2
+    cw = int(W * largura) // 2 * 2
+    ch = int(H * altura) // 2 * 2
+    x0 = int(np.clip(cx - cw / 2, 0, W - cw))
+    mh = int(OUT_W * ch / cw) // 2 * 2                    # altura do quadro nítido na tela
+    y_q = (OUT_H - mh) // 2 - 60                          # um pouco acima do centro
+    y_leg = y_q + mh + 30
+    pos_g = lambda img: max(260, y_q - img.height - 40)
+    # fundo: recorte vertical da própria cena, desfocado e escurecido
+    fw = int(H * 9 / 16) // 2 * 2
+    fx0 = int(np.clip(cx - fw / 2, 0, W - fw))
+    print(f"  quadro inteiro: {len(cortes)} cortes | recorte {cw}x{ch} | enquadramento fixo")
+    if so_checar:
+        return {}
+    tmp_v = saida + ".video.mp4"
+    enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
+                            "-s", f"{OUT_W}x{OUT_H}", "-r", str(FPS), "-i", "-",
+                            "-c:v", "h264_videotoolbox", "-b:v", "14M", "-pix_fmt", "yuv420p",
+                            "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
+                            "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
+    n_out, gi = 0, 0
+    for ci, c in enumerate(cortes):
+        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}",
+                                "-i", video, "-vf", f"fps={FPS}", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                               stdout=subprocess.PIPE)
+        fsize = W * H * 3
+        while True:
+            buf = dec.stdout.read(fsize)
+            if len(buf) < fsize:
+                break
+            fr = np.frombuffer(buf, np.uint8).reshape(H, W, 3)
+            fundo = cv2.resize(fr[:, fx0:fx0 + fw], (135, 240), interpolation=cv2.INTER_AREA)
+            fundo = cv2.GaussianBlur(fundo, (0, 0), 6)
+            out = (cv2.resize(fundo, (OUT_W, OUT_H), interpolation=cv2.INTER_LINEAR) * 0.5).astype(np.uint8)
+            out[y_q:y_q + mh] = cv2.resize(fr[:ch, x0:x0 + cw], (OUT_W, mh), interpolation=cv2.INTER_CUBIC)
+            t = n_out / FPS
+            while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
+                gi += 1
+            g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
+            if g:
+                ativo = max((i for i, p in enumerate(g) if p["s"] <= t), default=0)
+                colar(out, leg.render(gi, g, ativo), y_leg)
+            if img_gancho is not None and t < seg_gancho:
+                colar(out, img_gancho, pos_g(img_gancho))
+            if img_cta is not None and t > total - seg_cta:
+                colar(out, img_cta, pos_g(img_cta))
+            enc.stdin.write(out.tobytes())
+            n_out += 1
+        dec.wait()
+        print(f"  corte {ci + 1}/{len(cortes)} ok")
+    enc.stdin.close(); enc.wait()
+    montar_audio(video, cortes, tmp_v, saida)
+    return total
+
+
 # ---------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser(description="Editor automático de Reels")
@@ -938,7 +1006,7 @@ def main():
     ap.add_argument("--cor-caixa", choices=list(ESTILOS_CAIXA), help="estilo da tarja do gancho/CTA: branco, azul ou rosa")
     ap.add_argument("--cima", choices=["esquerda", "direita"], default="esquerda",
                     help="tela dividida: quem da live vai em cima (a pessoa da esquerda ou da direita)")
-    ap.add_argument("--layout", choices=["dividido"], help="dividido: live com duas pessoas lado a lado vira uma em cima e outra embaixo")
+    ap.add_argument("--layout", choices=["dividido", "quadro"], help="dividido: live com duas pessoas lado a lado vira uma em cima e outra embaixo")
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
     a = ap.parse_args()

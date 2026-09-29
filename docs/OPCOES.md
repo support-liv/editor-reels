@@ -28,6 +28,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--cor-caixa branco` / `azul` / `rosa` | Estilo da tarja do gancho/CTA (Imigrar: branco com texto preto, azul #0E59C5 ou rosa #F90D5B com texto branco) |
 | `--layout dividido` | Live com duas pessoas lado a lado: uma em cima, outra embaixo, enquadramento fixo, legenda e tarja na divisa |
 | `--cima esquerda` / `direita` | Na tela dividida, quem da live vai em cima |
+| `--layout quadro` | Live com uma pessoa: imagem nítida no meio (sem a faixa do chat), fundo desfocado, gancho acima e legenda abaixo, enquadramento fixo |
 
 ### Enquadramento
 | Opção | O que faz |

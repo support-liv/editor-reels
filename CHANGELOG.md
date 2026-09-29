@@ -2,6 +2,11 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.8 (29/09/2026) - live com uma pessoa
+- `--layout quadro`: imagem da live nítida no meio, fundo desfocado da própria cena, gancho acima e legenda abaixo, enquadramento fixo. Escolhido no lugar do recorte vertical, que ampliava 2,7x a imagem 720p e ficava borrado.
+- Recorte do quadro sem a faixa de baixo da live (chat).
+- Projeto `plano_eua_2027`: 14 cortes solo da Marinna (`lote_mari_solo.py`).
+
 ## 0.7.1 (28/09/2026) - tela dividida fixa
 - Tela dividida com **enquadramento fixo** no vídeo inteiro e sem zoom alternado: live é câmera parada e o recorte mexendo ficava estranho. Entrevistas e demais cortes continuam com o enquadramento dinâmico.
 - `--cima direita|esquerda`: escolhe quem da live vai em cima (na Plano EUA 2027, a Dra. Lívia).

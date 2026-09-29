@@ -40,6 +40,12 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - **Tarja alternando branco, azul e rosa** entre os cortes. A legenda corrida continua rosa.
 - O recorte fica nos **70% de cima** da imagem da live: abaixo disso o StreamYard mostra comentários e banners (medido: até 73% da altura).
 
+## Live com uma pessoa (layout "quadro")
+- A imagem da live aparece **nítida no meio**, sem ampliar demais (live é 720p): recorte de 58% da largura x 66% da altura, centrado na pessoa.
+- Os 34% de baixo da live ficam de fora: é onde aparecem os comentários do chat (medido: até 68% da altura no trecho solo).
+- Fundo: a própria cena desfocada e escurecida. Gancho acima do quadro, legenda abaixo, nunca sobre o rosto.
+- Enquadramento fixo, como na tela dividida.
+
 ## Enquadramento
 - Solo: 93% da largura, com punch-in de 82% alternando **por bloco de fala** (não por pedaço, senão o zoom pisca).
 - Entrevistado de um lado (`--pessoa direita`): 55% da largura, centrado no rosto dele.
