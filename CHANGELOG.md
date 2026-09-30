@@ -2,6 +2,12 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.13 (29/09/2026) - formatos, marcas e guia do Claude
+- `CLAUDE.md`: como o Claude do time trabalha no repositório. Assiste o material e deduz a estratégia; pergunta uma vez só o que não dá para deduzir (formatos, palavra-chave do CTA, live em 720p, nomes); mostra o plano antes de renderizar.
+- `docs/FORMATOS.md`: corte longo YouTube, Reels/Shorts, stories, WhatsApp, anúncio e carrossel; estilo por tipo de cena; paletas e fontes das marcas.
+- `assets/vinheta_cortes_liv.mp4`: vinheta do corte longo. Imagem até 3,80s (sem o flash branco da trilha) e som da transição até 4,7s, pra tocar por cima do começo da live.
+- `assets/fontes/`: Darker Grotesque (LIV) e Inter Tight (Imigrar), licença OFL.
+
 ## 0.12 (29/09/2026) - perspectiva e ajustes finos
 - `--endireitar`: mede as verticais da cena e escolhe sozinho o ângulo de `--girar` (a vertical fica reta na altura do rosto; no Thiago, +3,4° em vez dos 5° no olho).
 - **Regra: nunca distorcer a imagem.** A primeira versão do `--endireitar` corrigia perspectiva e deformou o rosto do Thiago. Foi removida: câmera torta se corrige só girando.

@@ -30,6 +30,8 @@ O arquivo sai em `./prontos/`.
 
 | Documento | Para quê |
 |---|---|
+| [CLAUDE.md](CLAUDE.md) | Como o Claude trabalha aqui: briefing curto, regras, conferência |
+| [docs/FORMATOS.md](docs/FORMATOS.md) | Formatos (corte longo, Reels, stories, WhatsApp, anúncio, carrossel), estilo por cena e marcas |
 | [docs/FLUXO.md](docs/FLUXO.md) | Passo a passo do time: do bruto ao vídeo aprovado |
 | [docs/OPCOES.md](docs/OPCOES.md) | Todas as opções do editor e dos comandos de auditoria |
 | [docs/PADROES.md](docs/PADROES.md) | Padrões visuais validados (legenda, gancho, bandeira, cor, anúncio x orgânico) e o porquê de cada um |
