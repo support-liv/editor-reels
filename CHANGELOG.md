@@ -2,6 +2,14 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.15 (29/09/2026) - motion design (piloto)
+- `motion/`: animações em HTML renderizadas pelo HyperFrames 0.8.94 (Apache 2.0), fundo transparente (ProRes 4444), render local.
+- Primeiro modelo: `cta_palavra_chave` ("Comente PALAVRA" animado), nas duas marcas.
+- Editor: `--cta-animado PALAVRA` (renderiza o modelo e cola no fim) e `--animacao arquivo@segundos` (qualquer animação). Proporção diferente do vídeo é recusada (nunca distorcer).
+- Skills do projeto em `.claude/skills/`: 9 do HyperFrames e 15 do iart-ai/motion-skills (técnica de motion; render pelo HyperFrames, não Remotion). Versões travadas em `skills-lock.json`.
+- `.claude/settings.json`: telemetria do HyperFrames desligada e comandos de nuvem/login bloqueados.
+- `setup.sh` instala o motion quando há Node 22+.
+
 ## 0.14 (29/09/2026) - identidade das marcas, corte longo e carrossel
 - **Fonte e cores da marca, sempre**, na legenda e nas caixas: LIV em Darker Grotesque, Imigrar em Inter Tight. Tamanho ajustado para a mesma altura visual aprovada em Arial Black.
 - `--cor-caixa` por marca, só com cores da paleta: LIV azul/laranja/bege/marrom (manual de identidade), Imigrar branco/azul/rosa.

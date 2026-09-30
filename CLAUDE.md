@@ -43,5 +43,12 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 - Carrossel: `editor/carrossel.py roteiro.json`.
 - Fonte e cores são sempre as da marca (`--marca`); `--cor-caixa` só aceita cores da paleta.
 
+## Motion design (animações)
+- Animações ficam em `motion/` (HyperFrames: HTML + GSAP, render local, fundo transparente) e o editor cola no vídeo (`--cta-animado`, `--animacao`). Ver `motion/README.md`.
+- Técnica: skills do projeto em `.claude/skills/` (HyperFrames + iart-ai/motion-skills). As do motion-skills falam de Remotion: use só a técnica e **renderize pelo HyperFrames** (Remotion exige licença paga).
+- **Nunca** use render na nuvem (`hyperframes cloud`, `lambda`, `cloudrun`) nem login/telemetria: vídeo de cliente não sai da máquina. Já está bloqueado em `.claude/settings.json`.
+- Animação serve à mensagem: curta, na fonte e nas cores da marca, fora do rosto e da faixa da legenda, e não em todo corte. O vídeo continua sendo a pessoa falando.
+- Ao criar um modelo novo, confira quadros do resultado e registre em `motion/README.md`.
+
 ## Git
 Commits locais à vontade; `git push` só quando a pessoa pedir. Mudança no editor: registrar no `CHANGELOG.md` e nos docs.

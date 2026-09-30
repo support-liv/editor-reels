@@ -1274,6 +1274,43 @@ def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta
     return total
 
 
+# ---------------------------------------------------------------- 6. animações (HyperFrames, render sempre local)
+MOTION = os.path.join(os.path.dirname(AQUI), "motion")
+
+
+def renderizar_modelo(modelo, variaveis, saida):
+    """renderiza um modelo de motion/modelos/ em MOV com transparência (ProRes 4444)."""
+    env = dict(os.environ, HYPERFRAMES_NO_TELEMETRY="1", HYPERFRAMES_SKIP_SKILLS="1")
+    if not os.path.exists(os.path.join(MOTION, "node_modules")):
+        subprocess.run(["npm", "install", "--no-fund", "--no-audit"], cwd=MOTION, env=env, check=True)
+    r = subprocess.run(["npx", "hyperframes", "render", ".", "-c", f"modelos/{modelo}.html", "--format", "mov",
+                        "--variables", json.dumps(variaveis, ensure_ascii=False), "-o", saida, "--quiet"],
+                       cwd=MOTION, env=env, capture_output=True, text=True)
+    if r.returncode != 0 or not os.path.exists(saida):
+        sys.exit(f"Erro no render da animação {modelo}:\n{(r.stderr or r.stdout)[-1500:]}")
+    return saida
+
+
+def aplicar_animacoes(saida, animacoes):
+    """cola as animações transparentes (arquivo, segundo) no vídeo pronto; o áudio não é tocado."""
+    W, H = tamanho_real(saida)
+    entradas, cadeia, ult = ["-i", saida], [], "0:v"
+    for k, (arq, t) in enumerate(animacoes, 1):
+        aw, ah = tamanho_real(arq)
+        if abs(aw / ah - W / H) > 0.01:
+            sys.exit(f"A animação {arq} é {aw}x{ah} e o vídeo {W}x{H}: proporções diferentes (nunca distorcer).")
+        entradas += ["-i", arq]
+        cadeia.append(f"[{k}:v]scale={W}:{H}:flags=lanczos,format=yuva444p,setpts=PTS+{t:.3f}/TB[m{k}];"
+                      f"[{ult}][m{k}]overlay=0:0:eof_action=pass:format=auto[v{k}]")
+        ult = f"v{k}"
+    tmp = saida + ".motion.mp4"
+    run(["ffmpeg", "-v", "error", "-y"] + entradas + ["-filter_complex", ";".join(cadeia), "-map", f"[{ult}]", "-map", "0:a",
+         "-c:v", "h264_videotoolbox", "-b:v", "14M", "-pix_fmt", "yuv420p",
+         "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
+         "-c:a", "copy", "-movflags", "+faststart", tmp])
+    os.replace(tmp, saida)
+
+
 # ---------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser(description="Editor automático de Reels")
@@ -1307,6 +1344,11 @@ def main():
     ap.add_argument("--girar", type=float, default=0.0, help="corrige câmera torta: graus (positivo = anti-horário)")
     ap.add_argument("--layout", choices=["dividido", "quadro", "quadrado", "youtube"],
                     help="dividido: live com duas pessoas; quadro: live solo 720p; quadrado: WhatsApp; youtube: corte longo 16:9")
+    ap.add_argument("--animacao", action="append", default=[],
+                    help='animação transparente (.mov/.webm) colada no vídeo: "arquivo.mov@12.5". Pode repetir')
+    ap.add_argument("--cta-animado", metavar="PALAVRA",
+                    help='CTA animado da marca no fim ("Comente PALAVRA"). Substitui a caixa --cta')
+    ap.add_argument("--cta-rotulo", default="Comente", help="texto antes da palavra no --cta-animado")
     ap.add_argument("--sem-vinheta", action="store_true", help="youtube: não põe a vinheta da marca na abertura")
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
@@ -1382,9 +1424,22 @@ def main():
     nome = a.nome or f"{base}_{a.marca}"
     saida = os.path.abspath(os.path.join(a.saida, nome + ".mp4"))
     print("\nRenderizando...")
-    renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
+    renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, "" if a.cta_animado else a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
                so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima, girar=a.girar,
                dinamico=a.dinamico, endireitar=a.endireitar, vinheta=not a.sem_vinheta)
+    animacoes = []
+    for x in a.animacao:
+        arq, _, t = x.rpartition("@")
+        animacoes.append((arq, float(t)))
+    if a.cta_animado and not a.so_checar_caixas:
+        print("Renderizando o CTA animado...")
+        arq = renderizar_modelo("cta_palavra_chave", {"marca": a.marca, "rotulo": a.cta_rotulo,
+                                                      "palavra": a.cta_animado.upper()}, saida + ".cta.mov")
+        animacoes.append((arq, max(0.0, duracao(saida) - 4.2)))
+    if animacoes and not a.so_checar_caixas:
+        aplicar_animacoes(saida, animacoes)
+        if a.cta_animado:
+            os.remove(saida + ".cta.mov")
     if not a.so_checar_caixas:
         print(f"\nPronto: {saida}")
 

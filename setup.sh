@@ -23,4 +23,13 @@ echo "Baixando o modelo do Whisper (medium, ~1,5 GB, só na primeira vez)..."
 python3 -c "import whisper; whisper.load_model('medium')" && ok "modelo medium" \
   || echo "  ! não baixou. Se der erro de certificado SSL, rode: /Applications/Python*/Install\ Certificates.command"
 
+echo "Instalando o motion (HyperFrames, animações)..."
+if command -v node >/dev/null && [ "$(node -p 'process.versions.node.split(".")[0]')" -ge 22 ]; then
+  (cd motion && HYPERFRAMES_NO_TELEMETRY=1 npm install --no-fund --no-audit --silent) && ok "HyperFrames" \
+    && (cd motion && HYPERFRAMES_NO_TELEMETRY=1 npx hyperframes telemetry disable >/dev/null 2>&1; true)
+else
+  echo "  ! motion desligado: instale o Node 22+ (brew install node) e rode o setup de novo"
+fi
+[ -d "/Applications/Google Chrome.app" ] && ok "Chrome (render das animações)" || echo "  ! instale o Google Chrome para renderizar animações"
+
 echo "Pronto. Teste: python3 editor/editor_reels.py --help"

@@ -1,0 +1,7 @@
+{
+  "name": "editor-reels-motion",
+  "private": true,
+  "description": "Animações (HyperFrames) para colar nos vídeos do editor-reels. Render sempre local.",
+  "engines": { "node": ">=22" },
+  "devDependencies": { "hyperframes": "0.8.94" }
+}

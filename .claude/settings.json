@@ -1,0 +1,20 @@
+{
+  "env": {
+    "HYPERFRAMES_NO_TELEMETRY": "1",
+    "HYPERFRAMES_SKIP_SKILLS": "1"
+  },
+  "permissions": {
+    "deny": [
+      "Bash(npx hyperframes cloud:*)",
+      "Bash(npx hyperframes lambda:*)",
+      "Bash(npx hyperframes cloudrun:*)",
+      "Bash(npx hyperframes auth:*)",
+      "Bash(npx hyperframes events:*)",
+      "Bash(hyperframes cloud:*)",
+      "Bash(hyperframes lambda:*)",
+      "Bash(hyperframes cloudrun:*)",
+      "Bash(hyperframes auth:*)",
+      "Bash(hyperframes events:*)"
+    ]
+  }
+}

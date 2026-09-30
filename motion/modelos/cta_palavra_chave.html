@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR" data-composition-variables='[
+  {"id":"marca","type":"enum","label":"Marca","default":"liv","options":[{"value":"liv","label":"LIV"},{"value":"imigrar","label":"Imigrar"}]},
+  {"id":"rotulo","type":"string","label":"Texto antes","default":"Comente"},
+  {"id":"palavra","type":"string","label":"Palavra-chave","default":"PERFIL"},
+  {"id":"topo","type":"number","label":"Altura (px do topo)","default":1330,"min":300,"max":1500}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>CTA palavra-chave</title>
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Darker Grotesque";
+        src: url("fontes/DarkerGrotesque[wght].ttf") format("truetype");
+        font-weight: 300 900;
+      }
+      @font-face {
+        font-family: "Inter Tight";
+        src: url("fontes/InterTight[wght].ttf") format("truetype");
+        font-weight: 100 900;
+      }
+      /* só cores da paleta de cada marca */
+      .liv { --fundo: #2c3642; --texto: #fff0e6; --destaque: #ff6e1f; --texto-destaque: #ffffff; --fonte: "Darker Grotesque"; --k: 1; }
+      .imigrar { --fundo: #ffffff; --texto: #141414; --destaque: #f90d5b; --texto-destaque: #ffffff; --fonte: "Inter Tight"; --k: 0.8; }
+      html, body { margin: 0; background: transparent; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+      /* zona segura do Reels: acima da legenda e abaixo do meio da tela */
+      .cta {
+        position: absolute; left: 0; right: 0; top: calc(var(--topo, 1330) * 1px);
+        display: flex; justify-content: center;
+      }
+      .cartao {
+        display: flex; align-items: center; gap: 26px;
+        padding: 26px 44px 30px;
+        background: var(--fundo); border-radius: 30px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+        font-family: var(--fonte), sans-serif; color: var(--texto);
+      }
+      .rotulo { font-size: calc(58px * var(--k)); font-weight: 700; line-height: 1; }
+      .palavra {
+        font-size: calc(74px * var(--k)); font-weight: 900; line-height: 1; color: var(--texto-destaque);
+        background: var(--destaque); padding: 10px 28px 16px; border-radius: 18px;
+      }
+      .seta { width: 54px; height: 54px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920" data-duration="4">
+        <div class="cta clip" id="bloco" data-start="0" data-duration="4">
+          <div class="cartao" id="cartao">
+            <svg class="seta" id="seta" viewBox="0 0 54 54" aria-hidden="true">
+              <!-- balão de comentário, geométrico como a iconografia da LIV -->
+              <path d="M8 10h38a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H22l-10 9v-9H8a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4z" fill="currentColor" style="color: var(--destaque)" />
+            </svg>
+            <span class="rotulo" id="rotulo" data-var-text="rotulo">Comente</span>
+            <span class="palavra" id="palavra" data-var-text="palavra">PERFIL</span>
+          </div>
+        </div>
+    </div>
+    <script>
+      const { marca } = window.__hyperframes.getVariables();
+      document.getElementById("root").classList.add(marca === "imigrar" ? "imigrar" : "liv");
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#cartao", { y: 140, opacity: 0, scale: 0.92 }, { y: 0, opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.6)" }, 0.1)
+        .fromTo("#seta", { scale: 0, rotation: -25 }, { scale: 1, rotation: 0, duration: 0.4, ease: "back.out(2.5)" }, 0.35)
+        .fromTo("#rotulo", { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 0.4)
+        .fromTo("#palavra", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2.2)" }, 0.55)
+        // pulso na palavra-chave pra chamar o olho
+        .to("#palavra", { scale: 1.09, duration: 0.22, ease: "power2.out", yoyo: true, repeat: 3 }, 1.35)
+        .to("#cartao", { y: 60, opacity: 0, duration: 0.4, ease: "power2.in" }, 3.5);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -25,6 +25,8 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--marca imigrar` / `liv` | Cores: rosa Imigrar / laranja e azul LIV |
 | `--gancho "texto"` | Caixa nos primeiros 3,2s, em caixa alta. Aceita 🇺🇸 e 🇧🇷 |
 | `--cta "texto"` | Caixa nos últimos 3,5s |
+| `--cta-animado PERFIL` | CTA animado da marca ("Comente PERFIL") nos últimos 4s, no lugar da caixa. `--cta-rotulo` muda o "Comente" |
+| `--animacao arq.mov@12.5` | Cola uma animação transparente (feita em `motion/`) nesse segundo do vídeo pronto. Pode repetir. Proporção tem que ser a mesma do vídeo |
 | `--y-legenda 0.62` | Altura da legenda (fração da tela). Orgânico 0.62, anúncio 0.55, selfie 0.64 |
 | `--cor-caixa` | Estilo da tarja do gancho/CTA, só com cores da marca. **Imigrar:** `branco`, `azul` (#0E59C5), `rosa` (#F90D5B). **LIV:** `azul` (#2C3642), `laranja` (#FF6E1F), `bege` (#FFF0E6), `marrom` (#945943) |
 | `--layout dividido` | Live com duas pessoas lado a lado: uma em cima, outra embaixo, enquadramento fixo, legenda e tarja na divisa |
