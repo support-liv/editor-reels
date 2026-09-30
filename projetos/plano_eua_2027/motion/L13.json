@@ -1,0 +1,175 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L13",
+ "duracao": 38.6,
+ "palavras": "palavras/L13.json",
+ "cenas": [
+  {
+   "t0": 3.3,
+   "t1": 8.2,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "capaz de vir por essa via",
+     "t": 3.5,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "muitas vezes é",
+     "t": 5.7,
+     "y": 420,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "discricionariedade",
+     "t": 7.6,
+     "y": 550,
+     "cor": "destaque",
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 8.4,
+   "t1": 18.6,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o texto da negativa",
+     "t": 8.6,
+     "y": 250
+    },
+    {
+     "tipo": "notificacao",
+     "app": "consulado",
+     "titulo": "Visto negado",
+     "texto": "leia o texto da carta",
+     "t": 10.5,
+     "y": 320
+    },
+    {
+     "tipo": "linha",
+     "texto": "não prejudica",
+     "t": 12.5,
+     "y": 620,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "futuras aplicações",
+     "t": 13.0,
+     "y": 750,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "nem as chances de aprovação",
+     "t": 16.2,
+     "y": 870,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 21.8,
+   "t1": 29.4,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "esteja preparado",
+     "t": 22.2,
+     "y": 250
+    },
+    {
+     "tipo": "cartoes",
+     "y": 320,
+     "alt": 280,
+     "itens": [
+      {
+       "titulo": "Plano A",
+       "texto": "o caminho principal",
+       "t": 23.4,
+       "destaque_t": 23.6
+      },
+      {
+       "titulo": "Plano B",
+       "texto": "a alternativa",
+       "t": 24.1,
+       "destaque_t": 24.3
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "eu falo muito:",
+     "t": 25.8,
+     "y": 640,
+     "tam": 76
+    },
+    {
+     "tipo": "linha",
+     "texto": "não desistir por um obstáculo",
+     "t": 27.8,
+     "y": 760,
+     "cor": "destaque",
+     "tam": 76,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "t0": 29.6,
+   "t1": 34.72,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "vai até o fim",
+     "t": 29.6,
+     "y": 300,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "maximiza as chances",
+     "t": 31.7,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "de conseguir o objetivo.",
+     "t": 33.4,
+     "y": 580,
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 34.77,
+   "t1": 38.6,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

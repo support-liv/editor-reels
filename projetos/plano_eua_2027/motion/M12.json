@@ -1,0 +1,137 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M12",
+ "duracao": 41.92,
+ "palavras": "palavras/M12.json",
+ "cenas": [
+  {
+   "t0": 8.9,
+   "t1": 23.2,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a primeira coisa na cabeça",
+     "t": 9.0,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 54,
+     "itens": [
+      {
+       "texto": "Vou começar do zero.",
+       "t": 9.4
+      },
+      {
+       "texto": "Vou ser desvalorizado.",
+       "t": 11.0
+      },
+      {
+       "texto": "As portas estão fechadas.",
+       "t": 14.2
+      },
+      {
+       "texto": "Vou ter que dar um jeito.",
+       "t": 16.8
+      },
+      {
+       "texto": "O que eu sou bom não é suficiente lá.",
+       "t": 19.9
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 24.2,
+   "t1": 33.9,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "existe um aspecto cultural",
+     "t": 24.4,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "do brasileiro",
+     "t": 26.4,
+     "y": 410,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "é comum",
+     "t": 28.3,
+     "y": 560,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "se colocar nesse lugar",
+     "t": 29.8,
+     "y": 670,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "de devoção a outras culturas",
+     "t": 32.2,
+     "y": 780,
+     "tam": 70,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 34.4,
+   "t1": 38.04,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "mas é uma",
+     "t": 34.7,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "incompreensão",
+     "t": 36.0,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "do mercado de trabalho.",
+     "t": 37.0,
+     "y": 580,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 38.09,
+   "t1": 41.92,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

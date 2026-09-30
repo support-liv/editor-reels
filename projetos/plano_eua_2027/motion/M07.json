@@ -1,0 +1,173 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M07",
+ "duracao": 45.13,
+ "palavras": "palavras/M07.json",
+ "cenas": [
+  {
+   "t0": 5.4,
+   "t1": 9.9,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "entenda",
+     "t": 5.8,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "o inglês é",
+     "t": 6.4,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "ferramenta de trabalho",
+     "t": 7.0,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "ninguém chega fluente",
+     "t": 8.7,
+     "y": 590,
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "t0": 10.4,
+   "t1": 17.7,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "ninguém precisa ser fluente",
+     "t": 10.8,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "checklist",
+     "y": 430,
+     "tam": 74,
+     "passo": 108,
+     "itens": [
+      {
+       "texto": "pra ser funcional",
+       "t": 14.4
+      },
+      {
+       "texto": "compatível",
+       "t": 15.6
+      },
+      {
+       "texto": "competitivo",
+       "t": 16.0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 18.8,
+   "t1": 29.3,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "dar o peso",
+     "t": 19.2,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "que o inglês precisa",
+     "t": 20.5,
+     "y": 420,
+     "tam": 96
+    },
+    {
+     "tipo": "chat",
+     "y": 560,
+     "tam": 60,
+     "itens": [
+      {
+       "texto": "Vem com um inglêszinho, tá tudo resolvido.",
+       "t": 23.8,
+       "lado": "esq"
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "não dá pra ter essa postura",
+     "t": 27.8,
+     "y": 800,
+     "cor": "destaque",
+     "tam": 76,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "t0": 29.4,
+   "t1": 40.4,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "nem colocar o inglês",
+     "t": 29.6,
+     "y": 300,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "num pedestal",
+     "t": 30.5,
+     "y": 420,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "duvidar demais",
+     "t": 34.8,
+     "y": 580,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "de você, pessoa qualificada",
+     "t": 38.2,
+     "y": 700,
+     "tam": 76,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 41.3,
+   "t1": 45.13,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

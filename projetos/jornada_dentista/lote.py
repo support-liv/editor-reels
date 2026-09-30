@@ -129,10 +129,49 @@ def rel_por_frases(arq, ini_frase, fim_frase):
     return f"{max(0, P[i]['s'] - 0.08):.2f}-{fim:.2f}"
 
 
+def longo_preciso():
+    """corte longo com os limites exatos de cada bloco: troca, na transcrição da live (vinda da legenda .vtt, ~0,8s
+    adiantada), as palavras de cada bloco pelas do Whisper do trecho recortado, e acha início e fim pelas frases do
+    documento. Sem os trechos transcritos (`lote.py trechos` + `transcrever`), cai nos segundos de LONGO."""
+    import json
+    trans = os.path.join(AQUI, "..", "..", "editor", "transcricoes")
+    cache = os.path.join(trans, os.path.splitext(os.path.basename(LIVE))[0] + ".json")
+    dados = json.load(open(cache))
+    # no corte longo as frases seguem o documento ao pé da letra (os shorts às vezes param um pouco antes)
+    ajuste = {"S08": ("resolvi que essa era", None), "S14": (None, "data de validade né gente")}
+    blocos = [("S00", "cold_open", "você é uma pessoa que hoje", "os seus filhos")] + [
+        (sid, nome, ajuste.get(sid, (None, None))[0] or fi, ajuste.get(sid, (None, None))[1] or ff) for sid, nome, fi, ff, *_ in SHORTS]
+    faixas, trocados = [], []
+    for (sid, nome, f_ini, f_fim), (a, b) in zip(blocos, LONGO):
+        arq = os.path.join(TRECHOS, f"{sid}_{nome}.mp4")
+        if sid == "S00":                             # o cold open vem do trecho D1 (08:11-10:21), que o cobre inteiro
+            arq = os.path.join(SAIDA, "trechos", "D1_e_daqui_a_dez_anos.mp4")
+            ini_arq = 493.0 - 1.5
+        else:
+            ini_arq = a - 1.5
+        tj = os.path.join(trans, os.path.splitext(os.path.basename(arq))[0] + ".json")
+        if not os.path.exists(tj):
+            faixas.append((a, b)); continue
+        r0, r1 = (float(x) for x in rel_por_frases(arq, f_ini, f_fim).split("-"))
+        faixas.append((round(ini_arq + r0, 3), round(ini_arq + r1, 3)))
+        P = json.load(open(tj))["palavras"]
+        trocados.append((ini_arq + P[0]["s"], ini_arq + P[-1]["e"],
+                         [{"w": p["w"], "s": round(ini_arq + p["s"], 3), "e": round(ini_arq + p["e"], 3)} for p in P]))
+    pal = dados["palavras"]
+    for x0, x1, novas in trocados:                   # a palavra do Whisper vale mais que a da legenda nesses blocos
+        pal = [p for p in pal if not (x0 - 0.3 <= p["s"] <= x1 + 0.3)] + novas
+    dados["palavras"] = sorted(pal, key=lambda p: p["s"])
+    dados["fonte"] = "vtt + whisper nos blocos do corte longo"
+    json.dump(dados, open(cache, "w"), ensure_ascii=False, indent=1)
+    for (a, b), (x, y) in zip(LONGO, faixas):
+        print(f"  bloco {a:8.1f}-{b:8.1f} (legenda)  ->  {x:8.2f}-{y:8.2f} (Whisper)")
+    return ",".join(f"{a}-{b}" for a, b in faixas)
+
+
 def main():
     modo = sys.argv[1] if len(sys.argv) > 1 else "longo"
     if modo == "longo":
-        trechos = ",".join(f"{a}-{b}" for a, b in LONGO)
+        trechos = longo_preciso()
         cmd = ["python3", EDITOR, LIVE, "--layout", "youtube", "--marca", "imigrar", "--sem-vinheta", "--manter-perguntas",
                "--trechos", trechos, "--nome", "jornada_dentista_corte_longo", "--saida", os.path.join(SAIDA, "corte_longo")]
         for t in TROCAS:

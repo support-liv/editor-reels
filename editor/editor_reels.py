@@ -1305,6 +1305,7 @@ def renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, to
                             "-c:v", "h264_videotoolbox", "-b:v", "14M", "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
+    camadas = preparar_brolls(cortes, OUT_W, OUT_H)
     n_out, gi = 0, 0
     for ci, c in enumerate(cortes):
         dec = subprocess.Popen(["ffmpeg", "-v", "fatal", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
@@ -1317,23 +1318,26 @@ def renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, to
             fundo = cv2.GaussianBlur(fundo, (0, 0), 6)
             out = (cv2.resize(fundo, (OUT_W, OUT_H), interpolation=cv2.INTER_LINEAR) * 0.5).astype(np.uint8)
             out[y_q:y_q + mh] = cv2.resize(fr[:ch, x0:x0 + cw], (OUT_W, mh), interpolation=cv2.INTER_CUBIC)
+            base_ult = out.copy()
             t = n_out / FPS
+            com_motion = aplicar_brolls(out, camadas, t) > 0.5      # motion na tela: sem legenda nem gancho por cima
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
                 gi += 1
             g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
-            if g:
+            if g and not com_motion:
                 ativo = max((i for i, p in enumerate(g) if p["s"] <= t), default=0)
                 colar(out, leg.render(gi, g, ativo), y_leg)
-            if img_gancho is not None and t < seg_gancho:
+            if img_gancho is not None and t < seg_gancho and not com_motion:
                 colar(out, img_gancho, pos_g(img_gancho))
-            if img_cta is not None and t > total - seg_cta:
+            if img_cta is not None and t > total - seg_cta and not com_motion:
                 colar(out, img_cta, pos_g(img_cta))
             enc.stdin.write(out.tobytes())
             n_out += 1
         dec.wait()
         print(f"  corte {ci + 1}/{len(cortes)} ok")
+    escrever_cauda(enc, base_ult, camadas, n_out)
     enc.stdin.close(); enc.wait()
-    montar_audio(video, cortes, tmp_v, saida)
+    montar_audio(video, cortes, tmp_v, saida, sfx=[(b.arq, b.t0) for b in camadas])
     return total
 
 

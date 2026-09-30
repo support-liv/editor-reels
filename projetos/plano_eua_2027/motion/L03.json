@@ -1,0 +1,98 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L03",
+ "duracao": 29.76,
+ "palavras": "palavras/L03.json",
+ "cenas": [
+  {
+   "t0": 3.3,
+   "t1": 8.6,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a pergunta",
+     "t": 3.35,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Eu quero amanhã.",
+       "t": 3.4
+      },
+      {
+       "texto": "O que eu preciso fazer?",
+       "t": 5.2
+      },
+      {
+       "texto": "Quais são as portas legais?",
+       "t": 6.4
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 13.8,
+   "t1": 25.88,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "a primeira coisa que eu faço:",
+     "t": 14.0,
+     "y": 300,
+     "tam": 76,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "separar os caminhos",
+     "t": 16.7,
+     "y": 400,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "colunas",
+     "y": 470,
+     "alt": 300,
+     "itens": [
+      {
+       "titulo": "Temporários",
+       "texto": "objetivo específico",
+       "t": 19.0,
+       "tam": 90,
+       "sync_t": 22.6
+      },
+      {
+       "titulo": "Green card",
+       "texto": "o caminho pra ficar",
+       "t": 24.1,
+       "tam": 90
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 25.93,
+   "t1": 29.76,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

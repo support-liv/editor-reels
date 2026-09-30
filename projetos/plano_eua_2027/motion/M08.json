@@ -1,0 +1,128 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M08",
+ "duracao": 36.32,
+ "palavras": "palavras/M08.json",
+ "cenas": [
+  {
+   "t0": 3.4,
+   "t1": 10.4,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "uma gafe",
+     "t": 3.8,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "eles não compreendem",
+     "t": 6.1,
+     "y": 310,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "e refazem a sua frase",
+     "t": 9.3,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 10.6,
+   "t1": 19.8,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "colunas",
+     "y": 300,
+     "alt": 300,
+     "itens": [
+      {
+       "titulo": "Não é",
+       "texto": "deixa eu te corrigir",
+       "t": 10.8,
+       "tam": 110,
+       "sync_t": 11.6,
+       "risco_t": 12.8
+      },
+      {
+       "titulo": "É",
+       "texto": "deixa eu ver se entendi",
+       "t": 12.8,
+       "tam": 110,
+       "sync_t": 13.1,
+       "destaque_t": 14.0
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "ele tá confirmando",
+     "t": 18.1,
+     "y": 660,
+     "cor": "destaque",
+     "tam": 84,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "t0": 22.2,
+   "t1": 32.3,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "aspecto cultural",
+     "t": 22.6,
+     "y": 300,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "no Brasil 🇧🇷",
+     "t": 23.7,
+     "y": 440,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "brasileiro questiona brasileiro",
+     "t": 27.3,
+     "y": 580,
+     "tam": 76,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "isso não precisa te travar",
+     "t": 30.8,
+     "y": 690,
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 32.49,
+   "t1": 36.32,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

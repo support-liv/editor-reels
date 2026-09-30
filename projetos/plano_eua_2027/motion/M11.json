@@ -1,0 +1,161 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M11",
+ "duracao": 38.66,
+ "palavras": "palavras/M11.json",
+ "cenas": [
+  {
+   "t0": 3.5,
+   "t1": 10.8,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "visto de turismo",
+     "t": 3.6,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "é um benefício",
+     "t": 5.1,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "nem garantia de entrar",
+     "t": 8.8,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 11.1,
+   "t1": 15.0,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "colunas",
+     "y": 300,
+     "alt": 280,
+     "itens": [
+      {
+       "titulo": "Ajuda?",
+       "texto": "não é isso",
+       "t": 11.3,
+       "tam": 110,
+       "risco_t": 11.8
+      },
+      {
+       "titulo": "Benefício",
+       "texto": "a mais",
+       "t": 12.8,
+       "tam": 110,
+       "destaque_t": 13.5
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 15.1,
+   "t1": 21.5,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "gente que começa o processo",
+     "t": 15.3,
+     "y": 300,
+     "tam": 80
+    },
+    {
+     "tipo": "linha",
+     "texto": "sem nunca ter pisado lá",
+     "t": 17.8,
+     "y": 420,
+     "cor": "destaque",
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 21.7,
+   "t1": 28.5,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "essa pessoa nunca",
+     "y": 300,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "ganhou em dólar",
+       "t": 22.3,
+       "status": "negado",
+       "selo": "nunca"
+      },
+      {
+       "texto": "pisou nos EUA",
+       "t": 25.4,
+       "status": "negado",
+       "selo": "nunca"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 28.6,
+   "t1": 34.78,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "mas essa pessoa venceu",
+     "t": 28.8,
+     "y": 300,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "essas barreiras",
+     "t": 30.0,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "e foi levando perspectivas melhores",
+     "t": 32.2,
+     "y": 580,
+     "tam": 70,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 34.83,
+   "t1": 38.66,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

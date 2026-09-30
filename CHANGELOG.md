@@ -2,6 +2,11 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.27 (30/09/2026) - Plano EUA 2027: todos os shorts com motion
+- Layout `quadro` (live solo 720p) aceita `--broll` (motion em tela cheia, sem legenda nem gancho por cima) e `--cauda` (CTA animado no fim).
+- Batidas da Imigrar: o item da fala pode acender de novo e o respiro da cena pode se repetir (1,4s de intervalo), pra fala pausada não deixar a cena parada. A LIV segue igual.
+- `projetos/plano_eua_2027/lote_motion.py` cobre os 31 cortes (L01-L17 tela dividida, M01-M14 quadro); roteiros em `projetos/plano_eua_2027/motion/roteiros.py`.
+
 ## 0.26 (30/09/2026) - live com 3 pessoas (Jornada do dentista)
 - `--colunas N --pessoas cima,baixo`: tela dividida a partir de live com N pessoas lado a lado (as 2 que conversam; coluna inteira, rosto um pouco acima do meio).
 - `editor/vtt_para_json.py`: usa a legenda .vtt do YouTube como transcrição (corte longo de live comprida sem rodar o Whisper em 1h+). Atenção: a legenda vem ~0,8s adiantada; nos shorts, recorte o trecho e deixe o Whisper transcrever.

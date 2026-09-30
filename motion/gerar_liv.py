@@ -142,7 +142,7 @@ def batidas(c, falas):
     itens = [(ei, i, it["t"]) for ei, e in enumerate(els) if e["tipo"] in LETRA_ITEM for i, it in enumerate(e.get("itens", [])) if it.get("texto")]
     ja_tem_fio = {e.get("sob") for e in els if e["tipo"] == "sub"}
     usados, out = set(), []
-    for _ in range(6):
+    for _ in range(12):
         ts = revelacoes(dict(c, _batidas=out))
         buracos = [(a, b) for a, b in zip(ts, ts[1:]) if b - a > 1.2] + ([(ts[-1], c["t1"])] if ts and c["t1"] - ts[-1] > 1.1 else [])
         if not buracos:
@@ -159,8 +159,12 @@ def batidas(c, falas):
         elif [x for x in itens if x[2] < tb - 0.3 and ("item", x[:2]) not in usados]:
             ei, i, _ = [x for x in itens if x[2] < tb - 0.3 and ("item", x[:2]) not in usados][-1]
             usados.add(("item", (ei, i))); out.append({"t": tb, "tipo": "item", "el": ei, "item": i, "letra": LETRA_ITEM[els[ei]["tipo"]]})
-        elif not any(u[0] == "pulso" for u in usados):
-            usados.add(("pulso", 0)); out.append({"t": tb, "tipo": "pulso"})
+        elif itens and TEMA["marca"] != "liv" and not any(b_["tipo"] == "item" and abs(b_["t"] - tb) < 2.0 for b_ in out) \
+                and [x for x in itens if x[2] < tb - 0.3]:
+            ei, i, _ = [x for x in itens if x[2] < tb - 0.3][-1]     # Imigrar: o item da fala acende de novo
+            out.append({"t": tb, "tipo": "item", "el": ei, "item": i, "letra": LETRA_ITEM[els[ei]["tipo"]]})
+        elif not any(b_["tipo"] == "pulso" and abs(b_["t"] - tb) < (1.4 if TEMA["marca"] != "liv" else 99) for b_ in out):
+            out.append({"t": tb, "tipo": "pulso"})                  # respiro da cena (na LIV, uma vez só)
         else:
             break
     return out
@@ -607,7 +611,8 @@ def _status(e, eid, top, W, centro, fundo, ctexto, cdest):
         cor_p, rot = PILULA[it.get("status", "ok")]
         cor_p = "preto" if cor_p == cf else cor_p
         h.append(f'<div style="position:absolute;left:150px;top:{y - 14}px;width:{larg - 108}px;height:2px;background:{COR[ct]};opacity:0.12"></div>'
-                 f'<div id="{eid}t{i}" style="position:absolute;left:150px;top:{y + 18}px;font-size:{e.get("tam", 58)}px;font-weight:800;color:{COR[ct]};'
+                 f'<div id="{eid}t{i}" class="fit" data-grupo="{eid}" data-max="{larg - 108 - 60 - int(len(it.get("selo", PILULA[it.get("status", "ok")][1])) * 24 + 60)}" '
+                 f'style="position:absolute;left:150px;top:{y + 18}px;font-size:{e.get("tam", 58)}px;font-weight:800;color:{COR[ct]};'
                  f'white-space:nowrap">' + _pals(it["texto"], f"{eid}t{i}w", it.get("_tempos") or [it["t"]] * len(it["texto"].split()), js) + '</div>'
                  f'<div id="{eid}p{i}" style="position:absolute;right:{96 + 54}px;top:{y + 20}px;padding:12px 30px;border-radius:40px;font-size:40px;'
                  f'font-weight:800;background:{COR[cor_p]};color:#fff;transform:scale(0)">{html.escape(it.get("selo", rot))}</div>')

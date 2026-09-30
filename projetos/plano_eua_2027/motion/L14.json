@@ -1,0 +1,146 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L14",
+ "duracao": 37.01,
+ "palavras": "palavras/L14.json",
+ "cenas": [
+  {
+   "t0": 3.2,
+   "t1": 7.4,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "discricionariedade",
+     "t": 3.3,
+     "y": 300,
+     "cor": "destaque",
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "nas mãos do oficial",
+     "t": 5.1,
+     "y": 430,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "da análise dele",
+     "t": 6.5,
+     "y": 560,
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 10.5,
+   "t1": 23.3,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "o mesmo processo",
+     "t": 10.8,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "contanto que seja",
+     "t": 13.6,
+     "y": 420,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "bem feito e coerente",
+     "t": 14.4,
+     "y": 530,
+     "cor": "destaque",
+     "tam": 96
+    },
+    {
+     "tipo": "colunas",
+     "y": 690,
+     "alt": 260,
+     "itens": [
+      {
+       "titulo": "Oficial 1",
+       "texto": "negado",
+       "t": 17.4,
+       "tam": 96,
+       "sync_t": 18.0,
+       "risco_t": 19.5
+      },
+      {
+       "titulo": "Oficial 2",
+       "texto": "aprovado",
+       "t": 20.8,
+       "tam": 96,
+       "destaque_t": 21.6
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 24.6,
+   "t1": 32.5,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o nosso trabalho",
+     "t": 25.0,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 74,
+     "passo": 108,
+     "itens": [
+      {
+       "texto": "o mais coerente possível",
+       "t": 26.6
+      },
+      {
+       "texto": "o mais evidente",
+       "t": 27.8
+      },
+      {
+       "texto": "com provas",
+       "t": 29.1
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "pro oficial ser convencido",
+     "t": 30.6,
+     "y": 680,
+     "cor": "destaque",
+     "tam": 76,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 33.18,
+   "t1": 37.01,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

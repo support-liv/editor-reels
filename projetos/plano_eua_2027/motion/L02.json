@@ -1,0 +1,149 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L02",
+ "duracao": 41.3,
+ "palavras": "palavras/L02.json",
+ "cenas": [
+  {
+   "t0": 3.6,
+   "t1": 9.6,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "ainda escuto muito",
+     "t": 3.7,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "muitas pessoas falam:",
+     "t": 4.0,
+     "y": 310,
+     "tam": 84
+    },
+    {
+     "tipo": "chat",
+     "y": 440,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Eu não sabia que era possível!",
+       "t": 6.8,
+       "lado": "esq"
+      },
+      {
+       "texto": "Achava que era só com casamento.",
+       "t": 8.2,
+       "lado": "esq"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 10.6,
+   "t1": 15.3,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "muita gente não vê",
+     "t": 11.2,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "tantos caminhos",
+     "t": 14.0,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 120
+    }
+   ]
+  },
+  {
+   "t0": 15.4,
+   "t1": 22.4,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "existem vários tipos",
+     "t": 15.5,
+     "y": 250
+    },
+    {
+     "tipo": "busca",
+     "texto": "visto pros EUA",
+     "t": 18.0,
+     "dur": 0.9,
+     "y": 320,
+     "tam": 64,
+     "ate": 22.4
+    },
+    {
+     "tipo": "linha",
+     "texto": "e acha que é distante",
+     "t": 21.2,
+     "y": 520,
+     "cor": "destaque",
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 24.9,
+   "t1": 34.4,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "entendendo cada visto",
+     "t": 25.1,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "vai desmistificando",
+     "t": 26.4,
+     "y": 310,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "é possível",
+     "t": 30.6,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 140
+    },
+    {
+     "tipo": "linha",
+     "texto": "só preciso ajustar a rota",
+     "t": 32.2,
+     "y": 620,
+     "tam": 80
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 37.47,
+   "t1": 41.3,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

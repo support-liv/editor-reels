@@ -1,0 +1,109 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L09",
+ "duracao": 27.48,
+ "palavras": "palavras/L09.json",
+ "cenas": [
+  {
+   "t0": 3.4,
+   "t1": 11.8,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "uma cliente",
+     "t": 3.45,
+     "y": 250
+    },
+    {
+     "tipo": "etapas",
+     "y": 320,
+     "tam": 62,
+     "passo": 108,
+     "itens": [
+      {
+       "texto": "entrevista marcada",
+       "t": 3.8
+      },
+      {
+       "texto": "professora particular",
+       "t": 6.2
+      },
+      {
+       "texto": "todos os dias",
+       "t": 7.5
+      },
+      {
+       "texto": "sobre o próprio processo",
+       "t": 9.2
+      },
+      {
+       "texto": "foi suficiente",
+       "t": 11.2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 12.4,
+   "t1": 23.6,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não precisa ser",
+     "t": 12.7,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "proficiente",
+     "t": 13.0,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 130
+    },
+    {
+     "tipo": "linha",
+     "texto": "mas ter coerência",
+     "t": 14.6,
+     "y": 590,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "o inglês é importante,",
+     "t": 16.3,
+     "y": 710,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "mas não determinante",
+     "t": 18.4,
+     "y": 820,
+     "cor": "destaque",
+     "tam": 90,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 23.65,
+   "t1": 27.48,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

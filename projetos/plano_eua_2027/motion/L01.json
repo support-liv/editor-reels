@@ -1,0 +1,190 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L01",
+ "duracao": 46.57,
+ "palavras": "palavras/L01.json",
+ "cenas": [
+  {
+   "t0": 3.5,
+   "t1": 9.5,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "do lado de lá",
+     "t": 3.6,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "muita humanização",
+     "t": 3.6,
+     "y": 310,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "sentindo todo o processo",
+     "t": 7.8,
+     "y": 460,
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "t0": 10.3,
+   "t1": 20.1,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a história dela",
+     "t": 10.4,
+     "y": 250
+    },
+    {
+     "tipo": "etapas",
+     "y": 320,
+     "tam": 64,
+     "passo": 110,
+     "itens": [
+      {
+       "texto": "imigrante",
+       "t": 11.1
+      },
+      {
+       "texto": "vários vistos",
+       "t": 13.6
+      },
+      {
+       "texto": "obstáculos",
+       "t": 16.6
+      },
+      {
+       "texto": "green card",
+       "t": 18.5
+      },
+      {
+       "texto": "cidadania",
+       "t": 19.3
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 20.3,
+   "t1": 23.3,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "hoje morando",
+     "t": 20.5,
+     "y": 300,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "e trabalhando nos EUA 🇺🇸",
+     "t": 22.0,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 27.2,
+   "t1": 34.4,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "consigo linkar",
+     "t": 27.7,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "um propósito",
+     "t": 28.6,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "fazer diferença",
+     "t": 30.7,
+     "y": 590,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "na vida das pessoas",
+     "t": 33.0,
+     "y": 710,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 34.4,
+   "t1": 42.69,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "cada cliente faz parte",
+     "t": 34.5,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 74,
+     "passo": 108,
+     "itens": [
+      {
+       "texto": "da minha história",
+       "t": 36.7
+      },
+      {
+       "texto": "do meu dia a dia",
+       "t": 37.7
+      },
+      {
+       "texto": "das conquistas",
+       "t": 40.7
+      },
+      {
+       "texto": "e das lutas",
+       "t": 41.5
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 42.74,
+   "t1": 46.57,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

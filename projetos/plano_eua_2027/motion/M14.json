@@ -1,0 +1,142 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M14",
+ "duracao": 32.52,
+ "palavras": "palavras/M14.json",
+ "cenas": [
+  {
+   "t0": 3.3,
+   "t1": 10.6,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "dólar não cai em árvore",
+     "t": 3.4,
+     "y": 300,
+     "cor": "destaque",
+     "tam": 90
+    },
+    {
+     "tipo": "numero",
+     "numero": "10",
+     "rotulo": "anos aqui",
+     "t": 4.8,
+     "t_rotulo": 5.1,
+     "y": 440,
+     "tam": 260,
+     "tam_rotulo": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "nunca plantei um dólar",
+     "t": 6.2,
+     "y": 720,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "nunca vi ninguém que conseguiu",
+     "t": 9.3,
+     "y": 830,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 10.8,
+   "t1": 20.0,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "é sempre",
+     "t": 11.1,
+     "y": 250
+    },
+    {
+     "tipo": "etapas",
+     "y": 320,
+     "tam": 66,
+     "passo": 118,
+     "itens": [
+      {
+       "texto": "causa",
+       "t": 11.7
+      },
+      {
+       "texto": "consequência",
+       "t": 12.3
+      },
+      {
+       "texto": "esforço",
+       "t": 13.2
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "em qualquer lugar",
+     "t": 15.7,
+     "y": 700,
+     "cor": "destaque",
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "EUA, Brasil, Europa, Ásia",
+     "t": 16.6,
+     "y": 830,
+     "tam": 70,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 21.8,
+   "t1": 28.64,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "o esforço que você faz hoje",
+     "t": 22.1,
+     "y": 300,
+     "tam": 80
+    },
+    {
+     "tipo": "linha",
+     "texto": "chega aonde você quer?",
+     "t": 23.6,
+     "y": 410,
+     "cor": "destaque",
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "essa é a perspectiva",
+     "t": 26.6,
+     "y": 560,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 28.69,
+   "t1": 32.52,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

@@ -1,0 +1,165 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M13",
+ "duracao": 44.4,
+ "palavras": "palavras/M13.json",
+ "cenas": [
+  {
+   "t0": 3.3,
+   "t1": 9.8,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "o lugar que americano não quer?",
+     "t": 3.6,
+     "y": 300,
+     "tam": 76,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "não.",
+     "t": 6.8,
+     "y": 400,
+     "cor": "destaque",
+     "tam": 170
+    },
+    {
+     "tipo": "linha",
+     "texto": "isso existe, é uma possibilidade",
+     "t": 7.4,
+     "y": 610,
+     "tam": 76,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 10.5,
+   "t1": 20.9,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "existe compatibilidade",
+     "t": 10.8,
+     "y": 300,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "pra qualquer pessoa",
+     "t": 12.2,
+     "y": 420,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "o mercado americano",
+     "t": 16.0,
+     "y": 560,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "valoriza o que você traz",
+     "t": 18.8,
+     "y": 680,
+     "cor": "destaque",
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 23.1,
+   "t1": 27.9,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "busca",
+     "texto": "não sou bom o suficiente",
+     "t": 23.5,
+     "dur": 1.2,
+     "y": 300,
+     "tam": 58,
+     "ate": 27.9
+    },
+    {
+     "tipo": "linha",
+     "texto": "síndrome do impostor",
+     "t": 25.2,
+     "y": 500,
+     "cor": "destaque",
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "fica para trás",
+     "t": 27.3,
+     "y": 640,
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 28.0,
+   "t1": 40.52,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "na cultura americana, você é",
+     "t": 28.2,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 70,
+     "passo": 104,
+     "itens": [
+      {
+       "texto": "seu principal encorajador",
+       "t": 30.4
+      },
+      {
+       "texto": "seu principal vendedor",
+       "t": 32.9
+      },
+      {
+       "texto": "quem mostra o seu valor",
+       "t": 34.5
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "como vai mudar aquele ambiente",
+     "t": 38.5,
+     "y": 680,
+     "cor": "destaque",
+     "tam": 70,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 40.57,
+   "t1": 44.4,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

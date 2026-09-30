@@ -1,0 +1,160 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M02",
+ "duracao": 39.8,
+ "palavras": "palavras/M02.json",
+ "cenas": [
+  {
+   "t0": 3.3,
+   "t1": 14.0,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "que canseira. eu queria",
+     "t": 3.35,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 70,
+     "passo": 104,
+     "itens": [
+      {
+       "texto": "uma perspectiva melhor",
+       "t": 3.4
+      },
+      {
+       "texto": "ganhar mais",
+       "t": 7.1
+      },
+      {
+       "texto": "ser reconhecida",
+       "t": 8.2
+      },
+      {
+       "texto": "carreira internacional",
+       "t": 10.1
+      },
+      {
+       "texto": "falar um inglês bonito",
+       "t": 12.3
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 14.3,
+   "t1": 21.3,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "que o mundo entendesse",
+     "t": 14.6,
+     "y": 300,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "que sou sensacional",
+     "t": 16.4,
+     "y": 420,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "que sou o que quero ser",
+     "t": 17.8,
+     "y": 570,
+     "tam": 76,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 21.7,
+   "t1": 28.4,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "isso vai cansando",
+     "t": 21.9,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "ou eu saio daqui",
+     "t": 25.7,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "ou a vida não tem sentido",
+     "t": 26.9,
+     "y": 580,
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "t0": 28.7,
+   "t1": 35.92,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "mudar de país",
+     "t": 28.9,
+     "y": 300,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "status",
+     "titulo": "vira uma resposta pra",
+     "y": 460,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "esse cansaço",
+       "t": 31.4,
+       "status": "ok",
+       "selo": "resposta"
+      },
+      {
+       "texto": "a falta de perspectiva",
+       "t": 34.2,
+       "status": "ok",
+       "selo": "resposta"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 35.97,
+   "t1": 39.8,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

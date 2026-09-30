@@ -1,0 +1,163 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L15",
+ "duracao": 42.88,
+ "palavras": "palavras/L15.json",
+ "cenas": [
+  {
+   "t0": 3.2,
+   "t1": 11.0,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "premium processing",
+     "t": 3.3,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "a USCIS disponibiliza",
+     "t": 4.6,
+     "y": 310,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "se você quiser pagar",
+     "t": 6.4,
+     "y": 420,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "tantos dias úteis",
+     "t": 9.0,
+     "y": 540,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "pra analisar",
+     "t": 10.6,
+     "y": 690,
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 12.4,
+   "t1": 21.0,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "prazo de análise",
+     "y": 300,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "EB-1",
+       "t": 12.6,
+       "status": "ok",
+       "selo": "15 dias",
+       "selo_t": 13.3
+      },
+      {
+       "texto": "EB-2 NIW",
+       "t": 14.2,
+       "status": "ok",
+       "selo": "40 a 45 dias",
+       "selo_t": 16.6
+      },
+      {
+       "texto": "temporários",
+       "t": 17.9,
+       "status": "ok",
+       "selo": "15 dias",
+       "selo_t": 20.2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 29.0,
+   "t1": 39.0,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "atenção",
+     "t": 29.2,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "não é que você",
+     "t": 29.9,
+     "y": 310,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "está pagando mais",
+     "t": 31.1,
+     "y": 420,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "ele não tem que aprovar",
+     "t": 32.0,
+     "y": 540,
+     "cor": "destaque",
+     "tam": 90
+    },
+    {
+     "tipo": "status",
+     "titulo": "a decisão pode ser",
+     "y": 690,
+     "tam": 56,
+     "itens": [
+      {
+       "texto": "pedido de provas",
+       "t": 35.9,
+       "status": "andamento",
+       "selo": "RFE"
+      },
+      {
+       "texto": "aprovação",
+       "t": 36.9,
+       "status": "ok",
+       "selo": "sim"
+      },
+      {
+       "texto": "negativa",
+       "t": 37.9,
+       "status": "negado",
+       "selo": "não"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 39.05,
+   "t1": 42.88,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

@@ -1,0 +1,198 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L17",
+ "duracao": 49.31,
+ "palavras": "palavras/L17.json",
+ "cenas": [
+  {
+   "t0": 3.4,
+   "t1": 8.7,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "porque sou engenheiro",
+     "t": 3.7,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "isso é um mito",
+     "t": 7.8,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 120
+    }
+   ]
+  },
+  {
+   "t0": 9.6,
+   "t1": 19.4,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a gente vê muito",
+     "t": 9.9,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Eu sou tal coisa…",
+       "t": 11.2
+      },
+      {
+       "texto": "Tenho tal profissão.",
+       "t": 13.0
+      },
+      {
+       "texto": "Tá faltando nos EUA!",
+       "t": 16.3
+      },
+      {
+       "texto": "Então vou ser aprovado.",
+       "t": 18.4
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 20.3,
+   "t1": 25.2,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "foi vendido",
+     "t": 20.6,
+     "y": 300,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "erroneamente",
+     "t": 22.7,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "pelas mídias",
+     "t": 24.0,
+     "y": 580,
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 27.6,
+   "t1": 33.3,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "colunas",
+     "y": 320,
+     "alt": 280,
+     "itens": [
+      {
+       "titulo": "Pro visto",
+       "texto": "não quer dizer nada",
+       "t": 28.0,
+       "tam": 96,
+       "sync_t": 27.8
+      },
+      {
+       "titulo": "Pra carreira",
+       "texto": "é bom pra você",
+       "t": 29.4,
+       "tam": 96,
+       "destaque_t": 30.2
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "não compre essa ideia",
+     "t": 31.1,
+     "y": 680,
+     "cor": "destaque",
+     "tam": 90,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "t0": 34.1,
+   "t1": 45.43,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "mesma profissão",
+     "t": 34.6,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "status",
+     "titulo": "duas pessoas",
+     "y": 430,
+     "tam": 56,
+     "itens": [
+      {
+       "texto": "projetos",
+       "t": 37.2,
+       "status": "andamento",
+       "selo": "diferentes"
+      },
+      {
+       "texto": "caminhos",
+       "t": 40.0,
+       "status": "andamento",
+       "selo": "diferentes"
+      },
+      {
+       "texto": "pessoa 1",
+       "t": 42.5,
+       "status": "negado",
+       "selo": "negado",
+       "selo_t": 43.6
+      },
+      {
+       "texto": "pessoa 2",
+       "t": 44.0,
+       "status": "ok",
+       "selo": "aprovado",
+       "selo_t": 44.3
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 45.48,
+   "t1": 49.31,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

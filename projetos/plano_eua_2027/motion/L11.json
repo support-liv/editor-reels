@@ -1,0 +1,211 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L11",
+ "duracao": 48.62,
+ "palavras": "palavras/L11.json",
+ "cenas": [
+  {
+   "t0": 3.2,
+   "t1": 10.5,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "vistos temporários",
+     "t": 3.25,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 74,
+     "passo": 108,
+     "itens": [
+      {
+       "texto": "filhos menores de 21",
+       "t": 6.1
+      },
+      {
+       "texto": "cônjuge",
+       "t": 8.1
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "vêm como dependentes",
+     "t": 4.0,
+     "y": 560,
+     "cor": "destaque",
+     "tam": 84,
+     "marcador": false
+    },
+    {
+     "tipo": "linha",
+     "texto": "você vem junto",
+     "t": 9.8,
+     "y": 660,
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "t0": 12.6,
+   "t1": 18.4,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "alguns vistos não deixam",
+     "y": 300,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "cônjuge trabalhar",
+       "t": 13.2,
+       "status": "negado",
+       "selo": "barreira"
+      },
+      {
+       "texto": "filho trabalhar",
+       "t": 15.3,
+       "status": "negado",
+       "selo": "barreira"
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "vão ter algumas barreiras",
+     "t": 17.5,
+     "y": 560,
+     "tam": 76,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 18.9,
+   "t1": 30.0,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "numero",
+     "numero": "21",
+     "rotulo": "anos",
+     "t": 19.4,
+     "t_rotulo": 19.9,
+     "y": 300,
+     "tam": 300,
+     "tam_rotulo": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "debaixo do guarda-chuva",
+     "t": 20.8,
+     "y": 620,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "depois dos 21, sai",
+     "t": 22.6,
+     "y": 740,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "no temporário e no green card",
+     "t": 25.0,
+     "y": 880,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 31.9,
+   "t1": 38.8,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "colunas",
+     "y": 320,
+     "alt": 300,
+     "itens": [
+      {
+       "titulo": "Antes dos 21",
+       "texto": "green card junto",
+       "t": 32.4,
+       "tam": 90,
+       "destaque_t": 34.6
+      },
+      {
+       "titulo": "Depois dos 21",
+       "texto": "não recebe junto",
+       "t": 35.9,
+       "tam": 90,
+       "risco_t": 37.9
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 39.0,
+   "t1": 44.74,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "por isso",
+     "t": 39.1,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Meu filho já tem 19!",
+       "t": 40.8
+      },
+      {
+       "texto": "Tenho que resolver minha vida!",
+       "t": 42.5
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "pro filho não ficar de fora",
+     "t": 43.5,
+     "y": 640,
+     "cor": "destaque",
+     "tam": 80,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 44.79,
+   "t1": 48.62,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

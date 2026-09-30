@@ -1,0 +1,191 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M04",
+ "duracao": 43.65,
+ "palavras": "palavras/M04.json",
+ "cenas": [
+  {
+   "t0": 3.3,
+   "t1": 10.5,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não tomar uma atitude",
+     "t": 3.3,
+     "y": 300,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "não dar o primeiro passo",
+     "t": 4.8,
+     "y": 410,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "não colocar um basta",
+     "t": 6.4,
+     "y": 520,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "também é escolher",
+     "t": 8.3,
+     "y": 650,
+     "cor": "destaque",
+     "tam": 110
+    }
+   ]
+  },
+  {
+   "t0": 10.8,
+   "t1": 15.6,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "enquanto não entende isso",
+     "t": 10.9,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "tudo continua no mesmo lugar",
+     "t": 12.8,
+     "y": 420,
+     "cor": "destaque",
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "t0": 16.9,
+   "t1": 24.7,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "numero",
+     "numero": "10",
+     "rotulo": "anos aqui fora",
+     "t": 17.3,
+     "t_rotulo": 17.6,
+     "y": 300,
+     "tam": 280,
+     "tam_rotulo": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "quase ninguém da minha geração",
+     "t": 19.4,
+     "y": 600,
+     "tam": 70,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "continuou no Brasil",
+     "t": 21.9,
+     "y": 700,
+     "cor": "destaque",
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 24.8,
+   "t1": 35.4,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "as pessoas experimentam",
+     "t": 25.0,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "o mundo",
+     "t": 26.4,
+     "y": 410,
+     "cor": "destaque",
+     "tam": 130
+    },
+    {
+     "tipo": "colunas",
+     "y": 590,
+     "alt": 260,
+     "itens": [
+      {
+       "titulo": "Antes",
+       "texto": "coisas limitadoras",
+       "t": 30.5,
+       "tam": 96,
+       "sync_t": 31.0,
+       "risco_t": 32.2
+      },
+      {
+       "titulo": "Depois",
+       "texto": "consequência do esforço",
+       "t": 32.5,
+       "tam": 96,
+       "sync_t": 33.5,
+       "destaque_t": 35.0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 35.7,
+   "t1": 39.77,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "dificilmente você quer",
+     "t": 35.9,
+     "y": 300,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "voltar",
+     "t": 36.6,
+     "y": 420,
+     "cor": "destaque",
+     "tam": 150
+    },
+    {
+     "tipo": "linha",
+     "texto": "e se reduzir de novo",
+     "t": 38.1,
+     "y": 610,
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 39.82,
+   "t1": 43.65,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

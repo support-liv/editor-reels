@@ -1,0 +1,165 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M05",
+ "duracao": 44.39,
+ "palavras": "palavras/M05.json",
+ "cenas": [
+  {
+   "t0": 3.3,
+   "t1": 7.1,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o medo número 1",
+     "t": 3.35,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "vou fazer isso tudo",
+     "t": 3.6,
+     "y": 310,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "e não vou me comunicar?",
+     "t": 5.0,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 9.4,
+   "t1": 17.0,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não é só isso",
+     "t": 9.9,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "o medo de não ser",
+     "t": 13.4,
+     "y": 430,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "o bom profissional",
+     "t": 14.9,
+     "y": 560,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "que você é em português",
+     "t": 15.7,
+     "y": 700,
+     "tam": 76,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 17.3,
+   "t1": 27.9,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "em inglês",
+     "t": 17.35,
+     "y": 250
+    },
+    {
+     "tipo": "etapas",
+     "y": 320,
+     "tam": 62,
+     "passo": 112,
+     "itens": [
+      {
+       "texto": "medo do patamar",
+       "t": 17.9
+      },
+      {
+       "texto": "vergonha",
+       "t": 20.8
+      },
+      {
+       "texto": "se sentir julgado",
+       "t": 22.4
+      },
+      {
+       "texto": "como se devesse algo",
+       "t": 25.5
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 30.6,
+   "t1": 39.8,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "numero",
+     "numero": "2",
+     "rotulo": "personalidades",
+     "t": 31.0,
+     "t_rotulo": 31.5,
+     "y": 300,
+     "tam": 280,
+     "tam_rotulo": 84
+    },
+    {
+     "tipo": "colunas",
+     "y": 620,
+     "alt": 260,
+     "itens": [
+      {
+       "titulo": "Português",
+       "texto": "a que vocês conhecem",
+       "t": 33.6,
+       "tam": 96,
+       "sync_t": 34.7
+      },
+      {
+       "titulo": "Inglês",
+       "texto": "mais recatada",
+       "t": 36.8,
+       "tam": 96,
+       "sync_t": 37.6
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 40.56,
+   "t1": 44.39,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

@@ -1,0 +1,171 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M10",
+ "duracao": 43.02,
+ "palavras": "palavras/M10.json",
+ "cenas": [
+  {
+   "t0": 3.4,
+   "t1": 9.6,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o primeiro carro",
+     "t": 3.45,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Nunca mais transporte público!",
+       "t": 3.6
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "andei de transporte público",
+     "t": 6.5,
+     "y": 480,
+     "tam": 76,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "grande parte da minha vida",
+     "t": 7.9,
+     "y": 580,
+     "cor": "destaque",
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "t0": 10.3,
+   "t1": 22.9,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "vou juntar cada centavo",
+     "t": 10.4,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "status",
+     "titulo": "nunca mais",
+     "y": 420,
+     "tam": 56,
+     "itens": [
+      {
+       "texto": "dois ônibus",
+       "t": 14.1,
+       "status": "negado",
+       "selo": "nunca mais"
+      },
+      {
+       "texto": "ônibus com goteira",
+       "t": 16.8,
+       "status": "negado",
+       "selo": "nunca mais"
+      },
+      {
+       "texto": "metrô sem sentar",
+       "t": 19.6,
+       "status": "negado",
+       "selo": "nunca mais",
+       "sync_t": 20.0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 22.8,
+   "t1": 33.4,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "todo gasto:",
+     "t": 22.8,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "vou juntar pra parcela",
+     "t": 24.9,
+     "y": 420,
+     "cor": "destaque",
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "meu primeiro carro",
+     "t": 27.7,
+     "y": 560,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "resolvia um problema",
+     "t": 32.5,
+     "y": 690,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 33.7,
+   "t1": 39.14,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "o custo passou",
+     "t": 34.1,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "a fazer sentido",
+     "t": 35.6,
+     "y": 420,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "a mesma coisa pro visto",
+     "t": 37.3,
+     "y": 560,
+     "cor": "destaque",
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 39.19,
+   "t1": 43.02,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

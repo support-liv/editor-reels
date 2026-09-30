@@ -1,0 +1,146 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L04",
+ "duracao": 37.45,
+ "palavras": "palavras/L04.json",
+ "cenas": [
+  {
+   "t0": 3.4,
+   "t1": 12.0,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "visto temporário",
+     "t": 3.5,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "consegue aplicar",
+     "t": 4.0,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "em média:",
+     "t": 7.5,
+     "y": 440,
+     "tam": 90
+    },
+    {
+     "tipo": "contador",
+     "de": 6,
+     "ate": 8,
+     "sufixo": " meses",
+     "t": 8.0,
+     "dur": 1.2,
+     "y": 560,
+     "tam": 170
+    },
+    {
+     "tipo": "linha",
+     "texto": "já está aqui com o visto",
+     "t": 10.0,
+     "y": 780,
+     "cor": "destaque",
+     "tam": 80,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "t0": 15.0,
+   "t1": 24.9,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "por que dividir?",
+     "t": 15.1,
+     "y": 250
+    },
+    {
+     "tipo": "colunas",
+     "y": 320,
+     "alt": 300,
+     "itens": [
+      {
+       "titulo": "Green card",
+       "texto": "longo prazo",
+       "t": 17.5,
+       "tam": 100,
+       "sync_t": 19.0
+      },
+      {
+       "titulo": "Temporário",
+       "texto": "a oportunidade agora",
+       "t": 21.0,
+       "tam": 100,
+       "sync_t": 22.4
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 25.0,
+   "t1": 33.57,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "aqui você pode",
+     "t": 25.1,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 74,
+     "passo": 108,
+     "itens": [
+      {
+       "texto": "desenvolver-se",
+       "t": 25.2
+      },
+      {
+       "texto": "criar vínculos",
+       "t": 26.7
+      },
+      {
+       "texto": "fazer networking",
+       "t": 27.7
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "green card: o segundo passo",
+     "t": 31.6,
+     "y": 680,
+     "cor": "destaque",
+     "tam": 76,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 33.62,
+   "t1": 37.45,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

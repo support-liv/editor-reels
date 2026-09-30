@@ -1,0 +1,190 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L08",
+ "duracao": 48.96,
+ "palavras": "palavras/L08.json",
+ "cenas": [
+  {
+   "t0": 3.3,
+   "t1": 10.9,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o inglês",
+     "t": 3.35,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "cada categoria de visto",
+     "t": 5.8,
+     "y": 310,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "não exige inglês",
+     "t": 7.7,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 110
+    }
+   ]
+  },
+  {
+   "t0": 11.5,
+   "t1": 16.6,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "busca",
+     "texto": "nota mínima do TOEFL?",
+     "t": 11.9,
+     "dur": 1.2,
+     "y": 300,
+     "tam": 60,
+     "ate": 16.6
+    },
+    {
+     "tipo": "linha",
+     "texto": "não existe isso",
+     "t": 13.7,
+     "y": 500,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "nos critérios do visto",
+     "t": 15.6,
+     "y": 650,
+     "tam": 76,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 17.1,
+   "t1": 26.3,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "na prática, no consulado",
+     "t": 17.4,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "status",
+     "titulo": "o oficial quer entender",
+     "y": 440,
+     "tam": 56,
+     "itens": [
+      {
+       "texto": "sua petição",
+       "t": 22.3,
+       "status": "andamento",
+       "selo": "entende?"
+      },
+      {
+       "texto": "seu preparo",
+       "t": 23.6,
+       "status": "andamento",
+       "selo": "pronto?"
+      },
+      {
+       "texto": "o que vai fazer",
+       "t": 25.7,
+       "status": "andamento",
+       "selo": "?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 27.2,
+   "t1": 36.0,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "vindo trabalhar numa empresa",
+     "t": 27.8,
+     "y": 300,
+     "tam": 76,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "e não se comunica",
+     "t": 32.8,
+     "y": 410,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "chat",
+     "y": 570,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Como você vai trabalhar, então?",
+       "t": 34.2,
+       "lado": "esq"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 39.2,
+   "t1": 45.08,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "outra leitura:",
+     "t": 39.3,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "ele não espera",
+     "t": 41.8,
+     "y": 430,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "que você seja proficiente",
+     "t": 43.4,
+     "y": 560,
+     "cor": "destaque",
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 45.13,
+   "t1": 48.96,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

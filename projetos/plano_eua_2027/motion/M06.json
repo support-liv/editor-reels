@@ -1,0 +1,221 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_M06",
+ "duracao": 48.59,
+ "palavras": "palavras/M06.json",
+ "cenas": [
+  {
+   "t0": 3.4,
+   "t1": 6.4,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "um treinamento",
+     "t": 3.45,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "equipes multipaíses",
+     "t": 4.1,
+     "y": 310,
+     "cor": "destaque",
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 6.6,
+   "t1": 15.0,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "e eu pensando",
+     "t": 7.0,
+     "y": 250
+    },
+    {
+     "tipo": "status",
+     "titulo": "o que eles vão achar",
+     "y": 320,
+     "tam": 56,
+     "itens": [
+      {
+       "texto": "meu inglês",
+       "t": 8.4,
+       "status": "negado",
+       "selo": "péssimo?",
+       "selo_t": 8.7
+      },
+      {
+       "texto": "capacidade técnica",
+       "t": 10.3,
+       "status": "negado",
+       "selo": "fraca?",
+       "selo_t": 11.2
+      },
+      {
+       "texto": "como em português",
+       "t": 12.8,
+       "status": "andamento",
+       "selo": "não é igual",
+       "selo_t": 14.8
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 17.5,
+   "t1": 21.6,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "a primeira coisa que eu falei:",
+     "t": 17.8,
+     "y": 300,
+     "tam": 76,
+     "peso": 700
+    },
+    {
+     "tipo": "chat",
+     "y": 420,
+     "tam": 66,
+     "itens": [
+      {
+       "texto": "I'm sorry about my English.",
+       "t": 20.2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 21.8,
+   "t1": 30.7,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a americana respondeu",
+     "t": 22.0,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Acho que a gente devia começar por aqui.",
+       "t": 24.6,
+       "lado": "esq"
+      },
+      {
+       "texto": "Isso é uma vantagem.",
+       "t": 28.0,
+       "lado": "esq"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 31.1,
+   "t1": 39.3,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "eu não sei falar uma frase",
+     "t": 31.2,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "em português",
+     "t": 33.0,
+     "y": 410,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "checklist",
+     "y": 560,
+     "tam": 64,
+     "passo": 92,
+     "itens": [
+      {
+       "texto": "dar um treinamento",
+       "t": 34.7
+      },
+      {
+       "texto": "se comunicar",
+       "t": 36.1
+      },
+      {
+       "texto": "falar com um cliente",
+       "t": 37.4
+      },
+      {
+       "texto": "ler um e-mail",
+       "t": 38.6
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 39.4,
+   "t1": 44.71,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "você tem uma capacidade",
+     "t": 39.5,
+     "y": 300,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "uma coisa a mais",
+     "t": 42.9,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "e não a menos",
+     "t": 43.8,
+     "y": 580,
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 44.76,
+   "t1": 48.59,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

@@ -1,0 +1,165 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L16",
+ "duracao": 41.72,
+ "palavras": "palavras/L16.json",
+ "cenas": [
+  {
+   "t0": 3.5,
+   "t1": 6.7,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "vai me ajudar?",
+     "t": 4.0,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "não entra na análise",
+     "t": 5.5,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 9.6,
+   "t1": 14.0,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "numero",
+     "numero": "2",
+     "rotulo": "fases",
+     "t": 10.1,
+     "t_rotulo": 10.4,
+     "y": 300,
+     "tam": 300,
+     "tam_rotulo": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "elegibilidade:",
+     "t": 11.4,
+     "y": 620,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "os critérios do visto",
+     "t": 12.6,
+     "y": 750,
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "t0": 14.1,
+   "t1": 25.8,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não se pergunta",
+     "t": 14.5,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "busca",
+     "texto": "qual a sua nacionalidade?",
+     "t": 15.6,
+     "dur": 1.2,
+     "y": 440,
+     "tam": 56,
+     "ate": 25.8
+    },
+    {
+     "tipo": "linha",
+     "texto": "exceção: visto E-2",
+     "t": 17.6,
+     "y": 640,
+     "cor": "destaque",
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "tratados entre países",
+     "t": 20.5,
+     "y": 780,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "só se o seu país está na lista",
+     "t": 23.6,
+     "y": 890,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 27.4,
+   "t1": 37.84,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não entra na elegibilidade",
+     "t": 27.8,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "status",
+     "titulo": "aprovado no…",
+     "y": 430,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "EB-2",
+       "t": 32.6,
+       "status": "ok",
+       "selo": "qualquer cidadania"
+      },
+      {
+       "texto": "EB-3",
+       "t": 33.8,
+       "status": "ok",
+       "selo": "qualquer cidadania"
+      },
+      {
+       "texto": "EB-1A",
+       "t": 35.0,
+       "status": "ok",
+       "selo": "qualquer cidadania"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 37.89,
+   "t1": 41.72,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

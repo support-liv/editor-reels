@@ -1,0 +1,200 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L07",
+ "duracao": 48.62,
+ "palavras": "palavras/L07.json",
+ "cenas": [
+  {
+   "t0": 3.6,
+   "t1": 10.9,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a pergunta",
+     "t": 3.65,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Sou engenheiro?",
+       "t": 4.4
+      },
+      {
+       "texto": "Desenvolvedor?",
+       "t": 6.6
+      },
+      {
+       "texto": "Área da saúde?",
+       "t": 8.0
+      },
+      {
+       "texto": "Todo mundo começa do mesmo lugar?",
+       "t": 9.2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 10.9,
+   "t1": 19.6,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não.",
+     "t": 11.1,
+     "y": 300,
+     "cor": "destaque",
+     "tam": 160
+    },
+    {
+     "tipo": "linha",
+     "texto": "muda menos",
+     "t": 11.5,
+     "y": 500,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "do que as pessoas imaginam",
+     "t": 12.3,
+     "y": 630,
+     "tam": 80
+    },
+    {
+     "tipo": "linha",
+     "texto": "nem todos vão se qualificar",
+     "t": 17.2,
+     "y": 750,
+     "tam": 80
+    }
+   ]
+  },
+  {
+   "t0": 20.3,
+   "t1": 27.4,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "a profissão",
+     "t": 20.6,
+     "y": 300,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "raramente define",
+     "t": 24.4,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "o caminho do visto",
+     "t": 26.6,
+     "y": 580,
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 28.2,
+   "t1": 39.4,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "dois dentistas,",
+     "t": 28.4,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "caminhos diferentes",
+     "t": 31.2,
+     "y": 420,
+     "cor": "destaque",
+     "tam": 96
+    },
+    {
+     "tipo": "status",
+     "titulo": "dentistas, vistos diferentes",
+     "y": 570,
+     "tam": 56,
+     "itens": [
+      {
+       "texto": "dentista 1",
+       "t": 32.9,
+       "status": "ok",
+       "selo": "EB-1A",
+       "selo_t": 34.9
+      },
+      {
+       "texto": "dentista 2",
+       "t": 36.1,
+       "status": "ok",
+       "selo": "EB-2 NIW",
+       "selo_t": 37.0
+      },
+      {
+       "texto": "dentista 3",
+       "t": 38.1,
+       "status": "ok",
+       "selo": "O-1A",
+       "selo_t": 38.8
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 39.6,
+   "t1": 44.74,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não é a profissão",
+     "t": 39.9,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "que muda o caminho",
+     "t": 41.4,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 44.79,
+   "t1": 48.62,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}
