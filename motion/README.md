@@ -6,6 +6,13 @@ Animações feitas em HTML e renderizadas pelo [HyperFrames](https://github.com/
 - `fontes` aponta para `../assets/fontes`; `vendor/gsap.min.js` é a biblioteca de animação, local (o render não depende de internet).
 - Render **sempre local**. Telemetria desligada e comandos de nuvem bloqueados em `.claude/settings.json`: vídeo de cliente nunca sai da máquina.
 
+## Nível de motion por marca
+- **LIV: clean, só elementos do manual de identidade.** Fundos lisos (bege, azul, laranja), Darker Grotesque, fio fino com arcos, seta dupla, arco duplo, estrela no círculo, losangos ♦♦, a curva bege/azul com fio laranja do outdoor/posts como transição, sublinhado laranja fino. Movimento calmo (revelação por máscara, traços se desenhando, deslizes). **Sem sombra, contorno, extrusão, brilho, grão, partícula, tremida ou carimbo.** Som discreto. Referência: `broll_perfil_liv`.
+- **Imigrar: pode explorar** (3D, partículas, impacto, contador, extrusão), sempre na paleta e na fonte dela. Base: `broll_perfil_explorado`.
+
+## Zona segura
+Texto e elementos importantes em x 60-1020, y 153-1510, fora do canto dos botões (x > 835, y > 1205) e da faixa da legenda (1190-1390). Bloco principal 250-950, apoio 980-1170. Conferir sempre com `python3 motion/conferir.py VIDEO --tempos ...` antes de entregar.
+
 ## O que é motion aqui: B-roll de cena
 O motion é uma **cena extra de B-roll** que entra por cima da pessoa e **explica a narrativa** enquanto ela fala: tela cheia na identidade da marca, texto cinético sincronizado com as palavras, efeitos sonoros no quadro exato, e entrada e saída com transição (a faixa diagonal do "V" da LIV). A voz continua; a legenda do editor continua por cima.
 
@@ -27,7 +34,8 @@ Como fazer uma cena:
 
 | Modelo | O que é | Variáveis |
 |---|---|---|
-| `broll_perfil_liv` | **Referência principal.** B-roll da narrativa inteira (19s, 5 cenas): cards 3D "Formação acadêmica / Experiência sólida" com barras, rota BR→EUA com "CAMINHO LEGÍTIMO" em tipografia com volume e partículas, prédio carimbado + contador US$ 1.000.000 riscado, painel "Análise" com anel 0→100% e checklist, CTA "ANÁLISE DO SEU PERFIL" com selo SEM CUSTO. Fundo com 3 camadas de profundidade, grão, brilho; texto ajustado à largura; 32 efeitos sonoros no tempo das palavras. Posicionado inteiro com `--broll arquivo.mov@0` | — |
+| `broll_perfil_liv` | **Referência LIV (clean).** 19s, 5 cenas em painéis que entram com a curva da marca: "Formação acadêmica e experiência sólida" (fio com arco, seta dupla), "um caminho legítimo" (seta dupla sólida), "sem empresa / sem investir milhões" riscados (estrela no círculo), "se existe esse caminho para você" (arco duplo), CTA laranja "Análise do seu perfil, sem custo". 13 sons discretos. `--broll arquivo.mov@0` | — |
+| `broll_perfil_explorado` | **Base para a Imigrar.** Mesma narrativa com 3D, extrusão, partículas, contador, impactos e 32 sons (trocar paleta/fonte para a Imigrar) | — |
 | `broll_caminho_liv` | B-roll de 7s, 2 atos: "FORMAÇÃO + EXPERIÊNCIA" e "UM CAMINHO LEGÍTIMO / sem empresa / sem US$ 1.000.000" riscados, com whoosh, pops, ticks do contador, riscos e impacto | — (exemplo de referência) |
 | `cta_palavra_chave` | "Comente PALAVRA" entrando, pulsando e saindo (4s), abaixo da faixa da legenda | `marca`, `rotulo`, `palavra`, `topo` |
 

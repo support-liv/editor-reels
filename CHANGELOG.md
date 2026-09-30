@@ -2,6 +2,12 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.18 (29/09/2026) - LIV clean e zona segura
+- **LIV clean:** B-roll refeito só com elementos do manual (curva da marca, fio com arco, seta dupla, arco duplo, estrela no círculo, losangos), movimento calmo e som discreto. A versão cheia de efeitos virou base para a Imigrar (`broll_perfil_explorado`).
+- **Legenda da LIV sem contorno:** texto bege em bloco sólido azul, palavra em laranja. Imigrar mantém o contorno.
+- **Zona segura** padrão (x 60-1020, y 153-1510, sem o canto dos botões): motion redistribuído (bloco 250-950, apoio 980-1170, legenda 1190-1390 livre). CTA animado à esquerda e a 1400 px.
+- `motion/conferir.py`: folha de quadros com a zona segura, a legenda e os botões desenhados por cima.
+
 ## 0.17 (29/09/2026) - motion mais trabalhado
 - Modelo `broll_perfil_liv`: B-roll da narrativa inteira (5 cenas), com profundidade (3 camadas em paralaxe, grão, brilho), cards 3D, tipografia com extrusão, partículas, rastro de velocidade, contador, anel de progresso, follow-through e 32 efeitos sonoros sincronizados.
 - Texto ajustado à largura na montagem (o "EXPERIÊNCIA" quase cortava na lateral).

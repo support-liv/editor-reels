@@ -14,6 +14,7 @@ Leia antes de editar: `docs/FORMATOS.md` (o que cada formato leva), `docs/PADROE
    - **live solo em 720p**: quadro com fundo desfocado ou tela cheia perdendo qualidade;
    - nomes com grafia duvidosa (o Whisper erra: "Livre" = LIV, "Marina Damás" = Marinna Damásio).
    Não pergunte o que o vídeo já responde nem o que já tem padrão.
+   Se a origem vier com legenda gravada e não houver bruto: enquadre acima dela (`--aperto`, só zoom uniforme) e use a legenda padrão; avise que o bruto dá mais qualidade.
 4. **Mostre o plano antes de renderizar**: lista de cortes com o texto de cada um, ganchos e CTAs. Renderize só depois do ok.
 5. **Renderize, confira e entregue** (ver "Conferência" abaixo).
 
@@ -49,6 +50,7 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 - Técnica: skills do projeto em `.claude/skills/` (HyperFrames + iart-ai/motion-skills). As do motion-skills falam de Remotion: use só a técnica e **renderize pelo HyperFrames** (Remotion exige licença paga).
 - **Nunca** use render na nuvem (`hyperframes cloud`, `lambda`, `cloudrun`) nem login/telemetria: vídeo de cliente não sai da máquina. Já está bloqueado em `.claude/settings.json`.
 - **Motion = B-roll de cena extra que explica a narrativa** (`--broll`): tela cheia na identidade da marca, texto cinético no tempo das palavras, efeitos sonoros (`motion/sfx/`), transição de entrada e saída. Nunca é enfeite em cima do gancho ou da legenda. Como montar: `motion/README.md`.
+- **Nível por marca:** LIV clean, só elementos do manual, sem sombra/contorno no texto; Imigrar pode explorar. **Zona segura:** x 60-1020, y 153-1510, fora do canto dos botões e da faixa da legenda; conferir com `motion/conferir.py`.
 - A pessoa fica na tela no gancho, nos momentos de confiança e no CTA; o B-roll entra nos conceitos, listas, números e comparações.
 - Ao criar um modelo novo, confira quadros do resultado e registre em `motion/README.md`.
 

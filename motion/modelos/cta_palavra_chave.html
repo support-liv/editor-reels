@@ -3,7 +3,7 @@
   {"id":"marca","type":"enum","label":"Marca","default":"liv","options":[{"value":"liv","label":"LIV"},{"value":"imigrar","label":"Imigrar"}]},
   {"id":"rotulo","type":"string","label":"Texto antes","default":"Comente"},
   {"id":"palavra","type":"string","label":"Palavra-chave","default":"PERFIL"},
-  {"id":"topo","type":"number","label":"Altura (px do topo)","default":1330,"min":300,"max":1500}
+  {"id":"topo","type":"number","label":"Altura (px do topo)","default":1400,"min":300,"max":1500}
 ]'>
   <head>
     <meta charset="UTF-8" />
@@ -28,8 +28,8 @@
       #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: transparent; }
       /* zona segura do Reels: acima da legenda e abaixo do meio da tela */
       .cta {
-        position: absolute; left: 0; right: 0; top: calc(var(--topo, 1330) * 1px);
-        display: flex; justify-content: center;
+        position: absolute; left: 0; right: 0; top: calc(var(--topo, 1400) * 1px);
+        display: flex; justify-content: flex-start; padding-left: 96px; /* zona segura: longe dos botões (x > 835) */
       }
       .cartao {
         display: flex; align-items: center; gap: 26px;

@@ -6,7 +6,14 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - 1080x1920, 30 fps, H.264 14 Mbps, AAC 192 kbps, -14 LUFS.
 - **Cor:** o iPhone grava em HDR (HLG/Dolby Vision, BT.2020). Sem conversão, a imagem fica lavada. O editor converte para SDR BT.709 com tone mapping (VideoToolbox) e marca o arquivo como BT.709.
 
+## Zona segura (9:16: Reels, Stories, Shorts)
+- **Tudo que precisa ser visto fica em x 60-1020, y 153-1510.** O canto de baixo à direita (x > 835, y > 1205) é dos botões de interação: nada importante ali.
+- Legenda do editor: faixa 1190-1390 (62% da altura).
+- Motion: bloco principal 250-950, apoio 980-1170, nada na faixa da legenda. Conferir com `python3 motion/conferir.py VIDEO` (desenha a zona segura, a legenda e os botões por cima dos quadros).
+
 ## Legenda
+- **LIV: sem contorno e sem sombra no texto** (é clean). Texto bege num bloco sólido azul #2C3642 arredondado, palavra falada em laranja.
+- **Imigrar:** texto branco com contorno preto, palavra falada em rosa.
 - **Fonte e cores da marca, sempre** (legenda, gancho e CTA): LIV em Darker Grotesque Black, Imigrar em Inter Tight Black (`assets/fontes/`). O tamanho equivale aos 38 px aprovados em Arial Black (a primeira versão era 58; foi reduzida 35% a pedido do time).
 - Caixa alta, até 3 palavras ou 18 caracteres por vez, palavra falada na cor de destaque da marca, contorno preto.
 - Altura: **62%** da tela nos Reels orgânicos. **55%** em anúncio (o Meta cobre mais a parte de baixo com botão e texto). **64%** em selfie (o rosto ocupa o meio da tela; a legenda fica abaixo do queixo).

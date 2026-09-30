@@ -35,7 +35,9 @@ MARCAS = {
     "imigrar": {"destaque": (249, 13, 91), "caixa": (255, 255, 255), "texto_caixa": (20, 20, 20),
                 "fonte": os.path.join(FONTES, "InterTight[wght].ttf"), "peso": "Black", "escala": 1.10},
     "liv":     {"destaque": (255, 110, 31), "caixa": (44, 54, 66), "texto_caixa": (255, 255, 255),
-                "fonte": os.path.join(FONTES, "DarkerGrotesque[wght].ttf"), "peso": "Black", "escala": 1.35},
+                "fonte": os.path.join(FONTES, "DarkerGrotesque[wght].ttf"), "peso": "Black", "escala": 1.35,
+                # LIV é clean: sem contorno nem sombra no texto. A legenda vai num bloco sólido azul (como as etiquetas do manual)
+                "legenda": "bloco", "bloco": (44, 54, 66), "texto_legenda": (255, 240, 230)},
 }
 # estilos da tarja (gancho/CTA): cor de fundo, cor do texto, só com cores da paleta de cada marca
 ESTILOS_CAIXA = {
@@ -597,6 +599,7 @@ def grupos_legenda(palavras_saida, max_palavras=3, max_chars=18):
 class Legenda:
     def __init__(self, marca, tam=TAM_LEGENDA):
         self.cor = MARCAS[marca]["destaque"]
+        self.m = MARCAS[marca]
         self.tam = int(round(tam * MARCAS[marca]["escala"]))
         self.f = fonte_marca(marca, tam)
         self.cache = {}
@@ -617,12 +620,21 @@ class Legenda:
         linhas.append(linha)
         passo = int(self.tam * 1.24)
         y = 100 - len(linhas) * passo // 2
+        bloco = self.m.get("legenda") == "bloco"
         for ln in linhas:
             total = sum(larg[i] for i in ln) + esp * (len(ln) - 1)
             x = (OUT_W - total) / 2
+            if bloco:                                   # etiqueta sólida atrás da linha, sem contorno no texto
+                topo, base = d.textbbox((x, y), "ÁgÇ", font=self.f)[1], d.textbbox((x, y), "ÁgÇ", font=self.f)[3]
+                pad = int(self.tam * 0.34)
+                d.rounded_rectangle([x - pad, topo - pad * 0.6, x + total + pad, base + pad * 0.5],
+                                    radius=int(self.tam * 0.3), fill=self.m["bloco"] + (240,))
             for i in ln:
-                d.text((x, y), palavras[i], font=self.f, fill=self.cor if i == ativo else (255, 255, 255),
-                       stroke_width=max(4, round(self.tam * 0.12)), stroke_fill=(0, 0, 0))
+                if bloco:
+                    d.text((x, y), palavras[i], font=self.f, fill=self.cor if i == ativo else self.m["texto_legenda"])
+                else:
+                    d.text((x, y), palavras[i], font=self.f, fill=self.cor if i == ativo else (255, 255, 255),
+                           stroke_width=max(4, round(self.tam * 0.12)), stroke_fill=(0, 0, 0))
                 x += larg[i] + esp
             y += passo
         self.cache[(gi, ativo)] = img
