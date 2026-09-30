@@ -12,3 +12,6 @@ editor/emoji
 editor/bandeira_*.png
 __pycache__/
 .DS_Store
+
+# vinheta oficial (exceção aos vídeos)
+!assets/*.mp4
