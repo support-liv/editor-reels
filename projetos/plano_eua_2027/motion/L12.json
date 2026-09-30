@@ -11,6 +11,7 @@
    "t0": 3.9,
    "t1": 10.9,
    "cor": "preto",
+   "fundo_anim": "faixas",
    "elementos": [
     {
      "tipo": "rotulo",
@@ -19,40 +20,27 @@
      "y": 250
     },
     {
-     "tipo": "linha",
-     "texto": "isso tudo dá errado?",
-     "t": 4.0,
-     "y": 310,
-     "tam": 96
-    },
-    {
-     "tipo": "linha",
-     "texto": "negado.",
-     "t": 5.4,
-     "y": 430,
-     "cor": "destaque",
-     "tam": 160
-    },
-    {
-     "tipo": "linha",
-     "texto": "uma lista negra?",
-     "t": 7.4,
-     "y": 620,
-     "tam": 120
-    },
-    {
-     "tipo": "linha",
-     "texto": "nunca mais",
-     "t": 9.6,
-     "y": 760,
-     "tam": 90
-    },
-    {
-     "tipo": "linha",
-     "texto": "tem chance?",
-     "t": 10.1,
-     "y": 860,
-     "tam": 90
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "E se der tudo errado?",
+       "t": 4.0
+      },
+      {
+       "texto": "E se eu for negado?",
+       "t": 5.1
+      },
+      {
+       "texto": "Existe uma lista negra?",
+       "t": 7.4
+      },
+      {
+       "texto": "Nunca mais tenho chance?",
+       "t": 9.6
+      }
+     ]
     }
    ]
   },
@@ -60,6 +48,7 @@
    "t0": 13.6,
    "t1": 19.6,
    "cor": "azul",
+   "fundo_anim": "pontos",
    "elementos": [
     {
      "tipo": "rotulo",
@@ -105,6 +94,7 @@
    "t0": 22.4,
    "t1": 26.9,
    "cor": "branco",
+   "fundo_anim": "grade",
    "elementos": [
     {
      "tipo": "rotulo",
@@ -113,17 +103,19 @@
      "y": 250
     },
     {
-     "tipo": "linha",
+     "tipo": "busca",
      "texto": "EB-2 NIW",
-     "t": 23.9,
-     "y": 310,
-     "cor": "destaque",
-     "tam": 140
+     "t": 22.9,
+     "dur": 0.9,
+     "y": 320,
+     "tam": 70,
+     "ate": 26.9
     },
     {
      "tipo": "checklist",
-     "y": 500,
+     "y": 520,
      "tam": 68,
+     "passo": 112,
      "itens": [
       {
        "texto": "preencho os critérios",
@@ -133,8 +125,7 @@
        "texto": "tenho uma proposta",
        "t": 26.1
       }
-     ],
-     "passo": 112
+     ]
     }
    ]
   },
@@ -142,6 +133,7 @@
    "t0": 29.0,
    "t1": 34.6,
    "cor": "rosa",
+   "fundo_anim": "circulos",
    "elementos": [
     {
      "tipo": "rotulo",
@@ -186,6 +178,7 @@
    "t0": 34.7,
    "t1": 42.9,
    "cor": "azul",
+   "fundo_anim": "faixas",
    "elementos": [
     {
      "tipo": "linha",
@@ -210,28 +203,30 @@
      "tam": 110
     },
     {
-     "tipo": "linha",
-     "texto": "você fica",
-     "t": 38.6,
-     "y": 700,
-     "tam": 80
-    },
-    {
-     "tipo": "linha",
-     "texto": "totalmente apto",
-     "t": 39.4,
-     "y": 800,
-     "cor": "destaque",
-     "tam": 110,
-     "marcador": false
-    },
-    {
-     "tipo": "linha",
-     "texto": "pra tentar outras vias.",
-     "t": 41.0,
-     "y": 940,
-     "tam": 70,
-     "peso": 700
+     "tipo": "status",
+     "titulo": "seu caso",
+     "y": 720,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "1º pedido",
+       "t": 38.6,
+       "status": "negado",
+       "selo_t": 38.9
+      },
+      {
+       "texto": "totalmente apto",
+       "t": 39.4,
+       "status": "apto",
+       "selo_t": 40.6
+      },
+      {
+       "texto": "outras vias",
+       "t": 41.7,
+       "status": "andamento",
+       "selo_t": 42.2
+      }
+     ]
     }
    ]
   },
@@ -240,9 +235,9 @@
    "t0": 42.95,
    "t1": 46.74,
    "painel": "cheio",
-   "acima": "Existe um caminho",
-   "palavra": "pro seu perfil?",
-   "texto": "Link na bio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
    "tam_texto": 84
   }
  ]

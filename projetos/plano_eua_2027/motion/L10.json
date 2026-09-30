@@ -11,48 +11,36 @@
    "t0": 3.4,
    "t1": 8.3,
    "cor": "rosa",
+   "fundo_anim": "pontos",
    "elementos": [
     {
      "tipo": "rotulo",
      "texto": "a dúvida",
-     "t": 3.5,
+     "t": 3.45,
      "y": 250
     },
     {
-     "tipo": "linha",
-     "texto": "meu marido?",
-     "t": 3.8,
-     "y": 310,
-     "tam": 120
-    },
-    {
-     "tipo": "linha",
-     "texto": "meus filhos?",
-     "t": 4.4,
-     "y": 440,
-     "tam": 120
-    },
-    {
-     "tipo": "linha",
-     "texto": "e o cachorro?",
-     "t": 5.8,
-     "y": 580,
-     "cor": "destaque",
-     "tam": 120
-    },
-    {
-     "tipo": "linha",
-     "texto": "papagaio, periquito?",
-     "t": 6.3,
-     "y": 730,
-     "tam": 80
-    },
-    {
-     "tipo": "linha",
-     "texto": "tudo igual?",
-     "t": 7.3,
-     "y": 850,
-     "tam": 80
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "E meu marido?",
+       "t": 3.8
+      },
+      {
+       "texto": "E meus filhos?",
+       "t": 4.4
+      },
+      {
+       "texto": "Posso levar o cachorro? 🐶",
+       "t": 5.7
+      },
+      {
+       "texto": "Tudo igual?",
+       "t": 7.3
+      }
+     ]
     }
    ]
   },
@@ -60,6 +48,7 @@
    "t0": 12.0,
    "t1": 18.8,
    "cor": "azul",
+   "fundo_anim": "grade",
    "elementos": [
     {
      "tipo": "rotulo",
@@ -106,6 +95,7 @@
    "t0": 18.8,
    "t1": 24.0,
    "cor": "branco",
+   "fundo_anim": "circulos",
    "elementos": [
     {
      "tipo": "rotulo",
@@ -145,6 +135,7 @@
    "t0": 33.0,
    "t1": 39.95,
    "cor": "preto",
+   "fundo_anim": "faixas",
    "elementos": [
     {
      "tipo": "linha",
@@ -172,20 +163,12 @@
      "tam_rotulo": 84
     },
     {
-     "tipo": "linha",
-     "texto": "todos como dependentes",
-     "t": 37.5,
-     "y": 900,
-     "tam": 70,
-     "peso": 700
-    },
-    {
-     "tipo": "linha",
-     "texto": "também recebem green card 🇺🇸",
-     "t": 38.7,
-     "y": 990,
-     "tam": 70,
-     "peso": 700
+     "tipo": "notificacao",
+     "app": "seu processo",
+     "titulo": "Green card aprovado",
+     "texto": "você, cônjuge e filhos",
+     "t": 38.6,
+     "y": 920
     }
    ]
   },
@@ -194,9 +177,9 @@
    "t0": 40.0,
    "t1": 43.74,
    "painel": "cheio",
-   "acima": "Existe um caminho",
-   "palavra": "pro seu perfil?",
-   "texto": "Link na bio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
    "tam_texto": 84
   }
  ]

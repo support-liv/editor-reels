@@ -123,6 +123,8 @@ def revelacoes(c):
                   [it[k] for e in els for it in e.get("itens", []) for k in ("t", "risco_t", "destaque_t") if k in it] +
                   [tk for e in els for it in e.get("itens", []) for tk in it.get("_tempos", [])] +
                   [e["t"] + e.get("dur", 0) for e in els if e["tipo"] in ("rota", "anel", "contador")] +
+                  [e["t"] + 0.25 + 0.08 * len(e["titulo"].split()) for e in els if e["tipo"] == "notificacao"] +
+                  [e["t"] + e.get("dur", 0.06 * len(e["texto"])) for e in els if e["tipo"] == "busca"] +
                   [b["t"] for b in c.get("_batidas", [])])
 
 
@@ -170,7 +172,7 @@ def alinhamento(c, i):
         return False
     if "alinhar" in c:
         return c["alinhar"] == "centro"
-    return i % 4 == 2
+    return i % 2 == 1 if TEMA["marca"] == "imigrar" else i % 4 == 2
 
 
 def extensao(e):
@@ -196,6 +198,14 @@ def extensao(e):
         return e["y"], e["y"] + 190
     if e["tipo"] == "colunas":
         return e["y"], e["y"] + e.get("alt", 300)
+    if e["tipo"] == "chat":
+        return e["y"], e["y"] + sum(_alt_balao(it["texto"], e.get("tam", 64)) + 26 for it in e["itens"])
+    if e["tipo"] == "status":
+        return e["y"], e["y"] + 130 + len(e["itens"]) * e.get("passo", 118)
+    if e["tipo"] == "notificacao":
+        return e["y"], e["y"] + 250
+    if e["tipo"] == "busca":
+        return e["y"], e["y"] + 150
     if e["tipo"] == "numero":
         return e["y"], e["y"] + e.get("tam", 340) * 0.95
     if e["tipo"] == "icone":
@@ -249,23 +259,25 @@ CARTAO = {"azul": ("bege", "azul"), "bege": ("azul", "bege"), "laranja": ("branc
 # impacto, marca-texto chapado atrás das palavras-chave, faixas em movimento no fundo, sons mais fortes), sempre só na
 # paleta (rosa #F90D5B, azul royal #0E59C5, branco, preto) e na fonte Inter Tight.
 TEMA = {"marca": "liv", "fonte": "Darker Grotesque", "arq_fonte": "DarkerGrotesque[wght].ttf", "peso": 800, "cta_cor": "laranja",
-        "marcador": None, "escala": 1.0}
+        "marcador": None, "escala": 1.0, "recuo": 0.4, "zona": (200, 1300), "fundos_anim": []}
 TEMAS = {
     "liv": dict(TEMA, cor=dict(COR), fundos=dict(FUNDOS), sec=dict(SEC), cartao=dict(CARTAO), destaque_card="laranja"),
     "imigrar": {"marca": "imigrar", "fonte": "Inter Tight", "arq_fonte": "InterTight[wght].ttf", "peso": 900, "cta_cor": "rosa",
                 "escala": 0.8,
                 "cor": {"azul": "#0e59c5", "rosa": "#f90d5b", "branco": "#ffffff", "preto": "#141414", "laranja": "#f90d5b"},
                 # (fundo, texto, destaque, rótulo, faixa da borda)
-                "fundos": {"azul": ("azul", "branco", "rosa", "branco", "rosa"),
-                           "rosa": ("rosa", "branco", "preto", "branco", "azul"),
+                # contraste: nunca rosa sobre azul nem azul sobre rosa (no azul o destaque é branco)
+                "fundos": {"azul": ("azul", "branco", "branco", "branco", "branco"),
+                           "rosa": ("rosa", "branco", "preto", "branco", "branco"),
                            "branco": ("branco", "preto", "rosa", "azul", "rosa"),
-                           "preto": ("preto", "branco", "rosa", "rosa", "azul")},
+                           "preto": ("preto", "branco", "rosa", "rosa", "rosa")},
                 "sec": {"azul": "rgba(255,255,255,0.25)", "rosa": "rgba(255,255,255,0.32)", "branco": "rgba(20,20,20,0.14)",
                         "preto": "rgba(255,255,255,0.2)"},
                 "cartao": {"azul": ("branco", "preto"), "rosa": ("branco", "preto"), "branco": ("azul", "branco"), "preto": ("azul", "branco")},
                 "destaque_card": "rosa",
                 # marca-texto atrás da linha de destaque: (cor do bloco, cor do texto por cima)
-                "marcador": {"azul": ("rosa", "branco"), "rosa": ("branco", "rosa"), "branco": ("rosa", "branco"), "preto": ("rosa", "branco")}},
+                "marcador": {"azul": ("branco", "azul"), "rosa": ("branco", "rosa"), "branco": ("rosa", "branco"), "preto": ("rosa", "branco")},
+                "recuo": 0.6, "zona": (330, 1420), "fundos_anim": ["faixas", "pontos", "grade", "circulos"]},
 }
 
 
@@ -533,6 +545,163 @@ def _numero(e, eid, top, W, centro, fundo, ctexto, cdest):
 COMPONENTES.update({"degraus": _degraus, "barra": _barra, "colunas": _colunas, "numero": _numero})
 
 
+# ---------------------------------------------------------------- interfaces (Imigrar pode explorar): conversa, status do
+# processo, notificação e busca. Chapados, na paleta da marca, com movimento de app (mola, digitação, deslize).
+def _cor_cartao(fundo):
+    """(fundo do cartão de interface, texto) com contraste em qualquer fundo de cena."""
+    return ("preto", "branco") if fundo == "branco" else ("branco", "preto")
+
+
+def _alt_balao(texto, tam, larg=760):
+    linhas = max(1, -(-len(texto) * tam * 0.56 // (larg - 80)))
+    return int(linhas * tam * 1.15 + 56)
+
+
+def _chat(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """balões de conversa aparecendo no tempo da fala (dúvida de quem pergunta), com "digitando..." antes do 1º."""
+    tam = e.get("tam", 64)
+    bf, bt = {"azul": ("branco", "azul"), "rosa": ("branco", "preto"), "preto": ("rosa", "branco"), "branco": ("azul", "branco")}[fundo]
+    h, js, sons, y = [], [], [], 0
+    for i, it in enumerate(e["itens"]):
+        dir_ = it.get("lado", "dir") == "dir"
+        alt = _alt_balao(it["texto"], tam)
+        lado = "align-self:flex-end" if dir_ else "align-self:flex-start"
+        raio = "44px 44px 10px 44px" if dir_ else "44px 44px 44px 10px"
+        cor_b, cor_t = (bf, bt) if dir_ else _cor_cartao(fundo)
+        h.append(f'<div id="{eid}b{i}" style="{lado};max-width:760px;padding:28px 40px;box-sizing:border-box;'
+                 f'border-radius:{raio};background:{COR[cor_b]};color:{COR[cor_t]};font-size:{tam}px;font-weight:800;line-height:1.15;'
+                 f'transform-origin:{"right" if dir_ else "left"} bottom;transform:scale(0)">'
+                 + _pals(it["texto"], f"{eid}b{i}w", it.get("_tempos") or [it["t"] + 0.1] * len(it["texto"].split()), js) + '</div>')
+        js.append(f'tl.to("#{eid}b{i}", {{ scale: 1, duration: 0.45, ease: "back.out(2.2)" }}, {it["t"] - 0.08:.2f});')
+        sons.append(("pop", it["t"] - 0.08, 0.35, 0.3))
+        y += alt + 26
+    t0 = e["itens"][0]["t"]
+    dots = "".join(f'<i id="{eid}d{k}" style="display:inline-block;width:18px;height:18px;border-radius:9px;margin:0 6px;background:{COR[bt]}"></i>' for k in range(3))
+    h.append(f'<div id="{eid}dg" style="position:absolute;right:96px;top:0;padding:30px 36px;border-radius:44px 44px 10px 44px;background:{COR[bf]};opacity:0">{dots}</div>')
+    js.append(f'tl.fromTo("#{eid}dg", {{ opacity: 0, scale: 0.6 }}, {{ opacity: 1, scale: 1, duration: 0.2 }}, {max(0, t0 - 0.55):.2f});')
+    for k in range(3):
+        js.append(f'tl.fromTo("#{eid}d{k}", {{ y: 0 }}, {{ y: -10, duration: 0.14, yoyo: true, repeat: 1 }}, {max(0, t0 - 0.5) + k * 0.1:.2f});')
+    js.append(f'tl.to("#{eid}dg", {{ opacity: 0, duration: 0.08 }}, {t0 - 0.1:.2f});')
+    # balões empilhados pelo layout (espaço igual entre eles, qualquer quantidade de linhas)
+    return (f'<div id="{eid}" style="position:absolute;left:96px;top:{top}px;width:{W - 192}px;display:flex;flex-direction:column;gap:26px">'
+            + "".join(h[:-1]) + "</div>" + h[-1].replace("right:96px;top:0", f"right:96px;top:{top}px"), js, sons)
+
+
+PILULA = {"ok": ("azul", "aprovado"), "negado": ("rosa", "negado"), "andamento": ("preto", "em análise"), "apto": ("azul", "apto")}
+
+
+def _status(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """tela de acompanhamento do processo: cada linha entra e o selo de status carimba no tempo da fala."""
+    cf, ct = _cor_cartao(fundo)
+    passo, larg = e.get("passo", 118), W - 192
+    h = [f'<div id="{eid}c" style="position:absolute;left:96px;top:0;width:{larg}px;height:{130 + len(e["itens"]) * passo}px;border-radius:36px;'
+         f'background:{COR[cf]};transform-origin:50% 0;transform:scaleY(0.2);opacity:0"></div>',
+         f'<div id="{eid}tt" style="position:absolute;left:150px;top:40px;font-size:40px;font-weight:800;letter-spacing:0.12em;color:{COR[ct]};opacity:0">'
+         f'{html.escape(e.get("titulo", "STATUS DO PROCESSO").upper())}</div>']
+    t0 = e["itens"][0]["t"]
+    js = [f'tl.to("#{eid}c", {{ opacity: 1, scaleY: 1, duration: 0.45, ease: "expo.out" }}, {t0 - 0.45:.2f});',
+          f'tl.to("#{eid}tt", {{ opacity: 0.55, duration: 0.3 }}, {t0 - 0.3:.2f});']
+    sons = [("whoosh", t0 - 0.45, 0.25, 0.4)]
+    for i, it in enumerate(e["itens"]):
+        y = 120 + i * passo
+        cor_p, rot = PILULA[it.get("status", "ok")]
+        cor_p = "preto" if cor_p == cf else cor_p
+        h.append(f'<div style="position:absolute;left:150px;top:{y - 14}px;width:{larg - 108}px;height:2px;background:{COR[ct]};opacity:0.12"></div>'
+                 f'<div id="{eid}t{i}" style="position:absolute;left:150px;top:{y + 18}px;font-size:{e.get("tam", 58)}px;font-weight:800;color:{COR[ct]};'
+                 f'white-space:nowrap">' + _pals(it["texto"], f"{eid}t{i}w", it.get("_tempos") or [it["t"]] * len(it["texto"].split()), js) + '</div>'
+                 f'<div id="{eid}p{i}" style="position:absolute;right:{96 + 54}px;top:{y + 20}px;padding:12px 30px;border-radius:40px;font-size:40px;'
+                 f'font-weight:800;background:{COR[cor_p]};color:#fff;transform:scale(0)">{html.escape(it.get("selo", rot))}</div>')
+        tp = it.get("selo_t", it["t"] + 0.35)
+        js.append(f'tl.fromTo("#{eid}p{i}", {{ scale: 1.8, opacity: 0 }}, {{ scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2.5)" }}, {tp:.2f});')
+        sons.append(("impacto" if it.get("status") == "negado" else "pop", tp, 0.3, 0.4))
+    return f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:{130 + len(e["itens"]) * passo}px">' + "".join(h) + "</div>", js, sons
+
+
+def _notificacao(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """notificação de celular descendo com mola: app, título e texto (ex.: 'green card aprovado')."""
+    cf, ct = _cor_cartao(fundo)
+    t = e["t"]
+    h = (f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:250px">'
+         f'<div id="{eid}c" style="position:absolute;left:80px;top:0;width:{W - 160}px;height:230px;border-radius:44px;background:{COR[cf]};opacity:0">'
+         f'<div style="position:absolute;left:40px;top:40px;width:96px;height:96px;border-radius:26px;background:{COR["rosa"]};display:grid;place-items:center">'
+         f'<svg viewBox="0 0 40 40" width="54" height="54"><path d="M8 21 L17 30 L33 11" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'
+         f'<div style="position:absolute;left:166px;top:40px;font-size:34px;font-weight:700;letter-spacing:0.1em;color:{COR[ct]};opacity:0.55">{html.escape(e.get("app", "SEU PROCESSO").upper())}</div>'
+         f'<div style="position:absolute;right:44px;top:40px;font-size:34px;font-weight:600;color:{COR[ct]};opacity:0.45">agora</div>'
+         f'<div style="position:absolute;left:166px;top:86px;right:40px;font-size:56px;font-weight:900;line-height:1.05;color:{COR[ct]};white-space:nowrap">'
+         + _pals(e["titulo"], f"{eid}w", e.get("_tempos_titulo") or [t + 0.25] * len(e["titulo"].split()), [], "entra") +
+         f'</div><div style="position:absolute;left:166px;top:156px;right:40px;font-size:40px;font-weight:600;color:{COR[ct]};opacity:0.7;white-space:nowrap">{html.escape(e.get("texto", ""))}</div>'
+         f'</div></div>')
+    js = [f'tl.fromTo("#{eid}c", {{ opacity: 0, y: -160, scale: 0.92 }}, {{ opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.6)" }}, {t:.2f});',
+          f'tl.fromTo(\'[id^="{eid}w"]\', {{ opacity: 0, y: 14 }}, {{ opacity: 1, y: 0, duration: 0.3, stagger: 0.08, ease: "power3.out" }}, {t + 0.25:.2f});']
+    return h, js, [("sino", t, 0.3, 1.0)]
+
+
+def _busca(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """barra de busca digitando o texto letra a letra (com cursor), como quem pesquisa o próprio caso."""
+    cf, ct = _cor_cartao(fundo)
+    t, texto = e["t"], e["texto"]
+    dur = e.get("dur", max(0.5, 0.06 * len(texto)))
+    tam = e.get("tam", 64)
+    letras = "".join(f'<span id="{eid}l{k}" style="opacity:0">{"&nbsp;" if ch == " " else html.escape(ch)}</span>' for k, ch in enumerate(texto))
+    h = (f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:150px">'
+         f'<div id="{eid}c" style="position:absolute;left:96px;top:0;width:{W - 192}px;height:140px;border-radius:70px;background:{COR[cf]};opacity:0;'
+         f'display:flex;align-items:center;gap:26px;padding:0 50px;box-sizing:border-box">'
+         f'<svg viewBox="0 0 40 40" width="56" height="56" style="flex:none"><circle cx="17" cy="17" r="11" stroke="{COR[ct]}" stroke-width="5" fill="none"/>'
+         f'<path d="M25 25 L35 35" stroke="{COR[ct]}" stroke-width="5" stroke-linecap="round"/></svg>'
+         f'<div style="font-size:{tam}px;font-weight:800;color:{COR[ct]};white-space:nowrap;display:flex;align-items:center">{letras}'
+         f'<i id="{eid}k" style="display:inline-block;width:6px;height:{int(tam * 0.9)}px;margin-left:6px;background:{COR["rosa"]}"></i></div></div></div>')
+    js = [f'tl.fromTo("#{eid}c", {{ opacity: 0, scaleX: 0.6 }}, {{ opacity: 1, scaleX: 1, duration: 0.4, ease: "expo.out" }}, {t - 0.35:.2f});',
+          f'tl.to("#{eid}k", {{ opacity: 0, duration: 0.01, yoyo: true, repeat: {int((e.get("ate", t + dur + 1.5) - t + 0.35) / 0.5)}, repeatDelay: 0.25 }}, {t - 0.3:.2f});']
+    sons = []
+    for k in range(len(texto)):
+        tk = t + dur * k / max(1, len(texto))
+        js.append(f'tl.set("#{eid}l{k}", {{ opacity: 1 }}, {tk:.2f});')
+        if k % 2 == 0 and texto[k] != " ":
+            sons.append(("tick", tk, 0.12, 0.03))
+    return h, js, sons
+
+
+COMPONENTES.update({"chat": _chat, "status": _status, "notificacao": _notificacao, "busca": _busca})
+LETRA_ITEM.update({"status": "t", "chat": "b"})
+
+
+
+def _tipo_fundo(c, ci):
+    lista = TEMA["fundos_anim"]
+    return c.get("fundo_anim", lista[ci % len(lista)] if lista else None)
+
+
+def fundo_anim(c, ci, pid, h, W, fundo):
+    """textura animada atrás do conteúdo, diferente a cada cena (faixas, pontos, grade, círculos)."""
+    tipo, cor = _tipo_fundo(c, ci), SEC[fundo]
+    if tipo == "faixas":
+        bg = f"repeating-linear-gradient(115deg, transparent 0 240px, {cor} 240px 252px)"
+        return f'<div id="{pid}fx" class="faixas" style="top:0;height:{h}px;background:{bg};opacity:0.3"></div>'
+    if tipo == "pontos":
+        bg = f"radial-gradient({cor} 5px, transparent 6px) 0 0 / 72px 72px"
+        return f'<div id="{pid}fx" class="faixas" style="top:0;height:{h}px;background:{bg};opacity:0.55"></div>'
+    if tipo == "grade":
+        bg = (f"linear-gradient({cor} 2px, transparent 2px) 0 0 / 140px 140px, "
+              f"linear-gradient(90deg, {cor} 2px, transparent 2px) 0 0 / 140px 140px")
+        return f'<div id="{pid}fx" class="faixas" style="top:0;height:{h}px;background:{bg};opacity:0.5"></div>'
+    if tipo == "circulos":
+        aneis = "".join(f'<circle cx="0" cy="0" r="{r}" fill="none" stroke="{cor}" stroke-width="{3 if k % 2 else 10}"/>'
+                        for k, r in enumerate(range(160, 1500, 150)))
+        return (f'<svg id="{pid}fx" viewBox="-1500 -1500 3000 3000" style="position:absolute;left:{W - 1500 + 200}px;top:{h // 2 - 1500 + 500}px;'
+                f'width:3000px;height:3000px;opacity:0.55">{aneis}</svg>')
+    return ""
+
+
+def anim_fundo(c, ci, pid, W, entra, dur):
+    tipo = _tipo_fundo(c, ci)
+    if tipo == "faixas":
+        return [f'tl.fromTo("#{pid}fx", {{ x: -{W} }}, {{ x: -{W} + 260, duration: {dur:.2f}, ease: "none" }}, {entra:.2f});']
+    if tipo in ("pontos", "grade"):
+        return [f'tl.fromTo("#{pid}fx", {{ x: -{W}, y: 0 }}, {{ x: -{W} + 140, y: -140, duration: {dur:.2f}, ease: "none" }}, {entra:.2f});']
+    if tipo == "circulos":
+        return [f'tl.fromTo("#{pid}fx", {{ scale: 0.85, rotate: 0 }}, {{ scale: 1.1, rotate: 25, duration: {dur:.2f}, ease: "sine.inOut" }}, {entra:.2f});']
+    return []
+
 
 def gerar(r):
     W, H, dur = r.get("largura", 1080), r.get("altura", 1920), r["duracao"]
@@ -557,7 +726,7 @@ def gerar(r):
               + (f'<path d="{borda}" stroke="{COR[cborda]}" stroke-width="16" fill="none"/></svg>' if TEMA["marca"] == "liv" else
                f'<path d="{borda}" transform="translate(0,-70)" stroke="{COR[cborda]}" stroke-width="60" fill="none"/>'
                f'<path d="{borda}" transform="translate(0,-150)" stroke="{COR[FUNDOS[c.get("cor", "azul")][1]]}" stroke-width="18" fill="none"/></svg>'
-               f'<div id="{pid}fx" class="faixas" style="top:0;height:{h}px;background:repeating-linear-gradient(115deg, transparent 0 240px, {SEC[fundo]} 240px 252px);opacity:0.3"></div>'),
+               + fundo_anim(c, ci, pid, h, W, fundo)),
               f'<div class="cont" id="{pid}m" style="position:absolute;left:0;top:0;width:{W}px;height:{h}px">']
         loc = lambda y: y - top                          # tela -> coordenada dentro do painel
         t0, t1 = c["t0"], c["t1"]
@@ -569,7 +738,7 @@ def gerar(r):
             som("whoosh", entra, 0.35, 0.5)
         else:                                            # entra rápido e assenta; faixas do fundo correm na cena toda
             js.append(f'tl.fromTo("#{pid}", {{ y: {y_ini} }}, {{ y: 0, duration: 0.45, ease: "expo.out" }}, {entra:.2f});')
-            js.append(f'tl.fromTo("#{pid}fx", {{ x: -{W} }}, {{ x: -{W} + 260, duration: {t1 - t0 + 0.8:.2f}, ease: "none" }}, {entra:.2f});')
+            js.extend(anim_fundo(c, ci, pid, W, entra, t1 - t0 + 0.8))
             som("whoosh_grave", entra, 0.45, 0.6)
         if t1 < dur - 0.05:
             if coberto:                                  # o próximo painel sobe por cima: este some depois
@@ -591,7 +760,7 @@ def gerar(r):
             som("sino", t0 + 0.4, 0.3, 1.2)
         centro = alinhamento(c, ci)
         if modo == "cheio" and c.get("tipo") != "cta":
-            centralizar_vertical(c.get("elementos", []))
+            centralizar_vertical(c.get("elementos", []), *TEMA["zona"])
         for ei, e in enumerate(c.get("elementos", [])):
             eid = f"{pid}e{ei}"
             t = e.get("t", t0)
@@ -661,7 +830,7 @@ def gerar(r):
         for bi, b in enumerate(c.get("_batidas", [])):
             if b["tipo"] == "foco":
                 for ei in b["recuar"]:
-                    js.append(f'tl.to("#{pid}e{ei}", {{ opacity: 0.4, duration: 0.45, ease: "power2.out" }}, {b["t"]:.2f});')
+                    js.append(f'tl.to("#{pid}e{ei}", {{ opacity: {TEMA["recuo"]}, duration: 0.45, ease: "power2.out" }}, {b["t"]:.2f});')
                 js.append(f'tl.fromTo("#{pid}e{b["manter"]}", {{ x: 0 }}, {{ x: {0 if centro else 10}, duration: 0.45, ease: "power2.out" }}, {b["t"]:.2f});')
             elif b["tipo"] == "fio":
                 el.append(f'<div class="barra" id="{pid}b{bi}" data-alvo="{pid}e{b["alvo"]}" data-sob="1" style="height:6px;background:{COR[cdest]}"></div>')
@@ -791,7 +960,7 @@ def conferir_ritmo(r):
             avisos.append(f"{nome}: {c['t1'] - ts[-1]:.1f}s parado no fim (máx 1,2)")
         els = [dict(e) for e in c.get("elementos", [])]   # confere já centralizado, como vai sair
         if c.get("painel", "cheio") == "cheio":
-            centralizar_vertical(els)
+            centralizar_vertical(els, *TEMA["zona"])
         for e in els:
             y0, y1 = extensao(e)
             if y0 < 160 or y1 > 1480:

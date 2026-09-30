@@ -4,6 +4,10 @@ Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
 ## 0.25 (30/09/2026) - motion na identidade da Imigrar
 - `gerar_liv.py` com tema por marca (`"marca": "imigrar"` no roteiro): paleta rosa #F90D5B, azul royal #0E59C5, branco e preto; Inter Tight Black; painel em diagonal com faixa dupla; palavras entrando com impacto; marca-texto chapado atrás das palavras de destaque; faixas sutis correndo no fundo; sons mais fortes. A LIV continua clean e igual.
+- Contraste na Imigrar: nunca rosa sobre azul nem azul sobre rosa (no azul, destaque e marca-texto em branco).
+- Fundo animado diferente a cada cena (faixas, pontos, grade, círculos) e conteúdo mais no meio da tela (zona 330-1420, metade das cenas centralizada).
+- Interfaces novas (Imigrar): `chat` (balões com "digitando..."), `status` (tela do processo com selos aprovado/negado/em análise), `notificacao` (desce com mola) e `busca` (digita letra a letra).
+- CTA dos testes: "Veja a live completa no canal" (YouTube).
 - Sincronia: palavras curtas ("e", "o", "de") não servem mais de âncora (casavam com o "é" errado da fala).
 - `projetos/plano_eua_2027/lote_motion.py`: shorts de teste da live Plano EUA 2027 com motion (L05, L10, L12), fala enxuta e CTA animado "Existe um caminho pro seu perfil? Link na bio".
 

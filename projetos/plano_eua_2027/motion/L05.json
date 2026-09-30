@@ -11,6 +11,7 @@
    "t0": 3.3,
    "t1": 6.4,
    "cor": "azul",
+   "fundo_anim": "pontos",
    "elementos": [
     {
      "tipo": "rotulo",
@@ -44,35 +45,35 @@
    ]
   },
   {
-   "t0": 6.6,
+   "t0": 7.0,
    "t1": 10.9,
    "cor": "preto",
+   "fundo_anim": "grade",
    "elementos": [
     {
-     "tipo": "rotulo",
-     "texto": "o que a empresa faz",
-     "t": 6.7,
-     "y": 250
-    },
-    {
-     "tipo": "etapas",
-     "y": 320,
-     "tam": 78,
+     "tipo": "status",
+     "titulo": "processo com sponsor",
+     "y": 300,
+     "tam": 60,
      "itens": [
       {
        "texto": "publicação",
-       "t": 7.5
+       "t": 7.5,
+       "status": "ok",
+       "selo": "feito"
       },
       {
-       "texto": "testa o mercado",
-       "t": 9.1
+       "texto": "teste de mercado",
+       "t": 9.1,
+       "status": "ok",
+       "selo": "feito"
       },
       {
-       "texto": "traz você",
-       "t": 10.4
+       "texto": "empresa traz você",
+       "t": 10.4,
+       "status": "andamento"
       }
-     ],
-     "passo": 124
+     ]
     }
    ]
   },
@@ -80,6 +81,7 @@
    "t0": 11.85,
    "t1": 17.7,
    "cor": "rosa",
+   "fundo_anim": "circulos",
    "elementos": [
     {
      "tipo": "rotulo",
@@ -125,6 +127,7 @@
    "t0": 24.6,
    "t1": 33.3,
    "cor": "azul",
+   "fundo_anim": "faixas",
    "elementos": [
     {
      "tipo": "rotulo",
@@ -143,6 +146,7 @@
      "tipo": "checklist",
      "y": 450,
      "tam": 78,
+     "passo": 112,
      "itens": [
       {
        "texto": "seu perfil",
@@ -156,14 +160,13 @@
        "texto": "sua proposta",
        "t": 28.6
       }
-     ],
-     "passo": 112
+     ]
     },
     {
      "tipo": "linha",
      "texto": "green card 🇺🇸",
      "t": 31.1,
-     "y": 800,
+     "y": 820,
      "cor": "destaque",
      "tam": 120
     },
@@ -171,7 +174,7 @@
      "tipo": "linha",
      "texto": "sem depender de empregador",
      "t": 31.6,
-     "y": 950,
+     "y": 970,
      "tam": 64,
      "peso": 700
     }
@@ -182,9 +185,9 @@
    "t0": 36.8,
    "t1": 40.54,
    "painel": "cheio",
-   "acima": "Existe um caminho",
-   "palavra": "pro seu perfil?",
-   "texto": "Link na bio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
    "tam_texto": 84
   }
  ]
