@@ -2,12 +2,14 @@
 """Live "Jornada do dentista nos EUA" (14/09, Imigrar): Marinna Damásio + Dra. Júlia e Dr. André (casal de dentistas).
 
 Formato novo: live com 3 pessoas. A live alterna entre a Marinna sozinha (08:14-10:19) e 3 colunas
-(Júlia | Marinna | André). Lista de cortes da equipe: docs "corte longo" (cold open + 15 trechos).
+(Júlia | Marinna | André). Lista de cortes da equipe (docx "corte longo"): 1 corte longo com cold open + os 15 trechos, e cada
+um dos 15 trechos vira um short.
 
     python3 projetos/jornada_dentista/lote.py longo            # corte longo 16:9 (YouTube), sem vinheta (Imigrar)
-    python3 projetos/jornada_dentista/lote.py trechos          # recorta os trechos dos shorts (o Whisper transcreve cada um)
-    python3 projetos/jornada_dentista/lote.py palavras [D1..]  # exporta palavras e duração (pro roteiro do motion)
-    python3 projetos/jornada_dentista/lote.py shorts [D1..]    # shorts 9:16 com motion (motion/renders/dentista_<id>.mov)
+    python3 projetos/jornada_dentista/lote.py trechos [S01..]      # recorta os 15 trechos dos shorts
+    python3 projetos/jornada_dentista/lote.py transcrever [S01..]  # Whisper em cada trecho (confira palavras esticadas!)
+    python3 projetos/jornada_dentista/lote.py palavras [S01..]     # exporta palavras e duração (pro roteiro do motion)
+    python3 projetos/jornada_dentista/lote.py shorts [S01..]       # 15 shorts 9:16 com motion (motion/renders/dentista_<id>.mov)
 
 Shorts: com a Marinna sozinha, vertical em tela cheia; com as 3 colunas, tela dividida com quem conversa
 (colunas da live: 1 = Júlia, 2 = Marinna, 3 = André). CTA do YouTube: "Veja a live completa no canal".
@@ -43,36 +45,88 @@ LONGO = [
 ]
 TRECHOS = os.path.join(SAIDA, "trechos")
 CAUDA = 3.8
-# id, nome, trechos (segundos da live), gancho, pessoas (colunas cima,baixo; None = Marinna sozinha em tela cheia), tarja
+# Os 15 shorts: cada trecho da lista (menos o cold open), do começo ao fim da frase do documento.
+# id, nome, frase de início, frase de fim, gancho, pessoas (colunas cima,baixo; None = Marinna sozinha, vertical em
+# tela cheia), tarja. Colunas da live: 1 = Júlia, 2 = Marinna, 3 = André. O arquivo do trecho vem de LONGO[1:].
 SHORTS = [
-    ("D1", "e_daqui_a_dez_anos", [(493.0, 536.75), (598.5, 619.75)],
-     "Dentista: você investiu tanto pra chegar só até aqui?", None, "rosa"),
-    ("D2", "sonho_pela_familia", [(985.2, 1047.4)],
+    ("S01", "voce_investiu_na_carreira", "mas eu quero que você pense", "espaço pra minha família",
+     "Você investiu tanto na carreira. É só isso que tem pra você?", None, "rosa"),
+    ("S02", "profissionais_qualificados", "profissionais qualificados", "não caiba nessa esfera mais",
+     "Qualificado, experiente… e sem espaço pra crescer?", None, "azul"),
+    ("S03", "a_carreira_da_julia", "bom eu me formei em odontologia", "buco maxilo facial",
+     "Cirurgiã do Exército no Brasil. Por que ela mudou de rota?", "1,2", "branco"),
+    ("S04", "a_carreira_do_andre", "eu me formei também", "área da docência",
+     "13 anos de carreira e professor. Por que sonhar com os EUA 🇺🇸?", "3,2", "rosa"),
+    ("S05", "sonho_pela_familia", "e surgiu esse sonho", "com a nossa família tudo isso",
      "Bem posicionados no Brasil. Por que olhar pros EUA 🇺🇸?", "3,1", "azul"),
-    ("D3", "bebe_e_a_prova", [(1564.7, 1568.9), (1572.1, 1638.4)],
+    ("S06", "aprovados_no_board", "então nós fomos aprovados", "se organiza para aquilo",
+     "A prova do Board é só pra quem é gênio?", "3,2", "branco"),
+    ("S07", "imigrar_e_revalidar", "porque geralmente é assim", "portas se abram para vocês",
+     "Imigrar e revalidar o diploma: qual vem primeiro?", "2,1", "rosa"),
+    ("S08", "tinha_tempo_sobrando", "que essa era uma oportunidade", "fazer minha prova",
+     "Ela tinha tempo sobrando pra estudar pra prova?", "2,1", "azul"),
+    ("S09", "bebe_e_a_prova", "não gente não tinha tempo", "alcançar o meu objetivo",
      "Bebê de 1 ano e a prova do Board: como ela estudou?", "1,2", "branco"),
-    ("D4", "o_que_e_o_inbde", [(2155.3, 2166.2), (2180.3, 2238.5)],
-     "Dentista brasileiro: você sabe o que é o INBDE?", "1,2", "rosa"),
-    ("D5", "dds_ou_aigd", [(2383.0, 2412.9), (2436.0, 2450.8)],
-     "DDS ou AIGD: qual licença pra atuar nos EUA 🇺🇸?", "3,2", "azul"),
-    ("D6", "limite_de_idade", [(3883.5, 3931.0)],
-     "Existe limite de idade pro dentista imigrar?", "2,1", "branco"),
+    ("S10", "ingles_basico", "foi um processo bem cansativo", "que eu precisava para a prova",
+     "Inglês básico dá pra passar na prova do Board?", "1,2", "rosa"),
+    ("S11", "o_que_e_o_inbde", "o que que é o", "cada estado tem sua legislação",
+     "Dentista brasileiro: você sabe o que é o INBDE?", "1,2", "azul"),
+    ("S12", "dds_ou_aigd", "aqui nós vamos ter diferentes tipos", "dentro de cada estado nos estados unidos",
+     "DDS ou AIGD: qual licença pra atuar nos EUA 🇺🇸?", "3,2", "branco"),
+    ("S13", "financiamento_estudantil", "por isso que eu falo que o processo", "faculdade sem preocupação gente",
+     "Sem trabalhar, como pagar a faculdade de odontologia nos EUA 🇺🇸?", "2,1", "rosa"),
+    ("S14", "nao_e_imediato", "então que não é imediato", "data de validade",
+     "Existe limite de idade pro dentista imigrar?", "2,1", "azul"),
+    ("S15", "genio_da_lampada", "porque a gente está aqui falando", "o repertório profissional e entender",
+     "Existe gênio da lâmpada pra carreira nos EUA 🇺🇸?", "2,1", "branco"),
 ]
-
-# cortes finos dentro de cada trecho, pelas palavras do Whisper (a legenda do YouTube vem ~0,8s adiantada)
-REL = {"D1": "1.58-45.6,107.0-128.35", "D2": "1.42-64.2", "D3": "0.6-5.56,8.76-76.6",
-       "D4": "1.4-12.4,25.4-56.6,64.7-84.8", "D5": "1.3-33.2,54.2-69.3", "D6": "1.4-48.9"}
 
 TROCAS = ["Imigrarê=Imigrar", "Emigrareua=Imigrar", "Livre Immigration Law=LIV Immigration Law",
           "Marina Damasio=Marinna Damásio", "Marina=Marinna", "Green Car=green card", "plantodontia=implantodontia",
           "implanta odontia=implantodontia",
           "INBD=INBDE", "DTS=DDS", "custa de revalidação=custo de revalidação", "beber de um ano=bebê de um ano",
-          "Julia=Júlia", "que é valida=revalida", "se aprovado=ser aprovado"]
+          "Julia=Júlia", "que é valida=revalida", "se aprovado=ser aprovado",
+          "investirão=investiram", "implanto da ontia=implantodontia", "buco maxilo facial=bucomaxilofacial",
+          "Júlio=Júlia", "estímulos estudantis=empréstimos estudantis",
+          "NVIDIA=INBDE", "Marino=Marinna", "EB1=EB-1", "EB2NW=EB-2 NIW", "pode ser abrir=pode se abrir",
+          "IGD=AIGD", "desses dois estados=desses 12 estados", "passo de mágica=passe de mágica", "não imediato=não é imediato",
+          "não um passe=não é um passe", "que eu acho que é muito importante culto cultural=cultural", "tenha condição=tem a condição"]
+
+
 
 
 def rodar(cmd):
     print(" ".join(cmd[:4]), "...", flush=True)
     subprocess.run(cmd, check=True)
+
+
+def rel_por_frases(arq, ini_frase, fim_frase):
+    """trecho exato dentro do arquivo recortado, pelas palavras do Whisper: da 1ª palavra da frase de início até o fim
+    da frase de fim (com folga, sem pegar a palavra seguinte). A legenda do YouTube vem ~0,8s adiantada."""
+    import json, re, unicodedata
+    norm = lambda w: re.sub(r"[^a-z0-9 ]", "", "".join(c for c in unicodedata.normalize("NFD", w.lower()) if unicodedata.category(c) != "Mn"))
+    cache = os.path.join(AQUI, "..", "..", "editor", "transcricoes", os.path.splitext(os.path.basename(arq))[0] + ".json")
+    P = json.load(open(cache))["palavras"]
+    toks = [norm(p["w"]) for p in P]
+
+    def achar(frase, depois=0, do_fim=False):
+        """a frase inteira; se o Whisper escreveu diferente, as últimas (fim) ou primeiras (início) palavras dela."""
+        pal = norm(frase).split()
+        for n in range(len(pal), 0, -1):
+            alvo = pal[-n:] if do_fim else pal[:n]
+            if n < len(pal) and n < 2 and len(alvo[0]) < 5:
+                break
+            achados = [i for i in range(depois, len(toks) - len(alvo) + 1) if toks[i:i + len(alvo)] == alvo]
+            if achados:                               # início: a 1ª vez; fim: a última (a frase fecha o trecho)
+                return (achados[-1] if do_fim else achados[0]), len(alvo)
+        sys.exit(f'{os.path.basename(arq)}: não achei "{frase}" na transcrição do trecho')
+    i, _ = achar(ini_frase)
+    e, n = achar(fim_frase, i, do_fim=True)
+    e = e + n - 1
+    fim = P[e]["e"] + 0.35
+    if e + 1 < len(P):
+        fim = min(fim, P[e + 1]["s"] - 0.03)
+    return f"{max(0, P[i]['s'] - 0.08):.2f}-{fim:.2f}"
 
 
 def main():
@@ -87,16 +141,19 @@ def main():
         return
     filtro = sys.argv[2:]
     os.makedirs(TRECHOS, exist_ok=True)
-    for sid, nome, faixas, gancho, pessoas, cor in SHORTS:
+    os.makedirs(os.path.join(AQUI, "motion", "palavras"), exist_ok=True)
+    for (sid, nome, f_ini, f_fim, gancho, pessoas, cor), (a, b) in zip(SHORTS, LONGO[1:]):
         if filtro and sid not in filtro:
             continue
-        ini, fim = faixas[0][0] - 1.5, faixas[-1][1] + 1.5
         arq = os.path.join(TRECHOS, f"{sid}_{nome}.mp4")
         if modo == "trechos":                       # recorte exato (reencodado) pra o Whisper transcrever só o trecho
-            rodar(["ffmpeg", "-v", "error", "-y", "-ss", f"{ini:.3f}", "-to", f"{fim:.3f}", "-i", LIVE,
+            rodar(["ffmpeg", "-v", "error", "-y", "-ss", f"{a - 1.5:.3f}", "-to", f"{b + 2.0:.3f}", "-i", LIVE,
                    "-c:v", "h264_videotoolbox", "-b:v", "24M", "-c:a", "aac", "-b:a", "192k", arq])
             continue
-        rel = REL.get(sid) or ",".join(f"{a - ini:.2f}-{b - ini:.2f}" for a, b in faixas)
+        if modo == "transcrever":                   # só o Whisper (o editor guarda a transcrição do trecho)
+            rodar(["python3", EDITOR, arq, "--marca", "imigrar", "--so-cortes"])
+            continue
+        rel = rel_por_frases(arq, f_ini, f_fim)
         cmd = ["python3", EDITOR, arq, "--marca", "imigrar", "--manter-perguntas", "--trechos", rel, "--gancho", gancho,
                "--cor-caixa", cor, "--tirar-hesitacoes", "--respiro", "0.18", "--cauda", str(CAUDA)]
         if pessoas:
@@ -104,13 +161,11 @@ def main():
         for t in TROCAS:
             cmd += ["--trocar", t]
         if modo == "palavras":
-            cmd += ["--json-palavras", os.path.join(AQUI, "motion", "palavras", f"{sid}.json")]
-            rodar(cmd)
-            rodar([c for c in cmd if c != "--json-palavras" and not c.endswith(f"{sid}.json")] + ["--tempos-palavras"])
+            rodar(cmd + ["--json-palavras", os.path.join(AQUI, "motion", "palavras", f"{sid}.json")])
+            rodar(cmd + ["--tempos-palavras"])
         else:
-            cmd += ["--broll", os.path.join(MOTION, f"dentista_{sid}.mov") + "@0",
-                    "--nome", f"{sid}_{nome}", "--saida", os.path.join(SAIDA, "shorts")]
-            rodar(cmd)
+            rodar(cmd + ["--broll", os.path.join(MOTION, f"dentista_{sid}.mov") + "@0",
+                         "--nome", f"{sid}_{nome}", "--saida", os.path.join(SAIDA, "shorts")])
 
 
 if __name__ == "__main__":

@@ -123,6 +123,18 @@ def transcrever(video, cache):
     for seg in res["segments"]:
         for w in seg.get("words", []):
             palavras.append({"w": w["word"].strip(), "s": round(w["start"], 3), "e": round(w["end"], 3)})
+    # o Whisper às vezes "pula" frases e estica uma palavra por vários segundos: transcreve de novo só essa janela
+    for w in [p for p in palavras if p["e"] - p["s"] > 2.0]:
+        ini, fim = max(0.0, w["s"] - 1.0), w["e"] + 0.5
+        jan = cache.replace(".json", ".janela.wav")
+        run(["ffmpeg", "-v", "error", "-y", "-ss", f"{ini:.3f}", "-to", f"{fim:.3f}", "-i", wav, jan])
+        r2 = model.transcribe(jan, language="pt", word_timestamps=True, fp16=False, condition_on_previous_text=False)
+        novas = [{"w": x["word"].strip(), "s": round(ini + x["start"], 3), "e": round(ini + x["end"], 3)}
+                 for sg in r2["segments"] for x in sg.get("words", [])]
+        os.remove(jan)
+        if novas and max(x["e"] - x["s"] for x in novas) < 2.0:
+            palavras = [p for p in palavras if p["e"] <= ini + 0.05] + novas + [p for p in palavras if p["s"] >= fim - 0.05]
+            print(f"  Whisper pulou fala em {ini:.1f}-{fim:.1f}s: transcrito de novo ({len(novas)} palavras)")
     dados = {"texto": res["text"].strip(), "palavras": palavras,
              "segmentos": [{"s": s["start"], "e": s["end"], "t": s["text"].strip()} for s in res["segments"]]}
     json.dump(dados, open(cache, "w"), ensure_ascii=False, indent=1)
@@ -572,9 +584,15 @@ def tom_de_voz(video, c):
 
 
 def caixa(cx, cy, frac, W, H):
-    """crop 9:16 com 'frac' da largura, rosto a ~38% do topo."""
-    cw = int(W * frac) // 2 * 2
-    ch = min(H, int(cw * 16 / 9)) // 2 * 2
+    """crop 9:16 com 'frac' da largura (vídeo em pé) ou da altura (vídeo deitado, ex.: live 16:9), rosto a ~38% do topo.
+    O recorte é SEMPRE 9:16: nunca estica nem espreme a imagem."""
+    if W * frac * 16 / 9 <= H:                           # vídeo em pé: a largura manda
+        cw = int(W * frac) // 2 * 2
+        ch = int(cw * 16 / 9) // 2 * 2
+    else:                                                # vídeo deitado: a altura manda (frac 0,93 = altura toda)
+        ch = int(H * min(1.0, frac / 0.93)) // 2 * 2
+        cw = int(ch * 9 / 16) // 2 * 2
+    assert abs(cw / ch - 9 / 16) < 0.01, f"recorte fora de 9:16 ({cw}x{ch}): distorceria o vídeo"
     x0 = int(np.clip(cx * W - cw / 2, 0, W - cw))
     y0 = int(np.clip(cy * H - ch * 0.38, 0, H - ch))
     return x0, y0, cw, ch

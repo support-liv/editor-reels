@@ -1,0 +1,284 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S14",
+ "duracao": 71.95,
+ "palavras": "palavras/S14.json",
+ "cenas": [
+  {
+   "t0": 3.4,
+   "t1": 7.1,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não é passe de mágica.",
+     "t": 3.5,
+     "y": 300,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "cuidado",
+     "t": 6.5,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 140
+    }
+   ]
+  },
+  {
+   "t0": 7.6,
+   "t1": 14.5,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "colunas",
+     "y": 320,
+     "alt": 300,
+     "itens": [
+      {
+       "titulo": "Verdade",
+       "texto": "que dói",
+       "t": 8.1,
+       "tam": 110,
+       "sync_t": 10.0,
+       "destaque_t": 10.8
+      },
+      {
+       "titulo": "Mentira",
+       "texto": "te põe num buraco",
+       "t": 12.2,
+       "tam": 110,
+       "risco_t": 14.2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 15.3,
+   "t1": 21.4,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "existe planejamento",
+     "t": 15.6,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 78,
+     "passo": 112,
+     "itens": [
+      {
+       "texto": "financeiro",
+       "t": 18.0
+      },
+      {
+       "texto": "emocional",
+       "t": 19.5
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "talvez até mais o emocional",
+     "t": 19.0,
+     "y": 580,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 27.4,
+   "t1": 37.5,
+   "cor": "branco",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não tem limite",
+     "t": 27.7,
+     "y": 300,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "de idade.",
+     "t": 29.3,
+     "y": 450,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "pessoas se licenciando",
+     "t": 32.2,
+     "y": 610,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "em idades avançadas",
+     "t": 36.6,
+     "y": 730,
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "t0": 38.3,
+   "t1": 43.6,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "fazendo green card",
+     "t": 38.7,
+     "y": 300,
+     "tam": 96
+    },
+    {
+     "tipo": "numero",
+     "numero": "70",
+     "rotulo": "anos",
+     "t": 40.1,
+     "t_rotulo": 40.6,
+     "y": 440,
+     "tam": 300,
+     "tam_rotulo": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "a imigração não coloca limite",
+     "t": 41.5,
+     "y": 760,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 43.6,
+   "t1": 51.6,
+   "cor": "preto",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a imigração quer saber",
+     "t": 43.7,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Você pode contribuir?",
+       "t": 44.8,
+       "lado": "esq"
+      },
+      {
+       "texto": "Vou usufruir do seu melhor?",
+       "t": 47.1,
+       "lado": "esq"
+      },
+      {
+       "texto": "Tem capacidade ativa?",
+       "t": 50.1,
+       "lado": "esq"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 53.6,
+   "t1": 61.2,
+   "cor": "branco",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "a história dela",
+     "y": 300,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "idade",
+       "t": 54.1,
+       "status": "andamento",
+       "selo": "quase 70"
+      },
+      {
+       "texto": "carreira pela frente",
+       "t": 55.6,
+       "status": "ok",
+       "selo": "+20 anos"
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "e você pensando em limite?",
+     "t": 59.5,
+     "y": 640,
+     "cor": "destaque",
+     "tam": 80,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "t0": 63.6,
+   "t1": 68.07,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "é cultural",
+     "t": 64.0,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "no Brasil 🇧🇷",
+     "t": 65.0,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "data de validade",
+     "t": 66.9,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 110
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 68.12,
+   "t1": 71.95,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

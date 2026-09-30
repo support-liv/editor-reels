@@ -7,7 +7,9 @@ Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 - `editor/vtt_para_json.py`: usa a legenda .vtt do YouTube como transcrição (corte longo de live comprida sem rodar o Whisper em 1h+). Atenção: a legenda vem ~0,8s adiantada; nos shorts, recorte o trecho e deixe o Whisper transcrever.
 - `editor/retranscrever.py`: transcreve de novo uma janela quando o Whisper "pula" frases (palavra esticada por vários segundos).
 - Motion: fundo animado recortado pela forma do painel (os círculos vazavam na tela depois que a cena saía); destaque de item em cartão de interface acende em rosa (branco sumia no cartão branco) e balão de chat pulsa; `sync_t`/`tempos` por item.
-- `projetos/jornada_dentista/lote.py`: corte longo (cold open + 15 trechos, 13:40, 16:9, sem vinheta) e 6 shorts com motion da Imigrar.
+- **Correção grave:** o layout vertical supunha vídeo em pé e, com fonte 16:9 (live), recortava um retângulo deitado e esticava para 9:16 (Marinna espremida). `caixa()` agora recorta sempre 9:16 (pela altura quando o vídeo é deitado) e tem trava contra distorção.
+- Transcrição: palavra esticada por mais de 2s (o Whisper pulou fala) é transcrita de novo automaticamente naquela janela.
+- `projetos/jornada_dentista/lote.py`: corte longo (cold open + 15 trechos, 13:40, 16:9, sem vinheta) e os 15 shorts da lista (um por trecho), com início e fim pelas frases do documento da equipe (`rel_por_frases`) e motion da Imigrar (`motion/roteiros.py`). No S07 o motion cobre o slide que a live mostra no fim do trecho.
 
 ## 0.25 (30/09/2026) - motion na identidade da Imigrar
 - `gerar_liv.py` com tema por marca (`"marca": "imigrar"` no roteiro): paleta rosa #F90D5B, azul royal #0E59C5, branco e preto; Inter Tight Black; painel em diagonal com faixa dupla; palavras entrando com impacto; marca-texto chapado atrás das palavras de destaque; faixas sutis correndo no fundo; sons mais fortes. A LIV continua clean e igual.

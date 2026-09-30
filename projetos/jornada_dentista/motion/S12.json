@@ -1,0 +1,341 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S12",
+ "duracao": 86.02,
+ "palavras": "palavras/S12.json",
+ "cenas": [
+  {
+   "t0": 3.2,
+   "t1": 9.9,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "tipos de licença",
+     "t": 3.3,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "precisamos observar",
+     "t": 4.2,
+     "y": 310,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "a legislação estadual",
+     "t": 5.4,
+     "y": 430,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "cada estado",
+     "t": 7.4,
+     "y": 560,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "tem sua legislação",
+     "t": 8.9,
+     "y": 690,
+     "cor": "destaque",
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 11.3,
+   "t1": 14.9,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "o que ele exige",
+     "t": 11.8,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "do dentista internacional",
+     "t": 12.5,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 15.1,
+   "t1": 25.0,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a via tradicional",
+     "t": 15.2,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "revalidação mais tradicional",
+     "t": 16.1,
+     "y": 310,
+     "tam": 70,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "DDS",
+     "t": 18.6,
+     "y": 400,
+     "cor": "destaque",
+     "tam": 200
+    },
+    {
+     "tipo": "linha",
+     "texto": "certificado federal",
+     "t": 20.7,
+     "y": 630,
+     "tam": 84
+    },
+    {
+     "tipo": "contador",
+     "de": 0,
+     "ate": 50,
+     "sufixo": " estados",
+     "t": 24.1,
+     "dur": 0.7,
+     "y": 770,
+     "tam": 150
+    }
+   ]
+  },
+  {
+   "t0": 26.0,
+   "t1": 31.6,
+   "cor": "azul",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "a via mais",
+     "t": 26.5,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "segura",
+     "t": 28.7,
+     "y": 420,
+     "cor": "destaque",
+     "tam": 140
+    },
+    {
+     "tipo": "busca",
+     "texto": "onde eu quero morar?",
+     "t": 29.2,
+     "dur": 1.3,
+     "y": 620,
+     "tam": 60,
+     "ate": 31.6
+    }
+   ]
+  },
+  {
+   "t0": 35.5,
+   "t1": 43.4,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "outra via",
+     "t": 35.8,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "AIGD",
+     "t": 36.5,
+     "y": 310,
+     "cor": "destaque",
+     "tam": 200
+    },
+    {
+     "tipo": "linha",
+     "texto": "trabalhar licenciado em",
+     "t": 39.0,
+     "y": 540,
+     "tam": 80
+    },
+    {
+     "tipo": "contador",
+     "de": 0,
+     "ate": 12,
+     "sufixo": " estados",
+     "t": 40.8,
+     "dur": 0.6,
+     "y": 650,
+     "tam": 150
+    },
+    {
+     "tipo": "linha",
+     "texto": "12 bons estados.",
+     "t": 42.5,
+     "y": 850,
+     "tam": 84
+    }
+   ]
+  },
+  {
+   "t0": 50.2,
+   "t1": 56.4,
+   "cor": "branco",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "alguns dos 12",
+     "t": 50.4,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 66,
+     "passo": 92,
+     "itens": [
+      {
+       "texto": "Flórida",
+       "t": 50.6
+      },
+      {
+       "texto": "Illinois",
+       "t": 53.0
+      },
+      {
+       "texto": "Oregon",
+       "t": 53.7
+      },
+      {
+       "texto": "Washington",
+       "t": 54.4
+      },
+      {
+       "texto": "Virgínia",
+       "t": 55.0
+      },
+      {
+       "texto": "New Hampshire",
+       "t": 55.7
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 62.3,
+   "t1": 76.4,
+   "cor": "azul",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a grande diferença",
+     "t": 62.6,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "custo de revalidação",
+     "t": 64.4,
+     "y": 310,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "certificação federal",
+     "t": 67.0,
+     "y": 430,
+     "tam": 76,
+     "peso": 700
+    },
+    {
+     "tipo": "colunas",
+     "y": 560,
+     "alt": 300,
+     "itens": [
+      {
+       "titulo": "DDS",
+       "texto": "via mais custosa",
+       "t": 69.0,
+       "tam": 120,
+       "sync_t": 70.0,
+       "destaque_t": 71.8
+      },
+      {
+       "titulo": "AIGD",
+       "texto": "licença mais restrita",
+       "t": 72.5,
+       "tam": 120,
+       "sync_t": 72.5,
+       "destaque_t": 75.4
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "50 estados × 12 estados",
+     "t": 75.4,
+     "y": 900,
+     "tam": 70,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 78.2,
+   "t1": 82.14,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "observe a legislação",
+     "t": 78.5,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "de cada estado",
+     "t": 80.7,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 120
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 82.19,
+   "t1": 86.02,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

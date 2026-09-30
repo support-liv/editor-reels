@@ -1,0 +1,149 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S15",
+ "duracao": 31.36,
+ "palavras": "palavras/S15.json",
+ "cenas": [
+  {
+   "t0": 3.9,
+   "t1": 10.7,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "a ideia desta live:",
+     "t": 4.1,
+     "y": 300,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "trazer a perspectiva",
+     "t": 5.5,
+     "y": 420,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "não é distante",
+     "t": 7.9,
+     "y": 550,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "nem fora do comum",
+     "t": 9.1,
+     "y": 700,
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 10.8,
+   "t1": 13.4,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não é um",
+     "t": 11.1,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "gênio da lâmpada",
+     "t": 11.8,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 120
+    }
+   ]
+  },
+  {
+   "t0": 17.8,
+   "t1": 23.8,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não tem gênio",
+     "t": 18.2,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "pra esfregar",
+     "t": 19.0,
+     "y": 420,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "o gênio é você",
+     "t": 20.5,
+     "y": 570,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "o esfregão é sua carreira",
+     "t": 22.4,
+     "y": 720,
+     "tam": 76,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 24.0,
+   "t1": 27.48,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "a gente tem condição",
+     "t": 24.1,
+     "y": 300,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "de olhar o repertório",
+     "t": 25.2,
+     "y": 420,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "profissional",
+     "t": 26.4,
+     "y": 550,
+     "cor": "destaque",
+     "tam": 130
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 27.53,
+   "t1": 31.36,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

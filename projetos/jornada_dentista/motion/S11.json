@@ -1,0 +1,258 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S11",
+ "duracao": 71.36,
+ "palavras": "palavras/S11.json",
+ "cenas": [
+  {
+   "t0": 3.6,
+   "t1": 8.4,
+   "cor": "preto",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a dúvida",
+     "t": 3.65,
+     "y": 250
+    },
+    {
+     "tipo": "busca",
+     "texto": "o que é o INBDE?",
+     "t": 3.8,
+     "dur": 1.0,
+     "y": 320,
+     "tam": 64,
+     "ate": 8.4
+    },
+    {
+     "tipo": "linha",
+     "texto": "com o que comparo no Brasil?",
+     "t": 5.2,
+     "y": 520,
+     "tam": 70,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "pra que serve?",
+     "t": 7.3,
+     "y": 620,
+     "cor": "destaque",
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 16.6,
+   "t1": 24.4,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "INBDE",
+     "t": 17.1,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "exame nacional",
+     "t": 18.8,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "integrado de",
+     "t": 20.6,
+     "y": 430,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "licenciamento",
+     "t": 21.7,
+     "y": 560,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "em odontologia",
+     "t": 22.5,
+     "y": 710,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 24.5,
+   "t1": 30.7,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "é como a prova",
+     "t": 24.8,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "do conselho americano",
+     "t": 27.4,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "pra dentistas.",
+     "t": 30.1,
+     "y": 580,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 34.9,
+   "t1": 41.8,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "dentista internacional",
+     "t": 35.2,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "precisa fazer a prova",
+     "t": 35.5,
+     "y": 310,
+     "tam": 96
+    },
+    {
+     "tipo": "checklist",
+     "y": 470,
+     "tam": 70,
+     "passo": 104,
+     "itens": [
+      {
+       "texto": "pra aplicar na faculdade",
+       "t": 38.3
+      },
+      {
+       "texto": "antes de aplicar",
+       "t": 40.5
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 42.0,
+   "t1": 48.5,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a diferença",
+     "t": 42.1,
+     "y": 250
+    },
+    {
+     "tipo": "colunas",
+     "y": 320,
+     "alt": 300,
+     "itens": [
+      {
+       "titulo": "Americanos",
+       "texto": "ao sair da faculdade",
+       "t": 42.6,
+       "tam": 90,
+       "sync_t": 45.0
+      },
+      {
+       "titulo": "Internacionais",
+       "texto": "antes de aplicar",
+       "t": 47.0,
+       "tam": 90
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 55.8,
+   "t1": 67.48,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o caminho",
+     "t": 55.9,
+     "y": 250
+    },
+    {
+     "tipo": "degraus",
+     "y": 330,
+     "tam": 40,
+     "itens": [
+      {
+       "texto": "candidatura",
+       "t": 56.8
+      },
+      {
+       "texto": "entrevista",
+       "t": 58.0
+      },
+      {
+       "texto": "aprovação",
+       "t": 60.1
+      },
+      {
+       "texto": "revalida 2-3 anos",
+       "t": 61.2
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "varia de estado para estado",
+     "t": 64.1,
+     "y": 800,
+     "tam": 64,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "cada estado, sua lei",
+     "t": 66.1,
+     "y": 880,
+     "cor": "destaque",
+     "tam": 84,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 67.53,
+   "t1": 71.36,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

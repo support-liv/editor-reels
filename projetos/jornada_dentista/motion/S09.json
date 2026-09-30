@@ -1,0 +1,234 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S09",
+ "duracao": 60.45,
+ "palavras": "palavras/S09.json",
+ "cenas": [
+  {
+   "t0": 3.5,
+   "t1": 6.0,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "o que faltava",
+     "t": 4.1,
+     "y": 300,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "era tempo.",
+     "t": 4.6,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 130
+    }
+   ]
+  },
+  {
+   "t0": 13.3,
+   "t1": 21.6,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "se preparar pra prova,",
+     "t": 13.6,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "a nossa filha tinha",
+     "t": 14.9,
+     "y": 410,
+     "tam": 84
+    },
+    {
+     "tipo": "numero",
+     "numero": "1",
+     "rotulo": "aninho",
+     "t": 16.2,
+     "t_rotulo": 16.4,
+     "y": 520,
+     "tam": 280,
+     "tam_rotulo": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "bebê de um ano",
+     "t": 18.0,
+     "y": 820,
+     "cor": "destaque",
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "não dorme direito",
+     "t": 18.7,
+     "y": 950,
+     "tam": 70,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "acorda várias vezes à noite",
+     "t": 20.5,
+     "y": 1040,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 28.1,
+   "t1": 34.2,
+   "cor": "preto",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o André",
+     "t": 28.5,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Você não tem obrigação de passar.",
+       "t": 30.6,
+       "lado": "esq"
+      },
+      {
+       "texto": "Vai e faz sem pressão.",
+       "t": 33.0,
+       "lado": "esq"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 34.4,
+   "t1": 40.0,
+   "cor": "branco",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "mas ela",
+     "t": 34.5,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "boa leonina,",
+     "t": 35.1,
+     "y": 310,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "me coloco um desafio",
+     "t": 36.5,
+     "y": 460,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "eu vou conseguir,",
+     "t": 38.4,
+     "y": 580,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "vou até o final.",
+     "t": 39.0,
+     "y": 700,
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 43.1,
+   "t1": 51.2,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "o dia da Júlia",
+     "y": 300,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "exército",
+       "t": 43.6,
+       "status": "andamento",
+       "selo": "meio período",
+       "selo_t": 44.5
+      },
+      {
+       "texto": "filha",
+       "t": 45.5,
+       "status": "andamento",
+       "selo": "meio período",
+       "selo_t": 47.2
+      },
+      {
+       "texto": "estudo",
+       "t": 48.4,
+       "status": "ok",
+       "selo": "quando ela dorme",
+       "selo_t": 50.3
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 53.6,
+   "t1": 56.57,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "me dedicar a estudar",
+     "t": 53.9,
+     "y": 300,
+     "tam": 96
+    },
+    {
+     "tipo": "notificacao",
+     "app": "resultado da prova",
+     "titulo": "Aprovada",
+     "texto": "prova do Board (INBDE)",
+     "t": 55.3,
+     "y": 470
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 56.62,
+   "t1": 60.45,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

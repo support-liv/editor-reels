@@ -1,0 +1,191 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S13",
+ "duracao": 50.07,
+ "palavras": "palavras/S13.json",
+ "cenas": [
+  {
+   "t0": 4.6,
+   "t1": 9.8,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a partir do momento",
+     "t": 5.0,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "com o green card 🇺🇸",
+     "t": 6.5,
+     "y": 310,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "financiamento estudantil",
+     "t": 8.7,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 10.3,
+   "t1": 15.0,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "muita gente pergunta",
+     "t": 10.8,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Não vou poder trabalhar?",
+       "t": 11.7
+      },
+      {
+       "texto": "Como vou me sustentar?",
+       "t": 12.8
+      },
+      {
+       "texto": "Como vou pagar a faculdade?",
+       "t": 14.0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 15.2,
+   "t1": 24.0,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "como funciona",
+     "t": 15.4,
+     "y": 250
+    },
+    {
+     "tipo": "etapas",
+     "y": 320,
+     "tam": 64,
+     "passo": 124,
+     "itens": [
+      {
+       "texto": "financiamento estudantil",
+       "t": 16.1
+      },
+      {
+       "texto": "estuda na faculdade",
+       "t": 18.0
+      },
+      {
+       "texto": "paga depois de formado",
+       "t": 19.6
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 28.4,
+   "t1": 35.0,
+   "cor": "azul",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "sociedade de crédito",
+     "t": 28.8,
+     "y": 300,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "dentista bem remunerado",
+     "t": 30.6,
+     "y": 450,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "financiamento fácil",
+     "t": 34.1,
+     "y": 580,
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 36.9,
+   "t1": 46.19,
+   "cor": "branco",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "o que abre o crédito",
+     "y": 300,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "green card",
+       "t": 37.4,
+       "status": "ok",
+       "selo": "acesso",
+       "selo_t": 38.2
+      },
+      {
+       "texto": "visto válido",
+       "t": 39.0,
+       "status": "ok",
+       "selo": "acesso"
+      },
+      {
+       "texto": "crédito",
+       "t": 42.5,
+       "status": "ok",
+       "selo": "liberado"
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "faculdade sem preocupação",
+     "t": 44.2,
+     "y": 720,
+     "cor": "destaque",
+     "tam": 76,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 46.24,
+   "t1": 50.07,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

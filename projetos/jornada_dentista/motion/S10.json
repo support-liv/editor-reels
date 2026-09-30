@@ -1,0 +1,255 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S10",
+ "duracao": 66.98,
+ "palavras": "palavras/S10.json",
+ "cenas": [
+  {
+   "t0": 4.2,
+   "t1": 10.2,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "a gente mira",
+     "t": 4.6,
+     "y": 300,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "no futuro",
+     "t": 5.0,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 130
+    },
+    {
+     "tipo": "linha",
+     "texto": "o que isso vai me trazer",
+     "t": 8.1,
+     "y": 600,
+     "tam": 76,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "daqui a dez anos?",
+     "t": 9.1,
+     "y": 700,
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 12.6,
+   "t1": 25.4,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "não tinha tempo livre",
+     "t": 12.8,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "status",
+     "titulo": "onde cabia o estudo",
+     "y": 430,
+     "tam": 54,
+     "passo": 104,
+     "itens": [
+      {
+       "texto": "o tempo que eu tinha",
+       "t": 15.2,
+       "status": "ok",
+       "selo": "estudo",
+       "selo_t": 16.9
+      },
+      {
+       "texto": "entre pacientes",
+       "t": 17.4,
+       "status": "ok",
+       "selo": "estudo"
+      },
+      {
+       "texto": "paciente faltou",
+       "t": 19.3,
+       "status": "ok",
+       "selo": "estudo",
+       "sync_t": 19.2,
+       "selo_t": 20.8
+      },
+      {
+       "texto": "à noite",
+       "t": 22.3,
+       "status": "ok",
+       "selo": "estudo",
+       "selo_t": 23.5
+      },
+      {
+       "texto": "fim de semana",
+       "t": 24.4,
+       "status": "ok",
+       "selo": "estudo"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 25.6,
+   "t1": 29.8,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "eu consegui.",
+     "t": 25.8,
+     "y": 300,
+     "cor": "destaque",
+     "tam": 150
+    },
+    {
+     "tipo": "linha",
+     "texto": "é possível.",
+     "t": 26.9,
+     "y": 500,
+     "tam": 120
+    }
+   ]
+  },
+  {
+   "t0": 38.2,
+   "t1": 48.9,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "vale ressaltar",
+     "t": 38.4,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "meu inglês era muito básico",
+     "t": 40.2,
+     "y": 310,
+     "tam": 80
+    },
+    {
+     "tipo": "barra",
+     "y": 450,
+     "tam": 50,
+     "itens": [
+      {
+       "texto": "básico",
+       "t": 41.2
+      },
+      {
+       "texto": "preparação",
+       "t": 43.4
+      },
+      {
+       "texto": "aprovada",
+       "t": 48.3
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "adquiri o inglês que precisava",
+     "t": 45.7,
+     "y": 700,
+     "tam": 70,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 49.3,
+   "t1": 55.4,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "pra prova, o inglês é",
+     "t": 49.5,
+     "y": 250
+    },
+    {
+     "tipo": "colunas",
+     "y": 320,
+     "alt": 260,
+     "itens": [
+      {
+       "titulo": "Dia a dia",
+       "t": 50.6,
+       "tam": 100,
+       "risco_t": 51.8
+      },
+      {
+       "titulo": "Técnico",
+       "t": 53.6,
+       "tam": 100,
+       "destaque_t": 54.2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 55.4,
+   "t1": 60.3,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "durante a preparação",
+     "t": 55.5,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 74,
+     "passo": 110,
+     "itens": [
+      {
+       "texto": "li tudo que podia",
+       "t": 56.1
+      },
+      {
+       "texto": "estudava inglês",
+       "t": 57.3
+      },
+      {
+       "texto": "lia em inglês",
+       "t": 58.2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 63.15,
+   "t1": 66.98,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

@@ -1,0 +1,152 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S02",
+ "duracao": 35.25,
+ "palavras": "palavras/S02.json",
+ "cenas": [
+  {
+   "t0": 3.6,
+   "t1": 8.4,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "você sabe da sua",
+     "t": 3.7,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 78,
+     "passo": 112,
+     "itens": [
+      {
+       "texto": "qualificação",
+       "t": 4.8
+      },
+      {
+       "texto": "potencial",
+       "t": 6.8
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 10.1,
+   "t1": 16.9,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "o ambiente",
+     "t": 10.6,
+     "y": 300,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "não permite crescer",
+     "t": 11.6,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "profissão sucateada",
+     "t": 15.6,
+     "y": 580,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 17.3,
+   "t1": 24.6,
+   "cor": "azul",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a conta não fecha",
+     "t": 17.4,
+     "y": 250
+    },
+    {
+     "tipo": "colunas",
+     "y": 320,
+     "alt": 300,
+     "itens": [
+      {
+       "titulo": "Você cobra",
+       "texto": "cada vez mais barato",
+       "t": 17.8,
+       "tam": 90
+      },
+      {
+       "titulo": "Você investiu",
+       "texto": "muito para aprender",
+       "t": 20.2,
+       "tam": 90
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "concorrência que não bate com a sua qualidade",
+     "t": 22.5,
+     "y": 680,
+     "tam": 56,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 27.8,
+   "t1": 31.37,
+   "cor": "rosa",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "se você não se diminuir,",
+     "t": 28.0,
+     "y": 300,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "talvez você não caiba",
+     "t": 29.4,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "nessa esfera.",
+     "t": 30.3,
+     "y": 580,
+     "tam": 110
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 31.42,
+   "t1": 35.25,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

@@ -1,0 +1,81 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S08",
+ "duracao": 15.88,
+ "palavras": "palavras/S08.json",
+ "cenas": [
+  {
+   "t0": 4.0,
+   "t1": 6.9,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "agora eu vou",
+     "t": 4.5,
+     "y": 300,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "nesse caminho.",
+     "t": 6.2,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 120
+    }
+   ]
+  },
+  {
+   "t0": 7.0,
+   "t1": 12.0,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a Marinna pergunta",
+     "t": 7.05,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Tinha tempo, Júlia?",
+       "t": 7.2
+      },
+      {
+       "texto": "Tava sobrando?",
+       "t": 8.2
+      },
+      {
+       "texto": "De férias na praia?",
+       "t": 9.7
+      },
+      {
+       "texto": "“É agora que eu vou fazer minha prova!”",
+       "t": 10.7
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 12.05,
+   "t1": 15.88,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

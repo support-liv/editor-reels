@@ -1,0 +1,213 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S06",
+ "duracao": 54.33,
+ "palavras": "palavras/S06.json",
+ "cenas": [
+  {
+   "t0": 3.6,
+   "t1": 7.9,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a prova do Board",
+     "t": 3.65,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "a prova que inicia",
+     "t": 3.9,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "a vida nos EUA 🇺🇸",
+     "t": 5.1,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "ano passado",
+     "t": 6.6,
+     "y": 590,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 11.0,
+   "t1": 16.8,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a partir daí",
+     "t": 11.1,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "fundar a empresa",
+     "t": 12.1,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "auxiliar nossos alunos",
+     "t": 13.1,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "a passar por esse processo",
+     "t": 15.3,
+     "y": 590,
+     "tam": 70,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 17.3,
+   "t1": 23.3,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "hoje",
+     "t": 17.4,
+     "y": 250
+    },
+    {
+     "tipo": "contador",
+     "de": 0,
+     "ate": 95,
+     "sufixo": "%",
+     "t": 18.4,
+     "dur": 0.8,
+     "y": 300,
+     "tam": 240
+    },
+    {
+     "tipo": "linha",
+     "texto": "de aprovação",
+     "t": 19.3,
+     "y": 580,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "um número bem alegre",
+     "t": 20.8,
+     "y": 730,
+     "tam": 80
+    }
+   ]
+  },
+  {
+   "t0": 33.6,
+   "t1": 47.3,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "essa porta é só pra…",
+     "y": 300,
+     "tam": 56,
+     "itens": [
+      {
+       "texto": "privilegiados",
+       "t": 34.2,
+       "status": "negado",
+       "selo": "não"
+      },
+      {
+       "texto": "quem está na prática",
+       "t": 36.4,
+       "status": "negado",
+       "selo": "não",
+       "sync_t": 36.3
+      },
+      {
+       "texto": "quem está na docência",
+       "t": 38.4,
+       "status": "negado",
+       "selo": "não",
+       "sync_t": 38.3
+      },
+      {
+       "texto": "quem está na pesquisa",
+       "t": 41.0,
+       "status": "negado",
+       "selo": "não",
+       "sync_t": 40.9
+      },
+      {
+       "texto": "o Einstein",
+       "t": 45.0,
+       "status": "negado",
+       "selo": "não!",
+       "selo_t": 47.4
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 47.6,
+   "t1": 50.45,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "é uma porta",
+     "t": 47.8,
+     "y": 300,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "pra todo mundo",
+     "t": 48.2,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "que se organiza.",
+     "t": 48.9,
+     "y": 580,
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 50.5,
+   "t1": 54.33,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

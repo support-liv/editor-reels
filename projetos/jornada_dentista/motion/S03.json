@@ -1,0 +1,156 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_S03",
+ "duracao": 38.93,
+ "palavras": "palavras/S03.json",
+ "cenas": [
+  {
+   "t0": 3.4,
+   "t1": 10.1,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a trajetória da Júlia",
+     "t": 3.5,
+     "y": 250
+    },
+    {
+     "tipo": "etapas",
+     "y": 320,
+     "tam": 64,
+     "passo": 124,
+     "itens": [
+      {
+       "texto": "formada em Santa Catarina",
+       "t": 3.5
+      },
+      {
+       "texto": "Cuiabá (MT)",
+       "t": 5.8
+      },
+      {
+       "texto": "residência em bucomaxilo",
+       "t": 8.2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 11.0,
+   "t1": 15.9,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "de volta",
+     "t": 11.1,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 74,
+     "passo": 110,
+     "itens": [
+      {
+       "texto": "pronto-socorro",
+       "t": 12.0
+      },
+      {
+       "texto": "hospitais",
+       "t": 12.7
+      },
+      {
+       "texto": "aulas de pós",
+       "t": 13.7
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 21.8,
+   "t1": 26.0,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "conheci o André,",
+     "t": 22.2,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "São Paulo",
+     "t": 23.6,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 140
+    },
+    {
+     "tipo": "linha",
+     "texto": "a gente casou",
+     "t": 24.3,
+     "y": 610,
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 27.5,
+   "t1": 35.05,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "oficial do",
+     "t": 27.9,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "Exército Brasileiro",
+     "t": 28.7,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "até fevereiro deste ano:",
+     "t": 30.0,
+     "y": 590,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "hospital militar",
+     "t": 32.3,
+     "y": 710,
+     "tam": 110
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 35.1,
+   "t1": 38.93,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}
