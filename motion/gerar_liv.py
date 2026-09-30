@@ -475,7 +475,8 @@ def _colunas(e, eid, top, W, centro, fundo, ctexto, cdest):
             js.append(f'tl.to("#{eid}x{i}", {{ scaleX: 1, duration: 0.3, ease: "power2.out" }}, {it["risco_t"]:.2f});')
             js.append(f'tl.to("#{eid}c{i}", {{ opacity: 0.45, duration: 0.3 }}, {it["risco_t"] + 0.15:.2f});')
             sons.append(("tick", it["risco_t"], 0.3, 0.03))
-    return f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:{alt}px">' + "".join(h) + "</div>", js, sons
+    return (f'<div id="{eid}" data-colunas="{eid}" data-x0="96" data-x1="{W - 96}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:{alt}px">'
+            + "".join(h) + "</div>", js, sons)
 
 
 def _numero(e, eid, top, W, centro, fundo, ctexto, cdest):
@@ -657,6 +658,28 @@ def gerar(r):
         Object.values(grupos).forEach((els) => {{
           const menor = Math.min(...els.map((el) => parseFloat(el.style.fontSize)));
           els.forEach((el) => {{ el.style.fontSize = menor + "px"; }});
+        }});
+        // colunas: o fio fica no meio do vão real entre as duas colunas (mesma margem dos dois lados),
+        // medido pelo fim do conteúdo da esquerda, não pelo meio da tela
+        document.querySelectorAll("[data-colunas]").forEach((box) => {{
+          const id = box.dataset.colunas, x0 = Number(box.dataset.x0), x1 = Number(box.dataset.x1);
+          const esq = document.getElementById(id + "c0"), dir = document.getElementById(id + "c1"), fio = document.getElementById(id + "f");
+          if (!esq || !dir || !fio) return;
+          const largura = (col) => {{
+            let m = 0;
+            col.querySelectorAll("div, span").forEach((n) => {{
+              if (getComputedStyle(n).position === "absolute" || n.id.endsWith("s0") || n.id.endsWith("s1")) return;
+              const r = n.getBoundingClientRect(), c = col.getBoundingClientRect();
+              if (n.children.length === 0 || n.classList.contains("fit")) m = Math.max(m, r.right - c.left);
+            }});
+            return m;
+          }};
+          const we = largura(esq), wd = largura(dir);
+          const vao = Math.min(64, Math.max(28, (x1 - x0 - we - wd - 4) / 2));
+          const xf = x0 + we + vao;
+          fio.style.left = xf + "px";
+          dir.style.left = (xf + 4 + vao) + "px"; dir.style.width = (x1 - xf - 4 - vao) + "px";
+          esq.style.width = we + "px";
         }});
         // risco do tamanho exato do texto que ele risca (funciona alinhado à esquerda ou centralizado)
         document.querySelectorAll(".barra[data-alvo]").forEach((b) => {{

@@ -8,7 +8,7 @@ Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 - Respiro de câmera sutil em toda cena (1,5%): nada fica congelado.
 - Componentes novos: `degraus`, `barra` (progresso segmentado), `colunas` (lado a lado com fio) e `numero` (numeral grande). A rota BR → EUA e os cards deixam de ser padrão; a checagem avisa quando um recurso se repete no vídeo.
 - Checagem de ritmo mais rígida: 1º elemento em até 0,6s, no máximo 1,3s parado entre revelações e 1,2s no fim.
-- Títulos de uma mesma comparação (colunas, cartões) no mesmo tamanho: se um encolhe pra caber, o grupo todo encolhe junto.
+- Títulos de uma mesma comparação (colunas, cartões) no mesmo tamanho: se um encolhe pra caber, o grupo todo encolhe junto. O fio entre colunas fica no meio do vão real entre os textos (mesma margem dos dois lados), medido, não fixo no meio da tela.
 - CTA por canal: YouTube Shorts "Veja a live completa no canal"; Instagram, palavra-chave nos comentários. O briefing pergunta o canal.
 
 ## 0.23 (30/09/2026) - sem filete e fala mais enxuta
