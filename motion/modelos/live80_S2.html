@@ -14,7 +14,8 @@
       .rotulo { position: absolute; display: flex; align-items: center; gap: 18px; font-size: 40px; font-weight: 700; }
       .rotulo svg { width: 46px; height: 28px; }
       .linha { position: absolute; overflow: hidden; padding-bottom: 10px; }
-      .linha span { display: inline-block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }
+      .linha > span { display: inline-block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }
+      .linha .pal { display: inline-block; }
       .barra { position: absolute; border-radius: 5px; transform-origin: left center; transform: scaleX(0); }
       .icone { position: absolute; }
     </style>
@@ -24,81 +25,93 @@
       <div id="tudo" class="clip" style="position:absolute;inset:0" data-start="0" data-duration="45.51">
 <div class="painel" id="p0" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#fff0e6"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#ff6e1f" stroke-width="16" fill="none"/></svg>
+<div class="cont" id="p0m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
 <div class="rotulo" id="p0e0" style="left:96px;top:845px;color:#945943"><svg viewBox="0 0 46 28"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#ff6e1f"/></svg><span>ajuste de status</span></div>
-<div class="linha" style="left:96px;width:894px;top:955px"><span id="p0e1" class="fit" data-max="894" style="color:#2c3642;font-size:124px;font-weight:800">não pode ser</span></div>
-<div class="linha" style="left:96px;width:894px;top:1075px"><span id="p0e2" class="fit" data-max="894" style="color:#ff6e1f;font-size:124px;font-weight:800">o seu plano A</span></div>
-<div class="linha" style="left:96px;width:894px;top:1195px"><span id="p0e3" class="fit" data-max="894" style="color:#2c3642;font-size:84px;font-weight:700">sem a petição aprovada.</span></div>
+<div class="linha" style="left:96px;width:894px;top:955px"><span id="p0e1" class="fit" data-max="894" style="color:#2c3642;font-size:124px;font-weight:800"><span class="pal" id="p0e1w0">não</span>&nbsp;<span class="pal" id="p0e1w1">pode</span>&nbsp;<span class="pal" id="p0e1w2">ser</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1075px"><span id="p0e2" class="fit" data-max="894" style="color:#ff6e1f;font-size:124px;font-weight:800"><span class="pal" id="p0e2w0">o</span>&nbsp;<span class="pal" id="p0e2w1">seu</span>&nbsp;<span class="pal" id="p0e2w2">plano</span>&nbsp;<span class="pal" id="p0e2w3">A</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1195px"><span id="p0e3" class="fit" data-max="894" style="color:#2c3642;font-size:84px;font-weight:700"><span class="pal" id="p0e3w0">sem</span>&nbsp;<span class="pal" id="p0e3w1">a</span>&nbsp;<span class="pal" id="p0e3w2">petição</span>&nbsp;<span class="pal" id="p0e3w3">aprovada.</span></span></div>
 <div class="barra" id="p0e4" style="left:96px;top:1305px;width:340px;height:7px;background:#ff6e1f"></div>
-</div>
+</div></div>
 <div class="painel" id="p1" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#2c3642"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#ff6e1f" stroke-width="16" fill="none"/></svg>
+<div class="cont" id="p1m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
 <div class="rotulo" id="p1e0" style="left:96px;top:798px;color:#fff0e6"><svg viewBox="0 0 46 28"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#ff6e1f"/></svg><span>por quê?</span></div>
-<div class="linha" style="left:96px;width:894px;top:908px"><span id="p1e1" class="fit" data-max="894" style="color:#fff0e6;font-size:124px;font-weight:800">um protocolo</span></div>
-<div class="linha" style="left:96px;width:894px;top:1028px"><span id="p1e2" class="fit" data-max="894" style="color:#fff0e6;font-size:124px;font-weight:800">de ajuste pode</span></div>
-<div class="linha" style="left:96px;width:894px;top:1148px"><span id="p1e3" class="fit" data-max="894" style="color:#ff6e1f;font-size:124px;font-weight:800">eliminar opções</span></div>
-<div class="linha" style="left:96px;width:894px;top:1268px"><span id="p1e4" class="fit" data-max="894" style="color:#fff0e6;font-size:90px;font-weight:700">de visto temporário.</span></div>
-</div>
+<div class="linha" style="left:96px;width:894px;top:908px"><span id="p1e1" class="fit" data-max="894" style="color:#fff0e6;font-size:124px;font-weight:800"><span class="pal" id="p1e1w0">um</span>&nbsp;<span class="pal" id="p1e1w1">protocolo</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1028px"><span id="p1e2" class="fit" data-max="894" style="color:#fff0e6;font-size:124px;font-weight:800"><span class="pal" id="p1e2w0">de</span>&nbsp;<span class="pal" id="p1e2w1">ajuste</span>&nbsp;<span class="pal" id="p1e2w2">pode</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1148px"><span id="p1e3" class="fit" data-max="894" style="color:#ff6e1f;font-size:124px;font-weight:800"><span class="pal" id="p1e3w0">eliminar</span>&nbsp;<span class="pal" id="p1e3w1">opções</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1268px"><span id="p1e4" class="fit" data-max="894" style="color:#fff0e6;font-size:90px;font-weight:700"><span class="pal" id="p1e4w0">de</span>&nbsp;<span class="pal" id="p1e4w1">visto</span>&nbsp;<span class="pal" id="p1e4w2">temporário.</span></span></div>
+<div class="barra" id="p1b0" data-alvo="p1e1" data-sob="1" style="height:6px;background:#ff6e1f"></div>
+</div></div>
 <div class="painel" id="p2" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#fff0e6"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#ff6e1f" stroke-width="16" fill="none"/></svg>
-<div class="linha" style="left:96px;width:888px;text-align:center;top:833px"><span id="p2e0" class="fit" data-max="888" style="color:#2c3642;font-size:96px;font-weight:800">pode prejudicar</span></div>
-<div class="linha" style="left:96px;width:888px;text-align:center;top:933px"><span id="p2e1" class="fit" data-max="888" style="color:#ff6e1f;font-size:96px;font-weight:800">um E-2</span></div>
-<div class="linha" style="left:96px;width:888px;text-align:center;top:1033px"><span id="p2e2" class="fit" data-max="888" style="color:#2c3642;font-size:96px;font-weight:800">no consulado:</span></div>
-<div class="linha" style="left:96px;width:888px;text-align:center;top:1133px"><span id="p2e3" class="fit" data-max="888" style="color:#2c3642;font-size:90px;font-weight:700">“você já declarou</span></div>
-<div class="linha" style="left:96px;width:888px;text-align:center;top:1233px"><span id="p2e4" class="fit" data-max="888" style="color:#ff6e1f;font-size:90px;font-weight:800">intenção imigratória”</span></div>
-</div>
+<div class="cont" id="p2m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
+<div class="linha" style="left:96px;width:888px;text-align:center;top:833px"><span id="p2e0" class="fit" data-max="888" style="color:#2c3642;font-size:96px;font-weight:800"><span class="pal" id="p2e0w0">pode</span>&nbsp;<span class="pal" id="p2e0w1">prejudicar</span></span></div>
+<div class="linha" style="left:96px;width:888px;text-align:center;top:933px"><span id="p2e1" class="fit" data-max="888" style="color:#ff6e1f;font-size:96px;font-weight:800"><span class="pal" id="p2e1w0">um</span>&nbsp;<span class="pal" id="p2e1w1">E-2</span></span></div>
+<div class="linha" style="left:96px;width:888px;text-align:center;top:1033px"><span id="p2e2" class="fit" data-max="888" style="color:#2c3642;font-size:96px;font-weight:800"><span class="pal" id="p2e2w0">no</span>&nbsp;<span class="pal" id="p2e2w1">consulado:</span></span></div>
+<div class="linha" style="left:96px;width:888px;text-align:center;top:1133px"><span id="p2e3" class="fit" data-max="888" style="color:#2c3642;font-size:90px;font-weight:700"><span class="pal" id="p2e3w0">“você</span>&nbsp;<span class="pal" id="p2e3w1">já</span>&nbsp;<span class="pal" id="p2e3w2">declarou</span></span></div>
+<div class="linha" style="left:96px;width:888px;text-align:center;top:1233px"><span id="p2e4" class="fit" data-max="888" style="color:#ff6e1f;font-size:90px;font-weight:800"><span class="pal" id="p2e4w0">intenção</span>&nbsp;<span class="pal" id="p2e4w1">imigratória”</span></span></div>
+</div></div>
 <div class="painel" id="p3" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#2c3642"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#ff6e1f" stroke-width="16" fill="none"/></svg>
+<div class="cont" id="p3m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
 <div class="rotulo" id="p3e0" style="left:96px;top:880px;color:#fff0e6"><svg viewBox="0 0 46 28"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#ff6e1f"/></svg><span>o passo certo</span></div>
-<div id="p3e1" style="position:absolute;left:0;top:960px;width:1080px;height:320px"><div id="p3e1k0" style="position:absolute;left:96px;top:0;width:429px;height:320px;border-radius:28px;background:#fff0e6;padding:36px 34px;box-sizing:border-box;opacity:0"><div class="fit" data-max="361" style="font-size:68px;font-weight:900;line-height:1.0;color:#2c3642;white-space:nowrap;display:inline-block">Pular pro ajuste</div><div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:#2c3642">só pela autorização de trabalho</div><div id="p3e1x0" style="position:absolute;left:24px;right:24px;top:155px;height:10px;border-radius:5px;background:#ff6e1f;transform:scaleX(0);transform-origin:left center"></div></div><div id="p3e1k1" style="position:absolute;left:555px;top:0;width:429px;height:320px;border-radius:28px;background:#fff0e6;padding:36px 34px;box-sizing:border-box;opacity:0"><div class="fit" data-max="361" style="font-size:68px;font-weight:900;line-height:1.0;color:#2c3642;white-space:nowrap;display:inline-block">Visto temporário</div><div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:#2c3642">sem prejudicar o futuro</div><div id="p3e1x1" style="position:absolute;left:24px;right:24px;top:155px;height:10px;border-radius:5px;background:#ff6e1f;transform:scaleX(0);transform-origin:left center"></div></div></div>
-</div>
+<div id="p3e1" style="position:absolute;left:0;top:960px;width:1080px;height:320px"><div id="p3e1k0" style="position:absolute;left:96px;top:0;width:429px;height:320px;border-radius:28px;background:#fff0e6;padding:36px 34px;box-sizing:border-box;opacity:0"><div class="fit" data-max="361" style="font-size:68px;font-weight:900;line-height:1.0;color:#2c3642;white-space:nowrap;display:inline-block">Pular pro ajuste</div><div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:#2c3642"><span id="p3e1k0w0" style="display:inline-block;opacity:0">só</span>&nbsp;<span id="p3e1k0w1" style="display:inline-block;opacity:0">pelo</span>&nbsp;<span id="p3e1k0w2" style="display:inline-block;opacity:0">benefício</span>&nbsp;<span id="p3e1k0w3" style="display:inline-block;opacity:0">do</span>&nbsp;<span id="p3e1k0w4" style="display:inline-block;opacity:0">trabalho</span></div><div id="p3e1x0" style="position:absolute;left:24px;right:24px;top:155px;height:10px;border-radius:5px;background:#ff6e1f;transform:scaleX(0);transform-origin:left center"></div></div><div id="p3e1k1" style="position:absolute;left:555px;top:0;width:429px;height:320px;border-radius:28px;background:#fff0e6;padding:36px 34px;box-sizing:border-box;opacity:0"><div class="fit" data-max="361" style="font-size:68px;font-weight:900;line-height:1.0;color:#2c3642;white-space:nowrap;display:inline-block">Visto temporário</div><div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:#2c3642"><span id="p3e1k1w0" style="display:inline-block;opacity:0">trabalhar</span>&nbsp;<span id="p3e1k1w1" style="display:inline-block;opacity:0">sem</span>&nbsp;<span id="p3e1k1w2" style="display:inline-block;opacity:0">prejudicar</span>&nbsp;<span id="p3e1k1w3" style="display:inline-block;opacity:0">o</span>&nbsp;<span id="p3e1k1w4" style="display:inline-block;opacity:0">futuro</span></div><div id="p3e1x1" style="position:absolute;left:24px;right:24px;top:155px;height:10px;border-radius:5px;background:#ff6e1f;transform:scaleX(0);transform-origin:left center"></div></div></div>
+</div></div>
 <div class="painel" id="p4" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#fff0e6"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#ff6e1f" stroke-width="16" fill="none"/></svg>
-<div class="linha" style="left:96px;width:894px;top:853px"><span id="p4e0" class="fit" data-max="894" style="color:#2c3642;font-size:124px;font-weight:800">correr pro ajuste</span></div>
-<div class="linha" style="left:96px;width:894px;top:973px"><span id="p4e1" class="fit" data-max="894" style="color:#2c3642;font-size:124px;font-weight:800">pode ser</span></div>
-<div class="linha" style="left:96px;width:894px;top:1093px"><span id="p4e2" class="fit" data-max="894" style="color:#ff6e1f;font-size:100px;font-weight:800">a opção mais errônea</span></div>
-<div class="linha" style="left:96px;width:894px;top:1213px"><span id="p4e3" class="fit" data-max="894" style="color:#2c3642;font-size:90px;font-weight:700">no seu planejamento.</span></div>
-</div>
+<div class="cont" id="p4m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
+<div class="linha" style="left:96px;width:894px;top:853px"><span id="p4e0" class="fit" data-max="894" style="color:#2c3642;font-size:124px;font-weight:800"><span class="pal" id="p4e0w0">correr</span>&nbsp;<span class="pal" id="p4e0w1">pro</span>&nbsp;<span class="pal" id="p4e0w2">ajuste</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:973px"><span id="p4e1" class="fit" data-max="894" style="color:#2c3642;font-size:124px;font-weight:800"><span class="pal" id="p4e1w0">pode</span>&nbsp;<span class="pal" id="p4e1w1">ser</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1093px"><span id="p4e2" class="fit" data-max="894" style="color:#ff6e1f;font-size:100px;font-weight:800"><span class="pal" id="p4e2w0">a</span>&nbsp;<span class="pal" id="p4e2w1">opção</span>&nbsp;<span class="pal" id="p4e2w2">mais</span>&nbsp;<span class="pal" id="p4e2w3">errônea</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1213px"><span id="p4e3" class="fit" data-max="894" style="color:#2c3642;font-size:90px;font-weight:700"><span class="pal" id="p4e3w0">no</span>&nbsp;<span class="pal" id="p4e3w1">seu</span>&nbsp;<span class="pal" id="p4e3w2">planejamento.</span></span></div>
+</div></div>
 <div class="painel" id="p5" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#ff6e1f"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#2c3642" stroke-width="16" fill="none"/></svg>
-<svg class="icone" id="p5e0" viewBox="0 0 46 28" style="left:96px;top:900px;width:60px;height:36px"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#2c3642"/></svg>
-<div class="linha" style="left:96px;width:894px;top:940px"><span id="p5e1" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:800">Comente</span></div>
-<div class="linha" style="left:96px;width:894px;top:1030px"><span id="p5e2" class="fit" data-max="894" style="color:#2c3642;font-size:132px;font-weight:800">PERFIL27</span></div>
-<div class="linha" style="left:96px;width:894px;top:1175px"><span id="p5e3" class="fit" data-max="894" style="color:#ffffff;font-size:52px;font-weight:700">para uma análise de perfil gratuita</span></div>
-<div class="barra" id="p5e4" style="left:96px;top:1250px;width:300px;height:7px;background:#2c3642"></div>
-</div>
+<div class="cont" id="p5m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
+<svg class="icone" id="p5e0" viewBox="0 0 46 28" style="left:96px;top:1020px;width:60px;height:36px"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#2c3642"/></svg>
+<div class="linha" style="left:96px;width:894px;top:1060px"><span id="p5e1" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:800"><span class="pal" id="p5e1w0">Veja</span>&nbsp;<span class="pal" id="p5e1w1">a</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1150px"><span id="p5e2" class="fit" data-max="894" style="color:#2c3642;font-size:132px;font-weight:800"><span class="pal" id="p5e2w0">live</span>&nbsp;<span class="pal" id="p5e2w1">completa</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1295px"><span id="p5e3" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:700"><span class="pal" id="p5e3w0">no</span>&nbsp;<span class="pal" id="p5e3w1">canal</span></span></div>
+<div class="barra" id="p5e4" style="left:96px;top:1405px;width:300px;height:7px;background:#2c3642"></div>
+</div></div>
       </div>
       <audio id="s01" src="sfx/whoosh.wav" data-start="3.95" data-duration="0.5" data-volume="0.35"></audio>
-      <audio id="s02" src="sfx/tick.wav" data-start="5.27" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s03" src="sfx/tick.wav" data-start="6.80" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s04" src="sfx/tick.wav" data-start="8.66" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s02" src="sfx/tick.wav" data-start="5.05" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s03" src="sfx/tick.wav" data-start="6.06" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s04" src="sfx/tick.wav" data-start="8.36" data-duration="0.03" data-volume="0.22"></audio>
       <audio id="s05" src="sfx/whoosh.wav" data-start="9.79" data-duration="0.5" data-volume="0.35"></audio>
       <audio id="s06" src="sfx/whoosh.wav" data-start="16.24" data-duration="0.5" data-volume="0.3"></audio>
-      <audio id="s07" src="sfx/tick.wav" data-start="11.19" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s08" src="sfx/tick.wav" data-start="12.13" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s07" src="sfx/tick.wav" data-start="10.39" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s08" src="sfx/tick.wav" data-start="15.21" data-duration="0.03" data-volume="0.22"></audio>
       <audio id="s09" src="sfx/tick.wav" data-start="13.89" data-duration="0.03" data-volume="0.22"></audio>
       <audio id="s10" src="sfx/tick.wav" data-start="15.21" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s11" src="sfx/whoosh.wav" data-start="17.37" data-duration="0.5" data-volume="0.35"></audio>
-      <audio id="s12" src="sfx/whoosh.wav" data-start="23.09" data-duration="0.5" data-volume="0.3"></audio>
-      <audio id="s13" src="sfx/tick.wav" data-start="18.08" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s14" src="sfx/tick.wav" data-start="18.66" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s15" src="sfx/tick.wav" data-start="20.23" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s16" src="sfx/tick.wav" data-start="21.27" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s17" src="sfx/tick.wav" data-start="22.33" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s18" src="sfx/whoosh.wav" data-start="29.50" data-duration="0.5" data-volume="0.35"></audio>
-      <audio id="s19" src="sfx/tick.wav" data-start="30.24" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s20" src="sfx/tick.wav" data-start="31.35" data-duration="0.03" data-volume="0.3"></audio>
-      <audio id="s21" src="sfx/tick.wav" data-start="32.80" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s22" src="sfx/whoosh.wav" data-start="36.14" data-duration="0.5" data-volume="0.35"></audio>
-      <audio id="s23" src="sfx/whoosh.wav" data-start="41.63" data-duration="0.5" data-volume="0.3"></audio>
-      <audio id="s24" src="sfx/tick.wav" data-start="36.50" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s25" src="sfx/tick.wav" data-start="37.70" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s26" src="sfx/tick.wav" data-start="38.88" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s27" src="sfx/tick.wav" data-start="40.63" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s28" src="sfx/whoosh.wav" data-start="41.71" data-duration="0.5" data-volume="0.35"></audio>
-      <audio id="s29" src="sfx/sino.wav" data-start="42.46" data-duration="1.2" data-volume="0.3"></audio>
-      <audio id="s30" src="sfx/tick.wav" data-start="42.26" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s31" src="sfx/tick.wav" data-start="42.46" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s32" src="sfx/tick.wav" data-start="42.81" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s11" src="sfx/tick.wav" data-start="12.35" data-duration="0.03" data-volume="0.12"></audio>
+      <audio id="s12" src="sfx/tick.wav" data-start="12.97" data-duration="0.03" data-volume="0.12"></audio>
+      <audio id="s13" src="sfx/tick.wav" data-start="14.49" data-duration="0.03" data-volume="0.12"></audio>
+      <audio id="s14" src="sfx/whoosh.wav" data-start="17.37" data-duration="0.5" data-volume="0.35"></audio>
+      <audio id="s15" src="sfx/whoosh.wav" data-start="23.09" data-duration="0.5" data-volume="0.3"></audio>
+      <audio id="s16" src="sfx/tick.wav" data-start="18.08" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s17" src="sfx/tick.wav" data-start="18.66" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s18" src="sfx/tick.wav" data-start="20.23" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s19" src="sfx/tick.wav" data-start="21.27" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s20" src="sfx/tick.wav" data-start="22.33" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s21" src="sfx/tick.wav" data-start="19.42" data-duration="0.03" data-volume="0.12"></audio>
+      <audio id="s22" src="sfx/whoosh.wav" data-start="29.50" data-duration="0.5" data-volume="0.35"></audio>
+      <audio id="s23" src="sfx/tick.wav" data-start="30.24" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s24" src="sfx/tick.wav" data-start="32.45" data-duration="0.03" data-volume="0.3"></audio>
+      <audio id="s25" src="sfx/tick.wav" data-start="32.80" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s26" src="sfx/tick.wav" data-start="34.47" data-duration="0.03" data-volume="0.12"></audio>
+      <audio id="s27" src="sfx/whoosh.wav" data-start="36.14" data-duration="0.5" data-volume="0.35"></audio>
+      <audio id="s28" src="sfx/whoosh.wav" data-start="41.63" data-duration="0.5" data-volume="0.3"></audio>
+      <audio id="s29" src="sfx/tick.wav" data-start="36.50" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s30" src="sfx/tick.wav" data-start="37.70" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s31" src="sfx/tick.wav" data-start="38.50" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s32" src="sfx/tick.wav" data-start="40.91" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s33" src="sfx/whoosh.wav" data-start="41.71" data-duration="0.5" data-volume="0.35"></audio>
+      <audio id="s34" src="sfx/sino.wav" data-start="42.46" data-duration="1.2" data-volume="0.3"></audio>
+      <audio id="s35" src="sfx/tick.wav" data-start="42.26" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s36" src="sfx/tick.wav" data-start="42.46" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s37" src="sfx/tick.wav" data-start="42.81" data-duration="0.03" data-volume="0.22"></audio>
     </div>
     <script>
       document.fonts.ready.then(() => {
@@ -111,50 +124,108 @@
         document.querySelectorAll(".barra[data-alvo]").forEach((b) => {
           const alvo = document.getElementById(b.dataset.alvo); if (!alvo) return;
           const caixa = alvo.parentElement;
+          if (b.dataset.sob) {
+            b.style.left = (caixa.offsetLeft + alvo.offsetLeft) + "px"; b.style.width = alvo.offsetWidth + "px";
+            b.style.top = (caixa.offsetTop + alvo.offsetTop + alvo.offsetHeight + 2) + "px"; return;
+          }
           b.style.left = (caixa.offsetLeft + alvo.offsetLeft - 12) + "px"; b.style.width = (alvo.offsetWidth + 24) + "px";
         });
         const tl = gsap.timeline({ paused: true });
         tl.fromTo("#p0", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 3.95);
         tl.set("#p0", { y: 2580 }, 10.49);
         tl.fromTo("#p0e0", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 4.40);
-        tl.fromTo("#p0e1", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 5.27);
-        tl.fromTo("#p0e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 6.80);
-        tl.fromTo("#p0e3", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 8.66);
+        tl.fromTo("#p0e1w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 5.05);
+        tl.fromTo("#p0e1w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 5.27);
+        tl.fromTo("#p0e1w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 5.59);
+        tl.fromTo("#p0e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 6.06);
+        tl.fromTo("#p0e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 6.80);
+        tl.fromTo("#p0e2w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 6.98);
+        tl.fromTo("#p0e2w3", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 7.22);
+        tl.fromTo("#p0e3w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 8.36);
+        tl.fromTo("#p0e3w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 8.42);
+        tl.fromTo("#p0e3w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 8.66);
+        tl.fromTo("#p0e3w3", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 9.16);
         tl.to("#p0e4", { scaleX: 1, duration: 0.5, ease: "power2.out" }, 9.16);
+        tl.fromTo("#p0m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 6.34, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 3.95);
         tl.fromTo("#p1", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 9.79);
         tl.to("#p1", { y: -2580, duration: 0.5, ease: "power3.in" }, 16.24);
         tl.fromTo("#p1e0", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 10.24);
-        tl.fromTo("#p1e1", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 11.19);
-        tl.fromTo("#p1e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 12.13);
-        tl.fromTo("#p1e3", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 13.89);
-        tl.fromTo("#p1e4", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 15.21);
+        tl.fromTo("#p1e1w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 10.39);
+        tl.fromTo("#p1e1w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 11.31);
+        tl.fromTo("#p1e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 15.21);
+        tl.fromTo("#p1e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 15.33);
+        tl.fromTo("#p1e2w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 15.45);
+        tl.fromTo("#p1e3w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 13.89);
+        tl.fromTo("#p1e3w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 13.95);
+        tl.fromTo("#p1e4w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 15.21);
+        tl.fromTo("#p1e4w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 15.37);
+        tl.fromTo("#p1e4w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 15.57);
+        tl.to("#p1b0", { scaleX: 1, duration: 0.6, ease: "power2.out" }, 12.35);
+        tl.to("#p1", { scale: 1.012, duration: 0.35, yoyo: true, repeat: 1, ease: "sine.inOut", transformOrigin: "50% 50%" }, 12.97);
+        tl.to("#p1e1", { opacity: 0.4, duration: 0.45, ease: "power2.out" }, 14.49);
+        tl.fromTo("#p1e3", { x: 0 }, { x: 10, duration: 0.45, ease: "power2.out" }, 14.49);
+        tl.fromTo("#p1m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 6.80, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 9.79);
         tl.fromTo("#p2", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 17.37);
         tl.to("#p2", { y: -2580, duration: 0.5, ease: "power3.in" }, 23.09);
-        tl.fromTo("#p2e0", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 18.08);
-        tl.fromTo("#p2e1", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 18.66);
-        tl.fromTo("#p2e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 20.23);
-        tl.fromTo("#p2e3", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 21.27);
-        tl.fromTo("#p2e4", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 22.33);
+        tl.fromTo("#p2e0w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 18.08);
+        tl.fromTo("#p2e0w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 18.24);
+        tl.fromTo("#p2e1w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 18.66);
+        tl.fromTo("#p2e1w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 18.80);
+        tl.fromTo("#p2e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 20.23);
+        tl.fromTo("#p2e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 20.39);
+        tl.fromTo("#p2e3w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 21.27);
+        tl.fromTo("#p2e3w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 21.67);
+        tl.fromTo("#p2e3w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 21.83);
+        tl.fromTo("#p2e4w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 22.33);
+        tl.fromTo("#p2e4w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 22.63);
+        tl.to("#p2e0", { opacity: 0.4, duration: 0.45, ease: "power2.out" }, 19.42);
+        tl.fromTo("#p2e1", { x: 0 }, { x: 0, duration: 0.45, ease: "power2.out" }, 19.42);
+        tl.fromTo("#p2m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 6.07, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 17.37);
         tl.fromTo("#p3", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 29.50);
         tl.set("#p3", { y: 2580 }, 36.84);
         tl.fromTo("#p3e0", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 29.95);
+        tl.fromTo("#p3e1k0w0", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 30.90);
+        tl.fromTo("#p3e1k0w1", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 31.23);
+        tl.fromTo("#p3e1k0w2", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 31.56);
+        tl.fromTo("#p3e1k0w3", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 32.26);
+        tl.fromTo("#p3e1k0w4", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 32.32);
         tl.fromTo("#p3e1k0", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 30.09);
-        tl.to("#p3e1x0", { scaleX: 1, duration: 0.3, ease: "power2.out" }, 31.35);
-        tl.to("#p3e1k0", { opacity: 0.45, duration: 0.3 }, 31.50);
+        tl.to("#p3e1x0", { scaleX: 1, duration: 0.3, ease: "power2.out" }, 32.45);
+        tl.to("#p3e1k0", { opacity: 0.45, duration: 0.3 }, 32.60);
+        tl.fromTo("#p3e1k1w0", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 33.20);
+        tl.fromTo("#p3e1k1w1", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 33.32);
+        tl.fromTo("#p3e1k1w2", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 33.44);
+        tl.fromTo("#p3e1k1w3", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 33.56);
+        tl.fromTo("#p3e1k1w4", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 33.68);
         tl.fromTo("#p3e1k1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 32.65);
-        tl.to("#p3e1k1", { backgroundColor: "#ff6e1f", duration: 0.3 }, 34.81);
+        tl.to("#p3e1k1", { backgroundColor: "#ff6e1f", duration: 0.3 }, 35.30);
+        tl.to("#p3", { scale: 1.012, duration: 0.35, yoyo: true, repeat: 1, ease: "sine.inOut", transformOrigin: "50% 50%" }, 34.47);
+        tl.fromTo("#p3m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 7.04, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 29.50);
         tl.fromTo("#p4", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 36.14);
         tl.to("#p4", { y: -2580, duration: 0.5, ease: "power3.in" }, 41.63);
-        tl.fromTo("#p4e0", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 36.50);
-        tl.fromTo("#p4e1", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 37.70);
-        tl.fromTo("#p4e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 38.88);
-        tl.fromTo("#p4e3", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 40.63);
+        tl.fromTo("#p4e0w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 36.50);
+        tl.fromTo("#p4e0w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 36.64);
+        tl.fromTo("#p4e0w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 36.78);
+        tl.fromTo("#p4e1w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 37.70);
+        tl.fromTo("#p4e1w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 37.90);
+        tl.fromTo("#p4e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 38.50);
+        tl.fromTo("#p4e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 38.88);
+        tl.fromTo("#p4e2w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 39.28);
+        tl.fromTo("#p4e2w3", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 39.87);
+        tl.fromTo("#p4e3w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 40.91);
+        tl.fromTo("#p4e3w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 41.11);
+        tl.fromTo("#p4e3w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 41.25);
+        tl.fromTo("#p4m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 5.84, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 36.14);
         tl.fromTo("#p5", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 41.71);
         tl.fromTo("#p5e0", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 42.21);
-        tl.fromTo("#p5e1", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 42.26);
-        tl.fromTo("#p5e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 42.46);
-        tl.fromTo("#p5e3", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 42.81);
+        tl.fromTo("#p5e1w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 42.26);
+        tl.fromTo("#p5e1w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 42.26);
+        tl.fromTo("#p5e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 42.46);
+        tl.fromTo("#p5e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 42.46);
+        tl.fromTo("#p5e3w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 42.81);
+        tl.fromTo("#p5e3w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 42.81);
         tl.to("#p5e4", { scaleX: 1, duration: 0.5, ease: "power2.out" }, 43.06);
+        tl.fromTo("#p5m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 4.05, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 41.71);
         window.__timelines["main"] = tl;
       });
     </script>

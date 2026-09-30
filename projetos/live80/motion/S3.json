@@ -58,7 +58,7 @@
      "tipo": "rotulo",
      "texto": "imigração é",
      "y": 250,
-     "t": 11.22
+     "t": 11.36
     },
     {
      "tipo": "linha",
@@ -67,20 +67,18 @@
      "t": 12.16
     },
     {
-     "tipo": "linha",
-     "texto": "médio ou longo prazo.",
-     "y": 480,
-     "t": 13.63,
-     "tam": 100,
-     "cor": "destaque"
-    },
-    {
-     "tipo": "rota",
-     "y": 640,
-     "t": 12.3,
-     "dur": 2.0,
-     "de": "hoje",
-     "para": "EUA"
+     "tipo": "barra",
+     "y": 520,
+     "itens": [
+      {
+       "texto": "médio prazo",
+       "t": 12.68
+      },
+      {
+       "texto": "ou longo prazo",
+       "t": 13.95
+      }
+     ]
     }
    ]
   },
@@ -199,8 +197,11 @@
    "t0": 36.48,
    "t1": 39.93,
    "painel": "cheio",
-   "palavra": "PERFIL27",
-   "texto": "para uma análise de perfil gratuita"
+   "palavra": "live completa",
+   "texto": "no canal",
+   "acima": "Veja a",
+   "tam_texto": 84
   }
- ]
+ ],
+ "palavras": "palavras/S3.json"
 }

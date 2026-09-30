@@ -41,7 +41,7 @@ SHORTS = [
     ("S6", "S6_filho_18", "3.32-50.3",
      "Seu filho já tem 18 anos? Isso pode mudar o seu plano", "laranja"),
 ]
-CTA = "Comente PERFIL27 para uma análise de perfil gratuita"   # texto do CTA animado (motion/…_cta)
+CTA = "Veja a live completa no canal"   # YouTube Shorts (no Instagram o CTA é a palavra-chave); texto do motion/…_cta
 CAUDA = 3.8
 
 TROCAS = ["USIS é a prova=USCIS aprova", "outra pessoa=autorização", "EB2 em Davos=EB-2 NIW",

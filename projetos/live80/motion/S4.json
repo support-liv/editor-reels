@@ -82,26 +82,27 @@
      "t": 12.6
     },
     {
-     "tipo": "linha",
-     "texto": "2 partes:",
-     "y": 360,
+     "tipo": "numero",
+     "y": 340,
      "t": 14.53,
-     "tam": 130,
+     "numero": "2",
+     "rotulo": "partes",
+     "t_rotulo": 14.77
+    },
+    {
+     "tipo": "linha",
+     "texto": "elegibilidade",
+     "y": 700,
+     "t": 15.43,
+     "tam": 100,
      "cor": "destaque"
     },
     {
-     "tipo": "etapas",
-     "y": 540,
-     "itens": [
-      {
-       "texto": "elegibilidade",
-       "t": 15.43
-      },
-      {
-       "texto": "ajuste de status",
-       "t": 17.05
-      }
-     ]
+     "tipo": "linha",
+     "texto": "+ ajuste de status",
+     "y": 810,
+     "t": 16.89,
+     "tam": 100
     }
    ]
   },
@@ -189,17 +190,18 @@
      "tipo": "rotulo",
      "texto": "parte 2",
      "y": 250,
-     "t": 33.25
+     "t": 33.2
     },
     {
-     "tipo": "cartoes",
+     "tipo": "colunas",
      "y": 330,
+     "alt": 340,
      "itens": [
       {
        "titulo": "Nos EUA 🇺🇸",
        "texto": "com visto temporário: ajuste",
        "t": 33.46,
-       "destaque_t": 35.2
+       "destaque_t": 35.52
       },
       {
        "titulo": "No Brasil 🇧🇷",
@@ -277,8 +279,11 @@
    "t0": 52.07,
    "t1": 55.52,
    "painel": "cheio",
-   "palavra": "PERFIL27",
-   "texto": "para uma análise de perfil gratuita"
+   "palavra": "live completa",
+   "texto": "no canal",
+   "acima": "Veja a",
+   "tam_texto": 84
   }
- ]
+ ],
+ "palavras": "palavras/S4.json"
 }

@@ -63,13 +63,12 @@
      "cor": "destaque"
     },
     {
-     "tipo": "rota",
-     "y": 650,
-     "t": 11.87,
-     "dur": 0.9,
-     "de": "BR",
-     "para": "EUA",
-     "rotulo_de": "consulado"
+     "tipo": "linha",
+     "texto": "Por que não muda nada?",
+     "y": 620,
+     "t": 12.33,
+     "tam": 84,
+     "peso": 700
     }
    ]
   },
@@ -127,30 +126,30 @@
      "tipo": "rotulo",
      "texto": "e o ajuste de status?",
      "y": 250,
-     "t": 29.5
+     "t": 29.4
     },
     {
-     "tipo": "cartoes",
+     "tipo": "colunas",
      "y": 330,
      "itens": [
       {
        "titulo": "Consular 🇧🇷",
        "texto": "na prática, igual",
-       "t": 29.6
+       "t": 29.61
       },
       {
        "titulo": "Ajuste 🇺🇸",
        "texto": "impacto real",
-       "t": 30.82,
-       "destaque_t": 31.53
+       "t": 30.17,
+       "destaque_t": 30.82
       }
      ]
     },
     {
      "tipo": "linha",
      "texto": "agora não pode mais.",
-     "y": 690,
-     "t": 32.34,
+     "y": 700,
+     "t": 32.06,
      "tam": 96,
      "cor": "destaque"
     }
@@ -161,8 +160,11 @@
    "t0": 34.07,
    "t1": 37.52,
    "painel": "cheio",
-   "palavra": "PERFIL27",
-   "texto": "para uma análise de perfil gratuita"
+   "palavra": "live completa",
+   "texto": "no canal",
+   "acima": "Veja a",
+   "tam_texto": 84
   }
- ]
+ ],
+ "palavras": "palavras/S1.json"
 }

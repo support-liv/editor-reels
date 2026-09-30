@@ -10,7 +10,7 @@ Leia antes de editar: `docs/FORMATOS.md` (o que cada formato leva), `docs/PADROE
 2. **Assista.** Transcreva (`python3 editor/transcrever_lote.py VIDEO`), veja alguns quadros e a resolução (`ffprobe`). Deduza sozinho: marca, tipo de cena, assunto, público, objetivo, pautas e ganchos.
 3. **Pergunte uma vez só, e só o que não dá para deduzir.** Uma rodada curta, já com a sua sugestão preenchida. Normalmente:
    - quais formatos saem desse material (corte longo, Reels/Shorts, stories, carrossel, WhatsApp, anúncio);
-   - **CTA**: link na bio ou **palavra-chave** (muda por campanha e por vídeo, sempre confirmar);
+   - **canal de destino** (YouTube, Instagram…): o **CTA muda por canal**. YouTube (Shorts de live): "Veja a live completa no canal". Instagram: link na bio ou **palavra-chave** (muda por campanha e por vídeo, sempre confirmar);
    - **live solo em 720p**: quadro com fundo desfocado ou tela cheia perdendo qualidade;
    - nomes com grafia duvidosa (o Whisper erra: "Livre" = LIV, "Marina Damás" = Marinna Damásio).
    Não pergunte o que o vídeo já responde nem o que já tem padrão.

@@ -14,7 +14,8 @@
       .rotulo { position: absolute; display: flex; align-items: center; gap: 18px; font-size: 40px; font-weight: 700; }
       .rotulo svg { width: 46px; height: 28px; }
       .linha { position: absolute; overflow: hidden; padding-bottom: 10px; }
-      .linha span { display: inline-block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }
+      .linha > span { display: inline-block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }
+      .linha .pal { display: inline-block; }
       .barra { position: absolute; border-radius: 5px; transform-origin: left center; transform: scaleX(0); }
       .icone { position: absolute; }
     </style>
@@ -24,68 +25,78 @@
       <div id="tudo" class="clip" style="position:absolute;inset:0" data-start="0" data-duration="37.52">
 <div class="painel" id="p0" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#fff0e6"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#ff6e1f" stroke-width="16" fill="none"/></svg>
+<div class="cont" id="p0m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
 <div class="rotulo" id="p0e0" style="left:96px;top:840px;color:#945943"><svg viewBox="0 0 46 28"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#ff6e1f"/></svg><span>a pergunta</span></div>
-<div class="linha" style="left:96px;width:894px;top:950px"><span id="p0e1" class="fit" data-max="894" style="color:#ff6e1f;font-size:124px;font-weight:800">EB-2 NIW</span></div>
-<div class="linha" style="left:96px;width:894px;top:1070px"><span id="p0e2" class="fit" data-max="894" style="color:#2c3642;font-size:124px;font-weight:800">nos próximos</span></div>
-<div class="linha" style="left:96px;width:894px;top:1190px"><span id="p0e3" class="fit" data-max="894" style="color:#2c3642;font-size:124px;font-weight:800">meses?</span></div>
-</div>
+<div class="linha" style="left:96px;width:894px;top:950px"><span id="p0e1" class="fit" data-max="894" style="color:#ff6e1f;font-size:124px;font-weight:800"><span class="pal" id="p0e1w0">EB-2</span>&nbsp;<span class="pal" id="p0e1w1">NIW</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1070px"><span id="p0e2" class="fit" data-max="894" style="color:#2c3642;font-size:124px;font-weight:800"><span class="pal" id="p0e2w0">nos</span>&nbsp;<span class="pal" id="p0e2w1">próximos</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1190px"><span id="p0e3" class="fit" data-max="894" style="color:#2c3642;font-size:124px;font-weight:800"><span class="pal" id="p0e3w0">meses?</span></span></div>
+</div></div>
 <div class="painel" id="p1" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#2c3642"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#ff6e1f" stroke-width="16" fill="none"/></svg>
-<div class="rotulo" id="p1e0" style="left:96px;top:690px;color:#fff0e6"><svg viewBox="0 0 46 28"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#ff6e1f"/></svg><span>processo consular</span></div>
-<div class="linha" style="left:96px;width:894px;top:800px"><span id="p1e1" class="fit" data-max="894" style="color:#fff0e6;font-size:124px;font-weight:800">Na prática,</span></div>
-<div class="linha" style="left:96px;width:894px;top:920px"><span id="p1e2" class="fit" data-max="894" style="color:#ff6e1f;font-size:124px;font-weight:800">não muda nada.</span></div>
-<div id="p1e3" style="position:absolute;left:0;top:1090px;width:1080px;height:360px"><svg style="position:absolute;left:0;top:0;width:1080px;height:360px" viewBox="0 0 1080 360"><path d="M150 270 C 380 270, 560 70, 930 90" fill="none" stroke="rgba(255,240,230,0.28)" stroke-width="5" stroke-dasharray="4 18" stroke-linecap="round"/><path id="p1e3p" class="rota" d="M150 270 C 380 270, 560 70, 930 90" fill="none" stroke="#ff6e1f" stroke-width="7" stroke-linecap="round"/><circle cx="150" cy="270" r="48" fill="#2c3642" stroke="#fff0e6" stroke-width="4"/><circle id="p1e3b" cx="930" cy="90" r="48" fill="#2c3642" stroke="#ff6e1f" stroke-width="4"/><circle id="p1e3v" r="14" fill="#ff6e1f" cx="150" cy="270"/><text x="150" y="282" text-anchor="middle" font-size="34" font-weight="900" fill="#fff0e6">BR</text><text id="p1e3bt" x="930" y="102" text-anchor="middle" font-size="34" font-weight="900" fill="#ff6e1f">EUA</text></svg><div style="position:absolute;left:-50px;top:340px;width:400px;text-align:center;font-size:36px;font-weight:700;color:#fff0e6">consulado</div></div>
-</div>
+<div class="cont" id="p1m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
+<div class="rotulo" id="p1e0" style="left:96px;top:851px;color:#fff0e6"><svg viewBox="0 0 46 28"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#ff6e1f"/></svg><span>processo consular</span></div>
+<div class="linha" style="left:96px;width:894px;top:961px"><span id="p1e1" class="fit" data-max="894" style="color:#fff0e6;font-size:124px;font-weight:800"><span class="pal" id="p1e1w0">Na</span>&nbsp;<span class="pal" id="p1e1w1">prática,</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1081px"><span id="p1e2" class="fit" data-max="894" style="color:#ff6e1f;font-size:124px;font-weight:800"><span class="pal" id="p1e2w0">não</span>&nbsp;<span class="pal" id="p1e2w1">muda</span>&nbsp;<span class="pal" id="p1e2w2">nada.</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1221px"><span id="p1e3" class="fit" data-max="894" style="color:#fff0e6;font-size:84px;font-weight:700"><span class="pal" id="p1e3w0">Por</span>&nbsp;<span class="pal" id="p1e3w1">que</span>&nbsp;<span class="pal" id="p1e3w2">não</span>&nbsp;<span class="pal" id="p1e3w3">muda</span>&nbsp;<span class="pal" id="p1e3w4">nada?</span></span></div>
+</div></div>
 <div class="painel" id="p2" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#fff0e6"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#ff6e1f" stroke-width="16" fill="none"/></svg>
+<div class="cont" id="p2m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
 <div class="rotulo" id="p2e0" style="left:0;width:1080px;justify-content:center;top:798px;color:#945943"><svg viewBox="0 0 46 28"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#ff6e1f"/></svg><span>por quê?</span></div>
-<div class="linha" style="left:96px;width:888px;text-align:center;top:908px"><span id="p2e1" class="fit" data-max="888" style="color:#2c3642;font-size:124px;font-weight:800">antes de</span></div>
-<div class="linha" style="left:96px;width:888px;text-align:center;top:1028px"><span id="p2e2" class="fit" data-max="888" style="color:#ff6e1f;font-size:124px;font-weight:800">janeiro de 2025</span></div>
-<div class="linha" style="left:96px;width:888px;text-align:center;top:1148px"><span id="p2e3" class="fit" data-max="888" style="color:#2c3642;font-size:90px;font-weight:700">o consulado já não</span></div>
-<div class="linha" style="left:96px;width:888px;text-align:center;top:1268px"><span id="p2e4" class="fit" data-max="888" style="color:#ff6e1f;font-size:90px;font-weight:700">estava chamando.</span></div>
-</div>
+<div class="linha" style="left:96px;width:888px;text-align:center;top:908px"><span id="p2e1" class="fit" data-max="888" style="color:#2c3642;font-size:124px;font-weight:800"><span class="pal" id="p2e1w0">antes</span>&nbsp;<span class="pal" id="p2e1w1">de</span></span></div>
+<div class="linha" style="left:96px;width:888px;text-align:center;top:1028px"><span id="p2e2" class="fit" data-max="888" style="color:#ff6e1f;font-size:124px;font-weight:800"><span class="pal" id="p2e2w0">janeiro</span>&nbsp;<span class="pal" id="p2e2w1">de</span>&nbsp;<span class="pal" id="p2e2w2">2025</span></span></div>
+<div class="linha" style="left:96px;width:888px;text-align:center;top:1148px"><span id="p2e3" class="fit" data-max="888" style="color:#2c3642;font-size:90px;font-weight:700"><span class="pal" id="p2e3w0">o</span>&nbsp;<span class="pal" id="p2e3w1">consulado</span>&nbsp;<span class="pal" id="p2e3w2">já</span>&nbsp;<span class="pal" id="p2e3w3">não</span></span></div>
+<div class="linha" style="left:96px;width:888px;text-align:center;top:1268px"><span id="p2e4" class="fit" data-max="888" style="color:#ff6e1f;font-size:90px;font-weight:700"><span class="pal" id="p2e4w0">estava</span>&nbsp;<span class="pal" id="p2e4w1">chamando.</span></span></div>
+<div class="barra" id="p2b0" data-alvo="p2e1" data-sob="1" style="height:6px;background:#ff6e1f"></div>
+</div></div>
 <div class="painel" id="p3" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#2c3642"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#ff6e1f" stroke-width="16" fill="none"/></svg>
-<div class="rotulo" id="p3e0" style="left:96px;top:810px;color:#fff0e6"><svg viewBox="0 0 46 28"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#ff6e1f"/></svg><span>e o ajuste de status?</span></div>
-<div id="p3e1" style="position:absolute;left:0;top:890px;width:1080px;height:300px"><div id="p3e1k0" style="position:absolute;left:96px;top:0;width:429px;height:300px;border-radius:28px;background:#fff0e6;padding:36px 34px;box-sizing:border-box;opacity:0"><div class="fit" data-max="361" style="font-size:68px;font-weight:900;line-height:1.0;color:#2c3642;white-space:nowrap;display:inline-block">Consular 🇧🇷</div><div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:#2c3642">na prática, igual</div><div id="p3e1x0" style="position:absolute;left:24px;right:24px;top:145px;height:10px;border-radius:5px;background:#ff6e1f;transform:scaleX(0);transform-origin:left center"></div></div><div id="p3e1k1" style="position:absolute;left:555px;top:0;width:429px;height:300px;border-radius:28px;background:#fff0e6;padding:36px 34px;box-sizing:border-box;opacity:0"><div class="fit" data-max="361" style="font-size:68px;font-weight:900;line-height:1.0;color:#2c3642;white-space:nowrap;display:inline-block">Ajuste 🇺🇸</div><div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:#2c3642">impacto real</div><div id="p3e1x1" style="position:absolute;left:24px;right:24px;top:145px;height:10px;border-radius:5px;background:#ff6e1f;transform:scaleX(0);transform-origin:left center"></div></div></div>
-<div class="linha" style="left:96px;width:894px;top:1250px"><span id="p3e2" class="fit" data-max="894" style="color:#ff6e1f;font-size:96px;font-weight:800">agora não pode mais.</span></div>
-</div>
+<div class="cont" id="p3m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
+<div class="rotulo" id="p3e0" style="left:96px;top:805px;color:#fff0e6"><svg viewBox="0 0 46 28"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#ff6e1f"/></svg><span>e o ajuste de status?</span></div>
+<div id="p3e1" style="position:absolute;left:0;top:885px;width:1080px;height:300px"><div id="p3e1f" style="position:absolute;left:538px;top:0;width:4px;height:300px;background:rgba(255,240,230,0.28);transform:scaleY(0);transform-origin:top"></div><div id="p3e1c0" style="position:absolute;left:96px;top:10px;width:414px;opacity:0"><div class="fit" data-max="414" style="display:inline-block;white-space:nowrap;font-size:70px;font-weight:900;line-height:1.0;color:#ff6e1f">Consular 🇧🇷</div><div style="margin-top:18px;font-size:48px;font-weight:700;line-height:1.1;color:#fff0e6"><span id="p3e1c0w0" style="display:inline-block;opacity:0">na</span>&nbsp;<span id="p3e1c0w1" style="display:inline-block;opacity:0">prática,</span>&nbsp;<span id="p3e1c0w2" style="display:inline-block;opacity:0">igual</span></div><div id="p3e1s0" style="margin-top:22px;width:180px;height:8px;border-radius:4px;background:#ff6e1f;transform:scaleX(0);transform-origin:left"></div><div id="p3e1x0" style="position:absolute;left:-10px;top:30px;width:414px;height:9px;border-radius:5px;background:#ff6e1f;transform:scaleX(0);transform-origin:left"></div></div><div id="p3e1c1" style="position:absolute;left:570px;top:10px;width:414px;opacity:0"><div class="fit" data-max="414" style="display:inline-block;white-space:nowrap;font-size:70px;font-weight:900;line-height:1.0;color:#ff6e1f">Ajuste 🇺🇸</div><div style="margin-top:18px;font-size:48px;font-weight:700;line-height:1.1;color:#fff0e6"><span id="p3e1c1w0" style="display:inline-block;opacity:0">impacto</span>&nbsp;<span id="p3e1c1w1" style="display:inline-block;opacity:0">real</span></div><div id="p3e1s1" style="margin-top:22px;width:180px;height:8px;border-radius:4px;background:#ff6e1f;transform:scaleX(0);transform-origin:left"></div><div id="p3e1x1" style="position:absolute;left:-10px;top:30px;width:414px;height:9px;border-radius:5px;background:#ff6e1f;transform:scaleX(0);transform-origin:left"></div></div></div>
+<div class="linha" style="left:96px;width:894px;top:1255px"><span id="p3e2" class="fit" data-max="894" style="color:#ff6e1f;font-size:96px;font-weight:800"><span class="pal" id="p3e2w0">agora</span>&nbsp;<span class="pal" id="p3e2w1">não</span>&nbsp;<span class="pal" id="p3e2w2">pode</span>&nbsp;<span class="pal" id="p3e2w3">mais.</span></span></div>
+<div class="barra" id="p3b0" data-alvo="p3e2" data-sob="1" style="height:6px;background:#ff6e1f"></div>
+</div></div>
 <div class="painel" id="p4" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#ff6e1f"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#2c3642" stroke-width="16" fill="none"/></svg>
-<svg class="icone" id="p4e0" viewBox="0 0 46 28" style="left:96px;top:900px;width:60px;height:36px"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#2c3642"/></svg>
-<div class="linha" style="left:96px;width:894px;top:940px"><span id="p4e1" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:800">Comente</span></div>
-<div class="linha" style="left:96px;width:894px;top:1030px"><span id="p4e2" class="fit" data-max="894" style="color:#2c3642;font-size:132px;font-weight:800">PERFIL27</span></div>
-<div class="linha" style="left:96px;width:894px;top:1175px"><span id="p4e3" class="fit" data-max="894" style="color:#ffffff;font-size:52px;font-weight:700">para uma análise de perfil gratuita</span></div>
-<div class="barra" id="p4e4" style="left:96px;top:1250px;width:300px;height:7px;background:#2c3642"></div>
-</div>
+<div class="cont" id="p4m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
+<svg class="icone" id="p4e0" viewBox="0 0 46 28" style="left:96px;top:1020px;width:60px;height:36px"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#2c3642"/></svg>
+<div class="linha" style="left:96px;width:894px;top:1060px"><span id="p4e1" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:800"><span class="pal" id="p4e1w0">Veja</span>&nbsp;<span class="pal" id="p4e1w1">a</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1150px"><span id="p4e2" class="fit" data-max="894" style="color:#2c3642;font-size:132px;font-weight:800"><span class="pal" id="p4e2w0">live</span>&nbsp;<span class="pal" id="p4e2w1">completa</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1295px"><span id="p4e3" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:700"><span class="pal" id="p4e3w0">no</span>&nbsp;<span class="pal" id="p4e3w1">canal</span></span></div>
+<div class="barra" id="p4e4" style="left:96px;top:1405px;width:300px;height:7px;background:#2c3642"></div>
+</div></div>
       </div>
       <audio id="s01" src="sfx/whoosh.wav" data-start="3.05" data-duration="0.5" data-volume="0.35"></audio>
       <audio id="s02" src="sfx/whoosh.wav" data-start="5.78" data-duration="0.5" data-volume="0.3"></audio>
       <audio id="s03" src="sfx/tick.wav" data-start="3.74" data-duration="0.03" data-volume="0.22"></audio>
       <audio id="s04" src="sfx/tick.wav" data-start="4.56" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s05" src="sfx/tick.wav" data-start="4.90" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s05" src="sfx/tick.wav" data-start="5.24" data-duration="0.03" data-volume="0.22"></audio>
       <audio id="s06" src="sfx/whoosh.wav" data-start="9.29" data-duration="0.5" data-volume="0.35"></audio>
       <audio id="s07" src="sfx/whoosh.wav" data-start="13.15" data-duration="0.5" data-volume="0.3"></audio>
       <audio id="s08" src="sfx/tick.wav" data-start="11.24" data-duration="0.03" data-volume="0.22"></audio>
       <audio id="s09" src="sfx/tick.wav" data-start="11.62" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s10" src="sfx/whoosh.wav" data-start="11.87" data-duration="0.5" data-volume="0.25"></audio>
-      <audio id="s11" src="sfx/tick.wav" data-start="12.77" data-duration="0.03" data-volume="0.3"></audio>
+      <audio id="s10" src="sfx/tick.wav" data-start="12.32" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s11" src="sfx/tick.wav" data-start="10.59" data-duration="0.03" data-volume="0.12"></audio>
       <audio id="s12" src="sfx/whoosh.wav" data-start="15.16" data-duration="0.5" data-volume="0.35"></audio>
       <audio id="s13" src="sfx/whoosh.wav" data-start="21.08" data-duration="0.5" data-volume="0.3"></audio>
-      <audio id="s14" src="sfx/tick.wav" data-start="15.77" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s14" src="sfx/tick.wav" data-start="15.41" data-duration="0.03" data-volume="0.22"></audio>
       <audio id="s15" src="sfx/tick.wav" data-start="17.07" data-duration="0.03" data-volume="0.22"></audio>
       <audio id="s16" src="sfx/tick.wav" data-start="18.81" data-duration="0.03" data-volume="0.22"></audio>
       <audio id="s17" src="sfx/tick.wav" data-start="19.82" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s18" src="sfx/whoosh.wav" data-start="28.95" data-duration="0.5" data-volume="0.35"></audio>
-      <audio id="s19" src="sfx/whoosh.wav" data-start="33.64" data-duration="0.5" data-volume="0.3"></audio>
-      <audio id="s20" src="sfx/tick.wav" data-start="29.60" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s21" src="sfx/tick.wav" data-start="30.82" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s22" src="sfx/tick.wav" data-start="32.34" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s23" src="sfx/whoosh.wav" data-start="33.72" data-duration="0.5" data-volume="0.35"></audio>
-      <audio id="s24" src="sfx/sino.wav" data-start="34.47" data-duration="1.2" data-volume="0.3"></audio>
-      <audio id="s25" src="sfx/tick.wav" data-start="34.27" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s26" src="sfx/tick.wav" data-start="34.47" data-duration="0.03" data-volume="0.22"></audio>
-      <audio id="s27" src="sfx/tick.wav" data-start="34.82" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s18" src="sfx/tick.wav" data-start="16.42" data-duration="0.03" data-volume="0.12"></audio>
+      <audio id="s19" src="sfx/tick.wav" data-start="20.58" data-duration="0.03" data-volume="0.12"></audio>
+      <audio id="s20" src="sfx/whoosh.wav" data-start="28.95" data-duration="0.5" data-volume="0.35"></audio>
+      <audio id="s21" src="sfx/whoosh.wav" data-start="33.64" data-duration="0.5" data-volume="0.3"></audio>
+      <audio id="s22" src="sfx/tick.wav" data-start="29.61" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s23" src="sfx/tick.wav" data-start="30.17" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s24" src="sfx/tick.wav" data-start="32.06" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s25" src="sfx/tick.wav" data-start="33.00" data-duration="0.03" data-volume="0.12"></audio>
+      <audio id="s26" src="sfx/whoosh.wav" data-start="33.72" data-duration="0.5" data-volume="0.35"></audio>
+      <audio id="s27" src="sfx/sino.wav" data-start="34.47" data-duration="1.2" data-volume="0.3"></audio>
+      <audio id="s28" src="sfx/tick.wav" data-start="34.27" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s29" src="sfx/tick.wav" data-start="34.47" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s30" src="sfx/tick.wav" data-start="34.82" data-duration="0.03" data-volume="0.22"></audio>
     </div>
     <script>
       document.fonts.ready.then(() => {
@@ -98,44 +109,85 @@
         document.querySelectorAll(".barra[data-alvo]").forEach((b) => {
           const alvo = document.getElementById(b.dataset.alvo); if (!alvo) return;
           const caixa = alvo.parentElement;
+          if (b.dataset.sob) {
+            b.style.left = (caixa.offsetLeft + alvo.offsetLeft) + "px"; b.style.width = alvo.offsetWidth + "px";
+            b.style.top = (caixa.offsetTop + alvo.offsetTop + alvo.offsetHeight + 2) + "px"; return;
+          }
           b.style.left = (caixa.offsetLeft + alvo.offsetLeft - 12) + "px"; b.style.width = (alvo.offsetWidth + 24) + "px";
         });
         const tl = gsap.timeline({ paused: true });
         tl.fromTo("#p0", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 3.05);
         tl.to("#p0", { y: -2580, duration: 0.5, ease: "power3.in" }, 5.78);
         tl.fromTo("#p0e0", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 3.50);
-        tl.fromTo("#p0e1", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 3.74);
-        tl.fromTo("#p0e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 4.56);
-        tl.fromTo("#p0e3", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 4.90);
+        tl.fromTo("#p0e1w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 3.74);
+        tl.fromTo("#p0e1w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 3.88);
+        tl.fromTo("#p0e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 4.56);
+        tl.fromTo("#p0e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 4.78);
+        tl.fromTo("#p0e3w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 5.24);
+        tl.fromTo("#p0m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 3.08, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 3.05);
         tl.fromTo("#p1", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 9.29);
         tl.to("#p1", { y: -2580, duration: 0.5, ease: "power3.in" }, 13.15);
         tl.fromTo("#p1e0", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 9.94);
-        tl.fromTo("#p1e1", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 11.24);
-        tl.fromTo("#p1e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 11.62);
-        tl.fromTo("#p1e3", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 11.52);
-        (() => { const p = document.getElementById("p1e3p"), L = p.getTotalLength(), P = Array.from({length: 41}, (_, i) => p.getPointAtLength(L * i / 40)); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; tl.fromTo(p, { strokeDashoffset: L }, { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut" }, 11.87); const v = { k: 0 }; tl.to(v, { k: 1, duration: 0.9, ease: "power2.inOut", onUpdate: () => { const q = P[Math.round(v.k * 40)]; document.getElementById("p1e3v").setAttribute("cx", q.x); document.getElementById("p1e3v").setAttribute("cy", q.y); } }, 11.87); })();
-        tl.to("#p1e3b", { fill: "#ff6e1f", duration: 0.25 }, 12.77);
-        tl.to("#p1e3bt", { fill: "#2c3642", duration: 0.25 }, 12.77);
+        tl.fromTo("#p1e1w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 11.24);
+        tl.fromTo("#p1e1w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 11.36);
+        tl.fromTo("#p1e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 11.62);
+        tl.fromTo("#p1e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 11.76);
+        tl.fromTo("#p1e2w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 12.04);
+        tl.fromTo("#p1e3w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 12.32);
+        tl.fromTo("#p1e3w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 12.44);
+        tl.fromTo("#p1e3w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 12.56);
+        tl.fromTo("#p1e3w3", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 12.68);
+        tl.fromTo("#p1e3w4", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 12.80);
+        tl.to("#p1", { scale: 1.012, duration: 0.35, yoyo: true, repeat: 1, ease: "sine.inOut", transformOrigin: "50% 50%" }, 10.59);
+        tl.fromTo("#p1m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 4.21, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 9.29);
         tl.fromTo("#p2", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 15.16);
         tl.to("#p2", { y: -2580, duration: 0.5, ease: "power3.in" }, 21.08);
         tl.fromTo("#p2e0", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 15.61);
-        tl.fromTo("#p2e1", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 15.77);
-        tl.fromTo("#p2e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 17.07);
-        tl.fromTo("#p2e3", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 18.81);
-        tl.fromTo("#p2e4", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 19.82);
+        tl.fromTo("#p2e1w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 15.41);
+        tl.fromTo("#p2e1w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 15.77);
+        tl.fromTo("#p2e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 17.07);
+        tl.fromTo("#p2e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 17.45);
+        tl.fromTo("#p2e2w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 17.63);
+        tl.fromTo("#p2e3w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 18.81);
+        tl.fromTo("#p2e3w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 18.93);
+        tl.fromTo("#p2e3w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 19.05);
+        tl.fromTo("#p2e3w3", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 19.17);
+        tl.fromTo("#p2e4w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 19.82);
+        tl.fromTo("#p2e4w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 19.96);
+        tl.to("#p2b0", { scaleX: 1, duration: 0.6, ease: "power2.out" }, 16.42);
+        tl.to("#p2e1", { opacity: 0.4, duration: 0.45, ease: "power2.out" }, 20.58);
+        tl.to("#p2e2", { opacity: 0.4, duration: 0.45, ease: "power2.out" }, 20.58);
+        tl.to("#p2e3", { opacity: 0.4, duration: 0.45, ease: "power2.out" }, 20.58);
+        tl.fromTo("#p2e4", { x: 0 }, { x: 0, duration: 0.45, ease: "power2.out" }, 20.58);
+        tl.fromTo("#p2m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 6.27, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 15.16);
         tl.fromTo("#p3", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 28.95);
         tl.to("#p3", { y: -2580, duration: 0.5, ease: "power3.in" }, 33.64);
-        tl.fromTo("#p3e0", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 29.50);
-        tl.fromTo("#p3e1k0", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 29.45);
-        tl.fromTo("#p3e1k1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 30.67);
-        tl.to("#p3e1k1", { backgroundColor: "#ff6e1f", duration: 0.3 }, 31.53);
-        tl.fromTo("#p3e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 32.34);
+        tl.fromTo("#p3e0", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 29.40);
+        tl.to("#p3e1f", { scaleY: 1, duration: 0.5, ease: "power2.out" }, 29.31);
+        tl.fromTo("#p3e1c0w0", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 29.20);
+        tl.fromTo("#p3e1c0w1", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 29.26);
+        tl.fromTo("#p3e1c0w2", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 29.32);
+        tl.fromTo("#p3e1c0", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 29.51);
+        tl.fromTo("#p3e1c1w0", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 30.82);
+        tl.fromTo("#p3e1c1w1", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 31.46);
+        tl.fromTo("#p3e1c1", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 30.07);
+        tl.to("#p3e1s1", { scaleX: 1, duration: 0.4, ease: "power2.out" }, 30.82);
+        tl.fromTo("#p3e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 32.06);
+        tl.fromTo("#p3e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 32.18);
+        tl.fromTo("#p3e2w2", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 32.30);
+        tl.fromTo("#p3e2w3", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 32.42);
+        tl.to("#p3b0", { scaleX: 1, duration: 0.6, ease: "power2.out" }, 33.00);
+        tl.fromTo("#p3m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 5.04, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 28.95);
         tl.fromTo("#p4", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 33.72);
         tl.fromTo("#p4e0", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 34.22);
-        tl.fromTo("#p4e1", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 34.27);
-        tl.fromTo("#p4e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 34.47);
-        tl.fromTo("#p4e3", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 34.82);
+        tl.fromTo("#p4e1w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 34.27);
+        tl.fromTo("#p4e1w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 34.27);
+        tl.fromTo("#p4e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 34.47);
+        tl.fromTo("#p4e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 34.47);
+        tl.fromTo("#p4e3w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 34.82);
+        tl.fromTo("#p4e3w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 34.82);
         tl.to("#p4e4", { scaleX: 1, duration: 0.5, ease: "power2.out" }, 35.07);
+        tl.fromTo("#p4m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 4.05, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 33.72);
         window.__timelines["main"] = tl;
       });
     </script>

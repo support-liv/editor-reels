@@ -47,6 +47,123 @@ ICONES = {
 }
 
 
+import unicodedata, re as _re
+
+
+def _norm(w):
+    w = unicodedata.normalize("NFD", w.lower())
+    return _re.sub(r"[^a-z0-9]", "", "".join(ch for ch in w if unicodedata.category(ch) != "Mn"))
+
+
+def sincronizar(texto, t, falas):
+    """tempo de cada palavra da linha, casando com a fala (Whisper) a partir de t; o que não foi dito literalmente
+    (resumo, bandeira) é distribuído entre os vizinhos. Sem falas: tudo em t."""
+    toks = texto.split()
+    if not falas:
+        return [t] * len(toks)
+    cand = [f for f in falas if f["t"] >= t - 0.8][:40]
+    tempos, j = [None] * len(toks), 0
+    for k, tok in enumerate(toks):
+        n = _norm(tok)
+        if not n:
+            continue
+        for jj in range(j, min(len(cand), j + (7 if j else 12))):   # 1ª palavra: janela maior
+            if _norm(cand[jj]["w"]) == n:
+                tempos[k], j = cand[jj]["t"], jj + 1
+                break
+    conhecidos = [(k, v) for k, v in enumerate(tempos) if v is not None]
+    if not conhecidos:
+        return [t + 0.14 * k for k in range(len(toks))]
+    prim = min(conhecidos[0][1], t) if conhecidos[0][0] > 0 else conhecidos[0][1]
+    for k in range(len(toks)):                           # preenche os buracos
+        if tempos[k] is None:
+            ant = max([(kk, v) for kk, v in conhecidos if kk < k], default=None)
+            pos = min([(kk, v) for kk, v in conhecidos if kk > k], default=None)
+            if ant and pos:
+                tempos[k] = ant[1] + (pos[1] - ant[1]) * (k - ant[0]) / (pos[0] - ant[0])
+            elif ant:
+                tempos[k] = ant[1] + 0.14 * (k - ant[0])
+            else:
+                tempos[k] = prim + 0.12 * k
+    for k in range(1, len(tempos)):                      # nunca volta no tempo
+        tempos[k] = max(tempos[k], tempos[k - 1] + 0.06)
+    return [round(v, 2) for v in tempos]
+
+
+def preparar(r, pasta):
+    """carrega as palavras da fala (--json-palavras) e resolve o tempo de cada palavra das linhas."""
+    falas = json.load(open(os.path.join(pasta, r["palavras"]))) if r.get("palavras") else []
+    for c in r["cenas"]:
+        for e in c.get("elementos", []):
+            if e["tipo"] == "linha" and falas and e.get("sync", True):
+                e["_tempos"] = sincronizar(e["texto"], e["t"], falas)
+            for it in e.get("itens", []):
+                if falas and it.get("texto"):
+                    it["_tempos"] = sincronizar(it["texto"], it["t"], falas)
+        # fala em outra ordem que o texto: a linha entra seguida (0,12s por palavra) em vez de ficar pela metade,
+        # entrar depois da linha seguinte ou depois que a cena sai
+        els = c.get("elementos", [])
+        objs = [e for e in els if e.get("_tempos")] + [it for e in els for it in e.get("itens", []) if it.get("_tempos")]
+        for k, o in enumerate(objs):
+            n, teto = len(o["_tempos"]), c["t1"] - 0.45
+            prox = [x["_tempos"][0] for x in objs[k + 1:] if x in els and o in els]
+            if o["_tempos"][-1] > teto + 0.01 or (prox and o["_tempos"][-1] > min(prox) + 0.3):
+                ini = min(o["_tempos"][0], teto - 0.12 * (n - 1))
+                o["_tempos"] = [round(ini + 0.12 * q, 2) for q in range(n)]
+            o["_tempos"] = [max(v, round(c["t0"] - 0.1 + 0.06 * q, 2)) for q, v in enumerate(o["_tempos"])]   # nada antes do painel chegar
+        c["_batidas"] = batidas(c, falas)
+    return r
+
+
+def revelacoes(c):
+    """todos os instantes em que algo novo acontece na cena (palavras, itens, traços, batidas)."""
+    els = c.get("elementos", [])
+    return sorted([tk for e in els for tk in e.get("_tempos", [])] +
+                  [e.get("t", c["t0"]) for e in els if "itens" not in e and "_tempos" not in e] +
+                  [it[k] for e in els for it in e.get("itens", []) for k in ("t", "risco_t", "destaque_t") if k in it] +
+                  [tk for e in els for it in e.get("itens", []) for tk in it.get("_tempos", [])] +
+                  [e["t"] + e.get("dur", 0) for e in els if e["tipo"] in ("rota", "anel", "contador")] +
+                  [b["t"] for b in c.get("_batidas", [])])
+
+
+LETRA_ITEM = {"etapas": "t", "checklist": "r", "degraus": "l", "barra": "l", "colunas": "c"}   # id do texto de cada item
+
+
+def batidas(c, falas):
+    """preenche o que sobrou parado (fala seguindo sem texto novo) com acentos discretos no tempo de uma palavra dita:
+    'foco' (as linhas anteriores recuam e a última fica em evidência) ou 'fio' (fio fino se desenha sob a última linha).
+    Tudo dentro do manual da LIV: nada de elemento novo inventado."""
+    if c.get("tipo") == "cta" or c.get("batidas") is False:
+        return []
+    els = c.get("elementos", [])
+    linhas = [(ei, (e.get("_tempos") or [e.get("t", c["t0"])])[0]) for ei, e in enumerate(els) if e["tipo"] == "linha"]
+    itens = [(ei, i, it["t"]) for ei, e in enumerate(els) if e["tipo"] in LETRA_ITEM for i, it in enumerate(e.get("itens", [])) if it.get("texto")]
+    ja_tem_fio = {e.get("sob") for e in els if e["tipo"] == "sub"}
+    usados, out = set(), []
+    for _ in range(6):
+        ts = revelacoes(dict(c, _batidas=out))
+        buracos = [(a, b) for a, b in zip(ts, ts[1:]) if b - a > 1.2] + ([(ts[-1], c["t1"])] if ts and c["t1"] - ts[-1] > 1.1 else [])
+        if not buracos:
+            break
+        a, b = max(buracos, key=lambda ab: ab[1] - ab[0])
+        meio = (a + b) / 2
+        ditas = [f["t"] for f in falas if a + 0.45 < f["t"] < b - 0.3]
+        tb = round(min(ditas, key=lambda x: abs(x - meio)) if ditas else meio, 2)
+        antes = [ei for ei, t in linhas if t < tb - 0.2]
+        if len(antes) >= 2 and ("foco", antes[-1]) not in usados:
+            usados.add(("foco", antes[-1])); out.append({"t": tb, "tipo": "foco", "manter": antes[-1], "recuar": antes[:-1]})
+        elif antes and ("fio", antes[-1]) not in usados and antes[-1] not in ja_tem_fio:
+            usados.add(("fio", antes[-1])); out.append({"t": tb, "tipo": "fio", "alvo": antes[-1]})
+        elif [x for x in itens if x[2] < tb - 0.3 and ("item", x[:2]) not in usados]:
+            ei, i, _ = [x for x in itens if x[2] < tb - 0.3 and ("item", x[:2]) not in usados][-1]
+            usados.add(("item", (ei, i))); out.append({"t": tb, "tipo": "item", "el": ei, "item": i, "letra": LETRA_ITEM[els[ei]["tipo"]]})
+        elif not any(u[0] == "pulso" for u in usados):
+            usados.add(("pulso", 0)); out.append({"t": tb, "tipo": "pulso"})
+        else:
+            break
+    return out
+
+
 def alinhamento(c, i):
     """a maioria alinhada à esquerda; ~1 em 4 cenas centralizada (fixo por cena, reproduzível). CTA: esquerda."""
     if c.get("tipo") == "cta":
@@ -73,6 +190,14 @@ def extensao(e):
         return e["y"], e["y"] + e.get("tam", 150) * 1.05
     if e["tipo"] == "cartoes":
         return e["y"], e["y"] + e.get("alt", 300)
+    if e["tipo"] == "degraus":
+        return e["y"], e["y"] + 420
+    if e["tipo"] == "barra":
+        return e["y"], e["y"] + 190
+    if e["tipo"] == "colunas":
+        return e["y"], e["y"] + e.get("alt", 300)
+    if e["tipo"] == "numero":
+        return e["y"], e["y"] + e.get("tam", 340) * 0.95
     if e["tipo"] == "icone":
         vb = ICONES[e["icone"]][0].split()
         return e["y"], e["y"] + (200 if e["icone"] == "fio_arco" else e.get("tam", 160) * float(vb[3]) / float(vb[2]))
@@ -116,6 +241,21 @@ SEC = {"azul": "rgba(255,240,230,0.28)", "bege": "rgba(44,54,66,0.22)", "laranja
 CARTAO = {"azul": ("bege", "azul"), "bege": ("azul", "bege"), "laranja": ("branco", "azul")}   # (fundo do card, texto)
 
 
+def _pals(texto, pref, tempos, js, modo="entra"):
+    """texto em palavras (spans) animadas cada uma no seu tempo: 'entra' (sobe e aparece) ou 'acende' (de apagada a cheia)."""
+    ws = texto.split()
+    tempos = tempos or [None] * len(ws)
+    out = []
+    for k, w in enumerate(ws):
+        out.append(f'<span id="{pref}{k}" style="display:inline-block;opacity:{0.35 if modo == "acende" else 0}">{html.escape(w)}</span>')
+        if tempos[k] is not None:
+            if modo == "acende":
+                js.append(f'tl.to("#{pref}{k}", {{ opacity: 1, duration: 0.25 }}, {tempos[k]:.2f});')
+            else:
+                js.append(f'tl.fromTo("#{pref}{k}", {{ opacity: 0, y: 14 }}, {{ opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }}, {tempos[k]:.2f});')
+    return "&nbsp;".join(out)
+
+
 def _etapas(e, eid, top, W, centro, fundo, ctexto, cdest):
     """linha do tempo vertical: cada etapa acende no tempo em que é dita (a jornada inteira aparece apagada antes)."""
     x, passo, n = e.get("x", 96), e.get("passo", 118), len(e["itens"])
@@ -131,7 +271,8 @@ def _etapas(e, eid, top, W, centro, fundo, ctexto, cdest):
         svg.append(f'<circle cx="{x + 26}" cy="{cy}" r="26" fill="none" stroke="{sec}" stroke-width="4"/>'
                    f'<circle id="{eid}c{i}" cx="{x + 26}" cy="{cy}" r="0" fill="{dest}"/>')
         divs.append(f'<div id="{eid}t{i}" style="position:absolute;left:{x + 80}px;top:{cy - 38}px;width:{W - x - 170}px;'
-                    f'font-size:{e.get("tam", 66)}px;font-weight:800;color:{txt};opacity:0.35;white-space:nowrap">{html.escape(it["texto"])}</div>'
+                    f'font-size:{e.get("tam", 66)}px;font-weight:800;color:{txt};white-space:nowrap">'
+                    + _pals(it["texto"], f"{eid}t{i}w", it.get("_tempos") or [it["t"]] * len(it["texto"].split()), js, "acende") + '</div>'
                     f'<div id="{eid}n{i}" style="position:absolute;left:{x}px;top:{cy - 22}px;width:52px;text-align:center;font-size:32px;'
                     f'font-weight:900;color:{sec}">{i + 1}</div>')
         t = it["t"]
@@ -139,7 +280,7 @@ def _etapas(e, eid, top, W, centro, fundo, ctexto, cdest):
             js.append(f'tl.to("#{eid}l{i}", {{ strokeDashoffset: 0, duration: 0.3, ease: "power2.inOut" }}, {t - 0.3:.2f});')
         js.append(f'tl.to("#{eid}c{i}", {{ attr: {{ r: 26 }}, duration: 0.35, ease: "back.out(2)" }}, {t:.2f});')
         js.append(f'tl.to("#{eid}n{i}", {{ color: "{COR[fundo]}", duration: 0.2 }}, {t + 0.05:.2f});')
-        js.append(f'tl.fromTo("#{eid}t{i}", {{ opacity: 0.35, x: 0 }}, {{ opacity: 1, x: 8, duration: 0.35, ease: "power2.out" }}, {t:.2f});')
+        js.append(f'tl.fromTo("#{eid}t{i}", {{ x: 0 }}, {{ x: 8, duration: 0.35, ease: "power2.out" }}, {t:.2f});')
         sons.append(("tick", t, 0.25, 0.03))
     t_ini = e["itens"][0]["t"] - 0.35
     js.append(f'tl.fromTo("#{eid}", {{ opacity: 0, y: 30 }}, {{ opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }}, {t_ini:.2f});')
@@ -190,7 +331,8 @@ def _checklist(e, eid, top, W, centro, fundo, ctexto, cdest):
                  f'<svg width="62" height="62" viewBox="0 0 62 62"><rect x="2" y="2" width="58" height="58" rx="14" fill="none" stroke="{sec}" stroke-width="4"/>'
                  f'<path id="{eid}m{i}" d="{marca}" fill="none" stroke="{dest}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" '
                  f'stroke-dasharray="60" stroke-dashoffset="60"/></svg>'
-                 f'<span style="font-size:{e.get("tam", 66)}px;font-weight:800;color:{txt};white-space:nowrap">{html.escape(it["texto"])}</span></div>')
+                 f'<span style="font-size:{e.get("tam", 66)}px;font-weight:800;color:{txt};white-space:nowrap">'
+                 + _pals(it["texto"], f"{eid}r{i}w", it.get("_tempos") or [t] * len(it["texto"].split()), js) + '</span></div>')
         js.append(f'tl.fromTo("#{eid}r{i}", {{ opacity: 0, x: -30 }}, {{ opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }}, {t - 0.2:.2f});')
         js.append(f'tl.to("#{eid}m{i}", {{ strokeDashoffset: 0, duration: 0.3, ease: "power2.out" }}, {t + 0.1:.2f});')
         sons.append(("tick", t + 0.1, 0.25, 0.03))
@@ -245,7 +387,8 @@ def _cartoes(e, eid, top, W, centro, fundo, ctexto, cdest):
         h.append(f'<div id="{eid}k{i}" style="position:absolute;left:{x}px;top:0;width:{larg}px;height:{alt}px;border-radius:28px;'
                  f'background:{COR[cf]};padding:36px 34px;box-sizing:border-box;opacity:0">'
                  f'<div class="fit" data-max="{larg - 68}" style="font-size:{it.get("tam", 68)}px;font-weight:900;line-height:1.0;color:{COR[ct]};white-space:nowrap;display:inline-block">{html.escape(it["titulo"])}</div>'
-                 + (f'<div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:{COR[ct]}">{html.escape(it["texto"])}</div>' if it.get("texto") else "")
+                 + (f'<div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:{COR[ct]}">'
+                    + _pals(it["texto"], f"{eid}k{i}w", it.get("_tempos") or [it["t"] + 0.2] * len(it["texto"].split()), js) + '</div>' if it.get("texto") else "")
                  + f'<div id="{eid}x{i}" style="position:absolute;left:24px;right:24px;top:{alt // 2 - 5}px;height:10px;border-radius:5px;'
                  f'background:{COR[cdest]};transform:scaleX(0);transform-origin:left center"></div></div>')
         js.append(f'tl.fromTo("#{eid}k{i}", {{ opacity: 0, y: 40 }}, {{ opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }}, {it["t"] - 0.15:.2f});')
@@ -263,6 +406,94 @@ def _cartoes(e, eid, top, W, centro, fundo, ctexto, cdest):
 
 
 COMPONENTES = {"etapas": _etapas, "rota": _rota, "checklist": _checklist, "anel": _anel, "contador": _contador, "cartoes": _cartoes}
+
+def _degraus(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """a escada do manual como jornada: cada degrau sobe e acende no tempo da fala, com o nome em cima."""
+    n = len(e["itens"]); gap = 18
+    larg = (W - 192 - gap * (n - 1)) // n
+    alt_max, sec, dest, txt = 300, SEC[fundo], COR[cdest], COR[ctexto]
+    h, js, sons = [], [], []
+    for i, it in enumerate(e["itens"]):
+        x = 96 + i * (larg + gap)
+        a = int(alt_max * (i + 1) / n)
+        yb = 120 + alt_max - a
+        h.append(f'<div style="position:absolute;left:{x}px;top:{yb}px;width:{larg}px;height:{a}px;background:{sec};border-radius:10px 10px 0 0"></div>'
+                 f'<div id="{eid}d{i}" style="position:absolute;left:{x}px;top:{yb}px;width:{larg}px;height:{a}px;background:{dest};'
+                 f'border-radius:10px 10px 0 0;transform:scaleY(0);transform-origin:bottom"></div>'
+                 f'<div id="{eid}l{i}" style="position:absolute;left:{x - 20}px;bottom:{a + 14}px;width:{larg + 40}px;text-align:center;'
+                 f'font-size:{e.get("tam", 44)}px;font-weight:800;line-height:1.0;color:{txt};opacity:0">'
+                 + _pals(it["texto"], f"{eid}l{i}w", it.get("_tempos") or [it["t"] + 0.1] * len(it["texto"].split()), js) + '</div>')
+        js.append(f'tl.to("#{eid}d{i}", {{ scaleY: 1, duration: 0.45, ease: "power3.out" }}, {it["t"]:.2f});')
+        js.append(f'tl.fromTo("#{eid}l{i}", {{ opacity: 0, y: 16 }}, {{ opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }}, {it["t"] + 0.1:.2f});')
+        sons.append(("tick", it["t"], 0.25, 0.03))
+    js.append(f'tl.fromTo("#{eid}", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.3 }}, {e["itens"][0]["t"] - 0.3:.2f});')
+    return f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:{120 + alt_max}px">' + "".join(h) + "</div>", js, sons
+
+
+def _barra(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """barra de progresso segmentada: cada trecho enche no tempo da fala, com o nome embaixo."""
+    n = len(e["itens"]); gap = 10
+    larg = (W - 192 - gap * (n - 1)) // n
+    sec, dest, txt = SEC[fundo], COR[cdest], COR[ctexto]
+    h, js, sons = [], [], []
+    for i, it in enumerate(e["itens"]):
+        x = 96 + i * (larg + gap)
+        h.append(f'<div style="position:absolute;left:{x}px;top:0;width:{larg}px;height:28px;border-radius:14px;background:{sec}"></div>'
+                 f'<div id="{eid}b{i}" style="position:absolute;left:{x}px;top:0;width:{larg}px;height:28px;border-radius:14px;background:{dest};'
+                 f'transform:scaleX(0);transform-origin:left center"></div>'
+                 f'<div id="{eid}l{i}" style="position:absolute;left:{x}px;top:52px;width:{larg}px;font-size:{e.get("tam", 42)}px;font-weight:800;'
+                 f'line-height:1.05;color:{txt}">' + _pals(it["texto"], f"{eid}l{i}w", it.get("_tempos") or [it["t"]] * len(it["texto"].split()), js, "acende") + '</div>')
+        js.append(f'tl.to("#{eid}b{i}", {{ scaleX: 1, duration: 0.5, ease: "power2.inOut" }}, {it["t"] - 0.2:.2f});')
+        sons.append(("tick", it["t"], 0.25, 0.03))
+    js.append(f'tl.fromTo("#{eid}", {{ opacity: 0, y: 20 }}, {{ opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }}, {e["itens"][0]["t"] - 0.45:.2f});')
+    return f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:190px">' + "".join(h) + "</div>", js, sons
+
+
+def _colunas(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """duas colunas separadas por um fio fino (comparação sem card). risco_t risca; destaque_t sublinha."""
+    larg, alt = (W - 192 - 60) // 2, e.get("alt", 300)
+    dest, txt = COR[cdest], COR[ctexto]
+    h = [f'<div id="{eid}f" style="position:absolute;left:{W // 2 - 2}px;top:0;width:4px;height:{alt}px;background:{SEC[fundo]};'
+         f'transform:scaleY(0);transform-origin:top"></div>']
+    js = [f'tl.to("#{eid}f", {{ scaleY: 1, duration: 0.5, ease: "power2.out" }}, {e["itens"][0]["t"] - 0.3:.2f});']
+    sons = []
+    for i, it in enumerate(e["itens"][:2]):
+        x = 96 if i == 0 else W // 2 + 30
+        h.append(f'<div id="{eid}c{i}" style="position:absolute;left:{x}px;top:10px;width:{larg}px;opacity:0">'
+                 f'<div class="fit" data-max="{larg}" style="display:inline-block;white-space:nowrap;font-size:{it.get("tam", 70)}px;font-weight:900;'
+                 f'line-height:1.0;color:{dest}">{html.escape(it["titulo"])}</div>'
+                 + (f'<div style="margin-top:18px;font-size:48px;font-weight:700;line-height:1.1;color:{txt}">'
+                    + _pals(it["texto"], f"{eid}c{i}w", it.get("_tempos") or [it["t"] + 0.2] * len(it["texto"].split()), js) + '</div>' if it.get("texto") else "")
+                 + f'<div id="{eid}s{i}" style="margin-top:22px;width:180px;height:8px;border-radius:4px;background:{dest};transform:scaleX(0);transform-origin:left"></div>'
+                 f'<div id="{eid}x{i}" style="position:absolute;left:-10px;top:30px;width:{larg}px;height:9px;border-radius:5px;background:{dest};'
+                 f'transform:scaleX(0);transform-origin:left"></div></div>')
+        js.append(f'tl.fromTo("#{eid}c{i}", {{ opacity: 0, x: {-30 if i == 0 else 30} }}, {{ opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }}, {it["t"] - 0.1:.2f});')
+        sons.append(("tick", it["t"], 0.22, 0.03))
+        if it.get("destaque_t"):
+            js.append(f'tl.to("#{eid}s{i}", {{ scaleX: 1, duration: 0.4, ease: "power2.out" }}, {it["destaque_t"]:.2f});')
+        if it.get("risco_t"):
+            js.append(f'tl.to("#{eid}x{i}", {{ scaleX: 1, duration: 0.3, ease: "power2.out" }}, {it["risco_t"]:.2f});')
+            js.append(f'tl.to("#{eid}c{i}", {{ opacity: 0.45, duration: 0.3 }}, {it["risco_t"] + 0.15:.2f});')
+            sons.append(("tick", it["risco_t"], 0.3, 0.03))
+    return f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:{alt}px">' + "".join(h) + "</div>", js, sons
+
+
+def _numero(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """numeral grande (ex.: 2) com o rótulo ao lado; entra com máscara e o rótulo em seguida."""
+    tam = e.get("tam", 340)
+    x = (W - tam) // 2 - 140 if centro else e.get("x", 96)
+    h = (f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:{int(tam * 0.95)}px">'
+         f'<div style="position:absolute;left:{x}px;top:0;overflow:hidden;height:{int(tam * 0.95)}px">'
+         f'<div id="{eid}n" style="font-size:{tam}px;font-weight:900;line-height:0.95;color:{COR[cdest]}">{html.escape(str(e["numero"]))}</div></div>'
+         f'<div id="{eid}r" style="position:absolute;left:{x + int(tam * 0.62 * len(str(e["numero"]))) + 30}px;top:{int(tam * 0.36)}px;'
+         f'font-size:{e.get("tam_rotulo", 96)}px;font-weight:800;color:{COR[ctexto]};opacity:0;white-space:nowrap">{html.escape(e.get("rotulo", ""))}</div></div>')
+    js = [f'tl.fromTo("#{eid}n", {{ yPercent: 100 }}, {{ yPercent: 0, duration: 0.6, ease: "expo.out" }}, {e["t"]:.2f});',
+          f'tl.fromTo("#{eid}r", {{ opacity: 0, x: -20 }}, {{ opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }}, {e.get("t_rotulo", e["t"] + 0.3):.2f});']
+    return h, js, [("tick", e["t"], 0.3, 0.03)]
+
+
+COMPONENTES.update({"degraus": _degraus, "barra": _barra, "colunas": _colunas, "numero": _numero})
+
 
 
 def gerar(r):
@@ -285,7 +516,8 @@ def gerar(r):
         pid = f"p{ci}"
         el = [f'<div class="painel" id="{pid}" style="top:{top}px;height:{h}px">',
               f'<svg class="forma" viewBox="0 0 {W} {h}" style="height:{h}px"><path d="{forma}" fill="{COR[fundo]}"/>'
-              f'<path d="{borda}" stroke="{COR[cborda]}" stroke-width="16" fill="none"/></svg>']
+              f'<path d="{borda}" stroke="{COR[cborda]}" stroke-width="16" fill="none"/></svg>',
+              f'<div class="cont" id="{pid}m" style="position:absolute;left:0;top:0;width:{W}px;height:{h}px">']
         loc = lambda y: y - top                          # tela -> coordenada dentro do painel
         t0, t1 = c["t0"], c["t1"]
         entra, sai = max(0.0, t0 - 0.35), t1 - 0.1
@@ -302,13 +534,13 @@ def gerar(r):
         if c.get("tipo") == "cta":
             base = 1130 if modo == "baixo" else (330 if modo == "cheio" else 250)
             if modo == "cheio" and r.get("tela_dividida"):
-                base = 560                                   # sem legenda competindo: o CTA desce pro meio da tela
+                base = 680                                   # sem legenda competindo: o CTA fica no meio da zona segura
             c["elementos"] = [
                 {"tipo": "icone", "icone": "losangos", "x": 96, "y": base + 10, "tam": 60, "t": t0 + 0.15},
-                {"tipo": "linha", "texto": "Comente", "y": base + 50, "t": t0 + 0.2, "cor": "texto", "tam": 84},
-                {"tipo": "linha", "texto": c["palavra"], "y": base + 140, "t": t0 + 0.4, "cor": "destaque", "tam": 132},
-                {"tipo": "linha", "texto": c["texto"], "y": base + 285, "t": t0 + 0.75, "cor": "texto", "tam": 52, "peso": 700},
-                {"tipo": "sub", "y": base + 360, "largura": 300, "t": t0 + 1.0},
+                {"tipo": "linha", "texto": c.get("acima", "Comente"), "y": base + 50, "t": t0 + 0.2, "cor": "texto", "tam": 84, "sync": False},
+                {"tipo": "linha", "texto": c["palavra"], "y": base + 140, "t": t0 + 0.4, "cor": "destaque", "tam": 132, "sync": False},
+                {"tipo": "linha", "texto": c["texto"], "y": base + 285, "t": t0 + 0.75, "cor": "texto", "tam": c.get("tam_texto", 52), "peso": 700, "sync": False},
+                {"tipo": "sub", "y": base + 285 + int(c.get("tam_texto", 52) * 1.05) + 22, "largura": 300, "t": t0 + 1.0},
             ]
             som("sino", t0 + 0.4, 0.3, 1.2)
         centro = alinhamento(c, ci)
@@ -331,11 +563,14 @@ def gerar(r):
                     caixa_l, larg_l = f"left:96px;width:{W - 192}px;text-align:center", W - 192
                 else:
                     caixa_l, larg_l = f"left:{x}px;width:{W - x - 90}px", W - x - 90
+                tempos = e.get("_tempos") or [t] * len(e["texto"].split())
+                pals = "&nbsp;".join(f'<span class="pal" id="{eid}w{k}">{html.escape(w)}</span>' for k, w in enumerate(e["texto"].split()))
                 el.append(f'<div class="linha" style="{caixa_l};top:{loc(e["y"])}px"><span id="{eid}" class="fit" data-max="{larg_l}" '
-                          f'style="color:{COR[cor]};font-size:{tam}px;font-weight:{peso}">{html.escape(e["texto"])}</span></div>')
-                js.append(f'tl.fromTo("#{eid}", {{ yPercent: 110 }}, {{ yPercent: 0, duration: 0.6, ease: "expo.out" }}, {t:.2f});')
+                          f'style="color:{COR[cor]};font-size:{tam}px;font-weight:{peso}">{pals}</span></div>')
+                for k, tk in enumerate(tempos):          # a linha se monta junto com a fala
+                    js.append(f'tl.fromTo("#{eid}w{k}", {{ yPercent: 115 }}, {{ yPercent: 0, duration: 0.5, ease: "expo.out" }}, {tk:.2f});')
                 if e.get("som", True):
-                    som("tick", t, 0.22, 0.03)
+                    som("tick", tempos[0], 0.22, 0.03)
             elif e["tipo"] in ("sub", "risco"):
                 alt = 7 if e["tipo"] == "sub" else 9
                 cor = COR[cdest]
@@ -361,8 +596,24 @@ def gerar(r):
                 el.append(h_); js.extend(j_)
                 for a in s_:
                     som(*a)
-        el.append("</div>")
+        for bi, b in enumerate(c.get("_batidas", [])):
+            if b["tipo"] == "foco":
+                for ei in b["recuar"]:
+                    js.append(f'tl.to("#{pid}e{ei}", {{ opacity: 0.4, duration: 0.45, ease: "power2.out" }}, {b["t"]:.2f});')
+                js.append(f'tl.fromTo("#{pid}e{b["manter"]}", {{ x: 0 }}, {{ x: {0 if centro else 10}, duration: 0.45, ease: "power2.out" }}, {b["t"]:.2f});')
+            elif b["tipo"] == "fio":
+                el.append(f'<div class="barra" id="{pid}b{bi}" data-alvo="{pid}e{b["alvo"]}" data-sob="1" style="height:6px;background:{COR[cdest]}"></div>')
+                js.append(f'tl.to("#{pid}b{bi}", {{ scaleX: 1, duration: 0.6, ease: "power2.out" }}, {b["t"]:.2f});')
+            elif b["tipo"] == "item":                     # o item de que a fala está tratando acende na cor de destaque
+                js.append(f'tl.to(\'[id^="{pid}e{b["el"]}{b["letra"]}{b["item"]}w"]\', {{ color: "{COR[cdest]}", duration: 0.3, yoyo: true, repeat: 1, repeatDelay: 0.9 }}, {b["t"]:.2f});')
+            else:                                         # pulso: a cena inteira respira um pouco mais
+                js.append(f'tl.to("#{pid}", {{ scale: 1.012, duration: 0.35, yoyo: true, repeat: 1, ease: "sine.inOut", transformOrigin: "50% 50%" }}, {b["t"]:.2f});')
+            som("tick", b["t"], 0.12, 0.03)
+        el.append("</div></div>")
         corpo.append("\n".join(el))
+        # respiro de câmera bem sutil durante a cena (ambient, 1,5%): nada fica congelado esperando a próxima palavra
+        js.append(f'tl.fromTo("#{pid}m", {{ y: 10, scale: 1 }}, {{ y: -10, scale: 1.015, duration: {max(0.5, t1 - t0 + 0.6):.2f}, '
+                  f'ease: "sine.inOut", transformOrigin: "50% {960 - top}px" }}, {entra:.2f});')
 
     return f"""<!doctype html>
 <html lang="pt-BR">
@@ -380,7 +631,8 @@ def gerar(r):
       .rotulo {{ position: absolute; display: flex; align-items: center; gap: 18px; font-size: 40px; font-weight: 700; }}
       .rotulo svg {{ width: 46px; height: 28px; }}
       .linha {{ position: absolute; overflow: hidden; padding-bottom: 10px; }}
-      .linha span {{ display: inline-block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }}
+      .linha > span {{ display: inline-block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }}
+      .linha .pal {{ display: inline-block; }}
       .barra {{ position: absolute; border-radius: 5px; transform-origin: left center; transform: scaleX(0); }}
       .icone {{ position: absolute; }}
     </style>
@@ -403,6 +655,10 @@ def gerar(r):
         document.querySelectorAll(".barra[data-alvo]").forEach((b) => {{
           const alvo = document.getElementById(b.dataset.alvo); if (!alvo) return;
           const caixa = alvo.parentElement;
+          if (b.dataset.sob) {{
+            b.style.left = (caixa.offsetLeft + alvo.offsetLeft) + "px"; b.style.width = alvo.offsetWidth + "px";
+            b.style.top = (caixa.offsetTop + alvo.offsetTop + alvo.offsetHeight + 2) + "px"; return;
+          }}
           b.style.left = (caixa.offsetLeft + alvo.offsetLeft - 12) + "px"; b.style.width = (alvo.offsetWidth + 24) + "px";
         }});
         const tl = gsap.timeline({{ paused: true }});
@@ -421,19 +677,17 @@ def conferir_ritmo(r):
     for i, c in enumerate(r["cenas"]):
         if c.get("tipo") == "cta":
             continue
-        ts = sorted([e.get("t", c["t0"]) for e in c.get("elementos", []) if "itens" not in e] +
-                    [it[k] for e in c.get("elementos", []) for it in e.get("itens", []) for k in ("t", "risco_t", "destaque_t") if k in it] +
-                    [e["t"] + e.get("dur", 0) for e in c.get("elementos", []) if e["tipo"] in ("rota", "anel", "contador")])
+        ts = revelacoes(c)
         if not ts:
             continue
         nome = f"cena {i + 1} ({c['t0']:.1f}-{c['t1']:.1f}s)"
-        if ts[0] - c["t0"] > 0.8:
-            avisos.append(f"{nome}: {ts[0] - c['t0']:.1f}s até o 1º elemento (máx 0,8)")
+        if ts[0] - c["t0"] > 0.6:
+            avisos.append(f"{nome}: {ts[0] - c['t0']:.1f}s até o 1º elemento (máx 0,6)")
         for a, b in zip(ts, ts[1:]):
-            if b - a > 2.0:
-                avisos.append(f"{nome}: {b - a:.1f}s parado entre {a:.2f} e {b:.2f} (máx 2,0)")
-        if c["t1"] - ts[-1] > 1.6:
-            avisos.append(f"{nome}: {c['t1'] - ts[-1]:.1f}s parado no fim (máx 1,6)")
+            if b - a > 1.3:
+                avisos.append(f"{nome}: {b - a:.1f}s parado entre {a:.2f} e {b:.2f} (máx 1,3)")
+        if c["t1"] - ts[-1] > 1.2:
+            avisos.append(f"{nome}: {c['t1'] - ts[-1]:.1f}s parado no fim (máx 1,2)")
         els = [dict(e) for e in c.get("elementos", [])]   # confere já centralizado, como vai sair
         if c.get("painel", "cheio") == "cheio":
             centralizar_vertical(els)
@@ -443,13 +697,19 @@ def conferir_ritmo(r):
                 avisos.append(f"{nome}: '{e.get('texto', e['tipo'])}' sai da zona segura ({y0:.0f}-{y1:.0f}px)")
         if r.get("tela_dividida") and c.get("painel", "cheio") != "cheio":
             avisos.append(f"{nome}: tela dividida pede motion em tela cheia (painel 'cheio')")
+    # variedade: o mesmo recurso não vira padrão do vídeo
+    from collections import Counter
+    uso = Counter(e["tipo"] for c in r["cenas"] for e in c.get("elementos", []) if e["tipo"] in COMPONENTES)
+    for tipo, n in uso.items():
+        if n > (1 if tipo == "rota" else 2):
+            avisos.append(f"'{tipo}' usado {n}x no vídeo: varie a forma de mostrar (degraus, barra, colunas, número...)")
     for av in avisos:
         print("  aviso:", av)
     return avisos
 
 
 def main():
-    r = json.load(open(sys.argv[1]))
+    r = preparar(json.load(open(sys.argv[1])), os.path.dirname(os.path.abspath(sys.argv[1])))
     conferir_ritmo(r)
     saida = os.path.join(AQUI, "modelos", r["nome"] + ".html")
     open(saida, "w").write(gerar(r))

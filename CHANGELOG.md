@@ -2,6 +2,14 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.24 (30/09/2026) - motion sem tempo parado, variado e CTA por canal
+- Texto do motion entra palavra por palavra no tempo da fala (`--json-palavras` exporta as palavras do corte; `gerar_liv.py` casa cada palavra da linha e dos itens dos componentes com o Whisper).
+- Batidas automáticas: onde a fala segue sem texto novo, o gerador acentua no tempo de uma palavra dita (as linhas anteriores recuam, um fio fino se desenha sob a última, o item da fala acende na cor de destaque, ou um respiro leve da cena). Tudo dentro do manual da LIV.
+- Respiro de câmera sutil em toda cena (1,5%): nada fica congelado.
+- Componentes novos: `degraus`, `barra` (progresso segmentado), `colunas` (lado a lado com fio) e `numero` (numeral grande). A rota BR → EUA e os cards deixam de ser padrão; a checagem avisa quando um recurso se repete no vídeo.
+- Checagem de ritmo mais rígida: 1º elemento em até 0,6s, no máximo 1,3s parado entre revelações e 1,2s no fim.
+- CTA por canal: YouTube Shorts "Veja a live completa no canal"; Instagram, palavra-chave nos comentários. O briefing pergunta o canal.
+
 ## 0.23 (30/09/2026) - sem filete e fala mais enxuta
 - Transição do motion sem filete: as curvas do painel ficam 30px fora da tela quando a cena está parada (sobrava um fio laranja no canto).
 - `--tirar-hesitacoes`: tira "éé", "hmm", "ah", "e..." esticado, "então, assim" com pausa e voz sem palavra.

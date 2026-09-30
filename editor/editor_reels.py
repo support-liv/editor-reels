@@ -1480,6 +1480,7 @@ def main():
     ap.add_argument("--girar", type=float, default=0.0, help="corrige câmera torta: graus (positivo = anti-horário)")
     ap.add_argument("--layout", choices=["dividido", "quadro", "quadrado", "youtube"],
                     help="dividido: live com duas pessoas; quadro: live solo 720p; quadrado: WhatsApp; youtube: corte longo 16:9")
+    ap.add_argument("--json-palavras", metavar="ARQ", help="salva cada palavra com o tempo no vídeo pronto (JSON) e sai")
     ap.add_argument("--json-cortes", metavar="ARQ", help="salva o plano de cortes (início/fim no bruto) e sai")
     ap.add_argument("--tempos-palavras", action="store_true",
                     help="só mostra cada palavra com o tempo no vídeo pronto (pra sincronizar o motion) e sai")
@@ -1573,6 +1574,12 @@ def main():
             fr = olhando_pra_baixo(a.video, c["s"], c["e"])
             aviso = f"  [olhando pra baixo/lado {fr:.0%}]" if fr > 0.4 else ""
         print(f"  {c['s']:7.2f}-{c['e']:7.2f}  {c['texto'][:80]}{aviso}")
+    if a.json_palavras:                           # pro motion sincronizar o texto palavra por palavra com a fala
+        P = dados["palavras"]
+        lista = [{"w": P[q]["w"], "t": round(tempo_na_saida(cortes, max(P[q]["s"], c["s"])), 3)} for c in cortes for q in c["idx"]]
+        json.dump(lista, open(a.json_palavras, "w"), ensure_ascii=False)
+        print(f"{len(lista)} palavras salvas em {a.json_palavras}")
+        return
     if a.json_cortes:                             # plano final (pra remapear roteiros de motion quando o corte muda)
         json.dump([{"s": c["s"], "e": c["e"]} for c in cortes], open(a.json_cortes, "w"))
         print(f"plano salvo em {a.json_cortes}")
