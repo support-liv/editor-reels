@@ -109,6 +109,12 @@
       "skillPath": "skills/lower-thirds/SKILL.md",
       "computedHash": "502c1a8a491e477dd855eb1a45469c09f6ff46a72ea841838d358d0a6a9fd790"
     },
+    "motion-advanced": {
+      "source": "affaan-m/ecc",
+      "sourceType": "github",
+      "skillPath": "skills/motion-advanced/SKILL.md",
+      "computedHash": "38502b809de1d53e5c47ae65eafb7a70a6624ed25d578c403ca858c6fa25eb90"
+    },
     "motion-art-direction": {
       "source": "iart-ai/motion-design-skills",
       "sourceType": "github",
@@ -121,11 +127,29 @@
       "skillPath": "skills/motion-background/SKILL.md",
       "computedHash": "99a576ac6549791b410abbc48a18074fed9e7925cf3ee5392108c59ad9e25fa4"
     },
+    "motion-design": {
+      "source": "lottiefiles/motion-design-skill",
+      "sourceType": "github",
+      "skillPath": "skills/motion-design/SKILL.md",
+      "computedHash": "9fcf9130cc46ee8fd1d8e09a9263347a9d76efbcbfa46591cc4cefaf19bbb453"
+    },
+    "motion-foundations": {
+      "source": "affaan-m/ecc",
+      "sourceType": "github",
+      "skillPath": "skills/motion-foundations/SKILL.md",
+      "computedHash": "f76298f3fcc5f20001c8e78cfa36384469c5a583cb25e8ce60a76d3912608d99"
+    },
     "motion-graphics": {
       "source": "heygen-com/hyperframes",
       "sourceType": "github",
       "skillPath": "skills/motion-graphics/SKILL.md",
       "computedHash": "c99fc89114add5b25b42a5947dd3ce366292ea0455a519ef802e72513e1e8b57"
+    },
+    "motion-patterns": {
+      "source": "affaan-m/ecc",
+      "sourceType": "github",
+      "skillPath": "skills/motion-patterns/SKILL.md",
+      "computedHash": "71d7279a0651e6cb95a0fe804c77cb7bfa88befba1cbd1c60c05d23feada4dcc"
     },
     "short-form-video": {
       "source": "iart-ai/tiktok-video-skills",

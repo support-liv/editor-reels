@@ -2,6 +2,11 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.17 (29/09/2026) - motion mais trabalhado
+- Modelo `broll_perfil_liv`: B-roll da narrativa inteira (5 cenas), com profundidade (3 camadas em paralaxe, grão, brilho), cards 3D, tipografia com extrusão, partículas, rastro de velocidade, contador, anel de progresso, follow-through e 32 efeitos sonoros sincronizados.
+- Texto ajustado à largura na montagem (o "EXPERIÊNCIA" quase cortava na lateral).
+- Skills novas no projeto: LottieFiles `motion-design`, ecc `motion-foundations`, `motion-patterns`, `motion-advanced`. (`motion-ui` não existe no repositório da ecc, não instalou.)
+
 ## 0.16 (29/09/2026) - B-roll de motion com efeitos sonoros
 - **Motion passou a ser B-roll de cena extra** explicando a narrativa (o teste anterior pôs o CTA por cima de um vídeo já legendado e duplicou legenda e gancho).
 - `--broll arquivo.mov@fonte:SEG`: a cena entra por cima da imagem e embaixo da legenda; os efeitos sonoros dela entram mixados por baixo da voz. O tempo pode ser o da fala no bruto.
