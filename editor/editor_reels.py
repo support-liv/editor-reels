@@ -265,6 +265,9 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
             m = (P[q]["s"] + P[q]["e"]) / 2
             donos[min(range(len(faixas)), key=lambda k: dist(m, faixas[k]))].append(q)
         for k, (s, e) in enumerate(faixas):
+            if HESITACOES and not donos[k] and e - s < 1.2:   # voz sem palavra nenhuma: "éé", "hmm", respiração
+                print(f"  hesitação sem palavra tirada: {s:.2f}-{e:.2f}")
+                continue
             n = dict(c); n.update({"s": round(s, 3), "e": round(e, 3), "idx": donos[k]})
             n.setdefault("grupo", gi_orig)                 # zoom alterna por bloco original, não por pedaço
             n["texto"] = " ".join(P[q]["w"] for q in donos[k])
@@ -279,6 +282,34 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
         n["idx"] = [q for q in n["idx"] if q not in vistos]
         vistos.update(n["idx"])
     return novos
+
+
+HESITACOES = False                                # --tirar-hesitacoes
+SONS_HESITACAO = {"ah", "eh", "ha", "hum", "hm", "hmm", "ahn", "uhm", "uh", "ehh", "ee", "eee", "aa"}
+
+
+def tirar_hesitacoes(cortes, P):
+    """tira muletas e hesitações faladas: "é..."/"e..." esticado (>= 0,45s), "ah/eh/hã/hum", e "então, assim" seguido
+    de pausa. A legenda perde a palavra junto."""
+    alvo = []
+    for c in cortes:
+        idx = c["idx"]
+        for j, q in enumerate(idx):
+            w, d = norm(P[q]["w"]), P[q]["e"] - P[q]["s"]
+            prox = P[idx[j + 1]] if j + 1 < len(idx) else None
+            if w in SONS_HESITACAO or (w == "e" and d >= 0.45):
+                alvo.append(([q], P[q]["s"], P[q]["e"]))
+            elif w == "entao" and prox and norm(prox["w"]) == "assim":
+                depois = P[idx[j + 2]]["s"] - prox["e"] if j + 2 < len(idx) else 1.0
+                if depois >= 0.12 or prox["e"] - prox["s"] >= 0.4:
+                    alvo.append(([q, idx[j + 1]], P[q]["s"], prox["e"]))
+    for qs, a, b in alvo:
+        print(f"  hesitação tirada: {' '.join(P[q]['w'] for q in qs)} ({a:.2f}-{b:.2f})")
+        cortes = tirar_trecho(cortes, P, a - 0.02, b + 0.02)
+        for c in cortes:
+            c["idx"] = [q for q in c["idx"] if q not in qs]
+            c["texto"] = " ".join(P[q]["w"] for q in c["idx"])
+    return cortes
 
 
 def tirar_trecho(cortes, P, a, b):
@@ -1449,8 +1480,11 @@ def main():
     ap.add_argument("--girar", type=float, default=0.0, help="corrige câmera torta: graus (positivo = anti-horário)")
     ap.add_argument("--layout", choices=["dividido", "quadro", "quadrado", "youtube"],
                     help="dividido: live com duas pessoas; quadro: live solo 720p; quadrado: WhatsApp; youtube: corte longo 16:9")
+    ap.add_argument("--json-cortes", metavar="ARQ", help="salva o plano de cortes (início/fim no bruto) e sai")
     ap.add_argument("--tempos-palavras", action="store_true",
                     help="só mostra cada palavra com o tempo no vídeo pronto (pra sincronizar o motion) e sai")
+    ap.add_argument("--tirar-hesitacoes", action="store_true",
+                    help='tira "éé", "hmm", "e..." esticado, "então, assim" com pausa e voz sem palavra (mostra o que tirou)')
     ap.add_argument("--cauda", type=float, default=0.0,
                     help="segundos extras no fim, depois da última fala (último quadro parado): espaço do CTA animado")
     ap.add_argument("--sem-legenda", action="store_true",
@@ -1467,6 +1501,8 @@ def main():
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
     a = ap.parse_args()
+    global HESITACOES
+    HESITACOES = a.tirar_hesitacoes
 
     base = os.path.splitext(os.path.basename(a.video))[0]
     cache_dir = os.path.join(AQUI, "transcricoes")
@@ -1512,13 +1548,17 @@ def main():
     if a.layout == "youtube" and not a.respiro:
         a.respiro = 0.8                           # corte longo: só tira silêncio de verdade, a conversa fica natural
     if a.respiro:
-        RESPIRO.update({"pausa_max": a.respiro, "depois": min(0.25, 0.10 + a.respiro / 4)})
+        # respiro maior (fala mais pausada) solta a folga; menor que o padrão (shorts) aperta
+        RESPIRO.update({"pausa_max": a.respiro,
+                        "depois": 0.08 if a.respiro < 0.25 else min(0.25, 0.10 + (a.respiro - 0.25) / 2)})
     if not a.sem_ajuste_audio:
         cortes = refinar_cortes(a.video, cortes, dados["palavras"])
     if not cortes:
         sys.exit("Nenhum trecho sobrou depois dos cortes.")
     for x in a.tirar:
         cortes = tirar_trecho(cortes, dados["palavras"], *map(float, x.split("-")))
+    if a.tirar_hesitacoes:
+        cortes = tirar_hesitacoes(cortes, dados["palavras"])
     fim_video = duracao(a.video)                  # a folga do corte pelo áudio não passa do fim do arquivo
     for c in cortes:
         c["e"] = min(c["e"], fim_video)
@@ -1533,6 +1573,10 @@ def main():
             fr = olhando_pra_baixo(a.video, c["s"], c["e"])
             aviso = f"  [olhando pra baixo/lado {fr:.0%}]" if fr > 0.4 else ""
         print(f"  {c['s']:7.2f}-{c['e']:7.2f}  {c['texto'][:80]}{aviso}")
+    if a.json_cortes:                             # plano final (pra remapear roteiros de motion quando o corte muda)
+        json.dump([{"s": c["s"], "e": c["e"]} for c in cortes], open(a.json_cortes, "w"))
+        print(f"plano salvo em {a.json_cortes}")
+        return
     if a.tempos_palavras:                         # pro motion: cada palavra no tempo do vídeo pronto
         P = dados["palavras"]
         total = sum(c["e"] - c["s"] for c in cortes)

@@ -32,6 +32,19 @@ Como fazer uma cena:
 ## Gerador de B-roll da LIV
 `python3 motion/gerar_liv.py roteiro.json` monta o HTML a partir de um roteiro (cenas com tempo, painel `cheio`/`baixo`/`cima`, cor e elementos: `rotulo`, `linha`, `sub`, `risco`, `icone`, e `cta`). Exemplos em `projetos/live80/motion/`. Tempos das palavras: `editor_reels.py VIDEO --trechos ... --tempos-palavras`.
 
+### Componentes de jornada (LIV, clean)
+Além de texto e ícones, o roteiro pode contar a história com componentes chapados, de traço fino e movimento leve:
+- `rota`: dois pontos (ex.: BR → EUA) ligados por um caminho que se desenha, com um ponto viajando (`de`, `para`, `t`, `dur`).
+- `etapas`: linha do tempo vertical; a jornada aparece apagada e cada etapa acende no tempo da fala (`itens: [{texto, t}]`).
+- `checklist`: itens recebendo ✓ ou × (`itens: [{texto, t, ok}]`).
+- `anel`: progresso 0 → 100% com número contando (`t`, `dur`, `legenda`).
+- `contador`: número subindo (`de`, `ate`, `prefixo`, `sufixo`).
+- `cartoes`: dois cards pra comparar (`itens: [{titulo, texto, t, risco_t, destaque_t}]`); o card destacado acende e o outro volta ao normal.
+Use quando a fala tem jornada, etapas, comparação ou número; texto puro só quando a frase é o que importa.
+
+## Quando o corte muda depois do motion pronto
+`motion/remapear.py roteiro.json antes.json depois.json --cauda 3.8` ajusta todos os tempos do roteiro pelo plano novo (salve os planos com `editor_reels.py ... --json-cortes`). Depois é só gerar e renderizar de novo.
+
 ## Efeitos sonoros
 `sfx/` (gerados por `gerar_sfx.py`, sem licença de terceiros): `whoosh`, `whoosh_grave` (entrada/virada), `pop` (elemento aparece), `tick` (contador, lista), `impacto` (texto batendo), `riscar` (negação), `subida` (tensão), `sino` (resolução/CTA). No HTML: `<audio id="..." src="sfx/pop.wav" data-start="0.41" data-duration="0.09" data-volume="0.7">`. O editor mixa os efeitos por baixo da voz.
 

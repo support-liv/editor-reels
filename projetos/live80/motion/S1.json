@@ -1,12 +1,12 @@
 {
  "nome": "live80_S1",
- "duracao": 38.03,
+ "duracao": 37.52,
  "tela_dividida": true,
- "fala": 34.23,
+ "fala": 33.72,
  "cenas": [
   {
    "t0": 3.4,
-   "t1": 5.9,
+   "t1": 5.88,
    "painel": "cheio",
    "cor": "bege",
    "elementos": [
@@ -38,8 +38,8 @@
    ]
   },
   {
-   "t0": 9.75,
-   "t1": 13.4,
+   "t0": 9.64,
+   "t1": 13.25,
    "painel": "cheio",
    "cor": "azul",
    "elementos": [
@@ -47,40 +47,35 @@
      "tipo": "rotulo",
      "texto": "processo consular",
      "y": 250,
-     "t": 10.05
+     "t": 9.94
     },
     {
      "tipo": "linha",
      "texto": "Na prática,",
      "y": 360,
-     "t": 11.37
+     "t": 11.24
     },
     {
      "tipo": "linha",
      "texto": "não muda nada.",
      "y": 480,
-     "t": 11.75,
+     "t": 11.62,
      "cor": "destaque"
     },
     {
-     "tipo": "sub",
-     "y": 630,
-     "largura": 380,
-     "t": 12.2
-    },
-    {
-     "tipo": "icone",
-     "icone": "seta_dupla",
-     "x": 96,
-     "y": 1110,
-     "tam": 220,
-     "t": 12.4
+     "tipo": "rota",
+     "y": 650,
+     "t": 11.87,
+     "dur": 0.9,
+     "de": "BR",
+     "para": "EUA",
+     "rotulo_de": "consulado"
     }
    ]
   },
   {
-   "t0": 15.7,
-   "t1": 21.5,
+   "t0": 15.51,
+   "t1": 21.18,
    "painel": "cheio",
    "cor": "bege",
    "elementos": [
@@ -88,26 +83,26 @@
      "tipo": "rotulo",
      "texto": "por quê?",
      "y": 250,
-     "t": 15.8
+     "t": 15.61
     },
     {
      "tipo": "linha",
      "texto": "antes de",
      "y": 360,
-     "t": 15.98
+     "t": 15.77
     },
     {
      "tipo": "linha",
      "texto": "janeiro de 2025",
      "y": 480,
-     "t": 17.37,
+     "t": 17.07,
      "cor": "destaque"
     },
     {
      "tipo": "linha",
      "texto": "o consulado já não",
      "y": 600,
-     "t": 19.13,
+     "t": 18.81,
      "tam": 90,
      "peso": 700
     },
@@ -115,7 +110,7 @@
      "tipo": "linha",
      "texto": "estava chamando.",
      "y": 720,
-     "t": 20.14,
+     "t": 19.82,
      "tam": 90,
      "peso": 700,
      "cor": "destaque"
@@ -123,8 +118,8 @@
    ]
   },
   {
-   "t0": 29.7,
-   "t1": 34.23,
+   "t0": 29.3,
+   "t1": 33.74,
    "painel": "cheio",
    "cor": "azul",
    "elementos": [
@@ -132,34 +127,39 @@
      "tipo": "rotulo",
      "texto": "e o ajuste de status?",
      "y": 250,
-     "t": 29.9
+     "t": 29.5
+    },
+    {
+     "tipo": "cartoes",
+     "y": 330,
+     "itens": [
+      {
+       "titulo": "Consular 🇧🇷",
+       "texto": "na prática, igual",
+       "t": 29.6
+      },
+      {
+       "titulo": "Ajuste 🇺🇸",
+       "texto": "impacto real",
+       "t": 30.82,
+       "destaque_t": 31.53
+      }
+     ]
     },
     {
      "tipo": "linha",
-     "texto": "impacto real:",
-     "y": 360,
-     "t": 31.24
-    },
-    {
-     "tipo": "linha",
-     "texto": "agora não",
-     "y": 480,
-     "t": 32.55,
-     "cor": "destaque"
-    },
-    {
-     "tipo": "linha",
-     "texto": "pode mais.",
-     "y": 600,
-     "t": 33.49,
+     "texto": "agora não pode mais.",
+     "y": 690,
+     "t": 32.34,
+     "tam": 96,
      "cor": "destaque"
     }
    ]
   },
   {
    "tipo": "cta",
-   "t0": 34.58,
-   "t1": 38.03,
+   "t0": 34.07,
+   "t1": 37.52,
    "painel": "cheio",
    "palavra": "PERFIL27",
    "texto": "para uma análise de perfil gratuita"

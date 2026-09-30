@@ -70,7 +70,8 @@ def main():
         if filtro and sid not in filtro:
             continue
         cmd = ["python3", EDITOR, os.path.join(TRECHOS, arq + ".mp4"), "--layout", "dividido", "--cima", "esquerda",
-               "--marca", "liv", "--manter-perguntas", "--trechos", trechos, "--gancho", gancho, "--cor-caixa", cor]
+               "--marca", "liv", "--manter-perguntas", "--trechos", trechos, "--gancho", gancho, "--cor-caixa", cor,
+               "--tirar-hesitacoes", "--respiro", "0.18"]      # shorts: sem "éé"/"então, assim" e com pausas curtas
         for t in TROCAS:
             cmd += ["--trocar", t]
         # CTA animado depois da fala final, numa cauda de 3,8s (A: só o CTA; B: motion completo + CTA)

@@ -38,6 +38,7 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - Folga de 0,05s antes da voz e 0,10s depois. Pausas internas acima de 0,25s saem.
 - **Sincronia:** cada corte tem duração em quadros inteiros, igual no vídeo e no áudio. Conferir com `ffprobe`: a duração do vídeo e a do áudio do arquivo final devem bater.
 - Nunca usar take em que a pessoa está lendo o celular (auditoria de olhar).
+- **Shorts: fala enxuta.** `--tirar-hesitacoes --respiro 0.18`: sem "éé"/"então, assim" e com pausas de no máximo 0,18s.
 - Pergunta do entrevistador: fica no vídeo quando vira gancho ("pergunta + resposta"). Em cena com várias pessoas, aparece em quadro aberto.
 
 ## Tela dividida (live com duas pessoas)

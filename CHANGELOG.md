@@ -2,6 +2,16 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.23 (30/09/2026) - sem filete e fala mais enxuta
+- Transição do motion sem filete: as curvas do painel ficam 30px fora da tela quando a cena está parada (sobrava um fio laranja no canto).
+- `--tirar-hesitacoes`: tira "éé", "hmm", "ah", "e..." esticado, "então, assim" com pausa e voz sem palavra.
+- `--respiro` menor que 0,25 aperta também a folga depois da fala (0,08s); shorts da LIVE 80 em `--respiro 0.18`.
+- `--json-cortes` + `motion/remapear.py`: o motion acompanha quando o corte muda.
+
+## 0.22 (30/09/2026) - motion com jornada
+- `gerar_liv.py`: componentes `rota`, `etapas`, `checklist`, `anel`, `contador`, `cartoes` (clean, na identidade da LIV), pra contar a história além de texto e ícones.
+- Shorts B da LIVE 80 com jornada: rota BR → EUA, linha do tempo "USCIS → NVC → entrevista", cards comparando (consular × ajuste, business × professional plan, plano A × plano B), checklist da proposta, contador "18 anos".
+
 ## 0.21 (30/09/2026) - motion sem legenda por cima
 - Com o motion cobrindo a tela, o editor não desenha a legenda (medido pela transparência do b-roll a cada quadro).
 - `gerar_liv.py`: bloco da cena centralizado na vertical na zona segura (200-1300 px), ícones puxados pra perto do texto, alinhamento variado (esquerda na maioria, ~1 em 4 centralizada), risco medido pelo texto que risca, checagem da zona segura.

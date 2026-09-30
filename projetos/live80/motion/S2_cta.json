@@ -1,15 +1,16 @@
 {
  "nome": "live80_S2_cta",
- "duracao": 46.71,
+ "duracao": 45.51,
  "tela_dividida": true,
  "cenas": [
   {
    "tipo": "cta",
-   "t0": 43.26,
-   "t1": 46.71,
+   "t0": 42.06,
+   "t1": 45.51,
    "painel": "cheio",
    "palavra": "PERFIL27",
    "texto": "para uma análise de perfil gratuita"
   }
- ]
+ ],
+ "fala": 41.71
 }

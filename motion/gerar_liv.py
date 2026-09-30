@@ -61,6 +61,18 @@ def extensao(e):
         return e["y"], e["y"] + e.get("tam", 124) * 1.05
     if e["tipo"] == "rotulo":
         return e["y"], e["y"] + 44
+    if e["tipo"] == "etapas":
+        return e["y"], e["y"] + len(e["itens"]) * e.get("passo", 118)
+    if e["tipo"] == "checklist":
+        return e["y"], e["y"] + len(e["itens"]) * e.get("passo", 104)
+    if e["tipo"] == "rota":
+        return e["y"], e["y"] + 380
+    if e["tipo"] == "anel":
+        return e["y"], e["y"] + 300 + (70 if e.get("legenda") else 0)
+    if e["tipo"] == "contador":
+        return e["y"], e["y"] + e.get("tam", 150) * 1.05
+    if e["tipo"] == "cartoes":
+        return e["y"], e["y"] + e.get("alt", 300)
     if e["tipo"] == "icone":
         vb = ICONES[e["icone"]][0].split()
         return e["y"], e["y"] + (200 if e["icone"] == "fio_arco" else e.get("tam", 160) * float(vb[3]) / float(vb[2]))
@@ -87,14 +99,170 @@ def centralizar_vertical(els, topo=200, base=1300):
 def painel_geo(modo, H):
     """(top, altura, path da forma, path da borda, y inicial, y final) do painel."""
     if modo == "cheio":
-        h = H + 600
-        return (-300, h, f"M0 300 C 300 300, 760 210, 1080 0 L1080 {h - 300} C 760 {h - 90}, 300 {h}, 0 {h} Z",
+        # as duas curvas (e o fio laranja de 16px) ficam 30px pra fora da tela quando a cena está parada: sem filete
+        h = H + 660
+        return (-330, h, f"M0 300 C 300 300, 760 210, 1080 0 L1080 {h - 300} C 760 {h - 90}, 300 {h}, 0 {h} Z",
                 "M0 300 C 300 300, 760 210, 1080 0", h, -h)
     if modo == "baixo":
         top = 1020; h = H - top + 40
         return (top, h, f"M0 120 C 300 120, 760 60, 1080 0 L1080 {h} L0 {h} Z", "M0 120 C 300 120, 760 60, 1080 0", h, h)
     h = 900
     return (0, h, f"M0 0 H1080 V{h - 120} C 760 {h - 60}, 300 {h}, 0 {h} Z", f"M1080 {h - 120} C 760 {h - 60}, 300 {h}, 0 {h}", -h, -h)
+
+
+# ---------------------------------------------------------------- componentes de "jornada" (clean: chapados, traço fino,
+# cores do manual, sem sombra/brilho/partícula; movimento leve: traço se desenhando, ponto acendendo, número contando)
+SEC = {"azul": "rgba(255,240,230,0.28)", "bege": "rgba(44,54,66,0.22)", "laranja": "rgba(255,255,255,0.35)"}
+CARTAO = {"azul": ("bege", "azul"), "bege": ("azul", "bege"), "laranja": ("branco", "azul")}   # (fundo do card, texto)
+
+
+def _etapas(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """linha do tempo vertical: cada etapa acende no tempo em que é dita (a jornada inteira aparece apagada antes)."""
+    x, passo, n = e.get("x", 96), e.get("passo", 118), len(e["itens"])
+    sec, dest, txt = SEC[fundo], COR[cdest], COR[ctexto]
+    svg = [f'<svg style="position:absolute;left:0;top:0;width:{W}px;height:{n * passo}px" viewBox="0 0 {W} {n * passo}">']
+    divs, js, sons = [], [], []
+    for i, it in enumerate(e["itens"]):
+        cy = i * passo + 34
+        if i:
+            svg.append(f'<line x1="{x + 26}" y1="{cy - passo + 26}" x2="{x + 26}" y2="{cy - 26}" stroke="{sec}" stroke-width="5"/>'
+                       f'<line id="{eid}l{i}" x1="{x + 26}" y1="{cy - passo + 26}" x2="{x + 26}" y2="{cy - 26}" stroke="{dest}" stroke-width="5" '
+                       f'stroke-dasharray="{passo - 52}" stroke-dashoffset="{passo - 52}"/>')
+        svg.append(f'<circle cx="{x + 26}" cy="{cy}" r="26" fill="none" stroke="{sec}" stroke-width="4"/>'
+                   f'<circle id="{eid}c{i}" cx="{x + 26}" cy="{cy}" r="0" fill="{dest}"/>')
+        divs.append(f'<div id="{eid}t{i}" style="position:absolute;left:{x + 80}px;top:{cy - 38}px;width:{W - x - 170}px;'
+                    f'font-size:{e.get("tam", 66)}px;font-weight:800;color:{txt};opacity:0.35;white-space:nowrap">{html.escape(it["texto"])}</div>'
+                    f'<div id="{eid}n{i}" style="position:absolute;left:{x}px;top:{cy - 22}px;width:52px;text-align:center;font-size:32px;'
+                    f'font-weight:900;color:{sec}">{i + 1}</div>')
+        t = it["t"]
+        if i:
+            js.append(f'tl.to("#{eid}l{i}", {{ strokeDashoffset: 0, duration: 0.3, ease: "power2.inOut" }}, {t - 0.3:.2f});')
+        js.append(f'tl.to("#{eid}c{i}", {{ attr: {{ r: 26 }}, duration: 0.35, ease: "back.out(2)" }}, {t:.2f});')
+        js.append(f'tl.to("#{eid}n{i}", {{ color: "{COR[fundo]}", duration: 0.2 }}, {t + 0.05:.2f});')
+        js.append(f'tl.fromTo("#{eid}t{i}", {{ opacity: 0.35, x: 0 }}, {{ opacity: 1, x: 8, duration: 0.35, ease: "power2.out" }}, {t:.2f});')
+        sons.append(("tick", t, 0.25, 0.03))
+    t_ini = e["itens"][0]["t"] - 0.35
+    js.append(f'tl.fromTo("#{eid}", {{ opacity: 0, y: 30 }}, {{ opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }}, {t_ini:.2f});')
+    return (f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:{n * passo}px">' + "".join(svg) + "</svg>"
+            + "".join(divs) + "</div>"), js, sons
+
+
+def _rota(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """dois pontos ligados por um caminho que se desenha, com um ponto viajando (ex.: BR -> EUA)."""
+    sec, dest, txt = SEC[fundo], COR[cdest], COR[ctexto]
+    t, d = e["t"], e.get("dur", 1.0)
+    caminho = "M150 270 C 380 270, 560 70, 930 90"
+    svg = (f'<svg style="position:absolute;left:0;top:0;width:{W}px;height:360px" viewBox="0 0 {W} 360">'
+           f'<path d="{caminho}" fill="none" stroke="{sec}" stroke-width="5" stroke-dasharray="4 18" stroke-linecap="round"/>'
+           f'<path id="{eid}p" class="rota" d="{caminho}" fill="none" stroke="{dest}" stroke-width="7" stroke-linecap="round"/>'
+           f'<circle cx="150" cy="270" r="48" fill="{COR[fundo]}" stroke="{txt}" stroke-width="4"/>'
+           f'<circle id="{eid}b" cx="930" cy="90" r="48" fill="{COR[fundo]}" stroke="{dest}" stroke-width="4"/>'
+           f'<circle id="{eid}v" r="14" fill="{dest}" cx="150" cy="270"/>'
+           f'<text x="150" y="282" text-anchor="middle" font-size="34" font-weight="900" fill="{txt}">{html.escape(e.get("de", "BR"))}</text>'
+           f'<text id="{eid}bt" x="930" y="102" text-anchor="middle" font-size="34" font-weight="900" fill="{dest}">{html.escape(e.get("para", "EUA"))}</text>'
+           '</svg>')
+    extra = ""
+    for k, (xx, yy) in (("rotulo_de", (150, 350)), ("rotulo_para", (930, 170))):
+        if e.get(k):
+            extra += (f'<div style="position:absolute;left:{xx - 200}px;top:{yy - 10}px;width:400px;text-align:center;font-size:36px;'
+                      f'font-weight:700;color:{txt}">{html.escape(e[k])}</div>')
+    js = [f'tl.fromTo("#{eid}", {{ opacity: 0, y: 30 }}, {{ opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }}, {t - 0.35:.2f});',
+          f'(() => {{ const p = document.getElementById("{eid}p"), L = p.getTotalLength(), P = Array.from({{length: 41}}, (_, i) => p.getPointAtLength(L * i / 40)); '
+          f'p.style.strokeDasharray = L; p.style.strokeDashoffset = L; '
+          f'tl.fromTo(p, {{ strokeDashoffset: L }}, {{ strokeDashoffset: 0, duration: {d}, ease: "power2.inOut" }}, {t:.2f}); '
+          f'const v = {{ k: 0 }}; tl.to(v, {{ k: 1, duration: {d}, ease: "power2.inOut", onUpdate: () => {{ const q = P[Math.round(v.k * 40)]; '
+          f'document.getElementById("{eid}v").setAttribute("cx", q.x); document.getElementById("{eid}v").setAttribute("cy", q.y); }} }}, {t:.2f}); }})();',
+          f'tl.to("#{eid}b", {{ fill: "{dest}", duration: 0.25 }}, {t + d:.2f});',
+          f'tl.to("#{eid}bt", {{ fill: "{COR[fundo]}", duration: 0.25 }}, {t + d:.2f});']
+    return (f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:360px">{svg}{extra}</div>', js,
+            [("whoosh", t, 0.25, 0.5), ("tick", t + d, 0.3, 0.03)])
+
+
+def _checklist(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """itens recebendo ✓ (ou ×) no tempo da fala."""
+    x, passo = e.get("x", 96), e.get("passo", 104)
+    sec, dest, txt = SEC[fundo], COR[cdest], COR[ctexto]
+    h, js, sons = [], [], []
+    for i, it in enumerate(e["itens"]):
+        y, t = i * passo, it["t"]
+        marca = "M14 32 L27 45 L48 18" if it.get("ok", True) else "M17 17 L45 45 M45 17 L17 45"
+        h.append(f'<div id="{eid}r{i}" style="position:absolute;left:{x}px;top:{y}px;display:flex;align-items:center;gap:28px;opacity:0">'
+                 f'<svg width="62" height="62" viewBox="0 0 62 62"><rect x="2" y="2" width="58" height="58" rx="14" fill="none" stroke="{sec}" stroke-width="4"/>'
+                 f'<path id="{eid}m{i}" d="{marca}" fill="none" stroke="{dest}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" '
+                 f'stroke-dasharray="60" stroke-dashoffset="60"/></svg>'
+                 f'<span style="font-size:{e.get("tam", 66)}px;font-weight:800;color:{txt};white-space:nowrap">{html.escape(it["texto"])}</span></div>')
+        js.append(f'tl.fromTo("#{eid}r{i}", {{ opacity: 0, x: -30 }}, {{ opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }}, {t - 0.2:.2f});')
+        js.append(f'tl.to("#{eid}m{i}", {{ strokeDashoffset: 0, duration: 0.3, ease: "power2.out" }}, {t + 0.1:.2f});')
+        sons.append(("tick", t + 0.1, 0.25, 0.03))
+    n = len(e["itens"])
+    return f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:{n * passo}px">' + "".join(h) + "</div>", js, sons
+
+
+def _anel(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """anel de progresso enchendo, com o número contando (0 -> 100%)."""
+    sec, dest, txt = SEC[fundo], COR[cdest], COR[ctexto]
+    t, d, lado = e["t"], e.get("dur", 1.2), 300
+    x = (W - lado) // 2 if centro or e.get("centro", True) else e.get("x", 96)
+    circ = 2 * 3.14159 * 120
+    leg = (f'<div style="position:absolute;left:0;top:{lado + 14}px;width:{W}px;text-align:center;font-size:44px;font-weight:700;color:{txt}">'
+           f'{html.escape(e["legenda"])}</div>') if e.get("legenda") else ""
+    h = (f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:{lado + 70}px">'
+         f'<svg style="position:absolute;left:{x}px;top:0" width="{lado}" height="{lado}" viewBox="0 0 300 300">'
+         f'<circle cx="150" cy="150" r="120" fill="none" stroke="{sec}" stroke-width="22"/>'
+         f'<circle id="{eid}a" cx="150" cy="150" r="120" fill="none" stroke="{dest}" stroke-width="22" stroke-linecap="round" '
+         f'transform="rotate(-90 150 150)" stroke-dasharray="{circ:.1f}" stroke-dashoffset="{circ:.1f}"/></svg>'
+         f'<div id="{eid}n" style="position:absolute;left:{x}px;top:0;width:{lado}px;height:{lado}px;display:grid;place-items:center;'
+         f'font-size:84px;font-weight:900;color:{txt}">0%</div>{leg}</div>')
+    js = [f'tl.fromTo("#{eid}", {{ opacity: 0, scale: 0.94 }}, {{ opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" }}, {t - 0.35:.2f});',
+          f'tl.to("#{eid}a", {{ strokeDashoffset: 0, duration: {d}, ease: "power2.inOut" }}, {t:.2f});',
+          f'(() => {{ const v = {{ k: 0 }}; tl.to(v, {{ k: 100, duration: {d}, ease: "power2.inOut", onUpdate: () => '
+          f'{{ document.getElementById("{eid}n").textContent = Math.round(v.k) + "%"; }} }}, {t:.2f}); }})();']
+    return h, js, [("sino", t + d, 0.28, 1.2)] if e.get("sino", True) else []
+
+
+def _contador(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """número subindo até o valor dito (formato brasileiro)."""
+    t, d, tam = e["t"], e.get("dur", 0.9), e.get("tam", 150)
+    cor = COR[cdest] if e.get("cor", "destaque") == "destaque" else COR[ctexto]
+    alinha = "left:96px;width:888px;text-align:center" if centro else f"left:{e.get('x', 96)}px;width:{W - e.get('x', 96) - 90}px"
+    fmt = f'"{e.get("prefixo", "")}" + Math.round(v.k).toLocaleString("pt-BR") + "{e.get("sufixo", "")}"'
+    h = (f'<div id="{eid}" style="position:absolute;{alinha};top:{top}px;font-size:{tam}px;font-weight:900;color:{cor};'
+         f'font-variant-numeric:tabular-nums;white-space:nowrap">{html.escape(e.get("prefixo", ""))}{e.get("de", 0)}{html.escape(e.get("sufixo", ""))}</div>')
+    js = [f'tl.fromTo("#{eid}", {{ opacity: 0, y: 30 }}, {{ opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }}, {t - 0.2:.2f});',
+          f'(() => {{ const v = {{ k: {e.get("de", 0)} }}; tl.to(v, {{ k: {e["ate"]}, duration: {d}, ease: "power2.out", onUpdate: () => '
+          f'{{ document.getElementById("{eid}").textContent = {fmt}; }} }}, {t:.2f}); }})();']
+    return h, js, [("tick", t + i * d / 5, 0.2, 0.03) for i in range(5)]
+
+
+def _cartoes(e, eid, top, W, centro, fundo, ctexto, cdest):
+    """dois cards lado a lado pra comparar, chapados (sem sombra). risco_t: risca e apaga; destaque_t: vira laranja."""
+    cf, ct = CARTAO[fundo]
+    alt, gap = e.get("alt", 300), 30
+    larg = (W - 192 - gap) // 2
+    h, js, sons = [], [], []
+    for i, it in enumerate(e["itens"][:2]):
+        x = 96 + i * (larg + gap)
+        h.append(f'<div id="{eid}k{i}" style="position:absolute;left:{x}px;top:0;width:{larg}px;height:{alt}px;border-radius:28px;'
+                 f'background:{COR[cf]};padding:36px 34px;box-sizing:border-box;opacity:0">'
+                 f'<div class="fit" data-max="{larg - 68}" style="font-size:{it.get("tam", 68)}px;font-weight:900;line-height:1.0;color:{COR[ct]};white-space:nowrap;display:inline-block">{html.escape(it["titulo"])}</div>'
+                 + (f'<div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:{COR[ct]}">{html.escape(it["texto"])}</div>' if it.get("texto") else "")
+                 + f'<div id="{eid}x{i}" style="position:absolute;left:24px;right:24px;top:{alt // 2 - 5}px;height:10px;border-radius:5px;'
+                 f'background:{COR[cdest]};transform:scaleX(0);transform-origin:left center"></div></div>')
+        js.append(f'tl.fromTo("#{eid}k{i}", {{ opacity: 0, y: 40 }}, {{ opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }}, {it["t"] - 0.15:.2f});')
+        sons.append(("tick", it["t"], 0.22, 0.03))
+        if it.get("risco_t"):
+            js.append(f'tl.to("#{eid}x{i}", {{ scaleX: 1, duration: 0.3, ease: "power2.out" }}, {it["risco_t"]:.2f});')
+            js.append(f'tl.to("#{eid}k{i}", {{ opacity: 0.45, duration: 0.3 }}, {it["risco_t"] + 0.15:.2f});')
+            sons.append(("tick", it["risco_t"], 0.3, 0.03))
+        if it.get("destaque_t"):                    # acende este e o outro volta ao normal: a comparação fica clara
+            js.append(f'tl.to("#{eid}k{i}", {{ backgroundColor: "{COR["laranja"] if fundo != "laranja" else COR["azul"]}", duration: 0.3 }}, {it["destaque_t"]:.2f});')
+            outro = 1 - i
+            if len(e["itens"]) > 1 and e["itens"][outro].get("destaque_t", 1e9) < it["destaque_t"]:
+                js.append(f'tl.to("#{eid}k{outro}", {{ backgroundColor: "{COR[cf]}", duration: 0.3 }}, {it["destaque_t"]:.2f});')
+    return f'<div id="{eid}" style="position:absolute;left:0;top:{top}px;width:{W}px;height:{alt}px">' + "".join(h) + "</div>", js, sons
+
+
+COMPONENTES = {"etapas": _etapas, "rota": _rota, "checklist": _checklist, "anel": _anel, "contador": _contador, "cartoes": _cartoes}
 
 
 def gerar(r):
@@ -188,6 +356,11 @@ def gerar(r):
                 xx = 0 if e["icone"] == "fio_arco" else ((W - larg) // 2 if centro else x)
                 el.append(f'<svg class="icone" id="{eid}" viewBox="{vb}" style="left:{xx}px;top:{loc(e["y"])}px;width:{larg}px;height:{alt}px">{svg}</svg>')
                 js.append(f'tl.fromTo("#{eid}", {{ opacity: 0, y: 30 }}, {{ opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }}, {t:.2f});')
+            elif e["tipo"] in COMPONENTES:
+                h_, j_, s_ = COMPONENTES[e["tipo"]](e, eid, loc(e["y"]), W, centro, fundo, ctexto, cdest)
+                el.append(h_); js.extend(j_)
+                for a in s_:
+                    som(*a)
         el.append("</div>")
         corpo.append("\n".join(el))
 
@@ -248,7 +421,9 @@ def conferir_ritmo(r):
     for i, c in enumerate(r["cenas"]):
         if c.get("tipo") == "cta":
             continue
-        ts = sorted(e.get("t", c["t0"]) for e in c.get("elementos", []))
+        ts = sorted([e.get("t", c["t0"]) for e in c.get("elementos", []) if "itens" not in e] +
+                    [it[k] for e in c.get("elementos", []) for it in e.get("itens", []) for k in ("t", "risco_t", "destaque_t") if k in it] +
+                    [e["t"] + e.get("dur", 0) for e in c.get("elementos", []) if e["tipo"] in ("rota", "anel", "contador")])
         if not ts:
             continue
         nome = f"cena {i + 1} ({c['t0']:.1f}-{c['t1']:.1f}s)"

@@ -1,12 +1,12 @@
 {
  "nome": "live80_S3",
- "duracao": 42.43,
+ "duracao": 39.93,
  "tela_dividida": true,
- "fala": 38.63,
+ "fala": 36.13,
  "cenas": [
   {
-   "t0": 7.0,
-   "t1": 11.8,
+   "t0": 6.84,
+   "t1": 11.22,
    "painel": "cheio",
    "cor": "azul",
    "elementos": [
@@ -14,27 +14,27 @@
      "tipo": "rotulo",
      "texto": "a imigração é cíclica",
      "y": 250,
-     "t": 7.25
+     "t": 7.07
     },
     {
      "tipo": "linha",
      "texto": "“agora tá",
      "y": 360,
-     "t": 8.37,
+     "t": 7.99,
      "tam": 110
     },
     {
      "tipo": "linha",
      "texto": "todo mundo falando,",
      "y": 480,
-     "t": 8.75,
+     "t": 8.37,
      "tam": 110
     },
     {
      "tipo": "linha",
      "texto": "vou correr”",
      "y": 600,
-     "t": 9.11,
+     "t": 8.73,
      "tam": 110,
      "cor": "destaque"
     },
@@ -42,15 +42,15 @@
      "tipo": "linha",
      "texto": "aí quer protocolar.",
      "y": 720,
-     "t": 10.51,
+     "t": 10.04,
      "tam": 90,
      "peso": 700
     }
    ]
   },
   {
-   "t0": 12.2,
-   "t1": 16.2,
+   "t0": 11.22,
+   "t1": 14.92,
    "painel": "cheio",
    "cor": "bege",
    "elementos": [
@@ -58,32 +58,35 @@
      "tipo": "rotulo",
      "texto": "imigração é",
      "y": 250,
-     "t": 12.3
+     "t": 11.22
     },
     {
      "tipo": "linha",
      "texto": "um jogo de",
      "y": 360,
-     "t": 13.26
+     "t": 12.16
     },
     {
      "tipo": "linha",
-     "texto": "médio ou",
+     "texto": "médio ou longo prazo.",
      "y": 480,
-     "t": 14.8
+     "t": 13.63,
+     "tam": 100,
+     "cor": "destaque"
     },
     {
-     "tipo": "linha",
-     "texto": "longo prazo.",
-     "y": 600,
-     "t": 15.12,
-     "cor": "destaque"
+     "tipo": "rota",
+     "y": 640,
+     "t": 12.3,
+     "dur": 2.0,
+     "de": "hoje",
+     "para": "EUA"
     }
    ]
   },
   {
-   "t0": 16.2,
-   "t1": 20.6,
+   "t0": 14.92,
+   "t1": 19.28,
    "painel": "cheio",
    "cor": "azul",
    "elementos": [
@@ -91,21 +94,21 @@
      "tipo": "linha",
      "texto": "Quando menos",
      "y": 360,
-     "t": 16.77,
+     "t": 15.49,
      "tam": 110
     },
     {
      "tipo": "linha",
      "texto": "você deveria aplicar,",
      "y": 480,
-     "t": 17.27,
+     "t": 15.99,
      "tam": 110
     },
     {
      "tipo": "linha",
      "texto": "talvez deveria",
      "y": 600,
-     "t": 18.33,
+     "t": 17.05,
      "tam": 110,
      "cor": "destaque"
     },
@@ -113,58 +116,47 @@
      "tipo": "linha",
      "texto": "mais aplicar.",
      "y": 720,
-     "t": 19.1,
+     "t": 17.8,
      "tam": 110,
      "cor": "destaque"
     }
    ]
   },
   {
-   "t0": 24.9,
-   "t1": 30.4,
+   "t0": 23.51,
+   "t1": 28.73,
    "painel": "cheio",
    "cor": "bege",
    "elementos": [
     {
      "tipo": "rotulo",
-     "texto": "quem protocolou",
+     "texto": "quem se planejou",
      "y": 250,
-     "t": 25.2
+     "t": 23.81
     },
     {
-     "tipo": "linha",
-     "texto": "até 15 de março",
-     "y": 360,
-     "t": 26.26,
-     "tam": 110
-    },
-    {
-     "tipo": "linha",
-     "texto": "para trás",
-     "y": 480,
-     "t": 27.08,
-     "tam": 110
-    },
-    {
-     "tipo": "linha",
-     "texto": "hoje pode fazer",
-     "y": 600,
-     "t": 28.63,
-     "tam": 100
-    },
-    {
-     "tipo": "linha",
-     "texto": "o ajuste de status.",
-     "y": 720,
-     "t": 29.46,
-     "tam": 100,
-     "cor": "destaque"
+     "tipo": "etapas",
+     "y": 330,
+     "itens": [
+      {
+       "texto": "protocolou até 15 de março",
+       "t": 24.87
+      },
+      {
+       "texto": "resultado:",
+       "t": 26.41
+      },
+      {
+       "texto": "hoje pode fazer o ajuste",
+       "t": 27.77
+      }
+     ]
     }
    ]
   },
   {
-   "t0": 33.1,
-   "t1": 38.63,
+   "t0": 30.66,
+   "t1": 36.13,
    "painel": "cheio",
    "cor": "azul",
    "elementos": [
@@ -172,40 +164,40 @@
      "tipo": "rotulo",
      "texto": "ter uma data de prioridade",
      "y": 250,
-     "t": 33.3
+     "t": 30.86
     },
     {
      "tipo": "linha",
      "texto": "faz parte do",
      "y": 360,
-     "t": 34.67
+     "t": 32.21
     },
     {
      "tipo": "linha",
      "texto": "planejamento",
      "y": 480,
-     "t": 35.52,
+     "t": 33.06,
      "cor": "destaque"
     },
     {
      "tipo": "linha",
      "texto": "e te dá",
      "y": 600,
-     "t": 36.55
+     "t": 34.07
     },
     {
      "tipo": "linha",
      "texto": "flexibilidade.",
      "y": 720,
-     "t": 37.85,
+     "t": 35.37,
      "cor": "destaque"
     }
    ]
   },
   {
    "tipo": "cta",
-   "t0": 38.98,
-   "t1": 42.43,
+   "t0": 36.48,
+   "t1": 39.93,
    "painel": "cheio",
    "palavra": "PERFIL27",
    "texto": "para uma análise de perfil gratuita"
