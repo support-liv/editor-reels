@@ -25,8 +25,9 @@ Ritmo (regra do time): a cena entra ~0,3s antes da 1ª palavra que mostra, no m�
 depois do último; se a fala pausa, a cena sai. Tela dividida ("tela_dividida": true): sempre painel "cheio".
 CTA depois da fala final: roteiro com "duracao" = fala + cauda e o CTA na cauda (editor --cauda).
 Tudo em coordenadas da tela (px). Cores e fonte só as do manual. Cada elemento já leva o som discreto dele.
-Zona segura: x 60-1020, y 153-1510, sem o canto dos botões (x > 835, y > 1205). Na tela dividida a legenda fica
-na divisa (860-1060): nada ali. Painel "baixo" começa em 1020; "cima" termina em 900.
+Zona segura: x 60-1020, y 153-1510, sem o canto dos botões (x > 835, y > 1205). Com o motion na tela o editor tira a
+legenda, e o bloco de cada cena é centralizado na vertical entre 200 e 1300 px (as posições y do roteiro valem só
+como espaçamento entre os elementos). ~1 em 4 cenas sai centralizada na horizontal ("alinhar": "esquerda"|"centro" força).
 """
 import html, json, os, sys
 
@@ -44,6 +45,43 @@ ICONES = {
     "losangos": ('0 0 46 28', '<path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="{d}"/>'),
     "fio_arco": ('0 0 1080 200', '<path d="M0 170 H 1080 M620 170 C 700 150, 760 90, 780 0 C 800 90, 860 150, 940 170" stroke="{r}" stroke-width="3" fill="none"/>'),
 }
+
+
+def alinhamento(c, i):
+    """a maioria alinhada à esquerda; ~1 em 4 cenas centralizada (fixo por cena, reproduzível). CTA: esquerda."""
+    if c.get("tipo") == "cta":
+        return False
+    if "alinhar" in c:
+        return c["alinhar"] == "centro"
+    return i % 4 == 2
+
+
+def extensao(e):
+    if e["tipo"] == "linha":
+        return e["y"], e["y"] + e.get("tam", 124) * 1.05
+    if e["tipo"] == "rotulo":
+        return e["y"], e["y"] + 44
+    if e["tipo"] == "icone":
+        vb = ICONES[e["icone"]][0].split()
+        return e["y"], e["y"] + (200 if e["icone"] == "fio_arco" else e.get("tam", 160) * float(vb[3]) / float(vb[2]))
+    return e["y"], e["y"] + 10
+
+
+def centralizar_vertical(els, topo=200, base=1300):
+    """sem legenda por cima do motion, o bloco da cena fica no meio da zona segura (não espremido no topo)."""
+    if not els:
+        return
+    textos = [extensao(e)[1] for e in els if e["tipo"] != "icone"]
+    if textos:                                       # ícone que ficou lá embaixo (longe da divisa) volta pra perto do texto
+        for e in els:
+            if e["tipo"] == "icone" and e["y"] > max(textos) + 150:
+                e["y"] = round(max(textos) + 70)
+    y0 = min(extensao(e)[0] for e in els)
+    y1 = max(extensao(e)[1] for e in els)
+    desloc = (topo + base) / 2 - (y0 + y1) / 2
+    desloc = min(max(desloc, topo - y0), base - y1)
+    for e in els:
+        e["y"] = round(e["y"] + desloc)
 
 
 def painel_geo(modo, H):
@@ -95,6 +133,8 @@ def gerar(r):
                 som("whoosh", sai, 0.3, 0.5)
         if c.get("tipo") == "cta":
             base = 1130 if modo == "baixo" else (330 if modo == "cheio" else 250)
+            if modo == "cheio" and r.get("tela_dividida"):
+                base = 560                                   # sem legenda competindo: o CTA desce pro meio da tela
             c["elementos"] = [
                 {"tipo": "icone", "icone": "losangos", "x": 96, "y": base + 10, "tam": 60, "t": t0 + 0.15},
                 {"tipo": "linha", "texto": "Comente", "y": base + 50, "t": t0 + 0.2, "cor": "texto", "tam": 84},
@@ -103,19 +143,27 @@ def gerar(r):
                 {"tipo": "sub", "y": base + 360, "largura": 300, "t": t0 + 1.0},
             ]
             som("sino", t0 + 0.4, 0.3, 1.2)
+        centro = alinhamento(c, ci)
+        if modo == "cheio" and c.get("tipo") != "cta":
+            centralizar_vertical(c.get("elementos", []))
         for ei, e in enumerate(c.get("elementos", [])):
             eid = f"{pid}e{ei}"
             t = e.get("t", t0)
             x = e.get("x", 96)
             if e["tipo"] == "rotulo":
                 lz = ICONES["losangos"][1].format(d=COR[cdest])
-                el.append(f'<div class="rotulo" id="{eid}" style="left:{x}px;top:{loc(e["y"])}px;color:{COR[crot]}">'
+                estilo = f"left:0;width:{W}px;justify-content:center" if centro else f"left:{x}px"
+                el.append(f'<div class="rotulo" id="{eid}" style="{estilo};top:{loc(e["y"])}px;color:{COR[crot]}">'
                           f'<svg viewBox="0 0 46 28">{lz}</svg><span>{html.escape(e["texto"])}</span></div>')
                 js.append(f'tl.fromTo("#{eid}", {{ opacity: 0, x: -20 }}, {{ opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }}, {t:.2f});')
             elif e["tipo"] == "linha":
                 cor = {"texto": ctexto, "destaque": cdest}.get(e.get("cor", "texto"), e.get("cor"))
                 tam, peso = e.get("tam", 124), e.get("peso", 800)
-                el.append(f'<div class="linha" style="left:{x}px;top:{loc(e["y"])}px"><span id="{eid}" class="fit" data-max="{W - x - 90}" '
+                if centro:
+                    caixa_l, larg_l = f"left:96px;width:{W - 192}px;text-align:center", W - 192
+                else:
+                    caixa_l, larg_l = f"left:{x}px;width:{W - x - 90}px", W - x - 90
+                el.append(f'<div class="linha" style="{caixa_l};top:{loc(e["y"])}px"><span id="{eid}" class="fit" data-max="{larg_l}" '
                           f'style="color:{COR[cor]};font-size:{tam}px;font-weight:{peso}">{html.escape(e["texto"])}</span></div>')
                 js.append(f'tl.fromTo("#{eid}", {{ yPercent: 110 }}, {{ yPercent: 0, duration: 0.6, ease: "expo.out" }}, {t:.2f});')
                 if e.get("som", True):
@@ -123,7 +171,9 @@ def gerar(r):
             elif e["tipo"] in ("sub", "risco"):
                 alt = 7 if e["tipo"] == "sub" else 9
                 cor = COR[cdest]
-                el.append(f'<div class="barra" id="{eid}" style="left:{x}px;top:{loc(e["y"])}px;width:{e["largura"]}px;height:{alt}px;background:{cor}"></div>')
+                bx = (W - e["largura"]) // 2 if centro else x
+                alvo = f' data-alvo="{pid}e{e["apaga"]}"' if e["tipo"] == "risco" and e.get("apaga") is not None else ""
+                el.append(f'<div class="barra" id="{eid}"{alvo} style="left:{bx}px;top:{loc(e["y"])}px;width:{e["largura"]}px;height:{alt}px;background:{cor}"></div>')
                 js.append(f'tl.to("#{eid}", {{ scaleX: 1, duration: {0.5 if e["tipo"] == "sub" else 0.3}, ease: "power2.out" }}, {t:.2f});')
                 if e["tipo"] == "risco":
                     som("tick", t, 0.3, 0.03)
@@ -135,7 +185,7 @@ def gerar(r):
                 tam = e.get("tam", 160)
                 larg = W if e["icone"] == "fio_arco" else tam
                 alt = 200 if e["icone"] == "fio_arco" else int(tam * float(vb.split()[3]) / float(vb.split()[2]))
-                xx = 0 if e["icone"] == "fio_arco" else x
+                xx = 0 if e["icone"] == "fio_arco" else ((W - larg) // 2 if centro else x)
                 el.append(f'<svg class="icone" id="{eid}" viewBox="{vb}" style="left:{xx}px;top:{loc(e["y"])}px;width:{larg}px;height:{alt}px">{svg}</svg>')
                 js.append(f'tl.fromTo("#{eid}", {{ opacity: 0, y: 30 }}, {{ opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }}, {t:.2f});')
         el.append("</div>")
@@ -157,7 +207,7 @@ def gerar(r):
       .rotulo {{ position: absolute; display: flex; align-items: center; gap: 18px; font-size: 40px; font-weight: 700; }}
       .rotulo svg {{ width: 46px; height: 28px; }}
       .linha {{ position: absolute; overflow: hidden; padding-bottom: 10px; }}
-      .linha span {{ display: block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }}
+      .linha span {{ display: inline-block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }}
       .barra {{ position: absolute; border-radius: 5px; transform-origin: left center; transform: scaleX(0); }}
       .icone {{ position: absolute; }}
     </style>
@@ -175,6 +225,12 @@ def gerar(r):
         document.querySelectorAll(".fit").forEach((el) => {{
           const max = Number(el.dataset.max); let tam = parseFloat(el.style.fontSize);
           while (el.scrollWidth > max && tam > 30) {{ tam -= 2; el.style.fontSize = tam + "px"; }}
+        }});
+        // risco do tamanho exato do texto que ele risca (funciona alinhado à esquerda ou centralizado)
+        document.querySelectorAll(".barra[data-alvo]").forEach((b) => {{
+          const alvo = document.getElementById(b.dataset.alvo); if (!alvo) return;
+          const caixa = alvo.parentElement;
+          b.style.left = (caixa.offsetLeft + alvo.offsetLeft - 12) + "px"; b.style.width = (alvo.offsetWidth + 24) + "px";
         }});
         const tl = gsap.timeline({{ paused: true }});
 {chr(10).join("        " + j for j in js)}
@@ -203,11 +259,13 @@ def conferir_ritmo(r):
                 avisos.append(f"{nome}: {b - a:.1f}s parado entre {a:.2f} e {b:.2f} (máx 2,0)")
         if c["t1"] - ts[-1] > 1.6:
             avisos.append(f"{nome}: {c['t1'] - ts[-1]:.1f}s parado no fim (máx 1,6)")
-        for e in c.get("elementos", []):         # tela dividida: a legenda fica na divisa (860-1060)
-            if r.get("tela_dividida") and e["tipo"] in ("linha", "sub", "risco"):
-                fim = e["y"] + (e.get("tam", 124) * 1.05 if e["tipo"] == "linha" else 10)
-                if e["y"] < 1060 and fim > 855:
-                    avisos.append(f"{nome}: '{e.get('texto', e['tipo'])}' invade a faixa da legenda (termina em {fim:.0f}px)")
+        els = [dict(e) for e in c.get("elementos", [])]   # confere já centralizado, como vai sair
+        if c.get("painel", "cheio") == "cheio":
+            centralizar_vertical(els)
+        for e in els:
+            y0, y1 = extensao(e)
+            if y0 < 160 or y1 > 1480:
+                avisos.append(f"{nome}: '{e.get('texto', e['tipo'])}' sai da zona segura ({y0:.0f}-{y1:.0f}px)")
         if r.get("tela_dividida") and c.get("painel", "cheio") != "cheio":
             avisos.append(f"{nome}: tela dividida pede motion em tela cheia (painel 'cheio')")
     for av in avisos:

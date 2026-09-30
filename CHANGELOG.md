@@ -2,6 +2,10 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.21 (30/09/2026) - motion sem legenda por cima
+- Com o motion cobrindo a tela, o editor não desenha a legenda (medido pela transparência do b-roll a cada quadro).
+- `gerar_liv.py`: bloco da cena centralizado na vertical na zona segura (200-1300 px), ícones puxados pra perto do texto, alinhamento variado (esquerda na maioria, ~1 em 4 centralizada), risco medido pelo texto que risca, checagem da zona segura.
+
 ## 0.20 (30/09/2026) - motion no ritmo da fala e CTA no fim
 - `--cauda SEG`: segundos extras depois da última fala (último quadro parado, silêncio); o CTA animado entra ali.
 - Shorts da LIVE 80 refeitos: motion sempre em tela cheia na tela dividida, cenas curtas no ritmo da fala (sem tempo parado), CTA "Comente PERFIL27" depois da fala nas versões A e B.

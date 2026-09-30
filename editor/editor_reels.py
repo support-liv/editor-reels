@@ -766,11 +766,15 @@ def escrever_cauda(enc, base, camadas, n_out):
 
 
 def aplicar_brolls(out, camadas, t):
+    """cola os b-rolls no quadro e devolve quanto da tela eles cobrem (0-1): com o motion na tela, a legenda sai."""
+    cobre = 0.0
     for b in camadas:
         q = b.quadro(t)
         if q is not None:
             a = q[:, :, 3:4].astype(np.float32) / 255
             out[:] = (q[:, :, :3] * a + out * (1 - a)).astype(np.uint8)
+            cobre = max(cobre, float(a[::16, ::16].mean()))
+    return cobre
 
 
 def colar(frame_bgr, rgba, y):
@@ -963,14 +967,14 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
             out = cv2.resize(fr[y0:y0 + ch, x0:x0 + cw], (OUT_W, OUT_H), interpolation=cv2.INTER_AREA)
             base_ult = out.copy()
             t = n_out / FPS
-            aplicar_brolls(out, camadas, t)
+            com_motion = aplicar_brolls(out, camadas, t) > 0.5      # motion na tela: sem legenda competindo
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
                 gi += 1
             g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
             mostra_g = img_gancho is not None and t < seg_gancho
             mostra_c = img_cta is not None and t > total - seg_cta
             ocupa_leg = (mostra_g and baixo_g) or (mostra_c and baixo_c)
-            if g and not ocupa_leg:
+            if g and not ocupa_leg and not com_motion:
                 ativo = max((i for i, p in enumerate(g) if p["s"] <= t), default=0)
                 colar(out, leg.render(gi, g, ativo), y_leg)
             if mostra_g:
@@ -1160,13 +1164,13 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
             out = np.vstack([cima, baixo])
             base_ult = out.copy()
             t = n_out / FPS
-            aplicar_brolls(out, camadas, t)
+            com_motion = aplicar_brolls(out, camadas, t) > 0.5      # motion na tela: sem legenda competindo
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
                 gi += 1
             g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
             mostra_g = img_gancho is not None and t < seg_gancho
             mostra_c = img_cta is not None and t > total - seg_cta
-            if g and not (mostra_g or mostra_c):
+            if g and not (mostra_g or mostra_c) and not com_motion:
                 ativo = max((i for i, p in enumerate(g) if p["s"] <= t), default=0)
                 colar(out, leg.render(gi, g, ativo), y_leg)
             if mostra_g:

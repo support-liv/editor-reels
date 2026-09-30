@@ -19,7 +19,8 @@ O motion é uma **cena extra de B-roll** que entra por cima da pessoa e **explic
 Não é enfeite em cima do gancho nem da legenda.
 
 Como fazer uma cena:
-0. **Regras de ritmo (aprendidas na LIVE 80):** cena começa ~0,3s antes da 1ª palavra que mostra; no máximo ~2s entre elementos; sai ~1s depois do último; se a fala pausa, a cena sai. Tela dividida: sempre tela cheia. CTA dos shorts depois da fala, na cauda (`--cauda 3.8`).
+0. **Legenda e posição:** com o motion na tela o editor tira a legenda (os textos não competem); o gerador centraliza o bloco da cena na vertical (200-1300 px) e varia o alinhamento (esquerda na maioria, ~1 em 4 centralizada; `"alinhar"` força).
+   **Regras de ritmo (aprendidas na LIVE 80):** cena começa ~0,3s antes da 1ª palavra que mostra; no máximo ~2s entre elementos; sai ~1s depois do último; se a fala pausa, a cena sai. Tela dividida: sempre tela cheia. CTA dos shorts depois da fala, na cauda (`--cauda 3.8`).
 1. Leia a fala com os tempos (`--so-cortes` e a transcrição) e escolha o trecho que ganha com explicação visual (conceito, lista, número, comparação). Deixe a pessoa na tela no gancho e nos momentos de confiança.
 2. Cada animação e cada efeito sonoro vão no tempo da palavra dita (tempos relativos ao começo da cena).
 3. Texto só entre 330 e 1090 px de altura: a faixa da legenda (~1150-1330) e a parte de baixo (interface do Reels) ficam livres.
