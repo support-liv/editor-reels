@@ -11,6 +11,7 @@ roteiro.json:
     {"tipo": "capa",  "titulo": "O que é o board?", "subtitulo": "e por que ele decide tudo",
      "imagem": "/caminho/video.mp4@12.5"},          # opcional: foto (arquivo) ou quadro de vídeo (arquivo@segundos)
     {"tipo": "texto", "titulo": "1. É a prova", "texto": "Explicação curta, uma ideia por card."},
+    ...                                   # 7 a 10 cards: capa, contexto, desenvolvimento, virada, resumo, CTA
     {"tipo": "cta",   "titulo": "Quer saber o seu caminho?", "texto": "Comente PERFIL"}
   ]
 }
@@ -130,6 +131,8 @@ def main():
     a = ap.parse_args()
     r = json.load(open(a.roteiro))
     marca, nome = r["marca"], r.get("nome", "carrossel")
+    if len(r["cards"]) < 6:                      # carrossel é narrativa: capa, contexto, desenvolvimento, virada, CTA
+        print(f"Aviso: só {len(r['cards'])} cards. Carrossel precisa desenvolver a narrativa (7 a 10 cards, ver docs/FORMATOS.md).")
     os.makedirs(a.saida, exist_ok=True)
     for i, c in enumerate(r["cards"], 1):
         arq = os.path.join(a.saida, f"{nome}_{i:02d}.png")

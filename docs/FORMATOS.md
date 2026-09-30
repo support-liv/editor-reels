@@ -33,7 +33,13 @@ Os formatos que o time publica, e como cada um é editado. Definidos com o time 
 - Entregas: os cortes, o texto de cada story e a sugestão de sticker (enquete, caixinha, link, contagem).
 
 ### Carrossel
-- Capa com a pergunta/gancho, um ponto por card, último card com CTA.
+- **Tem que desenvolver uma narrativa**, não é capa + um card + CTA. Em média **7 a 10 cards**:
+  1. **Capa:** o gancho (pergunta ou curiosidade, sem entregar a resposta).
+  2. **Contexto:** a situação ou a dor de quem lê.
+  3. **Desenvolvimento (3 a 5 cards):** um ponto por card, em sequência lógica; cada card puxa o próximo.
+  4. **Virada:** o insight ou o erro mais comum.
+  5. **Resumo:** o que levar do carrossel.
+  6. **CTA:** palavra-chave ou link na bio.
 - Como fazer: `python3 editor/carrossel.py roteiro.json` (ver OPCOES.md). A capa pode usar um quadro do vídeo.
 - Entregas: os PNGs, o texto de cada card e a legenda do post. Fontes e cores da marca (abaixo).
 

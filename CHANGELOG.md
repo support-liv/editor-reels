@@ -6,7 +6,7 @@ Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 - **Fonte e cores da marca, sempre**, na legenda e nas caixas: LIV em Darker Grotesque, Imigrar em Inter Tight. Tamanho ajustado para a mesma altura visual aprovada em Arial Black.
 - `--cor-caixa` por marca, só com cores da paleta: LIV azul/laranja/bege/marrom (manual de identidade), Imigrar branco/azul/rosa.
 - `--layout youtube`: corte longo 16:9 1080p com a vinheta da LIV (o som da transição entra por cima do começo da live, no mesmo volume, -14 LUFS). Gera o `.tempos.txt` para os capítulos.
-- `editor/carrossel.py`: carrossel 1080x1350 na identidade da marca.
+- `editor/carrossel.py`: carrossel 1080x1350 na identidade da marca. Carrossel é narrativa (7 a 10 cards: capa, contexto, desenvolvimento, virada, resumo, CTA); o gerador avisa quando tem menos de 6.
 - Layout quadrado converte HDR do iPhone (antes saía lavado).
 - Avisos claros quando o vídeo não existe ou não tem áudio; o corte não passa do fim do arquivo.
 
