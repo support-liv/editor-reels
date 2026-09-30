@@ -705,6 +705,7 @@ def caixa_texto(texto, marca, tam=52, estilo=None):
     return img
 
 
+CAUDA = 0.0                                       # --cauda: segundos extras no fim (último quadro parado, silêncio) pro CTA
 SEM_LEGENDA = False                               # --sem-legenda: o vídeo de origem já tem legenda gravada
 BROLLS = []                                       # [(arquivo, "12.5" ou "fonte:8.4")] vindos do --broll
 
@@ -754,6 +755,14 @@ def preparar_brolls(cortes, w, h):
         camadas.append(Broll(arq, t0, w, h))
         print(f"  b-roll {os.path.basename(arq)} em {t0:.2f}s")
     return camadas
+
+
+def escrever_cauda(enc, base, camadas, n_out):
+    """--cauda: último quadro parado (sem legenda) por CAUDA segundos, com os b-rolls por cima (o CTA entra aqui)."""
+    for k in range(int(round(CAUDA * FPS))):
+        out = base.copy()
+        aplicar_brolls(out, camadas, (n_out + k) / FPS)
+        enc.stdin.write(out.tobytes())
 
 
 def aplicar_brolls(out, camadas, t):
@@ -952,6 +961,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
             x0, y0, cw, ch = caixa(cx, cy, frac, W, H)
             x0 = int(np.clip(x0 - bx0, 0, bw - cw)); y0 = int(np.clip(y0 - by0, 0, bh - ch))
             out = cv2.resize(fr[y0:y0 + ch, x0:x0 + cw], (OUT_W, OUT_H), interpolation=cv2.INTER_AREA)
+            base_ult = out.copy()
             t = n_out / FPS
             aplicar_brolls(out, camadas, t)
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
@@ -971,6 +981,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
             fi, n_out = fi + 1, n_out + 1
         dec.wait()
         print(f"  corte {ci + 1}/{len(cortes)} ok")
+    escrever_cauda(enc, base_ult, camadas, n_out)
     enc.stdin.close(); enc.wait()
 
     montar_audio(video, cortes, tmp_v, saida, sfx=[(b.arq, b.t0) for b in camadas])
@@ -995,6 +1006,8 @@ def montar_audio(video, cortes, tmp_v, saida, vinheta=None, seg_vinheta=0.0, sfx
         filtros.append(f"[0:a]atrim={c['s']:.4f}:{c['e']:.4f},asetpts=PTS-STARTPTS{fade}[a{i}]")
         partes.append(f"[a{i}]")
     fc = ";".join(filtros) + f";{''.join(partes)}concat=n={len(cortes)}:v=0:a=1,dynaudnorm=f=250:g=15:p=0.9,loudnorm=I=-14:TP=-1.5:LRA=11"
+    if CAUDA:
+        fc += f",aresample=48000,apad=pad_dur={CAUDA:.3f}"
     entradas = ["-i", video, "-i", tmp_v]
     if vinheta:                                  # som da vinheta no mesmo volume, e o fim dele por cima do começo da live
         ganho = -14 - loudness(vinheta)
@@ -1145,6 +1158,7 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
             cima = cv2.resize(fr[ay:ay + ah, ax:ax + aw], (PW, PH), interpolation=cv2.INTER_CUBIC)
             baixo = cv2.resize(fr[by:by + bh, bx:bx + bw], (PW, PH), interpolation=cv2.INTER_CUBIC)
             out = np.vstack([cima, baixo])
+            base_ult = out.copy()
             t = n_out / FPS
             aplicar_brolls(out, camadas, t)
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
@@ -1163,6 +1177,7 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
             n_out += 1
         dec.wait()
         print(f"  corte {ci + 1}/{len(cortes)} ok")
+    escrever_cauda(enc, base_ult, camadas, n_out)
     enc.stdin.close(); enc.wait()
     montar_audio(video, cortes, tmp_v, saida, sfx=[(b.arq, b.t0) for b in camadas])
     return total
@@ -1432,6 +1447,8 @@ def main():
                     help="dividido: live com duas pessoas; quadro: live solo 720p; quadrado: WhatsApp; youtube: corte longo 16:9")
     ap.add_argument("--tempos-palavras", action="store_true",
                     help="só mostra cada palavra com o tempo no vídeo pronto (pra sincronizar o motion) e sai")
+    ap.add_argument("--cauda", type=float, default=0.0,
+                    help="segundos extras no fim, depois da última fala (último quadro parado): espaço do CTA animado")
     ap.add_argument("--sem-legenda", action="store_true",
                     help="não queima legenda (use só quando o vídeo de origem JÁ tem legenda gravada: senão duplica)")
     ap.add_argument("--broll", action="append", default=[],
@@ -1525,8 +1542,9 @@ def main():
     nome = a.nome or f"{base}_{a.marca}"
     saida = os.path.abspath(os.path.join(a.saida, nome + ".mp4"))
     print("\nRenderizando...")
-    global SEM_LEGENDA
+    global SEM_LEGENDA, CAUDA
     SEM_LEGENDA = a.sem_legenda
+    CAUDA = a.cauda
     for x in a.broll:
         arq, _, quando = x.rpartition("@")
         BROLLS.append((os.path.abspath(arq), quando))

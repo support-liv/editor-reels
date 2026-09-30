@@ -51,6 +51,9 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 - **Nunca** use render na nuvem (`hyperframes cloud`, `lambda`, `cloudrun`) nem login/telemetria: vídeo de cliente não sai da máquina. Já está bloqueado em `.claude/settings.json`.
 - **Motion = B-roll de cena extra que explica a narrativa** (`--broll`): tela cheia na identidade da marca, texto cinético no tempo das palavras, efeitos sonoros (`motion/sfx/`), transição de entrada e saída. Nunca é enfeite em cima do gancho ou da legenda. Como montar: `motion/README.md`.
 - **Nível por marca:** LIV clean, só elementos do manual, sem sombra/contorno no texto; Imigrar pode explorar. **Zona segura:** x 60-1020, y 153-1510, fora do canto dos botões e da faixa da legenda; conferir com `motion/conferir.py`.
+- **Ritmo:** a cena entra com a sequência de palavras que mostra, os elementos entram no tempo da fala (máx. ~2s entre eles) e a cena sai ~1s depois do último; na pausa da fala, volta a pessoa. Nunca "uma palavra entra e o motion fica parado". `motion/gerar_liv.py` avisa quando isso acontece.
+- **Tela dividida:** motion sempre em tela cheia (nunca cobrir o rosto de um e deixar o outro).
+- **CTA nos shorts:** depois da fala final, numa cauda de 3-4s (`--cauda 3.8`) com o CTA animado em tela cheia; vale para a versão A e a B.
 - A pessoa fica na tela no gancho, nos momentos de confiança e no CTA; o B-roll entra nos conceitos, listas, números e comparações.
 - Ao criar um modelo novo, confira quadros do resultado e registre em `motion/README.md`.
 

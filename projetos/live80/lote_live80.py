@@ -2,8 +2,8 @@
 """LIVE 80 (LIV) — Perguntas e Respostas com advogada de imigração.
 
 Cortes longos (YouTube, 16:9, vinheta da LIV) e 6 shorts em duas versões:
-  A = enxuta: gancho + legenda + CTA em caixa
-  B = com motion: B-roll de cena (clean, só manual da LIV) + CTA animado no fim
+  A = enxuta: gancho + legenda + CTA animado depois da fala final (cauda de 3,8s)
+  B = com motion em tela cheia no ritmo da fala + o mesmo CTA no fim
 
     python3 projetos/live80/lote_live80.py longos
     python3 projetos/live80/lote_live80.py A [S1 S2 ...]
@@ -41,7 +41,8 @@ SHORTS = [
     ("S6", "S6_filho_18", "3.32-50.3",
      "Seu filho já tem 18 anos? Isso pode mudar o seu plano", "laranja"),
 ]
-CTA = "Comente PERFIL27 para uma análise de perfil gratuita"
+CTA = "Comente PERFIL27 para uma análise de perfil gratuita"   # texto do CTA animado (motion/…_cta)
+CAUDA = 3.8
 
 TROCAS = ["USIS é a prova=USCIS aprova", "outra pessoa=autorização", "EB2 em Davos=EB-2 NIW",
           "Web2NW=EB-2 NIW", "B2NW=EB-2 NIW", "para estar serviços=é prestar serviços", "chega e mostrar=chegue a mostrar",
@@ -72,8 +73,11 @@ def main():
                "--marca", "liv", "--manter-perguntas", "--trechos", trechos, "--gancho", gancho, "--cor-caixa", cor]
         for t in TROCAS:
             cmd += ["--trocar", t]
+        # CTA animado depois da fala final, numa cauda de 3,8s (A: só o CTA; B: motion completo + CTA)
+        cmd += ["--cauda", str(CAUDA)]
         if modo == "A":
-            cmd += ["--cta", CTA, "--nome", f"{sid}A_{arq[3:]}", "--saida", os.path.join(SAIDA, "shorts_A")]
+            cmd += ["--broll", os.path.join(MOTION, f"live80_{sid}_cta.mov") + "@0",
+                    "--nome", f"{sid}A_{arq[3:]}", "--saida", os.path.join(SAIDA, "shorts_A")]
         else:
             cmd += ["--broll", os.path.join(MOTION, f"live80_{sid}.mov") + "@0",
                     "--nome", f"{sid}B_{arq[3:]}", "--saida", os.path.join(SAIDA, "shorts_B")]

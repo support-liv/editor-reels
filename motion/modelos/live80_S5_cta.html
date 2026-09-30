@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>live80_S5_cta (LIV clean, gerado por gerar_liv.py)</title>
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Darker Grotesque"; src: url("fontes/DarkerGrotesque[wght].ttf") format("truetype"); font-weight: 300 900; }
+      html, body { margin: 0; background: transparent; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: transparent; font-family: "Darker Grotesque", sans-serif; }
+      .painel { position: absolute; left: 0; width: 1080px; }
+      .painel > svg.forma { position: absolute; left: 0; top: 0; width: 1080px; }
+      .rotulo { position: absolute; display: flex; align-items: center; gap: 18px; font-size: 40px; font-weight: 700; }
+      .rotulo svg { width: 46px; height: 28px; }
+      .linha { position: absolute; overflow: hidden; padding-bottom: 10px; }
+      .linha span { display: block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }
+      .barra { position: absolute; border-radius: 5px; transform-origin: left center; transform: scaleX(0); }
+      .icone { position: absolute; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920" data-duration="56.52">
+      <div id="tudo" class="clip" style="position:absolute;inset:0" data-start="0" data-duration="56.52">
+<div class="painel" id="p0" style="top:-300px;height:2520px">
+<svg class="forma" viewBox="0 0 1080 2520" style="height:2520px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2220 C 760 2430, 300 2520, 0 2520 Z" fill="#ff6e1f"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#2c3642" stroke-width="16" fill="none"/></svg>
+<svg class="icone" id="p0e0" viewBox="0 0 46 28" style="left:96px;top:640px;width:60px;height:36px"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#2c3642"/></svg>
+<div class="linha" style="left:96px;top:680px"><span id="p0e1" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:800">Comente</span></div>
+<div class="linha" style="left:96px;top:770px"><span id="p0e2" class="fit" data-max="894" style="color:#2c3642;font-size:132px;font-weight:800">PERFIL27</span></div>
+<div class="linha" style="left:96px;top:915px"><span id="p0e3" class="fit" data-max="894" style="color:#ffffff;font-size:52px;font-weight:700">para uma análise de perfil gratuita</span></div>
+<div class="barra" id="p0e4" style="left:96px;top:990px;width:300px;height:7px;background:#2c3642"></div>
+</div>
+      </div>
+      <audio id="s01" src="sfx/whoosh.wav" data-start="52.72" data-duration="0.5" data-volume="0.35"></audio>
+      <audio id="s02" src="sfx/sino.wav" data-start="53.47" data-duration="1.2" data-volume="0.3"></audio>
+      <audio id="s03" src="sfx/tick.wav" data-start="53.27" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s04" src="sfx/tick.wav" data-start="53.47" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s05" src="sfx/tick.wav" data-start="53.82" data-duration="0.03" data-volume="0.22"></audio>
+    </div>
+    <script>
+      document.fonts.ready.then(() => {
+        // texto ajustado à largura (nunca corta na lateral), medido uma vez
+        document.querySelectorAll(".fit").forEach((el) => {
+          const max = Number(el.dataset.max); let tam = parseFloat(el.style.fontSize);
+          while (el.scrollWidth > max && tam > 30) { tam -= 2; el.style.fontSize = tam + "px"; }
+        });
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#p0", { y: 2520 }, { y: 0, duration: 0.55, ease: "power3.out" }, 52.72);
+        tl.fromTo("#p0e0", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 53.22);
+        tl.fromTo("#p0e1", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 53.27);
+        tl.fromTo("#p0e2", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 53.47);
+        tl.fromTo("#p0e3", { yPercent: 110 }, { yPercent: 0, duration: 0.6, ease: "expo.out" }, 53.82);
+        tl.to("#p0e4", { scaleX: 1, duration: 0.5, ease: "power2.out" }, 54.07);
+        window.__timelines["main"] = tl;
+      });
+    </script>
+  </body>
+</html>

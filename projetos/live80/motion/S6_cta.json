@@ -1,0 +1,15 @@
+{
+ "nome": "live80_S6_cta",
+ "duracao": 45.73,
+ "tela_dividida": true,
+ "cenas": [
+  {
+   "tipo": "cta",
+   "t0": 42.28,
+   "t1": 45.73,
+   "painel": "cheio",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise de perfil gratuita"
+  }
+ ]
+}

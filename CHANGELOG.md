@@ -2,6 +2,11 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.20 (30/09/2026) - motion no ritmo da fala e CTA no fim
+- `--cauda SEG`: segundos extras depois da última fala (último quadro parado, silêncio); o CTA animado entra ali.
+- Shorts da LIVE 80 refeitos: motion sempre em tela cheia na tela dividida, cenas curtas no ritmo da fala (sem tempo parado), CTA "Comente PERFIL27" depois da fala nas versões A e B.
+- `gerar_liv.py` confere o ritmo e avisa (e, na tela dividida, texto invadindo a faixa da legenda 860-1060): demora até o 1º elemento (> 0,8s), tempo parado entre elementos (> 2s) ou no fim (> 1,6s), e meia cena em tela dividida.
+
 ## 0.19 (30/09/2026) - LIVE 80: cortes longos e shorts A/B
 - `motion/gerar_liv.py`: gera o B-roll da LIV a partir de um roteiro JSON (painéis com a curva da marca, cheios ou cobrindo uma metade da tela dividida, linhas reveladas, riscos, sublinhados, ícones oficiais, CTA animado, sons discretos). Mantém os 6 shorts consistentes.
 - `--broll` também na tela dividida; o motion cobre a metade de quem está ouvindo e a legenda continua na divisa.

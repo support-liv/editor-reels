@@ -1,9 +1,12 @@
 {
- "duracao": 38.63,
+ "nome": "live80_S3",
+ "duracao": 42.43,
+ "tela_dividida": true,
+ "fala": 38.63,
  "cenas": [
   {
-   "t0": 5.4,
-   "t1": 11.2,
+   "t0": 7.0,
+   "t1": 11.8,
    "painel": "cheio",
    "cor": "azul",
    "elementos": [
@@ -11,43 +14,43 @@
      "tipo": "rotulo",
      "texto": "a imigração é cíclica",
      "y": 250,
-     "t": 5.6
+     "t": 7.25
     },
     {
      "tipo": "linha",
      "texto": "“agora tá",
      "y": 360,
-     "t": 8.3,
+     "t": 8.37,
      "tam": 110
     },
     {
      "tipo": "linha",
      "texto": "todo mundo falando,",
      "y": 480,
-     "t": 8.7,
+     "t": 8.75,
      "tam": 110
     },
     {
      "tipo": "linha",
      "texto": "vou correr”",
      "y": 600,
-     "t": 9.1,
+     "t": 9.11,
      "tam": 110,
      "cor": "destaque"
     },
     {
-     "tipo": "icone",
-     "icone": "seta_contorno",
-     "x": 96,
-     "y": 1130,
-     "tam": 220,
-     "t": 9.6
+     "tipo": "linha",
+     "texto": "aí quer protocolar.",
+     "y": 720,
+     "t": 10.51,
+     "tam": 90,
+     "peso": 700
     }
    ]
   },
   {
-   "t0": 11.9,
-   "t1": 16.5,
+   "t0": 12.2,
+   "t1": 16.2,
    "painel": "cheio",
    "cor": "bege",
    "elementos": [
@@ -55,38 +58,32 @@
      "tipo": "rotulo",
      "texto": "imigração é",
      "y": 250,
-     "t": 12.0
+     "t": 12.3
     },
     {
      "tipo": "linha",
      "texto": "um jogo de",
      "y": 360,
-     "t": 13.2
+     "t": 13.26
     },
     {
      "tipo": "linha",
      "texto": "médio ou",
-     "y": 490,
+     "y": 480,
      "t": 14.8
     },
     {
      "tipo": "linha",
      "texto": "longo prazo.",
-     "y": 620,
-     "t": 15.1,
+     "y": 600,
+     "t": 15.12,
      "cor": "destaque"
-    },
-    {
-     "tipo": "sub",
-     "y": 770,
-     "largura": 420,
-     "t": 15.6
     }
    ]
   },
   {
-   "t0": 16.6,
-   "t1": 20.8,
+   "t0": 16.2,
+   "t1": 20.6,
    "painel": "cheio",
    "cor": "azul",
    "elementos": [
@@ -94,92 +91,124 @@
      "tipo": "linha",
      "texto": "Quando menos",
      "y": 360,
-     "t": 16.8,
+     "t": 16.77,
      "tam": 110
     },
     {
      "tipo": "linha",
      "texto": "você deveria aplicar,",
      "y": 480,
-     "t": 17.5,
+     "t": 17.27,
      "tam": 110
     },
     {
      "tipo": "linha",
      "texto": "talvez deveria",
-     "y": 620,
-     "t": 18.3,
+     "y": 600,
+     "t": 18.33,
      "tam": 110,
      "cor": "destaque"
     },
     {
      "tipo": "linha",
      "texto": "mais aplicar.",
-     "y": 740,
+     "y": 720,
      "t": 19.1,
      "tam": 110,
      "cor": "destaque"
-    },
-    {
-     "tipo": "icone",
-     "icone": "arco_duplo",
-     "x": 96,
-     "y": 1120,
-     "tam": 170,
-     "t": 19.4
     }
    ]
   },
   {
    "t0": 24.9,
-   "t1": 30.2,
-   "painel": "cima",
+   "t1": 30.4,
+   "painel": "cheio",
    "cor": "bege",
    "elementos": [
     {
      "tipo": "rotulo",
      "texto": "quem protocolou",
-     "y": 190,
-     "t": 25.3
+     "y": 250,
+     "t": 25.2
     },
     {
      "tipo": "linha",
      "texto": "até 15 de março",
-     "y": 280,
-     "t": 26.2,
+     "y": 360,
+     "t": 26.26,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "para trás",
+     "y": 480,
+     "t": 27.08,
      "tam": 110
     },
     {
      "tipo": "linha",
      "texto": "hoje pode fazer",
-     "y": 420,
-     "t": 28.6,
-     "tam": 90
+     "y": 600,
+     "t": 28.63,
+     "tam": 100
     },
     {
      "tipo": "linha",
      "texto": "o ajuste de status.",
-     "y": 520,
-     "t": 29.3,
-     "tam": 90,
+     "y": 720,
+     "t": 29.46,
+     "tam": 100,
+     "cor": "destaque"
+    }
+   ]
+  },
+  {
+   "t0": 33.1,
+   "t1": 38.63,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "ter uma data de prioridade",
+     "y": 250,
+     "t": 33.3
+    },
+    {
+     "tipo": "linha",
+     "texto": "faz parte do",
+     "y": 360,
+     "t": 34.67
+    },
+    {
+     "tipo": "linha",
+     "texto": "planejamento",
+     "y": 480,
+     "t": 35.52,
      "cor": "destaque"
     },
     {
-     "tipo": "sub",
-     "y": 640,
-     "largura": 300,
-     "t": 29.6
+     "tipo": "linha",
+     "texto": "e te dá",
+     "y": 600,
+     "t": 36.55
+    },
+    {
+     "tipo": "linha",
+     "texto": "flexibilidade.",
+     "y": 720,
+     "t": 37.85,
+     "cor": "destaque"
     }
    ]
   },
   {
    "tipo": "cta",
-   "t0": 34.6,
-   "t1": 38.63,
-   "painel": "cima",
+   "t0": 38.98,
+   "t1": 42.43,
+   "painel": "cheio",
    "palavra": "PERFIL27",
    "texto": "para uma análise de perfil gratuita"
   }
- ],
- "nome": "live80_S3"
+ ]
 }

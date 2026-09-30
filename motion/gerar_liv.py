@@ -21,6 +21,9 @@ Roteiro:
     {"tipo": "cta", "t0": 30.2, "t1": 34.2, "painel": "baixo", "palavra": "PERFIL27", "texto": "para uma análise de perfil gratuita"}
   ]
 }
+Ritmo (regra do time): a cena entra ~0,3s antes da 1ª palavra que mostra, no máximo 2s entre elementos e sai ~1s
+depois do último; se a fala pausa, a cena sai. Tela dividida ("tela_dividida": true): sempre painel "cheio".
+CTA depois da fala final: roteiro com "duracao" = fala + cauda e o CTA na cauda (editor --cauda).
 Tudo em coordenadas da tela (px). Cores e fonte só as do manual. Cada elemento já leva o som discreto dele.
 Zona segura: x 60-1020, y 153-1510, sem o canto dos botões (x > 835, y > 1205). Na tela dividida a legenda fica
 na divisa (860-1060): nada ali. Painel "baixo" começa em 1020; "cima" termina em 900.
@@ -183,8 +186,38 @@ def gerar(r):
 """
 
 
+def conferir_ritmo(r):
+    """o motion acompanha a fala: nada de cena parada esperando a próxima palavra."""
+    avisos = []
+    for i, c in enumerate(r["cenas"]):
+        if c.get("tipo") == "cta":
+            continue
+        ts = sorted(e.get("t", c["t0"]) for e in c.get("elementos", []))
+        if not ts:
+            continue
+        nome = f"cena {i + 1} ({c['t0']:.1f}-{c['t1']:.1f}s)"
+        if ts[0] - c["t0"] > 0.8:
+            avisos.append(f"{nome}: {ts[0] - c['t0']:.1f}s até o 1º elemento (máx 0,8)")
+        for a, b in zip(ts, ts[1:]):
+            if b - a > 2.0:
+                avisos.append(f"{nome}: {b - a:.1f}s parado entre {a:.2f} e {b:.2f} (máx 2,0)")
+        if c["t1"] - ts[-1] > 1.6:
+            avisos.append(f"{nome}: {c['t1'] - ts[-1]:.1f}s parado no fim (máx 1,6)")
+        for e in c.get("elementos", []):         # tela dividida: a legenda fica na divisa (860-1060)
+            if r.get("tela_dividida") and e["tipo"] in ("linha", "sub", "risco"):
+                fim = e["y"] + (e.get("tam", 124) * 1.05 if e["tipo"] == "linha" else 10)
+                if e["y"] < 1060 and fim > 855:
+                    avisos.append(f"{nome}: '{e.get('texto', e['tipo'])}' invade a faixa da legenda (termina em {fim:.0f}px)")
+        if r.get("tela_dividida") and c.get("painel", "cheio") != "cheio":
+            avisos.append(f"{nome}: tela dividida pede motion em tela cheia (painel 'cheio')")
+    for av in avisos:
+        print("  aviso:", av)
+    return avisos
+
+
 def main():
     r = json.load(open(sys.argv[1]))
+    conferir_ritmo(r)
     saida = os.path.join(AQUI, "modelos", r["nome"] + ".html")
     open(saida, "w").write(gerar(r))
     print(saida)
