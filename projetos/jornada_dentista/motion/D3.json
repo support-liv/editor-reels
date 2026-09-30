@@ -1,0 +1,247 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_D3",
+ "duracao": 66.31,
+ "palavras": "palavras/D3.json",
+ "cenas": [
+  {
+   "t0": 4.8,
+   "t1": 10.3,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a verdade",
+     "t": 4.9,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "não tinha",
+     "t": 5.9,
+     "y": 310,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "tempo sobrando.",
+     "t": 6.4,
+     "y": 440,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "faltava era tempo.",
+     "t": 9.0,
+     "y": 600,
+     "cor": "destaque",
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 17.9,
+   "t1": 25.9,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "se preparar pra prova,",
+     "t": 18.0,
+     "y": 300,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "a nossa filha tinha",
+     "t": 19.3,
+     "y": 410,
+     "tam": 84
+    },
+    {
+     "tipo": "numero",
+     "numero": "1",
+     "rotulo": "aninho",
+     "t": 20.5,
+     "t_rotulo": 20.8,
+     "y": 520,
+     "tam": 280,
+     "tam_rotulo": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "bebê de um ano",
+     "t": 22.3,
+     "y": 820,
+     "cor": "destaque",
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "não dorme direito",
+     "t": 23.1,
+     "y": 950,
+     "tam": 70,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "acorda várias vezes à noite",
+     "t": 24.5,
+     "y": 1040,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 32.5,
+   "t1": 37.9,
+   "cor": "preto",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o André",
+     "t": 32.9,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Você não tem obrigação de passar.",
+       "t": 34.5,
+       "lado": "esq"
+      },
+      {
+       "texto": "Vai e faz sem pressão.",
+       "t": 36.8,
+       "lado": "esq"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 38.2,
+   "t1": 44.0,
+   "cor": "branco",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "mas ela",
+     "t": 38.3,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "boa leonina,",
+     "t": 39.0,
+     "y": 310,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "me coloco um desafio",
+     "t": 40.4,
+     "y": 460,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "eu vou conseguir,",
+     "t": 42.3,
+     "y": 580,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "vou até o final.",
+     "t": 43.0,
+     "y": 700,
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 47.5,
+   "t1": 55.6,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "o dia da Júlia",
+     "y": 300,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "exército",
+       "t": 47.9,
+       "status": "andamento",
+       "selo": "meio período",
+       "selo_t": 48.8
+      },
+      {
+       "texto": "filha",
+       "t": 50.1,
+       "status": "andamento",
+       "selo": "meio período",
+       "selo_t": 51.8
+      },
+      {
+       "texto": "estudo",
+       "t": 52.8,
+       "status": "ok",
+       "selo": "quando ela dorme",
+       "selo_t": 54.7
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 58.2,
+   "t1": 62.5,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "me dedicar a estudar",
+     "t": 58.4,
+     "y": 300,
+     "tam": 96
+    },
+    {
+     "tipo": "notificacao",
+     "app": "resultado da prova",
+     "titulo": "Aprovada",
+     "texto": "prova do Board (INBDE)",
+     "t": 61.3,
+     "y": 470
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 62.5,
+   "t1": 66.31,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

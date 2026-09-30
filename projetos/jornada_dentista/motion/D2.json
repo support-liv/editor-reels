@@ -1,0 +1,189 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_D2",
+ "duracao": 56.52,
+ "palavras": "palavras/D2.json",
+ "cenas": [
+  {
+   "t0": 3.6,
+   "t1": 10.2,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o sonho",
+     "t": 3.65,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "algo a mais",
+     "t": 3.7,
+     "y": 310,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "pra nossa família",
+     "t": 4.0,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "mesmo bem posicionados",
+     "t": 8.3,
+     "y": 600,
+     "tam": 76,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 14.0,
+   "t1": 17.9,
+   "cor": "preto",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a decisão",
+     "t": 14.3,
+     "y": 250
+    },
+    {
+     "tipo": "cartoes",
+     "y": 320,
+     "alt": 280,
+     "itens": [
+      {
+       "titulo": "Familiar",
+       "texto": "vocês juntos",
+       "t": 15.8,
+       "destaque_t": 16.1
+      },
+      {
+       "titulo": "De futuro",
+       "texto": "daqui a 10 anos",
+       "t": 17.0,
+       "destaque_t": 17.4
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 19.6,
+   "t1": 23.5,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "contador",
+     "de": 0,
+     "ate": 10,
+     "prefixo": "daqui a ",
+     "sufixo": " anos",
+     "t": 20.0,
+     "dur": 0.5,
+     "y": 300,
+     "tam": 130
+    },
+    {
+     "tipo": "linha",
+     "texto": "graças a Deus",
+     "t": 22.2,
+     "y": 500,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "a gente fez isso.",
+     "t": 22.7,
+     "y": 630,
+     "cor": "destaque",
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 36.3,
+   "t1": 44.1,
+   "cor": "azul",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "o que pesa na decisão",
+     "y": 300,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "só dinheiro",
+       "t": 36.7,
+       "status": "negado",
+       "selo": "não só",
+       "selo_t": 38.3
+      },
+      {
+       "texto": "sociedade",
+       "t": 40.1,
+       "status": "ok",
+       "selo": "sim"
+      },
+      {
+       "texto": "tranquilidade",
+       "t": 41.4,
+       "status": "ok",
+       "selo": "sim"
+      },
+      {
+       "texto": "qualidade de vida",
+       "t": 42.4,
+       "status": "ok",
+       "selo": "sim"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 50.3,
+   "t1": 52.7,
+   "cor": "branco",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "poder ficar mais",
+     "t": 50.7,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "com a família",
+     "t": 51.4,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 120
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 52.7,
+   "t1": 56.52,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

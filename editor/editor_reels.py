@@ -285,6 +285,7 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
 
 
 HESITACOES = False                                # --tirar-hesitacoes
+COLUNAS = (2, None)                               # --colunas N --pessoas cima,baixo (live com N pessoas lado a lado)
 SONS_HESITACAO = {"ah", "eh", "ha", "hum", "hm", "hmm", "ahn", "uhm", "uh", "ehh", "ee", "eee", "aa"}
 
 
@@ -1139,6 +1140,24 @@ def rostos_por_lado(video, c, fps=2):
     return med(esq, (0.25, 0.38)), med(dir_, (0.75, 0.40))
 
 
+def rostos_por_coluna(video, c, n, fps=2):
+    """posição mediana do rosto em cada coluna da live (n pessoas lado a lado, cada uma numa faixa de 1/n)."""
+    garantir_detector()
+    tmp = tempfile.mkdtemp()
+    run(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{max(0.5, c['e'] - c['s']):.3f}", "-i", video,
+         "-vf", f"fps={fps},scale=960:-2", os.path.join(tmp, "%04d.jpg")])
+    imgs = sorted(os.listdir(tmp))
+    cols = [[] for _ in range(n)]
+    if imgs:
+        for ln in run([DETECTOR] + [os.path.join(tmp, f) for f in imgs]).strip().splitlines():
+            for f in json.loads(ln):
+                if f[2] < 0.04:
+                    continue
+                cols[min(n - 1, int(f[0] * n))].append(f[:2])
+    shutil.rmtree(tmp)
+    return [tuple(np.median(np.array(l), axis=0)) if l else ((k + 0.5) / n, 0.38) for k, l in enumerate(cols)]
+
+
 def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, total, seg_gancho, seg_cta,
                         so_checar=False, frac=0.88, cima="esquerda"):
     """uma pessoa em cima, a outra embaixo; legenda e tarja na divisa, sem tapar rosto.
@@ -1149,16 +1168,30 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
     y_leg = y_meio - 100
     pos_caixa = lambda img: y_meio - img.height // 2
 
+    n_col, pessoas = COLUNAS
+
     def recorte(face, lado, pos_rosto, frac):
-        x_min = 0 if lado == "esq" else W // 2
-        cw = int(W / 2 * frac) // 2 * 2
+        if isinstance(lado, int):                       # coluna k (1 = esquerda) de uma live com n_col pessoas
+            x_min, larg = (lado - 1) * W // n_col, W // n_col
+        else:
+            x_min, larg = (0 if lado == "esq" else W // 2), W // 2
+        cw = int(larg * frac) // 2 * 2
         ch = int(cw * PH / PW) // 2 * 2
-        x0 = int(np.clip(face[0] * W - cw / 2, x_min, x_min + W // 2 - cw))
+        x0 = int(np.clip(face[0] * W - cw / 2, x_min, x_min + larg - cw))
         # a faixa de baixo da live tem comentários do chat e banners: o recorte fica acima dela
         y_max = max(0, int(H * LIMITE_SOBREPOSICAO) - ch)
         y0 = int(np.clip(face[1] * H - pos_rosto * ch, 0, y_max))
         return x0, y0, cw, ch
 
+    if pessoas:                                         # live com n_col pessoas: escolhe as duas da conversa
+        amostras = [rostos_por_coluna(video, c, n_col) for c in cortes[::max(1, len(cortes) // 8)]]
+        rosto = lambda k: tuple(np.median([a[k - 1] for a in amostras], axis=0))
+        # webcam em coluna estreita já é bem fechada: usa a largura toda da coluna e o rosto um pouco acima do meio
+        caixas = (recorte(rosto(pessoas[0]), pessoas[0], 0.46, 1.0), recorte(rosto(pessoas[1]), pessoas[1], 0.50, 1.0))
+        planos = [caixas] * len(cortes)
+        print(f"  tela dividida: {len(cortes)} cortes | live com {n_col} pessoas: coluna {pessoas[0]} em cima, {pessoas[1]} embaixo")
+        return _dividido_render(video, cortes, saida, grupos, leg, img_gancho, img_cta, total, seg_gancho, seg_cta,
+                                so_checar, planos, W, H, PW, PH, y_leg, pos_caixa)
     # posição média de cada pessoa no vídeo inteiro -> um recorte só por pessoa
     esqs, dirs = [], []
     for c in cortes[::max(1, len(cortes) // 8)]:
@@ -1171,6 +1204,12 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
         caixa_cima, caixa_baixo = recorte(fd, "dir", 0.42, frac), recorte(fe, "esq", 0.56, frac)
     planos = [(caixa_cima, caixa_baixo)] * len(cortes)
     print(f"  tela dividida: {len(cortes)} cortes | pessoa da {cima} em cima | enquadramento fixo")
+    return _dividido_render(video, cortes, saida, grupos, leg, img_gancho, img_cta, total, seg_gancho, seg_cta,
+                            so_checar, planos, W, H, PW, PH, y_leg, pos_caixa)
+
+
+def _dividido_render(video, cortes, saida, grupos, leg, img_gancho, img_cta, total, seg_gancho, seg_cta,
+                     so_checar, planos, W, H, PW, PH, y_leg, pos_caixa):
     if so_checar:
         return {}
 
@@ -1471,6 +1510,8 @@ def main():
     ap.add_argument("--checar-olhar", action="store_true", help="avisa trechos em que a pessoa olha pra baixo (lendo) ou pro lado")
     ap.add_argument("--cor-caixa", choices=sorted({e for m in ESTILOS_CAIXA.values() for e in m}),
                     help="estilo da tarja do gancho/CTA. Imigrar: branco, azul, rosa. LIV: azul, laranja, bege, marrom")
+    ap.add_argument("--colunas", type=int, default=2, help="tela dividida: quantas pessoas lado a lado na live (ex.: 3)")
+    ap.add_argument("--pessoas", help='tela dividida com --colunas: quem vai em cima e embaixo, pela coluna da live (1 = esquerda), ex: "3,1"')
     ap.add_argument("--cima", choices=["esquerda", "direita"], default="esquerda",
                     help="tela dividida: quem da live vai em cima (a pessoa da esquerda ou da direita)")
     ap.add_argument("--endireitar", action="store_true", help="quadrado: mede as verticais da cena e escolhe o ângulo de --girar sozinho (só gira, não distorce)")
@@ -1502,8 +1543,10 @@ def main():
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
     a = ap.parse_args()
-    global HESITACOES
+    global HESITACOES, COLUNAS
     HESITACOES = a.tirar_hesitacoes
+    if a.pessoas:
+        COLUNAS = (a.colunas, tuple(int(x) for x in a.pessoas.split(",")))
 
     base = os.path.splitext(os.path.basename(a.video))[0]
     cache_dir = os.path.join(AQUI, "transcricoes")

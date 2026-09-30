@@ -1,0 +1,242 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_D1",
+ "duracao": 60.26,
+ "palavras": "palavras/D1.json",
+ "cenas": [
+  {
+   "t0": 3.6,
+   "t1": 10.3,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "você investiu em",
+     "t": 3.7,
+     "y": 250
+    },
+    {
+     "tipo": "checklist",
+     "y": 320,
+     "tam": 70,
+     "passo": 100,
+     "itens": [
+      {
+       "texto": "graduação",
+       "t": 3.7
+      },
+      {
+       "texto": "curso",
+       "t": 5.3
+      },
+      {
+       "texto": "especialização",
+       "t": 5.5
+      },
+      {
+       "texto": "novas tecnologias",
+       "t": 6.9
+      },
+      {
+       "texto": "técnicas",
+       "t": 8.4
+      },
+      {
+       "texto": "várias coisas",
+       "t": 9.2
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 17.3,
+   "t1": 21.9,
+   "cor": "preto",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "quantas vezes",
+     "t": 17.7,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "por semana",
+     "t": 18.4,
+     "y": 420,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "você fica frustrado",
+     "t": 18.9,
+     "y": 560,
+     "cor": "destaque",
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "com a sua carreira?",
+     "t": 20.9,
+     "y": 700,
+     "tam": 80
+    }
+   ]
+  },
+  {
+   "t0": 24.8,
+   "t1": 29.7,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o pensamento",
+     "t": 24.85,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 60,
+     "itens": [
+      {
+       "texto": "É só isso que tem pra mim?",
+       "t": 24.9
+      },
+      {
+       "texto": "Fiz tudo isso pra chegar aqui?",
+       "t": 26.3
+      },
+      {
+       "texto": "Tô com um teto na cabeça.",
+       "t": 28.3
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 30.9,
+   "t1": 37.5,
+   "cor": "azul",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "e daqui pra frente?",
+     "y": 300,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "vida futura",
+       "t": 31.3,
+       "status": "andamento",
+       "selo": "?"
+      },
+      {
+       "texto": "atendimentos",
+       "t": 32.6,
+       "status": "andamento",
+       "selo": "?"
+      },
+      {
+       "texto": "carreira",
+       "t": 34.0,
+       "status": "andamento",
+       "selo": "?"
+      },
+      {
+       "texto": "família",
+       "t": 36.9,
+       "status": "andamento",
+       "selo": "?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 48.0,
+   "t1": 53.3,
+   "cor": "branco",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "você é até",
+     "t": 48.2,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "o top de linha",
+     "t": 49.0,
+     "y": 420,
+     "cor": "destaque",
+     "tam": 130
+    },
+    {
+     "tipo": "linha",
+     "texto": "dos seus pares,",
+     "t": 50.3,
+     "y": 580,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "numa posição privilegiada",
+     "t": 52.0,
+     "y": 700,
+     "tam": 70,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 53.7,
+   "t1": 56.46,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "contador",
+     "de": 0,
+     "ate": 10,
+     "prefixo": "daqui a ",
+     "sufixo": " anos?",
+     "t": 54.0,
+     "dur": 0.5,
+     "y": 300,
+     "tam": 130
+    },
+    {
+     "tipo": "linha",
+     "texto": "e pros seus filhos?",
+     "t": 55.8,
+     "y": 500,
+     "cor": "destaque",
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 56.46,
+   "t1": 60.26,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

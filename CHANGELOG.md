@@ -2,6 +2,13 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.26 (30/09/2026) - live com 3 pessoas (Jornada do dentista)
+- `--colunas N --pessoas cima,baixo`: tela dividida a partir de live com N pessoas lado a lado (as 2 que conversam; coluna inteira, rosto um pouco acima do meio).
+- `editor/vtt_para_json.py`: usa a legenda .vtt do YouTube como transcrição (corte longo de live comprida sem rodar o Whisper em 1h+). Atenção: a legenda vem ~0,8s adiantada; nos shorts, recorte o trecho e deixe o Whisper transcrever.
+- `editor/retranscrever.py`: transcreve de novo uma janela quando o Whisper "pula" frases (palavra esticada por vários segundos).
+- Motion: fundo animado recortado pela forma do painel (os círculos vazavam na tela depois que a cena saía); destaque de item em cartão de interface acende em rosa (branco sumia no cartão branco) e balão de chat pulsa; `sync_t`/`tempos` por item.
+- `projetos/jornada_dentista/lote.py`: corte longo (cold open + 15 trechos, 13:40, 16:9, sem vinheta) e 6 shorts com motion da Imigrar.
+
 ## 0.25 (30/09/2026) - motion na identidade da Imigrar
 - `gerar_liv.py` com tema por marca (`"marca": "imigrar"` no roteiro): paleta rosa #F90D5B, azul royal #0E59C5, branco e preto; Inter Tight Black; painel em diagonal com faixa dupla; palavras entrando com impacto; marca-texto chapado atrás das palavras de destaque; faixas sutis correndo no fundo; sons mais fortes. A LIV continua clean e igual.
 - Contraste na Imigrar: nunca rosa sobre azul nem azul sobre rosa (no azul, destaque e marca-texto em branco).

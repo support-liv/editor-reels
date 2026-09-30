@@ -99,7 +99,7 @@ def preparar(r, pasta):
                 e["_tempos"] = sincronizar(e["texto"], e["t"], falas)
             for it in e.get("itens", []):
                 if falas and it.get("texto"):
-                    it["_tempos"] = sincronizar(it["texto"], it["t"], falas)
+                    it["_tempos"] = it.get("tempos") or sincronizar(it["texto"], it.get("sync_t", it["t"]), falas)
         # fala em outra ordem que o texto: a linha entra seguida (0,12s por palavra) em vez de ficar pela metade,
         # entrar depois da linha seguinte ou depois que a cena sai
         els = c.get("elementos", [])
@@ -120,7 +120,7 @@ def revelacoes(c):
     els = c.get("elementos", [])
     return sorted([tk for e in els for tk in e.get("_tempos", [])] +
                   [e.get("t", c["t0"]) for e in els if "itens" not in e and "_tempos" not in e] +
-                  [it[k] for e in els for it in e.get("itens", []) for k in ("t", "risco_t", "destaque_t") if k in it] +
+                  [it[k] for e in els for it in e.get("itens", []) for k in ("t", "risco_t", "destaque_t", "selo_t") if k in it] +
                   [tk for e in els for it in e.get("itens", []) for tk in it.get("_tempos", [])] +
                   [e["t"] + e.get("dur", 0) for e in els if e["tipo"] in ("rota", "anel", "contador")] +
                   [e["t"] + 0.25 + 0.08 * len(e["titulo"].split()) for e in els if e["tipo"] == "notificacao"] +
@@ -726,7 +726,9 @@ def gerar(r):
               + (f'<path d="{borda}" stroke="{COR[cborda]}" stroke-width="16" fill="none"/></svg>' if TEMA["marca"] == "liv" else
                f'<path d="{borda}" transform="translate(0,-70)" stroke="{COR[cborda]}" stroke-width="60" fill="none"/>'
                f'<path d="{borda}" transform="translate(0,-150)" stroke="{COR[FUNDOS[c.get("cor", "azul")][1]]}" stroke-width="18" fill="none"/></svg>'
-               + fundo_anim(c, ci, pid, h, W, fundo)),
+               # textura presa dentro da forma do painel (não vaza na transição nem sobra na tela depois que a cena sai)
+               + f'<div style="position:absolute;left:0;top:0;width:{W}px;height:{h}px;overflow:hidden;'
+                 f'clip-path:polygon(0 330px, {W}px 0, {W}px {h - 330}px, 0 {h}px)">' + fundo_anim(c, ci, pid, h, W, fundo) + '</div>'),
               f'<div class="cont" id="{pid}m" style="position:absolute;left:0;top:0;width:{W}px;height:{h}px">']
         loc = lambda y: y - top                          # tela -> coordenada dentro do painel
         t0, t1 = c["t0"], c["t1"]
@@ -835,6 +837,10 @@ def gerar(r):
             elif b["tipo"] == "fio":
                 el.append(f'<div class="barra" id="{pid}b{bi}" data-alvo="{pid}e{b["alvo"]}" data-sob="1" style="height:6px;background:{COR[cdest]}"></div>')
                 js.append(f'tl.to("#{pid}b{bi}", {{ scaleX: 1, duration: 0.6, ease: "power2.out" }}, {b["t"]:.2f});')
+            elif b["tipo"] == "item" and c["elementos"][b["el"]]["tipo"] == "chat":   # balão: pulsa (a cor do texto é a do balão)
+                js.append(f'tl.to("#{pid}e{b["el"]}b{b["item"]}", {{ scale: 1.06, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }}, {b["t"]:.2f});')
+            elif b["tipo"] == "item" and c["elementos"][b["el"]]["tipo"] == "status":  # cartão claro/escuro: acende em rosa
+                js.append(f'tl.to(\'[id^="{pid}e{b["el"]}t{b["item"]}w"]\', {{ color: "{COR["rosa"]}", duration: 0.3, yoyo: true, repeat: 1, repeatDelay: 0.9 }}, {b["t"]:.2f});')
             elif b["tipo"] == "item":                     # o item de que a fala está tratando acende na cor de destaque
                 js.append(f'tl.to(\'[id^="{pid}e{b["el"]}{b["letra"]}{b["item"]}w"]\', {{ color: "{COR[cdest]}", duration: 0.3, yoyo: true, repeat: 1, repeatDelay: 0.9 }}, {b["t"]:.2f});')
             else:                                         # pulso: a cena inteira respira um pouco mais

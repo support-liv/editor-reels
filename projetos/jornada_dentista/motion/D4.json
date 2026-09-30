@@ -1,0 +1,224 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_D4",
+ "duracao": 56.51,
+ "palavras": "palavras/D4.json",
+ "cenas": [
+  {
+   "t0": 3.6,
+   "t1": 8.4,
+   "cor": "preto",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a dúvida",
+     "t": 3.65,
+     "y": 250
+    },
+    {
+     "tipo": "busca",
+     "texto": "o que é o INBDE?",
+     "t": 3.8,
+     "dur": 1.0,
+     "y": 320,
+     "tam": 64,
+     "ate": 8.4
+    },
+    {
+     "tipo": "linha",
+     "texto": "com o que comparo no Brasil?",
+     "t": 5.2,
+     "y": 520,
+     "tam": 70,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "pra que serve?",
+     "t": 7.3,
+     "y": 620,
+     "cor": "destaque",
+     "tam": 100
+    }
+   ]
+  },
+  {
+   "t0": 8.5,
+   "t1": 16.3,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "INBDE",
+     "t": 8.9,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "exame nacional",
+     "t": 10.6,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "integrado de",
+     "t": 12.4,
+     "y": 430,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "licenciamento",
+     "t": 13.5,
+     "y": 560,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "em odontologia",
+     "t": 14.4,
+     "y": 710,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 16.4,
+   "t1": 22.6,
+   "cor": "rosa",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "é como a prova",
+     "t": 16.7,
+     "y": 300,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "do conselho americano",
+     "t": 19.2,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "pra dentistas.",
+     "t": 22.0,
+     "y": 580,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 26.6,
+   "t1": 33.6,
+   "cor": "branco",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "dentista internacional",
+     "t": 26.7,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "precisa fazer a prova",
+     "t": 27.4,
+     "y": 310,
+     "tam": 96
+    },
+    {
+     "tipo": "checklist",
+     "y": 470,
+     "tam": 70,
+     "passo": 104,
+     "itens": [
+      {
+       "texto": "pra aplicar na faculdade",
+       "t": 29.9
+      },
+      {
+       "texto": "antes de aplicar",
+       "t": 32.3
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 41.0,
+   "t1": 52.7,
+   "cor": "azul",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o caminho",
+     "t": 41.1,
+     "y": 250
+    },
+    {
+     "tipo": "degraus",
+     "y": 330,
+     "tam": 40,
+     "itens": [
+      {
+       "texto": "candidatura",
+       "t": 41.9
+      },
+      {
+       "texto": "entrevista",
+       "t": 43.1
+      },
+      {
+       "texto": "aprovação",
+       "t": 45.3
+      },
+      {
+       "texto": "revalida 2-3 anos",
+       "t": 46.4
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "varia de estado para estado",
+     "t": 49.2,
+     "y": 800,
+     "tam": 64,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "cada estado, sua lei",
+     "t": 51.3,
+     "y": 880,
+     "cor": "destaque",
+     "tam": 84,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 52.7,
+   "t1": 56.51,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

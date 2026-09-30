@@ -1,0 +1,192 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "dentista_D6",
+ "duracao": 44.42,
+ "palavras": "palavras/D6.json",
+ "cenas": [
+  {
+   "t0": 4.3,
+   "t1": 10.3,
+   "cor": "rosa",
+   "fundo_anim": "pontos",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "licenciamento",
+     "t": 5.8,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "existem pessoas",
+     "t": 4.4,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "se licenciando",
+     "t": 6.4,
+     "y": 440,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "em idades avançadas",
+     "t": 9.1,
+     "y": 580,
+     "cor": "destaque",
+     "tam": 96
+    }
+   ]
+  },
+  {
+   "t0": 10.9,
+   "t1": 16.1,
+   "cor": "azul",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "fazendo green card",
+     "t": 11.2,
+     "y": 300,
+     "tam": 96
+    },
+    {
+     "tipo": "numero",
+     "numero": "70",
+     "rotulo": "anos",
+     "t": 12.7,
+     "t_rotulo": 13.1,
+     "y": 440,
+     "tam": 300,
+     "tam_rotulo": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "a imigração não coloca limite",
+     "t": 13.9,
+     "y": 760,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 16.1,
+   "t1": 24.1,
+   "cor": "preto",
+   "fundo_anim": "faixas",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a imigração quer saber",
+     "t": 16.2,
+     "y": 250
+    },
+    {
+     "tipo": "chat",
+     "y": 320,
+     "tam": 62,
+     "itens": [
+      {
+       "texto": "Você pode contribuir?",
+       "t": 17.3,
+       "lado": "esq"
+      },
+      {
+       "texto": "Vou usufruir do seu melhor?",
+       "t": 19.4,
+       "lado": "esq"
+      },
+      {
+       "texto": "Tem capacidade ativa?",
+       "t": 22.5,
+       "lado": "esq"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 26.4,
+   "t1": 33.6,
+   "cor": "branco",
+   "fundo_anim": "circulos",
+   "elementos": [
+    {
+     "tipo": "status",
+     "titulo": "a história dela",
+     "y": 300,
+     "tam": 58,
+     "itens": [
+      {
+       "texto": "idade",
+       "t": 26.9,
+       "status": "andamento",
+       "selo": "quase 70"
+      },
+      {
+       "texto": "carreira pela frente",
+       "t": 28.4,
+       "status": "ok",
+       "selo": "+20 anos"
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "e você pensando em limite?",
+     "t": 31.7,
+     "y": 640,
+     "cor": "destaque",
+     "tam": 80,
+     "marcador": false
+    }
+   ]
+  },
+  {
+   "t0": 36.3,
+   "t1": 40.6,
+   "cor": "rosa",
+   "fundo_anim": "grade",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "é cultural",
+     "t": 36.4,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "no Brasil 🇧🇷",
+     "t": 37.3,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "data de validade",
+     "t": 38.8,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 110
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 40.6,
+   "t1": 44.42,
+   "painel": "cheio",
+   "acima": "Veja a",
+   "palavra": "live completa",
+   "texto": "no canal",
+   "tam_texto": 84
+  }
+ ]
+}

@@ -49,6 +49,7 @@ Os formatos que o time publica, e como cada um é editado. Definidos com o time 
 | Cena | Enquadramento | Respiros |
 |---|---|---|
 | Live com 2 pessoas | `--layout dividido`: tela dividida, **fixa**, sem crop | Padrão |
+| Live com 3 pessoas lado a lado | Shorts: `--layout dividido --colunas 3 --pessoas 3,1` (as 2 que conversam; quem fala em cima). Corte longo: normal no wide. Trechos com uma pessoa só na tela: vertical em tela cheia | Padrão (live Jornada do dentista) |
 | Live com 1 pessoa, 1080p ou 4K | Tela cheia, com crops e zoom | Tira |
 | Live com 1 pessoa, **720p** | **Perguntar:** `--layout quadro` (imagem nítida com fundo desfocado, pode ter zoom leve) **ou** tela cheia, perdendo qualidade | Tira |
 | Entrevista / fala pra câmera | Dinâmico: zoom alternando por bloco | Tira |
