@@ -20,3 +20,4 @@ __pycache__/
 motion/node_modules/
 motion/renders/
 motion/.hyperframes/
+!motion/sfx/*.wav
