@@ -386,7 +386,7 @@ def _cartoes(e, eid, top, W, centro, fundo, ctexto, cdest):
         x = 96 + i * (larg + gap)
         h.append(f'<div id="{eid}k{i}" style="position:absolute;left:{x}px;top:0;width:{larg}px;height:{alt}px;border-radius:28px;'
                  f'background:{COR[cf]};padding:36px 34px;box-sizing:border-box;opacity:0">'
-                 f'<div class="fit" data-max="{larg - 68}" style="font-size:{it.get("tam", 68)}px;font-weight:900;line-height:1.0;color:{COR[ct]};white-space:nowrap;display:inline-block">{html.escape(it["titulo"])}</div>'
+                 f'<div class="fit" data-max="{larg - 68}" data-grupo="{eid}" style="font-size:{it.get("tam", 68)}px;font-weight:900;line-height:1.0;color:{COR[ct]};white-space:nowrap;display:inline-block">{html.escape(it["titulo"])}</div>'
                  + (f'<div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:{COR[ct]}">'
                     + _pals(it["texto"], f"{eid}k{i}w", it.get("_tempos") or [it["t"] + 0.2] * len(it["texto"].split()), js) + '</div>' if it.get("texto") else "")
                  + f'<div id="{eid}x{i}" style="position:absolute;left:24px;right:24px;top:{alt // 2 - 5}px;height:10px;border-radius:5px;'
@@ -460,7 +460,7 @@ def _colunas(e, eid, top, W, centro, fundo, ctexto, cdest):
     for i, it in enumerate(e["itens"][:2]):
         x = 96 if i == 0 else W // 2 + 30
         h.append(f'<div id="{eid}c{i}" style="position:absolute;left:{x}px;top:10px;width:{larg}px;opacity:0">'
-                 f'<div class="fit" data-max="{larg}" style="display:inline-block;white-space:nowrap;font-size:{it.get("tam", 70)}px;font-weight:900;'
+                 f'<div class="fit" data-max="{larg}" data-grupo="{eid}" style="display:inline-block;white-space:nowrap;font-size:{it.get("tam", 70)}px;font-weight:900;'
                  f'line-height:1.0;color:{dest}">{html.escape(it["titulo"])}</div>'
                  + (f'<div style="margin-top:18px;font-size:48px;font-weight:700;line-height:1.1;color:{txt}">'
                     + _pals(it["texto"], f"{eid}c{i}w", it.get("_tempos") or [it["t"] + 0.2] * len(it["texto"].split()), js) + '</div>' if it.get("texto") else "")
@@ -650,6 +650,13 @@ def gerar(r):
         document.querySelectorAll(".fit").forEach((el) => {{
           const max = Number(el.dataset.max); let tam = parseFloat(el.style.fontSize);
           while (el.scrollWidth > max && tam > 30) {{ tam -= 2; el.style.fontSize = tam + "px"; }}
+        }});
+        // títulos de uma mesma comparação (colunas, cartões) no mesmo tamanho: o menor que coube
+        const grupos = {{}};
+        document.querySelectorAll(".fit[data-grupo]").forEach((el) => {{ (grupos[el.dataset.grupo] = grupos[el.dataset.grupo] || []).push(el); }});
+        Object.values(grupos).forEach((els) => {{
+          const menor = Math.min(...els.map((el) => parseFloat(el.style.fontSize)));
+          els.forEach((el) => {{ el.style.fontSize = menor + "px"; }});
         }});
         // risco do tamanho exato do texto que ele risca (funciona alinhado à esquerda ou centralizado)
         document.querySelectorAll(".barra[data-alvo]").forEach((b) => {{
