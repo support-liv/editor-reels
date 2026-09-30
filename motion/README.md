@@ -6,10 +6,26 @@ Animações feitas em HTML e renderizadas pelo [HyperFrames](https://github.com/
 - `fontes` aponta para `../assets/fontes`; `vendor/gsap.min.js` é a biblioteca de animação, local (o render não depende de internet).
 - Render **sempre local**. Telemetria desligada e comandos de nuvem bloqueados em `.claude/settings.json`: vídeo de cliente nunca sai da máquina.
 
+## O que é motion aqui: B-roll de cena
+O motion é uma **cena extra de B-roll** que entra por cima da pessoa e **explica a narrativa** enquanto ela fala: tela cheia na identidade da marca, texto cinético sincronizado com as palavras, efeitos sonoros no quadro exato, e entrada e saída com transição (a faixa diagonal do "V" da LIV). A voz continua; a legenda do editor continua por cima.
+
+Não é enfeite em cima do gancho nem da legenda.
+
+Como fazer uma cena:
+1. Leia a fala com os tempos (`--so-cortes` e a transcrição) e escolha o trecho que ganha com explicação visual (conceito, lista, número, comparação). Deixe a pessoa na tela no gancho e nos momentos de confiança.
+2. Cada animação e cada efeito sonoro vão no tempo da palavra dita (tempos relativos ao começo da cena).
+3. Texto só entre 330 e 1090 px de altura: a faixa da legenda (~1150-1330) e a parte de baixo (interface do Reels) ficam livres.
+4. Fundo com entrada e saída transparentes (a pessoa aparece antes e depois da transição).
+5. Renderize em `--format mov`, confira quadros (contact sheet) e só então use: `--broll arquivo.mov@fonte:SEGUNDOS` (tempo da fala no bruto; o editor converte).
+
+## Efeitos sonoros
+`sfx/` (gerados por `gerar_sfx.py`, sem licença de terceiros): `whoosh`, `whoosh_grave` (entrada/virada), `pop` (elemento aparece), `tick` (contador, lista), `impacto` (texto batendo), `riscar` (negação), `subida` (tensão), `sino` (resolução/CTA). No HTML: `<audio id="..." src="sfx/pop.wav" data-start="0.41" data-duration="0.09" data-volume="0.7">`. O editor mixa os efeitos por baixo da voz.
+
 ## Modelos
 
 | Modelo | O que é | Variáveis |
 |---|---|---|
+| `broll_caminho_liv` | B-roll de 7s, 2 atos: "FORMAÇÃO + EXPERIÊNCIA" e "UM CAMINHO LEGÍTIMO / sem empresa / sem US$ 1.000.000" riscados, com whoosh, pops, ticks do contador, riscos e impacto | — (exemplo de referência) |
 | `cta_palavra_chave` | "Comente PALAVRA" entrando, pulsando e saindo (4s), abaixo da faixa da legenda | `marca`, `rotulo`, `palavra`, `topo` |
 
 ## Usar

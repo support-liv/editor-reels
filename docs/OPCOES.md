@@ -26,6 +26,8 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--gancho "texto"` | Caixa nos primeiros 3,2s, em caixa alta. Aceita 🇺🇸 e 🇧🇷 |
 | `--cta "texto"` | Caixa nos últimos 3,5s |
 | `--cta-animado PERFIL` | CTA animado da marca ("Comente PERFIL") nos últimos 4s, no lugar da caixa. `--cta-rotulo` muda o "Comente" |
+| `--broll arq.mov@fonte:8.4` | **B-roll de motion**: cena por cima da imagem, embaixo da legenda, com os efeitos sonoros dela mixados por baixo da voz. `@fonte:` = tempo da fala no bruto (o editor converte); `@12.5` = tempo do vídeo pronto. Pode repetir |
+| `--sem-legenda` | Não queima legenda. Só quando o vídeo de origem **já tem legenda gravada** (senão duplica) |
 | `--animacao arq.mov@12.5` | Cola uma animação transparente (feita em `motion/`) nesse segundo do vídeo pronto. Pode repetir. Proporção tem que ser a mesma do vídeo |
 | `--y-legenda 0.62` | Altura da legenda (fração da tela). Orgânico 0.62, anúncio 0.55, selfie 0.64 |
 | `--cor-caixa` | Estilo da tarja do gancho/CTA, só com cores da marca. **Imigrar:** `branco`, `azul` (#0E59C5), `rosa` (#F90D5B). **LIV:** `azul` (#2C3642), `laranja` (#FF6E1F), `bege` (#FFF0E6), `marrom` (#945943) |

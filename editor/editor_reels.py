@@ -693,6 +693,65 @@ def caixa_texto(texto, marca, tam=52, estilo=None):
     return img
 
 
+SEM_LEGENDA = False                               # --sem-legenda: o vídeo de origem já tem legenda gravada
+BROLLS = []                                       # [(arquivo, "12.5" ou "fonte:8.4")] vindos do --broll
+
+
+class Broll:
+    """cena de motion (MOV/WebM com transparência) que entra por cima da imagem, embaixo da legenda."""
+    def __init__(self, arq, t0, w, h):
+        self.arq, self.t0 = arq, t0
+        self.dur = float(run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", arq]).strip())
+        self.w, self.h, self.dec, self.ultimo = w, h, None, None
+        self.lidos = 0
+
+    def quadro(self, t):
+        """quadro BGRA da cena no tempo t do vídeo final (None fora dela). Leitura sequencial."""
+        if not (self.t0 <= t < self.t0 + self.dur):
+            return None
+        if self.dec is None:
+            self.dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", self.arq, "-vf",
+                                         f"fps={FPS},scale={self.w}:{self.h}:flags=lanczos,format=bgra",
+                                         "-f", "rawvideo", "-pix_fmt", "bgra", "-"], stdout=subprocess.PIPE)
+        alvo = int(round((t - self.t0) * FPS))
+        while self.lidos <= alvo:
+            buf = self.dec.stdout.read(self.w * self.h * 4)
+            if len(buf) < self.w * self.h * 4:
+                break
+            self.ultimo = np.frombuffer(buf, np.uint8).reshape(self.h, self.w, 4)
+            self.lidos += 1
+        return self.ultimo
+
+
+def tempo_na_saida(cortes, t_fonte):
+    """tempo do bruto -> tempo no vídeo pronto (soma dos cortes antes dele)."""
+    acc = 0.0
+    for c in cortes:
+        if c["s"] <= t_fonte < c["e"]:
+            return acc + t_fonte - c["s"]
+        if t_fonte < c["s"]:
+            return acc
+        acc += c["e"] - c["s"]
+    return acc
+
+
+def preparar_brolls(cortes, w, h):
+    camadas = []
+    for arq, quando in BROLLS:
+        t0 = tempo_na_saida(cortes, float(quando[6:])) if quando.startswith("fonte:") else float(quando)
+        camadas.append(Broll(arq, t0, w, h))
+        print(f"  b-roll {os.path.basename(arq)} em {t0:.2f}s")
+    return camadas
+
+
+def aplicar_brolls(out, camadas, t):
+    for b in camadas:
+        q = b.quadro(t)
+        if q is not None:
+            a = q[:, :, 3:4].astype(np.float32) / 255
+            out[:] = (q[:, :, :3] * a + out * (1 - a)).astype(np.uint8)
+
+
 def colar(frame_bgr, rgba, y):
     arr = np.asarray(rgba)
     h, w = arr.shape[:2]
@@ -755,7 +814,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
             pal_saida.append({"w": p["w"], "s": offset + ini, "e": offset + fim})
         offset += c["e"] - c["s"]
     total = offset
-    grupos = grupos_legenda(aplicar_trocas(pal_saida, trocas))
+    grupos = [] if SEM_LEGENDA else grupos_legenda(aplicar_trocas(pal_saida, trocas))
     leg = Legenda(marca)
     img_gancho = caixa_texto(gancho, marca, estilo=estilo_caixa) if gancho else None
     img_cta = caixa_texto(cta, marca, estilo=estilo_caixa) if cta else None
@@ -859,6 +918,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
                             "-color_range", "tv", tmp_v],
                            stdin=subprocess.PIPE)
     # 3) renderiza
+    camadas = preparar_brolls(cortes, OUT_W, OUT_H)
     n_out, gi = 0, 0
     for ci, c in enumerate(cortes):
         frac, ts, xy = planos[ci]
@@ -881,6 +941,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
             x0 = int(np.clip(x0 - bx0, 0, bw - cw)); y0 = int(np.clip(y0 - by0, 0, bh - ch))
             out = cv2.resize(fr[y0:y0 + ch, x0:x0 + cw], (OUT_W, OUT_H), interpolation=cv2.INTER_AREA)
             t = n_out / FPS
+            aplicar_brolls(out, camadas, t)
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
                 gi += 1
             g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
@@ -900,7 +961,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
         print(f"  corte {ci + 1}/{len(cortes)} ok")
     enc.stdin.close(); enc.wait()
 
-    montar_audio(video, cortes, tmp_v, saida)
+    montar_audio(video, cortes, tmp_v, saida, sfx=[(b.arq, b.t0) for b in camadas])
     return total
 
 
@@ -912,7 +973,7 @@ def loudness(path):
     return float(m[-1]) if m else -14.0
 
 
-def montar_audio(video, cortes, tmp_v, saida, vinheta=None, seg_vinheta=0.0):
+def montar_audio(video, cortes, tmp_v, saida, vinheta=None, seg_vinheta=0.0, sfx=()):
     """junta o áudio dos mesmos cortes (fade curtinho), equaliza vozes, -14 LUFS, e muxa com o vídeo."""
     partes, filtros = [], []
     for i, c in enumerate(cortes):
@@ -931,6 +992,17 @@ def montar_audio(video, cortes, tmp_v, saida, vinheta=None, seg_vinheta=0.0):
         entradas += ["-i", vinheta]
     else:
         fc += "[aout]"
+    sfx = [(a, t) for a, t in sfx if "audio" in run(["ffprobe", "-v", "error", "-show_entries", "stream=codec_type",
+                                                    "-of", "csv=p=0", a])]
+    if sfx:                                      # efeitos sonoros das cenas de motion, por baixo da voz
+        fc = fc.replace("[aout]", "[voz]")
+        base = len(entradas) // 2
+        mix = ["[voz]"]
+        for k, (arq, t0) in enumerate(sfx):
+            entradas += ["-i", arq]
+            fc += f";[{base + k}:a]aresample=48000,volume=0.55,adelay={int(round(t0 * 1000))}:all=1[fx{k}]"
+            mix.append(f"[fx{k}]")
+        fc += f";{''.join(mix)}amix=inputs={len(mix)}:duration=first:normalize=0,alimiter=limit=0.89[aout]"
     run(["ffmpeg", "-v", "error", "-y"] + entradas + ["-filter_complex", fc,
          "-map", "1:v", "-map", "[aout]", "-c:v", "copy",
          "-bsf:v", "h264_metadata=colour_primaries=1:transfer_characteristics=1:matrix_coefficients=1:video_full_range_flag=0",
@@ -1344,6 +1416,11 @@ def main():
     ap.add_argument("--girar", type=float, default=0.0, help="corrige câmera torta: graus (positivo = anti-horário)")
     ap.add_argument("--layout", choices=["dividido", "quadro", "quadrado", "youtube"],
                     help="dividido: live com duas pessoas; quadro: live solo 720p; quadrado: WhatsApp; youtube: corte longo 16:9")
+    ap.add_argument("--sem-legenda", action="store_true",
+                    help="não queima legenda (use só quando o vídeo de origem JÁ tem legenda gravada: senão duplica)")
+    ap.add_argument("--broll", action="append", default=[],
+                    help='cena de motion por cima da imagem (embaixo da legenda), com os efeitos sonoros dela: '
+                         '"arquivo.mov@12.5" (tempo do vídeo pronto) ou "arquivo.mov@fonte:8.4" (tempo da fala no bruto)')
     ap.add_argument("--animacao", action="append", default=[],
                     help='animação transparente (.mov/.webm) colada no vídeo: "arquivo.mov@12.5". Pode repetir')
     ap.add_argument("--cta-animado", metavar="PALAVRA",
@@ -1424,6 +1501,11 @@ def main():
     nome = a.nome or f"{base}_{a.marca}"
     saida = os.path.abspath(os.path.join(a.saida, nome + ".mp4"))
     print("\nRenderizando...")
+    global SEM_LEGENDA
+    SEM_LEGENDA = a.sem_legenda
+    for x in a.broll:
+        arq, _, quando = x.rpartition("@")
+        BROLLS.append((os.path.abspath(arq), quando))
     renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, "" if a.cta_animado else a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
                so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima, girar=a.girar,
                dinamico=a.dinamico, endireitar=a.endireitar, vinheta=not a.sem_vinheta)

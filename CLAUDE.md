@@ -6,15 +6,16 @@ Leia antes de editar: `docs/FORMATOS.md` (o que cada formato leva), `docs/PADROE
 
 ## Como trabalhar: rápido, certeiro, com poucas perguntas
 
-1. **Assista primeiro.** Transcreva (`python3 editor/transcrever_lote.py VIDEO`), veja alguns quadros e a resolução (`ffprobe`). Deduza sozinho: marca, tipo de cena, assunto, público, objetivo, pautas e ganchos.
-2. **Pergunte uma vez só, e só o que não dá para deduzir.** Uma rodada curta, já com a sua sugestão preenchida. Normalmente:
+1. **Confira se o material é bruto.** Olhe quadros: se já tem legenda, gancho ou grafismo gravado, **não queime outra legenda por cima** (duplica). Peça o bruto; se não houver, use `--sem-legenda` e avise.
+2. **Assista.** Transcreva (`python3 editor/transcrever_lote.py VIDEO`), veja alguns quadros e a resolução (`ffprobe`). Deduza sozinho: marca, tipo de cena, assunto, público, objetivo, pautas e ganchos.
+3. **Pergunte uma vez só, e só o que não dá para deduzir.** Uma rodada curta, já com a sua sugestão preenchida. Normalmente:
    - quais formatos saem desse material (corte longo, Reels/Shorts, stories, carrossel, WhatsApp, anúncio);
    - **CTA**: link na bio ou **palavra-chave** (muda por campanha e por vídeo, sempre confirmar);
    - **live solo em 720p**: quadro com fundo desfocado ou tela cheia perdendo qualidade;
    - nomes com grafia duvidosa (o Whisper erra: "Livre" = LIV, "Marina Damás" = Marinna Damásio).
    Não pergunte o que o vídeo já responde nem o que já tem padrão.
-3. **Mostre o plano antes de renderizar**: lista de cortes com o texto de cada um, ganchos e CTAs. Renderize só depois do ok.
-4. **Renderize, confira e entregue** (ver "Conferência" abaixo).
+4. **Mostre o plano antes de renderizar**: lista de cortes com o texto de cada um, ganchos e CTAs. Renderize só depois do ok.
+5. **Renderize, confira e entregue** (ver "Conferência" abaixo).
 
 ## Regras que nunca mudam
 - **Gancho só pergunta, nunca responde.** A resposta está no vídeo.
@@ -47,7 +48,8 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 - Animações ficam em `motion/` (HyperFrames: HTML + GSAP, render local, fundo transparente) e o editor cola no vídeo (`--cta-animado`, `--animacao`). Ver `motion/README.md`.
 - Técnica: skills do projeto em `.claude/skills/` (HyperFrames + iart-ai/motion-skills). As do motion-skills falam de Remotion: use só a técnica e **renderize pelo HyperFrames** (Remotion exige licença paga).
 - **Nunca** use render na nuvem (`hyperframes cloud`, `lambda`, `cloudrun`) nem login/telemetria: vídeo de cliente não sai da máquina. Já está bloqueado em `.claude/settings.json`.
-- Animação serve à mensagem: curta, na fonte e nas cores da marca, fora do rosto e da faixa da legenda, e não em todo corte. O vídeo continua sendo a pessoa falando.
+- **Motion = B-roll de cena extra que explica a narrativa** (`--broll`): tela cheia na identidade da marca, texto cinético no tempo das palavras, efeitos sonoros (`motion/sfx/`), transição de entrada e saída. Nunca é enfeite em cima do gancho ou da legenda. Como montar: `motion/README.md`.
+- A pessoa fica na tela no gancho, nos momentos de confiança e no CTA; o B-roll entra nos conceitos, listas, números e comparações.
 - Ao criar um modelo novo, confira quadros do resultado e registre em `motion/README.md`.
 
 ## Git

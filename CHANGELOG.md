@@ -2,6 +2,14 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.16 (29/09/2026) - B-roll de motion com efeitos sonoros
+- **Motion passou a ser B-roll de cena extra** explicando a narrativa (o teste anterior pôs o CTA por cima de um vídeo já legendado e duplicou legenda e gancho).
+- `--broll arquivo.mov@fonte:SEG`: a cena entra por cima da imagem e embaixo da legenda; os efeitos sonoros dela entram mixados por baixo da voz. O tempo pode ser o da fala no bruto.
+- `motion/sfx/` + `gerar_sfx.py`: 8 efeitos sonoros sintetizados (sem licença de terceiros).
+- Modelo `broll_caminho_liv` (7s, 2 atos, sincronizado com a fala), exemplo de referência.
+- `--sem-legenda`, para quando a origem já vem com legenda gravada.
+- CLAUDE.md: conferir se o material é bruto antes de editar.
+
 ## 0.15 (29/09/2026) - motion design (piloto)
 - `motion/`: animações em HTML renderizadas pelo HyperFrames 0.8.94 (Apache 2.0), fundo transparente (ProRes 4444), render local.
 - Primeiro modelo: `cta_palavra_chave` ("Comente PALAVRA" animado), nas duas marcas.
