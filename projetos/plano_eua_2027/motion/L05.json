@@ -1,0 +1,191 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L05",
+ "duracao": 40.54,
+ "palavras": "palavras/L05.json",
+ "cenas": [
+  {
+   "t0": 3.3,
+   "t1": 6.4,
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "caminho 1",
+     "t": 3.35,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "precisa de",
+     "t": 3.3,
+     "y": 310,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "um sponsor",
+     "t": 3.6,
+     "y": 440,
+     "cor": "destaque",
+     "tam": 140
+    },
+    {
+     "tipo": "linha",
+     "texto": "uma empresa faz todo o processo",
+     "t": 4.7,
+     "y": 610,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 6.6,
+   "t1": 10.9,
+   "cor": "preto",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o que a empresa faz",
+     "t": 6.7,
+     "y": 250
+    },
+    {
+     "tipo": "etapas",
+     "y": 320,
+     "tam": 78,
+     "itens": [
+      {
+       "texto": "publicação",
+       "t": 7.5
+      },
+      {
+       "texto": "testa o mercado",
+       "t": 9.1
+      },
+      {
+       "texto": "traz você",
+       "t": 10.4
+      }
+     ],
+     "passo": 124
+    }
+   ]
+  },
+  {
+   "t0": 11.85,
+   "t1": 17.7,
+   "cor": "rosa",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "os principais",
+     "t": 12.8,
+     "y": 250
+    },
+    {
+     "tipo": "numero",
+     "numero": "2",
+     "rotulo": "caminhos",
+     "t": 12.3,
+     "t_rotulo": 12.6,
+     "y": 300,
+     "tam": 300,
+     "tam_rotulo": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "sem oferta de emprego",
+     "t": 14.6,
+     "y": 620,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "EB-1A",
+     "t": 16.4,
+     "y": 740,
+     "cor": "destaque",
+     "tam": 130
+    },
+    {
+     "tipo": "linha",
+     "texto": "e EB-2 NIW",
+     "t": 16.9,
+     "y": 890,
+     "tam": 130
+    }
+   ]
+  },
+  {
+   "t0": 24.6,
+   "t1": 33.3,
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "esses dois tipos",
+     "t": 24.8,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "olham pra você:",
+     "t": 26.0,
+     "y": 310,
+     "tam": 100
+    },
+    {
+     "tipo": "checklist",
+     "y": 450,
+     "tam": 78,
+     "itens": [
+      {
+       "texto": "seu perfil",
+       "t": 26.9
+      },
+      {
+       "texto": "seu background",
+       "t": 27.6
+      },
+      {
+       "texto": "sua proposta",
+       "t": 28.6
+      }
+     ],
+     "passo": 112
+    },
+    {
+     "tipo": "linha",
+     "texto": "green card 🇺🇸",
+     "t": 31.1,
+     "y": 800,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "sem depender de empregador",
+     "t": 31.6,
+     "y": 950,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 36.8,
+   "t1": 40.54,
+   "painel": "cheio",
+   "acima": "Existe um caminho",
+   "palavra": "pro seu perfil?",
+   "texto": "Link na bio",
+   "tam_texto": 84
+  }
+ ]
+}

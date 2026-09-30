@@ -65,7 +65,7 @@ def sincronizar(texto, t, falas):
     tempos, j = [None] * len(toks), 0
     for k, tok in enumerate(toks):
         n = _norm(tok)
-        if not n:
+        if not n or (len(n) <= 2 and len(toks) > 1):     # "e", "o", "de": casam com a palavra errada; ficam entre as vizinhas
             continue
         for jj in range(j, min(len(cand), j + (7 if j else 12))):   # 1ª palavra: janela maior
             if _norm(cand[jj]["w"]) == n:
@@ -175,7 +175,7 @@ def alinhamento(c, i):
 
 def extensao(e):
     if e["tipo"] == "linha":
-        return e["y"], e["y"] + e.get("tam", 124) * 1.05
+        return e["y"], e["y"] + e.get("tam", 124) * TEMA["escala"] * 1.05
     if e["tipo"] == "rotulo":
         return e["y"], e["y"] + 44
     if e["tipo"] == "etapas":
@@ -223,6 +223,10 @@ def centralizar_vertical(els, topo=200, base=1300):
 
 def painel_geo(modo, H):
     """(top, altura, path da forma, path da borda, y inicial, y final) do painel."""
+    if modo == "cheio" and TEMA["marca"] == "imigrar":
+        # diagonal (330px de queda) com as bordas fora da tela quando a cena está parada: sem filete
+        h = H + 660
+        return (-330, h, f"M0 330 L1080 0 L1080 {h - 330} L0 {h} Z", "M0 330 L1080 0", h, -h)
     if modo == "cheio":
         # as duas curvas (e o fio laranja de 16px) ficam 30px pra fora da tela quando a cena está parada: sem filete
         h = H + 660
@@ -239,6 +243,39 @@ def painel_geo(modo, H):
 # cores do manual, sem sombra/brilho/partícula; movimento leve: traço se desenhando, ponto acendendo, número contando)
 SEC = {"azul": "rgba(255,240,230,0.28)", "bege": "rgba(44,54,66,0.22)", "laranja": "rgba(255,255,255,0.35)"}
 CARTAO = {"azul": ("bege", "azul"), "bege": ("azul", "bege"), "laranja": ("branco", "azul")}   # (fundo do card, texto)
+
+# ---------------------------------------------------------------- temas por marca ("marca" no roteiro)
+# LIV: clean (manual de identidade). Imigrar: explora mais (painel em diagonal com faixa dupla, palavra entrando com
+# impacto, marca-texto chapado atrás das palavras-chave, faixas em movimento no fundo, sons mais fortes), sempre só na
+# paleta (rosa #F90D5B, azul royal #0E59C5, branco, preto) e na fonte Inter Tight.
+TEMA = {"marca": "liv", "fonte": "Darker Grotesque", "arq_fonte": "DarkerGrotesque[wght].ttf", "peso": 800, "cta_cor": "laranja",
+        "marcador": None, "escala": 1.0}
+TEMAS = {
+    "liv": dict(TEMA, cor=dict(COR), fundos=dict(FUNDOS), sec=dict(SEC), cartao=dict(CARTAO), destaque_card="laranja"),
+    "imigrar": {"marca": "imigrar", "fonte": "Inter Tight", "arq_fonte": "InterTight[wght].ttf", "peso": 900, "cta_cor": "rosa",
+                "escala": 0.8,
+                "cor": {"azul": "#0e59c5", "rosa": "#f90d5b", "branco": "#ffffff", "preto": "#141414", "laranja": "#f90d5b"},
+                # (fundo, texto, destaque, rótulo, faixa da borda)
+                "fundos": {"azul": ("azul", "branco", "rosa", "branco", "rosa"),
+                           "rosa": ("rosa", "branco", "preto", "branco", "azul"),
+                           "branco": ("branco", "preto", "rosa", "azul", "rosa"),
+                           "preto": ("preto", "branco", "rosa", "rosa", "azul")},
+                "sec": {"azul": "rgba(255,255,255,0.25)", "rosa": "rgba(255,255,255,0.32)", "branco": "rgba(20,20,20,0.14)",
+                        "preto": "rgba(255,255,255,0.2)"},
+                "cartao": {"azul": ("branco", "preto"), "rosa": ("branco", "preto"), "branco": ("azul", "branco"), "preto": ("azul", "branco")},
+                "destaque_card": "rosa",
+                # marca-texto atrás da linha de destaque: (cor do bloco, cor do texto por cima)
+                "marcador": {"azul": ("rosa", "branco"), "rosa": ("branco", "rosa"), "branco": ("rosa", "branco"), "preto": ("rosa", "branco")}},
+}
+
+
+def usar_tema(marca):
+    """troca paleta, fonte e jeito de animar pela marca do roteiro (os componentes leem COR/FUNDOS/SEC/CARTAO)."""
+    global TEMA
+    t = TEMAS[marca]
+    COR.clear(); COR.update(t["cor"]); FUNDOS.clear(); FUNDOS.update(t["fundos"])
+    SEC.clear(); SEC.update(t["sec"]); CARTAO.clear(); CARTAO.update(t["cartao"])
+    TEMA = dict(TEMAS["liv"], **{k: v for k, v in t.items() if k not in ("cor", "fundos", "sec", "cartao")})
 
 
 def _pals(texto, pref, tempos, js, modo="entra"):
@@ -398,7 +435,7 @@ def _cartoes(e, eid, top, W, centro, fundo, ctexto, cdest):
             js.append(f'tl.to("#{eid}k{i}", {{ opacity: 0.45, duration: 0.3 }}, {it["risco_t"] + 0.15:.2f});')
             sons.append(("tick", it["risco_t"], 0.3, 0.03))
         if it.get("destaque_t"):                    # acende este e o outro volta ao normal: a comparação fica clara
-            js.append(f'tl.to("#{eid}k{i}", {{ backgroundColor: "{COR["laranja"] if fundo != "laranja" else COR["azul"]}", duration: 0.3 }}, {it["destaque_t"]:.2f});')
+            js.append(f'tl.to("#{eid}k{i}", {{ backgroundColor: "{COR[TEMA["destaque_card"]] if fundo != TEMA["destaque_card"] else COR["azul"]}", duration: 0.3 }}, {it["destaque_t"]:.2f});')
             outro = 1 - i
             if len(e["itens"]) > 1 and e["itens"][outro].get("destaque_t", 1e9) < it["destaque_t"]:
                 js.append(f'tl.to("#{eid}k{outro}", {{ backgroundColor: "{COR[cf]}", duration: 0.3 }}, {it["destaque_t"]:.2f});')
@@ -511,21 +548,29 @@ def gerar(r):
     for ci, c in enumerate(cenas):
         modo = c.get("painel", "cheio")
         if c.get("tipo") == "cta":
-            c = dict(c, cor=c.get("cor", "laranja"))
+            c = dict(c, cor=c.get("cor", TEMA["cta_cor"]))
         fundo, ctexto, cdest, crot, cborda = FUNDOS[c.get("cor", "azul")]
         top, h, forma, borda, y_ini, y_fim = painel_geo(modo, H)
         pid = f"p{ci}"
         el = [f'<div class="painel" id="{pid}" style="top:{top}px;height:{h}px">',
               f'<svg class="forma" viewBox="0 0 {W} {h}" style="height:{h}px"><path d="{forma}" fill="{COR[fundo]}"/>'
-              f'<path d="{borda}" stroke="{COR[cborda]}" stroke-width="16" fill="none"/></svg>',
+              + (f'<path d="{borda}" stroke="{COR[cborda]}" stroke-width="16" fill="none"/></svg>' if TEMA["marca"] == "liv" else
+               f'<path d="{borda}" transform="translate(0,-70)" stroke="{COR[cborda]}" stroke-width="60" fill="none"/>'
+               f'<path d="{borda}" transform="translate(0,-150)" stroke="{COR[FUNDOS[c.get("cor", "azul")][1]]}" stroke-width="18" fill="none"/></svg>'
+               f'<div id="{pid}fx" class="faixas" style="top:0;height:{h}px;background:repeating-linear-gradient(115deg, transparent 0 240px, {SEC[fundo]} 240px 252px);opacity:0.3"></div>'),
               f'<div class="cont" id="{pid}m" style="position:absolute;left:0;top:0;width:{W}px;height:{h}px">']
         loc = lambda y: y - top                          # tela -> coordenada dentro do painel
         t0, t1 = c["t0"], c["t1"]
         entra, sai = max(0.0, t0 - 0.35), t1 - 0.1
         seguinte = cenas[ci + 1] if ci + 1 < len(cenas) else None
         coberto = (seguinte and seguinte.get("painel", "cheio") == modo and seguinte["t0"] - t1 < 0.25)
-        js.append(f'tl.fromTo("#{pid}", {{ y: {y_ini} }}, {{ y: 0, duration: 0.55, ease: "power3.out" }}, {entra:.2f});')
-        som("whoosh", entra, 0.35, 0.5)
+        if TEMA["marca"] == "liv":
+            js.append(f'tl.fromTo("#{pid}", {{ y: {y_ini} }}, {{ y: 0, duration: 0.55, ease: "power3.out" }}, {entra:.2f});')
+            som("whoosh", entra, 0.35, 0.5)
+        else:                                            # entra rápido e assenta; faixas do fundo correm na cena toda
+            js.append(f'tl.fromTo("#{pid}", {{ y: {y_ini} }}, {{ y: 0, duration: 0.45, ease: "expo.out" }}, {entra:.2f});')
+            js.append(f'tl.fromTo("#{pid}fx", {{ x: -{W} }}, {{ x: -{W} + 260, duration: {t1 - t0 + 0.8:.2f}, ease: "none" }}, {entra:.2f});')
+            som("whoosh_grave", entra, 0.45, 0.6)
         if t1 < dur - 0.05:
             if coberto:                                  # o próximo painel sobe por cima: este some depois
                 js.append(f'tl.set("#{pid}", {{ y: {y_ini} }}, {seguinte["t0"] + 0.35:.2f});')
@@ -536,8 +581,8 @@ def gerar(r):
             base = 1130 if modo == "baixo" else (330 if modo == "cheio" else 250)
             if modo == "cheio" and r.get("tela_dividida"):
                 base = 680                                   # sem legenda competindo: o CTA fica no meio da zona segura
-            c["elementos"] = [
-                {"tipo": "icone", "icone": "losangos", "x": 96, "y": base + 10, "tam": 60, "t": t0 + 0.15},
+            c["elementos"] = ([] if TEMA["marca"] != "liv" else
+                              [{"tipo": "icone", "icone": "losangos", "x": 96, "y": base + 10, "tam": 60, "t": t0 + 0.15}]) + [
                 {"tipo": "linha", "texto": c.get("acima", "Comente"), "y": base + 50, "t": t0 + 0.2, "cor": "texto", "tam": 84, "sync": False},
                 {"tipo": "linha", "texto": c["palavra"], "y": base + 140, "t": t0 + 0.4, "cor": "destaque", "tam": 132, "sync": False},
                 {"tipo": "linha", "texto": c["texto"], "y": base + 285, "t": t0 + 0.75, "cor": "texto", "tam": c.get("tam_texto", 52), "peso": 700, "sync": False},
@@ -552,24 +597,40 @@ def gerar(r):
             t = e.get("t", t0)
             x = e.get("x", 96)
             if e["tipo"] == "rotulo":
-                lz = ICONES["losangos"][1].format(d=COR[cdest])
                 estilo = f"left:0;width:{W}px;justify-content:center" if centro else f"left:{x}px"
+                if TEMA["marca"] == "liv":
+                    lz = ICONES["losangos"][1].format(d=COR[cdest])
+                    marca_r = f'<svg viewBox="0 0 46 28">{lz}</svg>'
+                    txt_r = html.escape(e["texto"])
+                else:
+                    marca_r = f'<i style="display:block;width:44px;height:12px;background:{COR[cdest]};transform:skewX(-20deg)"></i>'
+                    txt_r = html.escape(e["texto"].upper())
                 el.append(f'<div class="rotulo" id="{eid}" style="{estilo};top:{loc(e["y"])}px;color:{COR[crot]}">'
-                          f'<svg viewBox="0 0 46 28">{lz}</svg><span>{html.escape(e["texto"])}</span></div>')
+                          f'{marca_r}<span>{txt_r}</span></div>')
                 js.append(f'tl.fromTo("#{eid}", {{ opacity: 0, x: -20 }}, {{ opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }}, {t:.2f});')
             elif e["tipo"] == "linha":
                 cor = {"texto": ctexto, "destaque": cdest}.get(e.get("cor", "texto"), e.get("cor"))
-                tam, peso = e.get("tam", 124), e.get("peso", 800)
+                tam, peso = int(e.get("tam", 124) * TEMA["escala"]), e.get("peso", TEMA["peso"])
+                marcador = TEMA["marcador"] and e.get("cor") == "destaque" and e.get("marcador", True)
+                if marcador:
+                    bloco, cor = TEMA["marcador"][fundo]
                 if centro:
                     caixa_l, larg_l = f"left:96px;width:{W - 192}px;text-align:center", W - 192
                 else:
                     caixa_l, larg_l = f"left:{x}px;width:{W - x - 90}px", W - x - 90
                 tempos = e.get("_tempos") or [t] * len(e["texto"].split())
                 pals = "&nbsp;".join(f'<span class="pal" id="{eid}w{k}">{html.escape(w)}</span>' for k, w in enumerate(e["texto"].split()))
-                el.append(f'<div class="linha" style="{caixa_l};top:{loc(e["y"])}px"><span id="{eid}" class="fit" data-max="{larg_l}" '
+                mk = (f'<div class="marca-texto" id="{eid}mk" data-alvo-mk="{eid}" style="background:{COR[bloco]}"></div>' if marcador else "")
+                el.append(f'<div class="linha" style="{caixa_l};top:{loc(e["y"])}px">{mk}<span id="{eid}" class="fit" data-max="{larg_l - (40 if marcador else 0)}" '
                           f'style="color:{COR[cor]};font-size:{tam}px;font-weight:{peso}">{pals}</span></div>')
+                if marcador:                             # o bloco risca por trás logo antes da 1ª palavra
+                    js.append(f'tl.to("#{eid}mk", {{ scaleX: 1, duration: 0.32, ease: "power4.out" }}, {max(t0 - 0.2, tempos[0] - 0.12):.2f});')
+                    som("pop", tempos[0] - 0.12, 0.35, 0.3)
                 for k, tk in enumerate(tempos):          # a linha se monta junto com a fala
-                    js.append(f'tl.fromTo("#{eid}w{k}", {{ yPercent: 115 }}, {{ yPercent: 0, duration: 0.5, ease: "expo.out" }}, {tk:.2f});')
+                    if TEMA["marca"] == "liv":
+                        js.append(f'tl.fromTo("#{eid}w{k}", {{ yPercent: 115 }}, {{ yPercent: 0, duration: 0.5, ease: "expo.out" }}, {tk:.2f});')
+                    else:                                # Imigrar: sobe com impacto (passa um pouco e assenta)
+                        js.append(f'tl.fromTo("#{eid}w{k}", {{ yPercent: 120, rotate: 5 }}, {{ yPercent: 0, rotate: 0, duration: 0.42, ease: "back.out(1.9)" }}, {tk:.2f});')
                 if e.get("som", True):
                     som("tick", tempos[0], 0.22, 0.03)
             elif e["tipo"] in ("sub", "risco"):
@@ -613,7 +674,8 @@ def gerar(r):
         el.append("</div></div>")
         corpo.append("\n".join(el))
         # respiro de câmera bem sutil durante a cena (ambient, 1,5%): nada fica congelado esperando a próxima palavra
-        js.append(f'tl.fromTo("#{pid}m", {{ y: 10, scale: 1 }}, {{ y: -10, scale: 1.015, duration: {max(0.5, t1 - t0 + 0.6):.2f}, '
+        amb = (10, 1.015) if TEMA["marca"] == "liv" else (18, 1.035)
+        js.append(f'tl.fromTo("#{pid}m", {{ y: {amb[0]}, scale: 1 }}, {{ y: -{amb[0]}, scale: {amb[1]}, duration: {max(0.5, t1 - t0 + 0.6):.2f}, '
                   f'ease: "sine.inOut", transformOrigin: "50% {960 - top}px" }}, {entra:.2f});')
 
     return f"""<!doctype html>
@@ -624,15 +686,19 @@ def gerar(r):
     <title>{html.escape(r["nome"])} (LIV clean, gerado por gerar_liv.py)</title>
     <script src="vendor/gsap.min.js"></script>
     <style>
-      @font-face {{ font-family: "Darker Grotesque"; src: url("fontes/DarkerGrotesque[wght].ttf") format("truetype"); font-weight: 300 900; }}
+      @font-face {{ font-family: "{TEMA["fonte"]}"; src: url("fontes/{TEMA["arq_fonte"]}") format("truetype"); font-weight: 300 900; }}
       html, body {{ margin: 0; background: transparent; }}
-      #root {{ position: relative; width: 100%; height: 100%; overflow: hidden; background: transparent; font-family: "Darker Grotesque", sans-serif; }}
+      #root {{ position: relative; width: 100%; height: 100%; overflow: hidden; background: transparent; font-family: "{TEMA["fonte"]}", sans-serif; }}
+      .marca-texto {{ position: absolute; transform: scaleX(0) skewX(-8deg); transform-origin: left center; border-radius: 6px; }}
+      .linha > span {{ position: relative; }}
+      .faixas {{ position: absolute; left: 0; width: {W * 3}px; pointer-events: none; }}
+      .rotulo span {{ letter-spacing: {"0.14em" if TEMA["marca"] == "imigrar" else "0"}; }}
       .painel {{ position: absolute; left: 0; width: {W}px; }}
       .painel > svg.forma {{ position: absolute; left: 0; top: 0; width: {W}px; }}
       .rotulo {{ position: absolute; display: flex; align-items: center; gap: 18px; font-size: 40px; font-weight: 700; }}
       .rotulo svg {{ width: 46px; height: 28px; }}
       .linha {{ position: absolute; overflow: hidden; padding-bottom: 10px; }}
-      .linha > span {{ display: inline-block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }}
+      .linha > span {{ display: inline-block; line-height: 1.0; white-space: nowrap; letter-spacing: {"-0.03em" if TEMA["marca"] == "imigrar" else "-0.01em"}; }}
       .linha .pal {{ display: inline-block; }}
       .barra {{ position: absolute; border-radius: 5px; transform-origin: left center; transform: scaleX(0); }}
       .icone {{ position: absolute; }}
@@ -691,6 +757,11 @@ def gerar(r):
           }}
           b.style.left = (caixa.offsetLeft + alvo.offsetLeft - 12) + "px"; b.style.width = (alvo.offsetWidth + 24) + "px";
         }});
+        document.querySelectorAll(".marca-texto").forEach((m) => {{
+          const alvo = document.getElementById(m.dataset.alvoMk); if (!alvo) return;
+          m.style.left = (alvo.offsetLeft - 18) + "px"; m.style.width = (alvo.offsetWidth + 36) + "px";
+          m.style.top = (alvo.offsetTop + alvo.offsetHeight * 0.08) + "px"; m.style.height = (alvo.offsetHeight * 0.92) + "px";
+        }});
         const tl = gsap.timeline({{ paused: true }});
 {chr(10).join("        " + j for j in js)}
         window.__timelines["main"] = tl;
@@ -739,7 +810,9 @@ def conferir_ritmo(r):
 
 
 def main():
-    r = preparar(json.load(open(sys.argv[1])), os.path.dirname(os.path.abspath(sys.argv[1])))
+    bruto = json.load(open(sys.argv[1]))
+    usar_tema(bruto.get("marca", "liv"))
+    r = preparar(bruto, os.path.dirname(os.path.abspath(sys.argv[1])))
     conferir_ritmo(r)
     saida = os.path.join(AQUI, "modelos", r["nome"] + ".html")
     open(saida, "w").write(gerar(r))

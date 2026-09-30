@@ -1,0 +1,249 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L12",
+ "duracao": 46.74,
+ "palavras": "palavras/L12.json",
+ "cenas": [
+  {
+   "t0": 3.9,
+   "t1": 10.9,
+   "cor": "preto",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o medo",
+     "t": 4.0,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "isso tudo dá errado?",
+     "t": 4.0,
+     "y": 310,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "negado.",
+     "t": 5.4,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 160
+    },
+    {
+     "tipo": "linha",
+     "texto": "uma lista negra?",
+     "t": 7.4,
+     "y": 620,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "nunca mais",
+     "t": 9.6,
+     "y": 760,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "tem chance?",
+     "t": 10.1,
+     "y": 860,
+     "tam": 90
+    }
+   ]
+  },
+  {
+   "t0": 13.6,
+   "t1": 19.6,
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "todo visto tem",
+     "t": 13.8,
+     "y": 250
+    },
+    {
+     "tipo": "numero",
+     "numero": "2",
+     "rotulo": "partes",
+     "t": 14.2,
+     "t_rotulo": 14.6,
+     "y": 300,
+     "tam": 300,
+     "tam_rotulo": 96
+    },
+    {
+     "tipo": "barra",
+     "y": 660,
+     "tam": 54,
+     "itens": [
+      {
+       "texto": "elegibilidade",
+       "t": 15.9
+      },
+      {
+       "texto": "o visto",
+       "t": 19.1
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "você é elegível",
+     "t": 17.6,
+     "y": 900,
+     "tam": 80
+    }
+   ]
+  },
+  {
+   "t0": 22.4,
+   "t1": 26.9,
+   "cor": "branco",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "por exemplo",
+     "t": 22.5,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "EB-2 NIW",
+     "t": 23.9,
+     "y": 310,
+     "cor": "destaque",
+     "tam": 140
+    },
+    {
+     "tipo": "checklist",
+     "y": 500,
+     "tam": 68,
+     "itens": [
+      {
+       "texto": "preencho os critérios",
+       "t": 25.1
+      },
+      {
+       "texto": "tenho uma proposta",
+       "t": 26.1
+      }
+     ],
+     "passo": 112
+    }
+   ]
+  },
+  {
+   "t0": 29.0,
+   "t1": 34.6,
+   "cor": "rosa",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "é um pedido",
+     "t": 29.2,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "seu perfil",
+     "t": 30.7,
+     "y": 310,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "bate com o visto?",
+     "t": 31.4,
+     "y": 440,
+     "tam": 96
+    },
+    {
+     "tipo": "colunas",
+     "y": 600,
+     "alt": 200,
+     "itens": [
+      {
+       "titulo": "Sim",
+       "t": 33.1,
+       "tam": 110
+      },
+      {
+       "titulo": "Não",
+       "t": 34.3,
+       "tam": 110
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 34.7,
+   "t1": 42.9,
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "nenhuma negativa",
+     "t": 34.8,
+     "y": 300,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "te impede de",
+     "t": 36.5,
+     "y": 420,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "aplicar de novo.",
+     "t": 37.5,
+     "y": 540,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "você fica",
+     "t": 38.6,
+     "y": 700,
+     "tam": 80
+    },
+    {
+     "tipo": "linha",
+     "texto": "totalmente apto",
+     "t": 39.4,
+     "y": 800,
+     "cor": "destaque",
+     "tam": 110,
+     "marcador": false
+    },
+    {
+     "tipo": "linha",
+     "texto": "pra tentar outras vias.",
+     "t": 41.0,
+     "y": 940,
+     "tam": 70,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 42.95,
+   "t1": 46.74,
+   "painel": "cheio",
+   "acima": "Existe um caminho",
+   "palavra": "pro seu perfil?",
+   "texto": "Link na bio",
+   "tam_texto": 84
+  }
+ ]
+}

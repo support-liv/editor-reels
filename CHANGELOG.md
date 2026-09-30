@@ -2,6 +2,11 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.25 (30/09/2026) - motion na identidade da Imigrar
+- `gerar_liv.py` com tema por marca (`"marca": "imigrar"` no roteiro): paleta rosa #F90D5B, azul royal #0E59C5, branco e preto; Inter Tight Black; painel em diagonal com faixa dupla; palavras entrando com impacto; marca-texto chapado atrás das palavras de destaque; faixas sutis correndo no fundo; sons mais fortes. A LIV continua clean e igual.
+- Sincronia: palavras curtas ("e", "o", "de") não servem mais de âncora (casavam com o "é" errado da fala).
+- `projetos/plano_eua_2027/lote_motion.py`: shorts de teste da live Plano EUA 2027 com motion (L05, L10, L12), fala enxuta e CTA animado "Existe um caminho pro seu perfil? Link na bio".
+
 ## 0.24 (30/09/2026) - motion sem tempo parado, variado e CTA por canal
 - Texto do motion entra palavra por palavra no tempo da fala (`--json-palavras` exporta as palavras do corte; `gerar_liv.py` casa cada palavra da linha e dos itens dos componentes com o Whisper).
 - Batidas automáticas: onde a fala segue sem texto novo, o gerador acentua no tempo de uma palavra dita (as linhas anteriores recuam, um fio fino se desenha sob a última, o item da fala acende na cor de destaque, ou um respiro leve da cena). Tudo dentro do manual da LIV.

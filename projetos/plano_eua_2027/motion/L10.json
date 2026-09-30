@@ -1,0 +1,203 @@
+{
+ "largura": 1080,
+ "altura": 1920,
+ "tela_dividida": true,
+ "marca": "imigrar",
+ "nome": "plano27_L10",
+ "duracao": 43.74,
+ "palavras": "palavras/L10.json",
+ "cenas": [
+  {
+   "t0": 3.4,
+   "t1": 8.3,
+   "cor": "rosa",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a dúvida",
+     "t": 3.5,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "meu marido?",
+     "t": 3.8,
+     "y": 310,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "meus filhos?",
+     "t": 4.4,
+     "y": 440,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "e o cachorro?",
+     "t": 5.8,
+     "y": 580,
+     "cor": "destaque",
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "papagaio, periquito?",
+     "t": 6.3,
+     "y": 730,
+     "tam": 80
+    },
+    {
+     "tipo": "linha",
+     "texto": "tudo igual?",
+     "t": 7.3,
+     "y": 850,
+     "tam": 80
+    }
+   ]
+  },
+  {
+   "t0": 12.0,
+   "t1": 18.8,
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "todos os vistos",
+     "t": 12.1,
+     "y": 250
+    },
+    {
+     "tipo": "linha",
+     "texto": "incluem",
+     "t": 13.8,
+     "y": 310,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "o seu dependente",
+     "t": 14.4,
+     "y": 430,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "e filhos",
+     "t": 15.6,
+     "y": 560,
+     "cor": "destaque",
+     "tam": 130
+    },
+    {
+     "tipo": "contador",
+     "de": 0,
+     "ate": 21,
+     "prefixo": "até ",
+     "sufixo": " anos",
+     "t": 17.1,
+     "dur": 0.9,
+     "y": 720,
+     "tam": 170
+    }
+   ]
+  },
+  {
+   "t0": 18.8,
+   "t1": 24.0,
+   "cor": "branco",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "um processo",
+     "t": 18.9,
+     "y": 250
+    },
+    {
+     "tipo": "cartoes",
+     "y": 320,
+     "alt": 330,
+     "itens": [
+      {
+       "titulo": "Principal",
+       "texto": "quem se qualifica",
+       "t": 19.4,
+       "destaque_t": 19.8
+      },
+      {
+       "titulo": "Família",
+       "texto": "cônjuge e filho",
+       "t": 20.7
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "vêm junto.",
+     "t": 21.9,
+     "y": 720,
+     "cor": "destaque",
+     "tam": 130
+    }
+   ]
+  },
+  {
+   "t0": 33.0,
+   "t1": 39.95,
+   "cor": "preto",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "todo mundo",
+     "t": 33.4,
+     "y": 300,
+     "tam": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "vai receber green card",
+     "t": 33.7,
+     "y": 430,
+     "cor": "destaque",
+     "tam": 110
+    },
+    {
+     "tipo": "numero",
+     "numero": "1",
+     "rotulo": "processo só",
+     "t": 34.7,
+     "t_rotulo": 35.3,
+     "y": 590,
+     "tam": 280,
+     "tam_rotulo": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "todos como dependentes",
+     "t": 37.5,
+     "y": 900,
+     "tam": 70,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "também recebem green card 🇺🇸",
+     "t": 38.7,
+     "y": 990,
+     "tam": 70,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 40.0,
+   "t1": 43.74,
+   "painel": "cheio",
+   "acima": "Existe um caminho",
+   "palavra": "pro seu perfil?",
+   "texto": "Link na bio",
+   "tam_texto": 84
+  }
+ ]
+}
