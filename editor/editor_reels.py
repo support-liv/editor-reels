@@ -722,7 +722,7 @@ class Broll:
         if not (self.t0 <= t < self.t0 + self.dur):
             return None
         if self.dec is None:
-            self.dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", self.arq, "-vf",
+            self.dec = subprocess.Popen(["ffmpeg", "-v", "fatal", "-i", self.arq, "-vf",
                                          f"fps={FPS},scale={self.w}:{self.h}:flags=lanczos,format=bgra",
                                          "-f", "rawvideo", "-pix_fmt", "bgra", "-"], stdout=subprocess.PIPE)
         alvo = int(round((t - self.t0) * FPS))
@@ -941,7 +941,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
         bx1 = min(W, max(b[0] + b[2] for b in caixas) + 2) // 2 * 2
         by1 = min(H, max(b[1] + b[3] for b in caixas) + 2) // 2 * 2
         bw, bh = bx1 - bx0, by1 - by0
-        dec = subprocess.Popen(["ffmpeg", "-v", "error"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
+        dec = subprocess.Popen(["ffmpeg", "-v", "fatal"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
                                 "-i", video, "-vf", f"{ent_filtro}crop={bw}:{bh}:{bx0}:{by0},fps={FPS}",
                                 "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], stdout=subprocess.PIPE)
         fsize, fi = bw * bh * 3, 0
@@ -1053,13 +1053,13 @@ def renderizar_youtube(video, cortes, saida, marca, vinheta=True, so_checar=Fals
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     fsize = W * H * 3
     if arq_vin:
-        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", arq_vin, "-an", "-vf", escala, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+        dec = subprocess.Popen(["ffmpeg", "-v", "fatal", "-i", arq_vin, "-an", "-vf", escala, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         for buf in quadros(dec, fsize, int(round(seg_vin * FPS))):
             enc.stdin.write(buf)
         dec.wait()
     for ci, c in enumerate(cortes):
-        dec = subprocess.Popen(["ffmpeg", "-v", "error"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
+        dec = subprocess.Popen(["ffmpeg", "-v", "fatal"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
                                 "-i", video, "-an", "-vf", ent_filtro + escala, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         for buf in quadros(dec, fsize, n_quadros(c)):
@@ -1132,10 +1132,11 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
                             "-c:v", "h264_videotoolbox", "-b:v", "14M", "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
+    camadas = preparar_brolls(cortes, OUT_W, OUT_H)
     n_out, gi = 0, 0
     for ci, c in enumerate(cortes):
         (ax, ay, aw, ah), (bx, by, bw, bh) = planos[ci]
-        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
+        dec = subprocess.Popen(["ffmpeg", "-v", "fatal", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
                                 "-i", video, "-vf", f"fps={FPS}", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                                stdout=subprocess.PIPE)
         fsize = W * H * 3
@@ -1145,6 +1146,7 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
             baixo = cv2.resize(fr[by:by + bh, bx:bx + bw], (PW, PH), interpolation=cv2.INTER_CUBIC)
             out = np.vstack([cima, baixo])
             t = n_out / FPS
+            aplicar_brolls(out, camadas, t)
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
                 gi += 1
             g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
@@ -1162,7 +1164,7 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
         dec.wait()
         print(f"  corte {ci + 1}/{len(cortes)} ok")
     enc.stdin.close(); enc.wait()
-    montar_audio(video, cortes, tmp_v, saida)
+    montar_audio(video, cortes, tmp_v, saida, sfx=[(b.arq, b.t0) for b in camadas])
     return total
 
 
@@ -1198,7 +1200,7 @@ def renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, to
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     n_out, gi = 0, 0
     for ci, c in enumerate(cortes):
-        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
+        dec = subprocess.Popen(["ffmpeg", "-v", "fatal", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
                                 "-i", video, "-vf", f"fps={FPS}", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                                stdout=subprocess.PIPE)
         fsize = W * H * 3
@@ -1333,7 +1335,7 @@ def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta
     for ci, c in enumerate(cortes):
         lado, x0, y0 = planos[ci]
         filtro = ent_filtro + gira + f"crop={lado}:{lado}:{x0}:{y0},scale={lado_px}:{lado_px}:flags=lanczos,fps={FPS}"
-        dec = subprocess.Popen(["ffmpeg", "-v", "error"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
+        dec = subprocess.Popen(["ffmpeg", "-v", "fatal"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
                                 "-i", video, "-vf", filtro, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                                stdout=subprocess.PIPE)
         for buf in quadros(dec, fsize, n_quadros(c)):
@@ -1428,6 +1430,8 @@ def main():
     ap.add_argument("--girar", type=float, default=0.0, help="corrige câmera torta: graus (positivo = anti-horário)")
     ap.add_argument("--layout", choices=["dividido", "quadro", "quadrado", "youtube"],
                     help="dividido: live com duas pessoas; quadro: live solo 720p; quadrado: WhatsApp; youtube: corte longo 16:9")
+    ap.add_argument("--tempos-palavras", action="store_true",
+                    help="só mostra cada palavra com o tempo no vídeo pronto (pra sincronizar o motion) e sai")
     ap.add_argument("--sem-legenda", action="store_true",
                     help="não queima legenda (use só quando o vídeo de origem JÁ tem legenda gravada: senão duplica)")
     ap.add_argument("--broll", action="append", default=[],
@@ -1508,6 +1512,14 @@ def main():
             fr = olhando_pra_baixo(a.video, c["s"], c["e"])
             aviso = f"  [olhando pra baixo/lado {fr:.0%}]" if fr > 0.4 else ""
         print(f"  {c['s']:7.2f}-{c['e']:7.2f}  {c['texto'][:80]}{aviso}")
+    if a.tempos_palavras:                         # pro motion: cada palavra no tempo do vídeo pronto
+        P = dados["palavras"]
+        total = sum(c["e"] - c["s"] for c in cortes)
+        print(f"\nDURACAO {total:.2f}")
+        for c in cortes:
+            for q in c["idx"]:
+                print(f"{tempo_na_saida(cortes, max(P[q]['s'], c['s'])):7.2f} {P[q]['w']}")
+        return
     if a.so_cortes:
         return
     nome = a.nome or f"{base}_{a.marca}"

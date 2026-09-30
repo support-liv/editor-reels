@@ -27,6 +27,9 @@ Como fazer uma cena:
 6. Texto com classe `fit` / `fit-grupo` e `data-max`: ajusta à largura e nunca corta na lateral.
 7. Renderize em `--format mov`, confira quadros (contact sheet) e só então use: `--broll arquivo.mov@fonte:SEGUNDOS` (tempo da fala no bruto; o editor converte).
 
+## Gerador de B-roll da LIV
+`python3 motion/gerar_liv.py roteiro.json` monta o HTML a partir de um roteiro (cenas com tempo, painel `cheio`/`baixo`/`cima`, cor e elementos: `rotulo`, `linha`, `sub`, `risco`, `icone`, e `cta`). Exemplos em `projetos/live80/motion/`. Tempos das palavras: `editor_reels.py VIDEO --trechos ... --tempos-palavras`.
+
 ## Efeitos sonoros
 `sfx/` (gerados por `gerar_sfx.py`, sem licença de terceiros): `whoosh`, `whoosh_grave` (entrada/virada), `pop` (elemento aparece), `tick` (contador, lista), `impacto` (texto batendo), `riscar` (negação), `subida` (tensão), `sino` (resolução/CTA). No HTML: `<audio id="..." src="sfx/pop.wav" data-start="0.41" data-duration="0.09" data-volume="0.7">`. O editor mixa os efeitos por baixo da voz.
 

@@ -1,0 +1,175 @@
+{
+ "duracao": 52.38,
+ "cenas": [
+  {
+   "t0": 12.6,
+   "t1": 17.8,
+   "painel": "baixo",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "todo processo tem",
+     "y": 1110,
+     "t": 12.7
+    },
+    {
+     "tipo": "linha",
+     "texto": "2 partes",
+     "y": 1170,
+     "t": 14.61,
+     "tam": 130,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "sub",
+     "y": 1330,
+     "largura": 300,
+     "t": 15.0
+    }
+   ]
+  },
+  {
+   "t0": 18.0,
+   "t1": 29.8,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "parte 1",
+     "y": 250,
+     "t": 18.2
+    },
+    {
+     "tipo": "linha",
+     "texto": "Elegibilidade",
+     "y": 360,
+     "t": 18.66
+    },
+    {
+     "tipo": "linha",
+     "texto": "de qualquer lugar",
+     "y": 490,
+     "t": 19.9,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "do mundo.",
+     "y": 620,
+     "t": 20.4,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "protocolada na USCIS",
+     "y": 760,
+     "t": 24.8,
+     "tam": 72,
+     "peso": 700
+    },
+    {
+     "tipo": "icone",
+     "icone": "estrela",
+     "x": 96,
+     "y": 1130,
+     "tam": 170,
+     "t": 21.4
+    }
+   ]
+  },
+  {
+   "t0": 29.9,
+   "t1": 41.3,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "parte 2",
+     "y": 250,
+     "t": 30.0
+    },
+    {
+     "tipo": "linha",
+     "texto": "Nos EUA 🇺🇸:",
+     "y": 360,
+     "t": 33.9,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "ajuste de status",
+     "y": 460,
+     "t": 35.97,
+     "tam": 100,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "No Brasil 🇧🇷:",
+     "y": 620,
+     "t": 37.14,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "via consulado",
+     "y": 720,
+     "t": 38.86,
+     "tam": 100,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "icone",
+     "icone": "seta_dupla",
+     "x": 96,
+     "y": 1150,
+     "tam": 220,
+     "t": 39.3
+    }
+   ]
+  },
+  {
+   "t0": 41.6,
+   "t1": 47.9,
+   "painel": "baixo",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "USCIS aprova",
+     "y": 1110,
+     "t": 41.8,
+     "tam": 84
+    },
+    {
+     "tipo": "linha",
+     "texto": "NVC",
+     "y": 1200,
+     "t": 42.78,
+     "tam": 84,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "documentos e DS",
+     "y": 1290,
+     "t": 44.6,
+     "tam": 72,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 48.3,
+   "t1": 52.38,
+   "painel": "baixo",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise de perfil gratuita"
+  }
+ ],
+ "nome": "live80_S4"
+}

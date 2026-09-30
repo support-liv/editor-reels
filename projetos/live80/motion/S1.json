@@ -1,0 +1,105 @@
+{
+ "duracao": 34.23,
+ "cenas": [
+  {
+   "t0": 5.7,
+   "t1": 13.4,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "processo consular",
+     "y": 250,
+     "t": 6.0
+    },
+    {
+     "tipo": "linha",
+     "texto": "Na prática,",
+     "y": 360,
+     "t": 6.84
+    },
+    {
+     "tipo": "linha",
+     "texto": "não muda nada.",
+     "y": 490,
+     "t": 11.75,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "sub",
+     "y": 640,
+     "largura": 380,
+     "t": 12.3
+    },
+    {
+     "tipo": "icone",
+     "icone": "seta_dupla",
+     "x": 96,
+     "y": 1150,
+     "tam": 220,
+     "t": 7.6
+    }
+   ]
+  },
+  {
+   "t0": 15.1,
+   "t1": 24.4,
+   "painel": "cima",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "por quê?",
+     "y": 190,
+     "t": 15.3
+    },
+    {
+     "tipo": "linha",
+     "texto": "antes de",
+     "y": 280,
+     "t": 15.9,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "janeiro de 2025",
+     "y": 390,
+     "t": 17.4,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "o consulado já não",
+     "y": 560,
+     "t": 19.6,
+     "tam": 72,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "estava chamando.",
+     "y": 640,
+     "t": 20.4,
+     "tam": 72,
+     "peso": 700
+    },
+    {
+     "tipo": "sub",
+     "y": 740,
+     "largura": 300,
+     "t": 21.2
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 30.2,
+   "t1": 34.23,
+   "painel": "cima",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise de perfil gratuita"
+  }
+ ],
+ "nome": "live80_S1"
+}

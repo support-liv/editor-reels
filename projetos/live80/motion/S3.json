@@ -1,0 +1,185 @@
+{
+ "duracao": 38.63,
+ "cenas": [
+  {
+   "t0": 5.4,
+   "t1": 11.2,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a imigração é cíclica",
+     "y": 250,
+     "t": 5.6
+    },
+    {
+     "tipo": "linha",
+     "texto": "“agora tá",
+     "y": 360,
+     "t": 8.3,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "todo mundo falando,",
+     "y": 480,
+     "t": 8.7,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "vou correr”",
+     "y": 600,
+     "t": 9.1,
+     "tam": 110,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "icone",
+     "icone": "seta_contorno",
+     "x": 96,
+     "y": 1130,
+     "tam": 220,
+     "t": 9.6
+    }
+   ]
+  },
+  {
+   "t0": 11.9,
+   "t1": 16.5,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "imigração é",
+     "y": 250,
+     "t": 12.0
+    },
+    {
+     "tipo": "linha",
+     "texto": "um jogo de",
+     "y": 360,
+     "t": 13.2
+    },
+    {
+     "tipo": "linha",
+     "texto": "médio ou",
+     "y": 490,
+     "t": 14.8
+    },
+    {
+     "tipo": "linha",
+     "texto": "longo prazo.",
+     "y": 620,
+     "t": 15.1,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "sub",
+     "y": 770,
+     "largura": 420,
+     "t": 15.6
+    }
+   ]
+  },
+  {
+   "t0": 16.6,
+   "t1": 20.8,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "Quando menos",
+     "y": 360,
+     "t": 16.8,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "você deveria aplicar,",
+     "y": 480,
+     "t": 17.5,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "talvez deveria",
+     "y": 620,
+     "t": 18.3,
+     "tam": 110,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "mais aplicar.",
+     "y": 740,
+     "t": 19.1,
+     "tam": 110,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "icone",
+     "icone": "arco_duplo",
+     "x": 96,
+     "y": 1120,
+     "tam": 170,
+     "t": 19.4
+    }
+   ]
+  },
+  {
+   "t0": 24.9,
+   "t1": 30.2,
+   "painel": "cima",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "quem protocolou",
+     "y": 190,
+     "t": 25.3
+    },
+    {
+     "tipo": "linha",
+     "texto": "até 15 de março",
+     "y": 280,
+     "t": 26.2,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "hoje pode fazer",
+     "y": 420,
+     "t": 28.6,
+     "tam": 90
+    },
+    {
+     "tipo": "linha",
+     "texto": "o ajuste de status.",
+     "y": 520,
+     "t": 29.3,
+     "tam": 90,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "sub",
+     "y": 640,
+     "largura": 300,
+     "t": 29.6
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 34.6,
+   "t1": 38.63,
+   "painel": "cima",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise de perfil gratuita"
+  }
+ ],
+ "nome": "live80_S3"
+}

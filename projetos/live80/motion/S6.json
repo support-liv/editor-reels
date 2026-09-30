@@ -1,0 +1,137 @@
+{
+ "duracao": 41.93,
+ "cenas": [
+  {
+   "t0": 3.7,
+   "t1": 11.6,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a pergunta",
+     "y": 250,
+     "t": 3.9
+    },
+    {
+     "tipo": "linha",
+     "texto": "F-1, mestrado,",
+     "y": 360,
+     "t": 4.0
+    },
+    {
+     "tipo": "linha",
+     "texto": "filho com",
+     "y": 490,
+     "t": 5.1
+    },
+    {
+     "tipo": "linha",
+     "texto": "18 anos",
+     "y": 620,
+     "t": 5.6,
+     "tam": 150,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "e empresa patrocinando.",
+     "y": 790,
+     "t": 7.5,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 12.0,
+   "t1": 26.4,
+   "painel": "baixo",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "18 anos:",
+     "y": 1110,
+     "t": 12.2,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "no limite.",
+     "y": 1210,
+     "t": 13.1,
+     "tam": 100,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "o processo passa pelo DOL",
+     "y": 1330,
+     "t": 18.9,
+     "tam": 64,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 27.0,
+   "t1": 37.0,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a estratégia",
+     "y": 250,
+     "t": 27.2
+    },
+    {
+     "tipo": "linha",
+     "texto": "Plano B:",
+     "y": 360,
+     "t": 29.5
+    },
+    {
+     "tipo": "linha",
+     "texto": "patrocínio da empresa",
+     "y": 470,
+     "t": 29.9,
+     "tam": 100,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "Plano A:",
+     "y": 630,
+     "t": 32.6
+    },
+    {
+     "tipo": "linha",
+     "texto": "sem depender do DOL.",
+     "y": 740,
+     "t": 36.0,
+     "tam": 100,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "icone",
+     "icone": "arco_duplo",
+     "x": 96,
+     "y": 1120,
+     "tam": 170,
+     "t": 33.0
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 37.9,
+   "t1": 41.93,
+   "painel": "baixo",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise de perfil gratuita"
+  }
+ ],
+ "nome": "live80_S6"
+}

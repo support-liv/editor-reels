@@ -1,0 +1,185 @@
+{
+ "duracao": 52.72,
+ "cenas": [
+  {
+   "t0": 3.7,
+   "t1": 8.3,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "a pergunta",
+     "y": 250,
+     "t": 3.9
+    },
+    {
+     "tipo": "linha",
+     "texto": "Business plan",
+     "y": 360,
+     "t": 4.1
+    },
+    {
+     "tipo": "linha",
+     "texto": "ou",
+     "y": 490,
+     "t": 4.4,
+     "tam": 90,
+     "peso": 600
+    },
+    {
+     "tipo": "linha",
+     "texto": "professional plan?",
+     "y": 590,
+     "t": 4.7,
+     "cor": "destaque"
+    }
+   ]
+  },
+  {
+   "t0": 8.6,
+   "t1": 15.9,
+   "painel": "baixo",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "Foque na",
+     "y": 1110,
+     "t": 12.1,
+     "tam": 100
+    },
+    {
+     "tipo": "linha",
+     "texto": "proposta,",
+     "y": 1210,
+     "t": 13.0,
+     "tam": 100,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "não no formato.",
+     "y": 1320,
+     "t": 14.0,
+     "tam": 84,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 20.4,
+   "t1": 28.4,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o erro comum",
+     "y": 250,
+     "t": 20.6
+    },
+    {
+     "tipo": "linha",
+     "texto": "“prestar serviços",
+     "y": 360,
+     "t": 24.1
+    },
+    {
+     "tipo": "linha",
+     "texto": "para clientes”",
+     "y": 490,
+     "t": 24.6
+    },
+    {
+     "tipo": "risco",
+     "y": 425,
+     "largura": 780,
+     "t": 25.9,
+     "apaga": 1
+    },
+    {
+     "tipo": "risco",
+     "y": 555,
+     "largura": 640,
+     "t": 26.1,
+     "apaga": 2
+    },
+    {
+     "tipo": "linha",
+     "texto": "= tiro no pé.",
+     "y": 650,
+     "t": 26.3,
+     "cor": "destaque"
+    }
+   ]
+  },
+  {
+   "t0": 36.2,
+   "t1": 46.3,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o que fazer",
+     "y": 250,
+     "t": 36.4
+    },
+    {
+     "tipo": "linha",
+     "texto": "Proposta",
+     "y": 360,
+     "t": 39.9
+    },
+    {
+     "tipo": "linha",
+     "texto": "compacta",
+     "y": 490,
+     "t": 40.4,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "e específica:",
+     "y": 620,
+     "t": 41.5,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "projeto, framework,",
+     "y": 760,
+     "t": 42.2,
+     "tam": 84,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "metodologia.",
+     "y": 1120,
+     "t": 43.4,
+     "tam": 84,
+     "peso": 700
+    },
+    {
+     "tipo": "icone",
+     "icone": "seta_dupla",
+     "x": 96,
+     "y": 1250,
+     "tam": 200,
+     "t": 44.2
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 48.7,
+   "t1": 52.72,
+   "painel": "baixo",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise de perfil gratuita"
+  }
+ ],
+ "nome": "live80_S5"
+}

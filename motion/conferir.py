@@ -6,7 +6,7 @@
 Zona segura (padrão do time, Reels/Stories/Shorts 1080x1920):
   verde    = zona segura: x 60-1020, y 153-1510
   vermelho = botões de interação (x > 835, y > 1205): nada importante ali
-  amarelo  = faixa da legenda do editor (y 1190-1390, com 62% de altura): o motion não põe texto ali
+  amarelo  = faixa da legenda do editor (y 1190-1390, com 62% de altura; --dividido: 860-1060): o motion não põe texto ali
 Sem --tempos, pega 12 quadros espalhados."""
 import argparse, subprocess, sys
 import numpy as np
@@ -48,7 +48,11 @@ def main():
     ap.add_argument("video")
     ap.add_argument("--tempos")
     ap.add_argument("--saida", default="conferencia.png")
+    ap.add_argument("--dividido", action="store_true", help="tela dividida: a legenda fica na divisa (860-1060)")
     a = ap.parse_args()
+    global LEGENDA
+    if a.dividido:
+        LEGENDA = (60, 860, 1020, 1060)
     tempos = [float(x) for x in a.tempos.split(",")] if a.tempos else list(np.linspace(0.3, duracao(a.video) - 0.2, 12))
     miniaturas = [marcar(quadro(a.video, t), t).resize((270, 480)) for t in tempos]
     col = 6

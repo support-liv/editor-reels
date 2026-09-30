@@ -2,6 +2,15 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.19 (30/09/2026) - LIVE 80: cortes longos e shorts A/B
+- `motion/gerar_liv.py`: gera o B-roll da LIV a partir de um roteiro JSON (painéis com a curva da marca, cheios ou cobrindo uma metade da tela dividida, linhas reveladas, riscos, sublinhados, ícones oficiais, CTA animado, sons discretos). Mantém os 6 shorts consistentes.
+- `--broll` também na tela dividida; o motion cobre a metade de quem está ouvindo e a legenda continua na divisa.
+- `--tempos-palavras`: lista cada palavra com o tempo no vídeo pronto (pra sincronizar o motion).
+- `motion/conferir.py --dividido`: marca a faixa da legenda da tela dividida.
+- Tom de voz: nesta live a Dra. Lívia fica em ~190-205 Hz e o Breno em ~115-150 Hz (limite 170, não 200).
+- Decodificadores em `-v fatal`: some a enxurrada de "Broken pipe" (inofensiva) do terminal.
+- Projeto `projetos/live80`: 2 cortes longos (9:10 e 8:14) e 6 shorts em versão A (gancho + legenda + CTA) e B (com motion + CTA animado "Comente PERFIL27").
+
 ## 0.18 (29/09/2026) - LIV clean e zona segura
 - **LIV clean:** B-roll refeito só com elementos do manual (curva da marca, fio com arco, seta dupla, arco duplo, estrela no círculo, losangos), movimento calmo e som discreto. A versão cheia de efeitos virou base para a Imigrar (`broll_perfil_explorado`).
 - **Legenda da LIV sem contorno:** texto bege em bloco sólido azul, palavra em laranja. Imigrar mantém o contorno.
