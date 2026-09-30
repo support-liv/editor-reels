@@ -18,7 +18,8 @@ Os formatos que o time publica, e como cada um é editado. Definidos com o time 
 - Cada corte é um assunto fechado, com começo, meio e fim. Não começa no meio de uma frase.
 - **Vinheta** `assets/vinheta_cortes_liv.mp4`: 3,80s de imagem (o flash branco da trilha foi tirado) e o som da transição continua ~0,9s por cima do começo da live. **Só no corte longo.**
 - Live da **Imigrar não tem introdução**.
-- Entregas junto com o vídeo: título, descrição, capítulos com minutagem, tags e sugestão de texto para a thumbnail.
+- Como fazer: `--layout youtube --marca liv --trechos "..."` (ver OPCOES.md). A Imigrar usa `--sem-vinheta`.
+- Entregas junto com o vídeo: título, descrição, capítulos com minutagem (a partir do `.tempos.txt`), tags e sugestão de texto para a thumbnail.
 
 ### Reels / Shorts
 - 30 a 50s: gancho, desenvolvimento, CTA.
@@ -28,11 +29,13 @@ Os formatos que o time publica, e como cada um é editado. Definidos com o time 
 
 ### Stories
 - **Curtos e objetivos, com enredo**: uma história com começo, meio e fim em poucos stories. Nunca uma colagem de clipes soltos.
+- Como fazer: cada story é um corte vertical curto (5 a 15s) no editor normal, com `--gancho` como texto do story quando precisar. O roteiro (ordem, texto de cada story e sticker) vai num `.md` junto dos vídeos.
 - Entregas: os cortes, o texto de cada story e a sugestão de sticker (enquete, caixinha, link, contagem).
 
 ### Carrossel
 - Capa com a pergunta/gancho, um ponto por card, último card com CTA.
-- Entregas: texto de cada card e legenda do post. Fontes e cores da marca (abaixo).
+- Como fazer: `python3 editor/carrossel.py roteiro.json` (ver OPCOES.md). A capa pode usar um quadro do vídeo.
+- Entregas: os PNGs, o texto de cada card e a legenda do post. Fontes e cores da marca (abaixo).
 
 ## Por tipo de cena
 

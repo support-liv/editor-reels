@@ -2,6 +2,14 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.14 (29/09/2026) - identidade das marcas, corte longo e carrossel
+- **Fonte e cores da marca, sempre**, na legenda e nas caixas: LIV em Darker Grotesque, Imigrar em Inter Tight. Tamanho ajustado para a mesma altura visual aprovada em Arial Black.
+- `--cor-caixa` por marca, só com cores da paleta: LIV azul/laranja/bege/marrom (manual de identidade), Imigrar branco/azul/rosa.
+- `--layout youtube`: corte longo 16:9 1080p com a vinheta da LIV (o som da transição entra por cima do começo da live, no mesmo volume, -14 LUFS). Gera o `.tempos.txt` para os capítulos.
+- `editor/carrossel.py`: carrossel 1080x1350 na identidade da marca.
+- Layout quadrado converte HDR do iPhone (antes saía lavado).
+- Avisos claros quando o vídeo não existe ou não tem áudio; o corte não passa do fim do arquivo.
+
 ## 0.13 (29/09/2026) - formatos, marcas e guia do Claude
 - `CLAUDE.md`: como o Claude do time trabalha no repositório. Assiste o material e deduz a estratégia; pergunta uma vez só o que não dá para deduzir (formatos, palavra-chave do CTA, live em 720p, nomes); mostra o plano antes de renderizar.
 - `docs/FORMATOS.md`: corte longo YouTube, Reels/Shorts, stories, WhatsApp, anúncio e carrossel; estilo por tipo de cena; paletas e fontes das marcas.

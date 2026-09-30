@@ -36,10 +36,12 @@ O tempo que a pessoa fala é do vídeo **pronto**. Converta para o bruto somando
 ## Projetos
 Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos e opções de cada vídeo (modelo: `projetos/_modelo/lote_modelo.py`, guia: `docs/NOVO_PROJETO.md`). Vídeos brutos e prontos ficam **fora** do repositório.
 
-## Ainda não implementado (fazer quando pedirem, e documentar)
-- Corte longo YouTube 16:9 com a vinheta (`assets/vinheta_cortes_liv.mp4`).
-- Stories e carrossel (cortes + textos + sugestões).
-- Fontes oficiais na legenda (em avaliação: `assets/fontes/`).
+## Ferramentas por formato
+- Reels/Shorts, anúncio, stories: `editor/editor_reels.py` (vertical).
+- Corte longo YouTube: `editor/editor_reels.py --layout youtube` (vinheta da LIV entra sozinha; Imigrar: `--sem-vinheta`).
+- WhatsApp: `--layout quadrado`. Live: `--layout dividido` / `quadro`.
+- Carrossel: `editor/carrossel.py roteiro.json`.
+- Fonte e cores são sempre as da marca (`--marca`); `--cor-caixa` só aceita cores da paleta.
 
 ## Git
 Commits locais à vontade; `git push` só quando a pessoa pedir. Mudança no editor: registrar no `CHANGELOG.md` e nos docs.

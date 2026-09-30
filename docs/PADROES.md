@@ -7,12 +7,12 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - **Cor:** o iPhone grava em HDR (HLG/Dolby Vision, BT.2020). Sem conversão, a imagem fica lavada. O editor converte para SDR BT.709 com tone mapping (VideoToolbox) e marca o arquivo como BT.709.
 
 ## Legenda
-- Arial Black **38 px** (a primeira versão era 58; foi reduzida 35% a pedido do time).
+- **Fonte e cores da marca, sempre** (legenda, gancho e CTA): LIV em Darker Grotesque Black, Imigrar em Inter Tight Black (`assets/fontes/`). O tamanho equivale aos 38 px aprovados em Arial Black (a primeira versão era 58; foi reduzida 35% a pedido do time).
 - Caixa alta, até 3 palavras ou 18 caracteres por vez, palavra falada na cor de destaque da marca, contorno preto.
 - Altura: **62%** da tela nos Reels orgânicos. **55%** em anúncio (o Meta cobre mais a parte de baixo com botão e texto). **64%** em selfie (o rosto ocupa o meio da tela; a legenda fica abaixo do queixo).
 
 ## Gancho (caixa de texto no começo)
-- 3,2 segundos, CAIXA ALTA, fundo branco (Imigrar) ou azul (LIV).
+- 3,2 segundos, CAIXA ALTA, na fonte da marca. Fundo só com cores da paleta (ver `--cor-caixa`).
 - Posição: **290 px do topo**, abaixo da barra do Instagram (~250 px).
 - **Nunca tapa rosto.** O editor gera o quadro final, procura os rostos e escolhe:
   1. em cima, se não encostar na cabeça;

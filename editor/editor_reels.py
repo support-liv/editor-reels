@@ -28,18 +28,35 @@ LIMITE_SOBREPOSICAO = 0.70            # tela dividida: abaixo disso a live mostr
 LIMIAR_VOZ = 200                      # Hz: acima disso considera voz aguda
 AMOSTRAS_POR_SEG = 5                  # frequência da detecção de rosto
 
+FONTES = os.path.join(os.path.dirname(AQUI), "assets", "fontes")
+# fonte e cores de cada marca, sempre (legenda, gancho, CTA). escala: a fonte da marca desenha menor que a
+# Arial Black em que os tamanhos foram aprovados; a escala mantém a mesma altura visual.
 MARCAS = {
-    "imigrar": {"destaque": (249, 13, 91), "caixa": (255, 255, 255), "texto_caixa": (20, 20, 20)},
-    "liv":     {"destaque": (255, 110, 31), "caixa": (44, 54, 66), "texto_caixa": (255, 255, 255)},
+    "imigrar": {"destaque": (249, 13, 91), "caixa": (255, 255, 255), "texto_caixa": (20, 20, 20),
+                "fonte": os.path.join(FONTES, "InterTight[wght].ttf"), "peso": "Black", "escala": 1.10},
+    "liv":     {"destaque": (255, 110, 31), "caixa": (44, 54, 66), "texto_caixa": (255, 255, 255),
+                "fonte": os.path.join(FONTES, "DarkerGrotesque[wght].ttf"), "peso": "Black", "escala": 1.35},
 }
-# estilos da tarja (gancho/CTA): cor de fundo, cor do texto. Rosa #F90D5B e azul royal #0E59C5 = Imigrar
+# estilos da tarja (gancho/CTA): cor de fundo, cor do texto, só com cores da paleta de cada marca
 ESTILOS_CAIXA = {
-    "branco": ((255, 255, 255), (20, 20, 20)),
-    "azul": ((14, 89, 197), (255, 255, 255)),
-    "rosa": ((249, 13, 91), (255, 255, 255)),
+    "imigrar": {"branco": ((255, 255, 255), (20, 20, 20)),       # Imigrar: rosa #F90D5B, azul royal #0E59C5
+                "azul": ((14, 89, 197), (255, 255, 255)),
+                "rosa": ((249, 13, 91), (255, 255, 255))},
+    "liv":     {"azul": ((44, 54, 66), (255, 255, 255)),          # LIV: manual de identidade visual
+                "laranja": ((255, 110, 31), (255, 255, 255)),
+                "bege": ((255, 240, 230), (44, 54, 66)),
+                "marrom": ((148, 89, 67), (255, 255, 255))},
 }
-FONTE = "/System/Library/Fonts/Supplemental/Arial Black.ttf"
-FONTE_CAIXA = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+
+VINHETA = {"liv": os.path.join(os.path.dirname(AQUI), "assets", "vinheta_cortes_liv.mp4")}   # só corte longo do YouTube
+
+
+def fonte_marca(marca, tam):
+    """fonte oficial da marca no peso das legendas/caixas, no tamanho equivalente ao aprovado."""
+    m = MARCAS[marca]
+    f = ImageFont.truetype(m["fonte"], int(round(tam * m["escala"])))
+    f.set_variation_by_name(m["peso"])
+    return f
 
 
 # ---------------------------------------------------------------- utilidades
@@ -580,8 +597,8 @@ def grupos_legenda(palavras_saida, max_palavras=3, max_chars=18):
 class Legenda:
     def __init__(self, marca, tam=TAM_LEGENDA):
         self.cor = MARCAS[marca]["destaque"]
-        self.tam = tam
-        self.f = ImageFont.truetype(FONTE, tam)
+        self.tam = int(round(tam * MARCAS[marca]["escala"]))
+        self.f = fonte_marca(marca, tam)
         self.cache = {}
 
     def render(self, gi, grupo, ativo):
@@ -632,8 +649,11 @@ def caixa_texto(texto, marca, tam=52, estilo=None):
     """caixa com texto em CAIXA ALTA; aceita 🇺🇸 e 🇧🇷 no meio do texto. estilo: branco/azul/rosa."""
     m = dict(MARCAS[marca])
     if estilo:
-        m["caixa"], m["texto_caixa"] = ESTILOS_CAIXA[estilo]
-    f = ImageFont.truetype(FONTE, tam)
+        if estilo not in ESTILOS_CAIXA[marca]:
+            sys.exit(f'--cor-caixa {estilo} não é da {marca}: use {", ".join(ESTILOS_CAIXA[marca])}')
+        m["caixa"], m["texto_caixa"] = ESTILOS_CAIXA[marca][estilo]
+    f = fonte_marca(marca, tam)
+    tam = f.size
     d0 = ImageDraw.Draw(Image.new("RGB", (1, 1)))
     texto = texto.upper()
     for bandeira in EMOJIS:
@@ -704,7 +724,7 @@ def quadros(dec, fsize, n):
 
 # ---------------------------------------------------------------- 5. render
 def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=None,
-               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda", girar=0.0, dinamico=False, endireitar=False):
+               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda", girar=0.0, dinamico=False, endireitar=False, vinheta=True):
     garantir_detector()
     W, H = tamanho_real(video)
     ent_args, ent_filtro = entrada_video(video)
@@ -739,6 +759,8 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     leg = Legenda(marca)
     img_gancho = caixa_texto(gancho, marca, estilo=estilo_caixa) if gancho else None
     img_cta = caixa_texto(cta, marca, estilo=estilo_caixa) if cta else None
+    if layout == "youtube":
+        return renderizar_youtube(video, cortes, saida, marca, vinheta=vinheta, so_checar=so_checar)
     if layout == "quadrado":
         return renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta, total,
                                    seg_gancho, seg_cta, so_checar, girar=girar, dinamico=dinamico, endireitar=endireitar)
@@ -882,7 +904,15 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     return total
 
 
-def montar_audio(video, cortes, tmp_v, saida):
+def loudness(path):
+    """volume integrado (LUFS) do áudio do arquivo."""
+    r = subprocess.run(["ffmpeg", "-hide_banner", "-i", path, "-vn", "-af", "ebur128", "-f", "null", "-"],
+                       capture_output=True, text=True).stderr
+    m = re.findall(r"I:\s+(-?[\d.]+) LUFS", r)
+    return float(m[-1]) if m else -14.0
+
+
+def montar_audio(video, cortes, tmp_v, saida, vinheta=None, seg_vinheta=0.0):
     """junta o áudio dos mesmos cortes (fade curtinho), equaliza vozes, -14 LUFS, e muxa com o vídeo."""
     partes, filtros = [], []
     for i, c in enumerate(cortes):
@@ -891,13 +921,71 @@ def montar_audio(video, cortes, tmp_v, saida):
                ("" if i + 1 < len(cortes) and cortes[i + 1].get("continua") else f",afade=t=out:st={max(0, d - 0.03):.3f}:d=0.03")
         filtros.append(f"[0:a]atrim={c['s']:.4f}:{c['e']:.4f},asetpts=PTS-STARTPTS{fade}[a{i}]")
         partes.append(f"[a{i}]")
-    fc = ";".join(filtros) + f";{''.join(partes)}concat=n={len(cortes)}:v=0:a=1,dynaudnorm=f=250:g=15:p=0.9,loudnorm=I=-14:TP=-1.5:LRA=11[aout]"
-    run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", tmp_v, "-filter_complex", fc,
+    fc = ";".join(filtros) + f";{''.join(partes)}concat=n={len(cortes)}:v=0:a=1,dynaudnorm=f=250:g=15:p=0.9,loudnorm=I=-14:TP=-1.5:LRA=11"
+    entradas = ["-i", video, "-i", tmp_v]
+    if vinheta:                                  # som da vinheta no mesmo volume, e o fim dele por cima do começo da live
+        ganho = -14 - loudness(vinheta)
+        ms = int(round(seg_vinheta * 1000))
+        fc += (f",aresample=48000,adelay={ms}:all=1[live];[2:a]aresample=48000,volume={ganho:.1f}dB[vin];"
+               f"[vin][live]amix=inputs=2:duration=longest:normalize=0,alimiter=limit=0.89[aout]")
+        entradas += ["-i", vinheta]
+    else:
+        fc += "[aout]"
+    run(["ffmpeg", "-v", "error", "-y"] + entradas + ["-filter_complex", fc,
          "-map", "1:v", "-map", "[aout]", "-c:v", "copy",
          "-bsf:v", "h264_metadata=colour_primaries=1:transfer_characteristics=1:matrix_coefficients=1:video_full_range_flag=0",
          "-c:a", "aac", "-b:a", "192k",
          "-ar", "48000", "-shortest", "-movflags", "+faststart", saida])
     os.remove(tmp_v)
+
+# ---------------------------------------------------------------- 5a. corte longo do YouTube
+def renderizar_youtube(video, cortes, saida, marca, vinheta=True, so_checar=False, lado=(1920, 1080)):
+    """corte longo 16:9: a cena da live inteira (sem recorte, sem legenda, sem gancho), com a vinheta
+    da marca na abertura. Grava ao lado um .tempos.txt com o tempo de cada trecho no vídeo final (capítulos)."""
+    W, H = lado
+    arq_vin = VINHETA.get(marca) if vinheta else None
+    seg_vin = 0.0
+    if arq_vin:
+        seg_vin = int(run(["ffprobe", "-v", "error", "-count_frames", "-select_streams", "v", "-show_entries",
+                           "stream=nb_read_frames", "-of", "csv=p=0", arq_vin]).strip()) / FPS
+    total = seg_vin + sum(c["e"] - c["s"] for c in cortes)
+    print(f"  youtube: {W}x{H} | {len(cortes)} trechos | {total / 60:.1f} min" + (f" | vinheta {seg_vin:.2f}s" if arq_vin else ""))
+    with open(os.path.splitext(saida)[0] + ".tempos.txt", "w") as f:
+        f.write("# tempo no vídeo final -> tempo na live (use pra montar os capítulos)\n")
+        t = seg_vin
+        for c in cortes:
+            if not c.get("continua"):
+                f.write(f"{int(t // 60):02d}:{int(t % 60):02d} -> {int(c['s'] // 60):02d}:{c['s'] % 60:05.2f}  {c['texto'][:70]}\n")
+            t += c["e"] - c["s"]
+    if so_checar:
+        return total
+    ent_args, ent_filtro = entrada_video(video)
+    escala = f"scale={W}:{H}:force_original_aspect_ratio=decrease:flags=lanczos,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2,fps={FPS},format=bgr24"
+    tmp_v = saida + ".video.mp4"
+    enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
+                            "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
+                            "-c:v", "h264_videotoolbox", "-b:v", "12M", "-pix_fmt", "yuv420p",
+                            "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
+                            "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
+    fsize = W * H * 3
+    if arq_vin:
+        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", arq_vin, "-an", "-vf", escala, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                               stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        for buf in quadros(dec, fsize, int(round(seg_vin * FPS))):
+            enc.stdin.write(buf)
+        dec.wait()
+    for ci, c in enumerate(cortes):
+        dec = subprocess.Popen(["ffmpeg", "-v", "error"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
+                                "-i", video, "-an", "-vf", ent_filtro + escala, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                               stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+        for buf in quadros(dec, fsize, n_quadros(c)):
+            enc.stdin.write(buf)
+        dec.wait()
+        print(f"  trecho {ci + 1}/{len(cortes)} ok")
+    enc.stdin.close(); enc.wait()
+    montar_audio(video, cortes, tmp_v, saida, vinheta=arq_vin, seg_vinheta=seg_vin)
+    return total
+
 
 # ---------------------------------------------------------------- 5b. tela dividida (live com duas pessoas lado a lado)
 def rostos_por_lado(video, c, fps=2):
@@ -1117,6 +1205,7 @@ def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta
     W, H = tamanho_real(video)
     import math
     margem = 8
+    ent_args, ent_filtro = entrada_video(video)     # iPhone em HDR: converte pra SDR como nos outros layouts
     if endireitar:                                  # só GIRA: nunca distorcer a imagem (perspectiva deformava o rosto)
         v = ponto_de_fuga(video, cortes)
         if v is not None:
@@ -1159,8 +1248,8 @@ def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta
     fsize = lado_px * lado_px * 3
     for ci, c in enumerate(cortes):
         lado, x0, y0 = planos[ci]
-        filtro = gira + f"crop={lado}:{lado}:{x0}:{y0},scale={lado_px}:{lado_px}:flags=lanczos,fps={FPS}"
-        dec = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
+        filtro = ent_filtro + gira + f"crop={lado}:{lado}:{x0}:{y0},scale={lado_px}:{lado_px}:flags=lanczos,fps={FPS}"
+        dec = subprocess.Popen(["ffmpeg", "-v", "error"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
                                 "-i", video, "-vf", filtro, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                                stdout=subprocess.PIPE)
         for buf in quadros(dec, fsize, n_quadros(c)):
@@ -1207,7 +1296,8 @@ def main():
     ap.add_argument("--so-cortes", action="store_true", help="só mostra o plano de cortes")
     ap.add_argument("--sem-ajuste-audio", action="store_true", help="não corta pelo áudio (usa só o tempo do Whisper)")
     ap.add_argument("--checar-olhar", action="store_true", help="avisa trechos em que a pessoa olha pra baixo (lendo) ou pro lado")
-    ap.add_argument("--cor-caixa", choices=list(ESTILOS_CAIXA), help="estilo da tarja do gancho/CTA: branco, azul ou rosa")
+    ap.add_argument("--cor-caixa", choices=sorted({e for m in ESTILOS_CAIXA.values() for e in m}),
+                    help="estilo da tarja do gancho/CTA. Imigrar: branco, azul, rosa. LIV: azul, laranja, bege, marrom")
     ap.add_argument("--cima", choices=["esquerda", "direita"], default="esquerda",
                     help="tela dividida: quem da live vai em cima (a pessoa da esquerda ou da direita)")
     ap.add_argument("--endireitar", action="store_true", help="quadrado: mede as verticais da cena e escolhe o ângulo de --girar sozinho (só gira, não distorce)")
@@ -1215,7 +1305,9 @@ def main():
     ap.add_argument("--dinamico", action="store_true", help="troca o zoom a cada ~2,5s (entre palavras), com 3 níveis")
     ap.add_argument("--respiro", type=float, help="mantém pausas internas até esse tamanho (s). Padrão 0.25; fala mais natural: 0.5")
     ap.add_argument("--girar", type=float, default=0.0, help="corrige câmera torta: graus (positivo = anti-horário)")
-    ap.add_argument("--layout", choices=["dividido", "quadro", "quadrado"], help="dividido: live com duas pessoas lado a lado vira uma em cima e outra embaixo")
+    ap.add_argument("--layout", choices=["dividido", "quadro", "quadrado", "youtube"],
+                    help="dividido: live com duas pessoas; quadro: live solo 720p; quadrado: WhatsApp; youtube: corte longo 16:9")
+    ap.add_argument("--sem-vinheta", action="store_true", help="youtube: não põe a vinheta da marca na abertura")
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
     a = ap.parse_args()
@@ -1224,6 +1316,10 @@ def main():
     cache_dir = os.path.join(AQUI, "transcricoes")
     os.makedirs(cache_dir, exist_ok=True)
     os.makedirs(a.saida, exist_ok=True)
+    if not os.path.exists(a.video):
+        sys.exit(f"Não achei o vídeo: {a.video}")
+    if "audio" not in run(["ffprobe", "-v", "error", "-show_entries", "stream=codec_type", "-of", "csv=p=0", a.video]):
+        sys.exit(f"O vídeo não tem áudio: {a.video}")
     dados = transcrever(a.video, os.path.join(cache_dir, base + ".json"))
     forcar = {}
     trechos = None
@@ -1257,6 +1353,8 @@ def main():
     else:
         cortes = plano_de_cortes(dados, a.comecar, a.terminar, a.remover,
                                  tirar_perguntas=not a.manter_perguntas)
+    if a.layout == "youtube" and not a.respiro:
+        a.respiro = 0.8                           # corte longo: só tira silêncio de verdade, a conversa fica natural
     if a.respiro:
         RESPIRO.update({"pausa_max": a.respiro, "depois": min(0.25, 0.10 + a.respiro / 4)})
     if not a.sem_ajuste_audio:
@@ -1265,6 +1363,9 @@ def main():
         sys.exit("Nenhum trecho sobrou depois dos cortes.")
     for x in a.tirar:
         cortes = tirar_trecho(cortes, dados["palavras"], *map(float, x.split("-")))
+    fim_video = duracao(a.video)                  # a folga do corte pelo áudio não passa do fim do arquivo
+    for c in cortes:
+        c["e"] = min(c["e"], fim_video)
     if a.dinamico:
         cortes = dividir_pra_zoom(cortes, dados["palavras"])
 
@@ -1283,7 +1384,7 @@ def main():
     print("\nRenderizando...")
     renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
                so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima, girar=a.girar,
-               dinamico=a.dinamico, endireitar=a.endireitar)
+               dinamico=a.dinamico, endireitar=a.endireitar, vinheta=not a.sem_vinheta)
     if not a.so_checar_caixas:
         print(f"\nPronto: {saida}")
 

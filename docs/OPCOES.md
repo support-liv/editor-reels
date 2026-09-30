@@ -26,9 +26,11 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--gancho "texto"` | Caixa nos primeiros 3,2s, em caixa alta. Aceita 🇺🇸 e 🇧🇷 |
 | `--cta "texto"` | Caixa nos últimos 3,5s |
 | `--y-legenda 0.62` | Altura da legenda (fração da tela). Orgânico 0.62, anúncio 0.55, selfie 0.64 |
-| `--cor-caixa branco` / `azul` / `rosa` | Estilo da tarja do gancho/CTA (Imigrar: branco com texto preto, azul #0E59C5 ou rosa #F90D5B com texto branco) |
+| `--cor-caixa` | Estilo da tarja do gancho/CTA, só com cores da marca. **Imigrar:** `branco`, `azul` (#0E59C5), `rosa` (#F90D5B). **LIV:** `azul` (#2C3642), `laranja` (#FF6E1F), `bege` (#FFF0E6), `marrom` (#945943) |
 | `--layout dividido` | Live com duas pessoas lado a lado: uma em cima, outra embaixo, enquadramento fixo, legenda e tarja na divisa |
 | `--cima esquerda` / `direita` | Na tela dividida, quem da live vai em cima |
+| `--layout youtube` | Corte longo 16:9 1080p: a cena inteira da live, sem legenda e sem gancho, com a vinheta da marca na abertura (LIV). Tira só silêncios longos (respiro 0,8s). Gera junto um `.tempos.txt` com a minutagem de cada trecho, para os capítulos |
+| `--sem-vinheta` | No `youtube`, não põe a vinheta |
 | `--layout quadrado` | WhatsApp: 1080x1080, punch-in alternando por bloco de fala, legenda perto da base |
 | `--dinamico` | Troca o zoom a cada ~2,5s entre palavras, em 3 níveis, sem cortar a fala. Pra quem fala mais travado |
 | `--endireitar` | Quadrado: mede as verticais da cena e escolhe o ângulo de `--girar` sozinho. Só gira, nunca distorce |
@@ -62,6 +64,12 @@ python3 editor/editor_reels.py VIDEO [opções]
 |---|---|
 | `--nome NOME` | Nome do arquivo (sem extensão) |
 | `--saida PASTA` | Pasta do arquivo (padrão: `./prontos`) |
+
+## editor/carrossel.py
+```bash
+python3 editor/carrossel.py roteiro.json --saida PASTA
+```
+Carrossel 1080x1350 na fonte e nas cores da marca: capa (com foto ou quadro de vídeo `arquivo.mp4@12.5`), cards de texto e card de CTA. O formato do `roteiro.json` está no começo do arquivo. A foto nunca é distorcida (amplia por igual e recorta).
 
 ## editor/auditar.py
 ```bash
