@@ -36,8 +36,11 @@ def baixar(video, altura_max=1920):
     os.makedirs(CACHE, exist_ok=True)
     destino = os.path.join(CACHE, f"pexels_{video['id']}.mp4")
     if not os.path.exists(destino):
-        with urllib.request.urlopen(melhor_arquivo(video, altura_max)["link"], context=conta.SSL) as r, open(destino, "wb") as f:
+        req = urllib.request.Request(melhor_arquivo(video, altura_max)["link"],
+                                     headers={"User-Agent": "Mozilla/5.0 (Macintosh) editor-reels"})   # o CDN recusa o UA padrão do Python
+        with urllib.request.urlopen(req, context=conta.SSL, timeout=120) as r, open(destino + ".parcial", "wb") as f:
             f.write(r.read())
+        os.replace(destino + ".parcial", destino)
     json.dump({k: video[k] for k in ("id", "pagina", "autor", "autor_url", "fonte", "duracao")},
               open(destino.replace(".mp4", ".json"), "w"), ensure_ascii=False)
     return destino
