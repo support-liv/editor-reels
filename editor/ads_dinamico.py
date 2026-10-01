@@ -348,7 +348,7 @@ def ajustar_legibilidade(rot, atras, frente, ms, n, limite=0.18):
         tam = min(max(l.get("tam", 100) for l in linhas), rot.get("tam_frente", 190))
         y_leg = rot.get("y_legenda", int(H * 0.62))
         # pé da palavra ~40 px acima da caixa da legenda (respiro), nunca encostado
-        nb = dict(b.b, linhas=[dict(linhas[0], protecao=rot.get("protecao_frente", 0.8), y=y_leg - 88 - int(tam * 0.42),
+        nb = dict(b.b, linhas=[dict(linhas[0], protecao=rot.get("protecao_frente", 0.55), y=y_leg - 88 - int(tam * 0.42),
                                     spans=[s_ for l in linhas for s_ in l["spans"]], tam=tam)])
         print(f"    → na frente, acima da legenda", flush=True)
         frente.append(Linhas(nb))
