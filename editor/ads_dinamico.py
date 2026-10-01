@@ -130,20 +130,33 @@ def aplicar_zoom(img, s, ax, ay):
 
 
 # ------------------------------------------------------------------ texto
-def render_span(texto, tam, cor, peso=800, track=-0.02):
-    """texto de display: tracking apertado (em fração do corpo), sem sombra/contorno."""
+def render_span(texto, tam, cor, peso=800, track=-0.02, protecao=0.0):
+    """texto de display: tracking apertado (em fração do corpo), sem contorno.
+    protecao > 0: esfumaçado escuro bem suave atrás das letras (só para dar contraste sobre imagem clara)."""
     f = fonte(tam, peso)
     tr = tam * track
     xs = [f.getlength(texto[:i]) + tr * i for i in range(len(texto))]
     larg = int((f.getlength(texto) + tr * (len(texto) - 1)) if texto else 1)
     asc, desc = f.getmetrics()
-    pad = int(tam * 0.12)
+    pad = _pad(tam, protecao)
     im = Image.new("RGBA", (larg + 2 * pad, asc + desc + 2 * pad), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     for ch, x in zip(texto, xs):
         d.text((pad + x, pad), ch, font=f, fill=COR.get(cor, cor) + (255,))
+    if protecao > 0:
+        a_ = np.array(im)[..., 3].astype(np.float32)
+        r = max(1, int(tam * 0.05))
+        halo = cv2.dilate(a_, np.ones((2 * r + 1, 2 * r + 1), np.uint8))
+        halo = cv2.GaussianBlur(halo, (0, 0), tam * 0.16)
+        sombra = np.zeros((im.height, im.width, 4), np.uint8)
+        sombra[..., 3] = np.clip(halo * protecao, 0, 255).astype(np.uint8)
+        im = Image.alpha_composite(Image.fromarray(sombra), im)
     bb = im.getbbox() or (0, 0, im.width, im.height)
     return im.crop((bb[0], 0, bb[2], im.height))
+
+
+def _pad(tam, protecao=0.0):
+    return int(tam * (0.45 if protecao > 0 else 0.12))
 
 
 def entra(im, p, desfoque=16, escala=0.14):
@@ -175,6 +188,22 @@ def colar(base, im, cx, cy):
     base[ya:yb, xa:xb] = base[ya:yb, xa:xb] * (1 - al) + sub[..., :3] * 255.0 * al
 
 
+def altura_optica(linha):
+    """2x a distância da linha de base ao centro de massa (peso visual) das letras, sem acentos.
+    Centralizar por aí deixa a linha visualmente no meio, mesmo com acento ou maiúscula alta."""
+    import unicodedata
+    soma = peso_tot = 0.0
+    for sp in linha["spans"]:
+        tam, peso = sp.get("tam", linha.get("tam", 100)), sp.get("peso", linha.get("peso", 800))
+        sem = "".join(c for c in unicodedata.normalize("NFD", sp["texto"]) if unicodedata.category(c) != "Mn")
+        im = render_span(sem, tam, "branco", peso, sp.get("track", linha.get("track", -0.02)))
+        al = np.array(im)[..., 3].astype(np.float64)
+        base = _pad(tam) + fonte(tam, peso).getmetrics()[0]          # linha de base dentro da imagem
+        ys = np.arange(al.shape[0])[:, None]
+        soma += float(((base - ys) * al).sum()); peso_tot += float(al.sum())
+    return 2 * soma / peso_tot if peso_tot else 0.0
+
+
 class Linhas:
     """bloco de linhas; cada linha é uma lista de spans (texto, tam, cor, t) que entram no tempo da fala."""
 
@@ -196,18 +225,27 @@ class Linhas:
                         self.cache[k] = render_legenda(sp["texto"], linha["caixa"] == "laranja", tam=sp.get("tam", linha.get("tam", 100)))
                     else:
                         self.cache[k] = render_span(sp["texto"], sp.get("tam", linha.get("tam", 100)), sp.get("cor", linha.get("cor", "branco")),
-                                                    sp.get("peso", linha.get("peso", 800)), sp.get("track", linha.get("track", -0.02)))
+                                                    sp.get("peso", linha.get("peso", 800)), sp.get("track", linha.get("track", -0.02)),
+                                                    linha.get("protecao", 0.0))
                 imgs.append((self.cache[k], sp["t"]))
             esp = int(linha.get("tam", 100) * linha.get("espaco", 0.26))   # espaço entre palavras (texto recortado justo)
             larg = sum(im.size[0] for im, _ in imgs) + esp * (len(imgs) - 1)
             x = W / 2 - larg / 2 if linha.get("alinha", "centro") == "centro" else linha.get("x", 80)
-            for im, t_ in imgs:
+            # y da linha = centro óptico: do topo das letras (sem contar acento) até a linha de base comum
+            base_y = linha["y"] + altura_optica(linha) / 2
+            for (im, t_), sp in zip(imgs, linha["spans"]):
                 p = (t - t_) / 0.32
                 if p > 0:
                     v = entra(im, p)
                     if saida > 0:
                         v = entra(v, 1 - saida, desfoque=10, escala=-0.08)
-                    colar(base, v, x + im.size[0] / 2, linha["y"])
+                    if linha.get("caixa"):
+                        cy = linha["y"]
+                    else:
+                        tam_s, peso_s = sp.get("tam", linha.get("tam", 100)), sp.get("peso", linha.get("peso", 800))
+                        topo = base_y - (_pad(tam_s, linha.get("protecao", 0)) + fonte(tam_s, peso_s).getmetrics()[0])
+                        cy = topo + im.size[1] / 2
+                    colar(base, v, x + im.size[0] / 2, cy)
                 x += im.size[0] + esp
 
 
@@ -310,7 +348,7 @@ def ajustar_legibilidade(rot, atras, frente, ms, n, limite=0.18):
         tam = min(max(l.get("tam", 100) for l in linhas), rot.get("tam_frente", 190))
         y_leg = rot.get("y_legenda", int(H * 0.62))
         # pé da palavra ~40 px acima da caixa da legenda (respiro), nunca encostado
-        nb = dict(b.b, linhas=[dict(linhas[0], y=y_leg - 88 - int(tam * 0.42),
+        nb = dict(b.b, linhas=[dict(linhas[0], protecao=rot.get("protecao_frente", 0.8), y=y_leg - 88 - int(tam * 0.42),
                                     spans=[s_ for l in linhas for s_ in l["spans"]], tam=tam)])
         print(f"    → na frente, acima da legenda", flush=True)
         frente.append(Linhas(nb))
@@ -476,8 +514,13 @@ def montar(rot, versao, saida, quadros_png=None):
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", tmp_v],
                            stdin=subprocess.PIPE)
     alvo_png = sorted(quadros_png or [])
+    previas = os.path.join(CACHE, "previas", os.path.splitext(os.path.basename(saida))[0])   # temporário, fora da pasta do vídeo
+    if alvo_png:
+        os.makedirs(previas, exist_ok=True)
     m_ant = None
     ate = rot.get("_ate")
+    if alvo_png:
+        print(f"  quadros de conferência em: {previas}", flush=True)
     for i in range(n):
         t = i / FPS
         if ate and t > ate:
@@ -551,7 +594,7 @@ def montar(rot, versao, saida, quadros_png=None):
         enc.stdin.write(out.tobytes())
         for tp in alvo_png:
             if abs(t - tp) < 0.5 / FPS:
-                Image.fromarray(out).save(os.path.splitext(saida)[0] + f"_{tp:05.2f}s.png")
+                Image.fromarray(out).save(os.path.join(previas, f"{tp:05.2f}s.png"))
         if i % 150 == 0:
             print(f"  {t:5.1f}s / {dur:.1f}s", flush=True)
     enc.stdin.close(); enc.wait()
