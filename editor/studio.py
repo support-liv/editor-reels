@@ -84,7 +84,11 @@ def fechar():
     from playwright.sync_api import sync_playwright
     pw = sync_playwright().start()
     try:
-        pw.chromium.connect_over_cdp(f"http://127.0.0.1:{PORTA}").close()
+        nav = pw.chromium.connect_over_cdp(f"http://127.0.0.1:{PORTA}")
+        try:
+            nav.new_browser_cdp_session().send("Browser.close")      # .close() só desconecta, não fecha o Chrome
+        except Exception:
+            pass
     finally:
         pw.stop()
     for _ in range(20):
@@ -94,9 +98,18 @@ def fechar():
     time.sleep(1)
 
 
+def _com_janela():
+    """True se o Chrome do editor que está rodando é o com janela (o do login), e não o invisível."""
+    r = subprocess.run(["ps", "-axo", "command"], capture_output=True, text=True).stdout
+    return any(f"--remote-debugging-port={PORTA}" in l and "--type=" not in l and "--headless" not in l
+               for l in r.splitlines())
+
+
 def conectar():
-    """usa o Chrome do editor se a janela estiver aberta; senão abre um invisível (segundo plano)."""
+    """sempre o Chrome invisível: se a janela do login ficou aberta, fecha (o login fica salvo) e abre sem janela."""
     from playwright.sync_api import sync_playwright
+    if aberto() and _com_janela():
+        fechar()
     if not aberto():
         abrir_fundo()
     pw = sync_playwright().start()
@@ -280,6 +293,7 @@ def main():
             print(f"{s['id']}: enviando ({quando})…", flush=True)
             print(f"{s['id']}: {'programado ' + quando if h else 'enviado (privado)'} "
                   f"{enviar(s['video'], a.canal, s['titulo'], desc, s.get('tags', []), h)}", flush=True)
+        fechar()
 
 
 if __name__ == "__main__":
