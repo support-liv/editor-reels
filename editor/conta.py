@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Login do time no Supabase do editor (pra usar APIs como a de B-roll sem chave no computador).
 
-    python3 editor/conta.py entrar      # pede o e-mail da empresa, manda um código de 6 dígitos, você cola aqui
+    python3 editor/conta.py entrar --email nome@liv.law   # manda o link de acesso; a pessoa só clica no e-mail
+    python3 editor/conta.py entrar --codigo               # alternativa: digitar o código de 6 dígitos no terminal
     python3 editor/conta.py status      # quem está logado
     python3 editor/conta.py sair        # apaga a sessão deste Mac
 
 A sessão fica no Chaveiro do macOS (criptografada), não em arquivo. Ela se renova sozinha; se ficar muito tempo
 sem uso, é só entrar de novo. Nenhuma chave de API passa por aqui: elas ficam no servidor.
 """
-import getpass, json, os, subprocess, sys, time, urllib.error, urllib.request
+import getpass, http.server, json, os, subprocess, sys, time, urllib.error, urllib.parse, urllib.request
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 CFG = json.load(open(os.path.join(AQUI, "supabase_config.json")))
@@ -61,7 +62,58 @@ def token():
     return nova["access_token"]
 
 
+PORTA_LINK = 8723          # o link do e-mail volta pra cá (cadastrado em Auth → URL Configuration → Redirect URLs)
+
+PAGINA = """<!doctype html><meta charset="utf-8"><title>Editor</title>
+<body style="font-family:-apple-system,sans-serif;padding:48px"><h2 id="m">Conectando…</h2>
+<script>
+const h = location.hash.slice(1);
+fetch("/sessao", {method: "POST", body: h}).then(r => r.text()).then(t => { document.getElementById("m").textContent = t; });
+</script></body>"""
+
+
+def entrar_por_link(email, espera=900):
+    """manda o link de acesso e espera a pessoa clicar: o link volta pro 127.0.0.1 com a sessão (fica só neste Mac)."""
+    pronto = {}
+
+    class H(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200); self.send_header("Content-Type", "text/html; charset=utf-8"); self.end_headers()
+            self.wfile.write(PAGINA.encode())
+
+        def do_POST(self):
+            corpo = self.rfile.read(int(self.headers.get("Content-Length", 0))).decode()
+            q = dict(urllib.parse.parse_qsl(corpo))
+            ok = "access_token" in q and "refresh_token" in q
+            if ok:
+                q["expires_at"] = int(q.get("expires_at") or time.time() + int(q.get("expires_in", 3600)))
+                q["email"] = email
+                _guardar(q); pronto["ok"] = True
+            self.send_response(200); self.send_header("Content-Type", "text/plain; charset=utf-8"); self.end_headers()
+            self.wfile.write(("Pronto, pode fechar esta aba." if ok else "Link inválido ou expirado. Peça um novo.").encode())
+
+        def log_message(self, *a):
+            pass
+
+    srv = http.server.HTTPServer(("127.0.0.1", PORTA_LINK), H)
+    destino = urllib.parse.quote(f"http://127.0.0.1:{PORTA_LINK}/", safe="")
+    st, r = _req(f"/auth/v1/otp?redirect_to={destino}", {"email": email, "create_user": True})
+    if st not in (200, 204):
+        sys.exit(f"Não deu para enviar o link: {r.get('msg') or r.get('message') or r.get('error_description') or r}")
+    print(f"Link de acesso enviado para {email}. Esperando o clique no e-mail…", flush=True)
+    fim = time.time() + espera
+    srv.timeout = 5
+    while not pronto and time.time() < fim:
+        srv.handle_request()
+    srv.server_close()
+    if not pronto:
+        sys.exit("O link não foi clicado a tempo. Peça um novo.")
+    print(f"Pronto: {email} conectado neste Mac.")
+
+
 def entrar():
+    if "--email" in sys.argv:
+        return entrar_por_link(sys.argv[sys.argv.index("--email") + 1].strip().lower())
     email = input("E-mail da empresa: ").strip().lower()
     st, r = _req("/auth/v1/otp", {"email": email, "create_user": True})
     if st not in (200, 204):

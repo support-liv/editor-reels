@@ -64,6 +64,11 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 ## Git
 Commits locais à vontade; `git push` só quando a pessoa pedir. Mudança no editor: registrar no `CHANGELOG.md` e nos docs.
 
+## Quem roda os comandos
+- **O Claude roda todos os comandos** (login, conectar canal, buscar B-roll, enviar vídeo, editar). Nunca peça para o usuário abrir o terminal ou rodar comando.
+- O usuário só faz o que exige a identidade dele: clicar no link de login que chega no e-mail e clicar em "Permitir" na tela do Google ao conectar um canal. Códigos, senhas e chaves não passam pelo chat: se precisar de um segredo, ele mesmo cadastra no painel (Supabase → Secrets).
+- Login no servidor do time: `python3 editor/conta.py entrar --email <email>` (rodar em segundo plano; a pessoa clica no link do e-mail e a sessão fica no Chaveiro do Mac).
+
 ## Publicação (YouTube)
 - Envio direto pelo servidor do time: escreva `projetos/<projeto>/publicacao.json` (título até 100 caracteres, descrição com o CTA do canal e hashtags, tags) a partir do que foi dito no vídeo e rode `python3 editor/youtube.py lote projetos/<projeto>/publicacao.json --canal <liv|imigrar> --inicio AAAA-MM-DD --hora 12:00`. Publicar é ação externa: confirme a lista com o usuário antes de enviar, e comece com `--so 1` num canal novo.
 - Os vídeos sobem privados (projeto sem auditoria do Google); se o canal estiver restrito, alguém programa pelo Studio. Ver `docs/SUPABASE.md`.
