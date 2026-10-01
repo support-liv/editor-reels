@@ -131,13 +131,20 @@ def aplicar_zoom(img, s, ax, ay):
 
 
 # ------------------------------------------------------------------ texto
-def render_span(texto, tam, cor, peso=800):
+def render_span(texto, tam, cor, peso=800, track=-0.02):
+    """texto de display: tracking apertado (em fração do corpo), sem sombra/contorno."""
     f = fonte(tam, peso)
-    x0, y0, x1, y1 = f.getbbox(texto)
-    pad = int(tam * 0.25)
-    im = Image.new("RGBA", (x1 - x0 + 2 * pad, int(tam * 1.25) + 2 * pad), (0, 0, 0, 0))
-    ImageDraw.Draw(im).text((pad - x0, pad), texto, font=f, fill=COR.get(cor, cor) + (255,))
-    return im
+    tr = tam * track
+    xs = [f.getlength(texto[:i]) + tr * i for i in range(len(texto))]
+    larg = int((f.getlength(texto) + tr * (len(texto) - 1)) if texto else 1)
+    asc, desc = f.getmetrics()
+    pad = int(tam * 0.12)
+    im = Image.new("RGBA", (larg + 2 * pad, asc + desc + 2 * pad), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    for ch, x in zip(texto, xs):
+        d.text((pad + x, pad), ch, font=f, fill=COR.get(cor, cor) + (255,))
+    bb = im.getbbox() or (0, 0, im.width, im.height)
+    return im.crop((bb[0], 0, bb[2], im.height))
 
 
 def entra(im, p, desfoque=16, escala=0.14):
@@ -189,10 +196,11 @@ class Linhas:
                     if linha.get("caixa"):              # texto em pílula (como a legenda): legível em qualquer fundo
                         self.cache[k] = render_legenda(sp["texto"], linha["caixa"] == "laranja", tam=sp.get("tam", linha.get("tam", 100)))
                     else:
-                        self.cache[k] = render_span(sp["texto"], sp.get("tam", linha.get("tam", 100)), sp.get("cor", linha.get("cor", "branco")))
+                        self.cache[k] = render_span(sp["texto"], sp.get("tam", linha.get("tam", 100)), sp.get("cor", linha.get("cor", "branco")),
+                                                    sp.get("peso", linha.get("peso", 800)), sp.get("track", linha.get("track", -0.02)))
                 imgs.append((self.cache[k], sp["t"]))
-            esp = int(linha.get("tam", 100) * 0.12)
-            larg = sum(im.size[0] for im, _ in imgs) - esp * (len(imgs) - 1)
+            esp = int(linha.get("tam", 100) * linha.get("espaco", 0.26))   # espaço entre palavras (texto recortado justo)
+            larg = sum(im.size[0] for im, _ in imgs) + esp * (len(imgs) - 1)
             x = W / 2 - larg / 2 if linha.get("alinha", "centro") == "centro" else linha.get("x", 80)
             for im, t_ in imgs:
                 p = (t - t_) / 0.32
@@ -201,7 +209,58 @@ class Linhas:
                     if saida > 0:
                         v = entra(v, 1 - saida, desfoque=10, escala=-0.08)
                     colar(base, v, x + im.size[0] / 2, linha["y"])
-                x += im.size[0] - esp
+                x += im.size[0] + esp
+
+
+class Lettering:
+    """lettering grande alinhado à esquerda (nos inserts de imagem): cada linha sobe de dentro de uma máscara.
+    Ênfase pelo peso (Black x Light da mesma família), entrelinha justa, uma barra laranja curta como único acento."""
+
+    def __init__(self, bloco):
+        self.b, self.cache = bloco, {}
+
+    def ativo(self, t):
+        return self.b["t0"] <= t < self.b["t1"]
+
+    def desenhar(self, base, t):
+        b = self.b
+        if not self.ativo(t):
+            return
+        x, y = b.get("x", 84), b["y"]
+        if b.get("barra", True):
+            p = max(0.0, min(1.0, (t - b["linhas"][0]["t"] + 0.1) / 0.35))
+            e = 1 - (1 - p) ** 4
+            if e > 0:
+                base[int(y - 34):int(y - 24), int(x):int(x + 96 * e)] = np.array(COR["laranja"], np.float32)
+        for li, ln in enumerate(b["linhas"]):
+            if li not in self.cache:
+                self.cache[li] = render_span(ln["texto"], ln["tam"], ln.get("cor", "bege"), ln.get("peso", 900), ln.get("track", -0.03))
+            im = self.cache[li]
+            h_linha = int(ln["tam"] * b.get("entrelinha", 0.98))
+            p = (t - ln["t"]) / 0.42
+            if p > 0:
+                e = 1 - (1 - min(1.0, p)) ** 4                         # sai rápido e assenta devagar
+                dy = int((1 - e) * im.height * 0.9)
+                a = np.asarray(im).astype(np.float32) / 255.0
+                hh = min(im.height - dy, H - int(y))
+                if hh > 0:
+                    sub = a[:hh]
+                    y0 = int(y) + dy
+                    y1 = min(y0 + sub.shape[0], int(y) + im.height, H)  # recorte da máscara: a linha "nasce" da base
+                    sub = sub[:max(0, y1 - y0)]
+                    w_ = min(sub.shape[1], W - int(x))
+                    if sub.shape[0] > 0 and w_ > 0:
+                        al = sub[:, :w_, 3:4]
+                        reg = base[y0:y0 + sub.shape[0], int(x):int(x) + w_]
+                        base[y0:y0 + sub.shape[0], int(x):int(x) + w_] = reg * (1 - al) + sub[:, :w_, :3] * 255.0 * al
+            y += h_linha
+
+
+def escurecer_base(q, forca=0.55):
+    """véu suave na metade de baixo da imagem (não é sombra no texto): dá contraste ao lettering claro."""
+    g = np.clip((np.arange(H, dtype=np.float32) - H * 0.40) / (H * 0.45), 0, 1)
+    g = g * g * (3 - 2 * g)
+    return q * (1 - forca * g)[:, None, None]
 
 
 # ------------------------------------------------------------------ legenda 1-3 palavras
@@ -258,19 +317,21 @@ def tela(a, b, k=1.0):
 
 # ------------------------------------------------------------------ CTA
 def render_cta(c, p_seta):
-    w, h = 940, 330
-    im = Image.new("RGBA", (w, h + 150), (0, 0, 0, 0))
-    d = ImageDraw.Draw(im)
-    d.rounded_rectangle((0, 0, w - 1, h - 1), radius=46, fill=COR["bege"] + (255,))
-    f1, f2 = fonte(c.get("tam1", 112), 800), fonte(c.get("tam2", 70), 700)
-    for txt, f, y, cor in ((c["linha1"], f1, 62, "laranja"), (c["linha2"], f2, 196, "azul")):
-        x0, _, x1, _ = f.getbbox(txt)
-        d.text(((w - (x1 - x0)) / 2 - x0, y), txt, font=f, fill=COR[cor] + (255,))
-    if p_seta > 0:                                         # seta pro botão do anúncio, pulsando
+    """faixa azul da marca embaixo: Light + Black da mesma família, seta laranja pro botão do anúncio."""
+    w, h = W, 450
+    im = Image.new("RGBA", (w, h), COR["azul"] + (255,))
+    l1 = render_span(c["linha1"], 70, "bege", 400, -0.01)
+    l2 = render_span(c["linha2"], 132, "bege", 900, -0.03)
+    l3 = render_span(c["linha3"], 60, "laranja", 600, 0.0)
+    y = 58
+    for l, passo in ((l1, 72), (l2, 168), (l3, 0)):
+        im.alpha_composite(l, (84, y)); y += passo
+    if p_seta > 0:
+        d = ImageDraw.Draw(im)
         a = int(255 * min(1, p_seta * 3))
-        dy = int(10 * np.sin(p_seta * 9))
-        cx, cy = w / 2, h + 70 + dy
-        d.polygon([(cx - 46, cy - 26), (cx + 46, cy - 26), (cx, cy + 30)], fill=COR["laranja"] + (a,))
+        dy = int(12 * np.sin(p_seta * 8))
+        cx, cy = W - 150, h // 2 + dy
+        d.line([(cx - 44, cy - 22), (cx, cy + 22), (cx + 44, cy - 22)], fill=COR["laranja"] + (a,), width=14, joint="curve")
     return im
 
 
@@ -300,8 +361,22 @@ def montar(rot, versao, saida, quadros_png=None):
     atras = [Linhas(b) for b in rot["atras"] if versao == "A" or not b.get("so_A")]
     frente = [Linhas(b) for b in rot.get("frente", []) if versao == "A" or not b.get("so_A")]
     faixa = Linhas(dividido["faixa"]) if dividido else None
-    legs = blocos_legenda(palavras, rot.get("trocas", {}), set(rot.get("destaques", [])))
-    sem_leg = [(b.b["t0"], b.b["t1"]) for b in atras + frente if not b.b.get("legenda")] + [(rot["cta"]["t0"], dur + 1)]
+    # legenda: o padrão minimalista da LIV do editor (palavra falada em laranja), sem mexer no editor
+    sys.path.insert(0, AQUI)
+    import editor_reels as er
+    ws = []
+    for p in palavras:
+        w = p["w"]
+        for a_, b_ in rot.get("trocas", {}).items():
+            w = w.replace(a_, b_)
+        ws.append(dict(p, w=w))
+    grupos = er.grupos_legenda(ws)
+    leg = er.Legenda("liv")
+    letterings = [Lettering(b) for b in rot.get("lettering", [])]
+    sem_leg = [(b.b.get("legenda_desde", b.b["t0"]) if b.b.get("legenda_desde") else b.b["t0"],
+                b.b["t1"]) for b in atras + frente if not b.b.get("legenda") and not b.b.get("legenda_desde")]
+    sem_leg += [(b.b["t0"], b.b.get("legenda_desde")) for b in atras + frente if b.b.get("legenda_desde")]
+    sem_leg += [(b.b["t0"], b.b["t1"]) for b in letterings] + [(rot["cta"]["t0"], dur + 1)]
     if dividido:
         sem_leg.append((dividido["t0"], dividido["t1"]))
     cache_leg = {}
@@ -340,6 +415,10 @@ def montar(rot, versao, saida, quadros_png=None):
         br = next((b for b in brolls if b["t0"] <= t < b["t1"]), None)
         if br:
             q = br["f"].quadro(int((t - br["t0"]) * FPS)).astype(np.float32)
+            if any(l.ativo(t) for l in letterings):
+                q = escurecer_base(q, br.get("veu", 0.62))
+        for l in letterings:
+            l.desenhar(q, t)
         if dividido and dividido["t0"] <= t < dividido["t1"]:
             topo = dividido["f"].quadro(int((t - dividido["t0"]) * FPS))[dividido["y_topo"]:dividido["y_topo"] + H // 2]
             pessoa = bruto[dividido["y_pessoa"]:dividido["y_pessoa"] + H // 2]
@@ -353,18 +432,23 @@ def montar(rot, versao, saida, quadros_png=None):
             faixa.desenhar(q, t)
         # legenda
         if not any(a <= t < b for a, b in sem_leg):
-            lg = next((l for l in legs if l["t0"] <= t < l["t1"]), None)
-            if lg:
-                k = lg["texto"]
-                if k not in cache_leg:
-                    cache_leg[k] = render_legenda(lg["texto"], lg["dest"])
-                colar(q, entra(cache_leg[k], (t - lg["t0"]) / 0.12, desfoque=0, escala=0.10), W / 2, rot.get("y_legenda", 1330))
-        # CTA
+            gi = next((k for k, g in enumerate(grupos) if g[0]["s"] <= t < (grupos[k + 1][0]["s"] if k + 1 < len(grupos) else g[-1]["e"] + 0.6)
+                       and t < g[-1]["e"] + 0.6), None)
+            if gi is not None:
+                g = grupos[gi]
+                ativo = max(k for k, p in enumerate(g) if p["s"] <= t + 0.02)
+                colar(q, leg.render(gi, g, ativo), W / 2, rot.get("y_legenda", int(H * 0.62)))
+        # CTA: faixa sobe de baixo
         if t >= cta["t0"]:
-            p = (t - cta["t0"]) / 0.35
+            p = min(1.0, (t - cta["t0"]) / 0.45)
+            e = 1 - (1 - p) ** 4
             im = render_cta(cta, max(0.0, t - cta["t_seta"]) if t >= cta["t_seta"] else 0)
-            e = 1 - (1 - min(1, p)) ** 3
-            colar(q, entra(im, p, desfoque=0, escala=0.06), W / 2, cta["y"] + (1 - e) * 80)
+            topo = cta.get("y", 1150)
+            a = np.asarray(im).astype(np.float32)
+            dy = int((1 - e) * im.height)
+            vis = im.height - dy
+            if vis > 0:
+                q[topo + dy:topo + im.height] = a[:vis, :, :3]
         # film burn: o pico de luz cai exatamente no corte
         for ci, c in enumerate(cortes):
             bn = burns[ci % len(burns)]
