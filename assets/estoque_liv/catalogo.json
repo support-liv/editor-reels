@@ -1,1 +1,592 @@
-{"videos": []}
+{
+ "videos": [
+  {
+   "arquivo": "vertical__dra-livia-e-equipe__escritorio-com-toda-equipe__escritorio-aberto__plano-geral-1__6s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e equipe",
+   "acao": "escritorio com toda equipe",
+   "local": "escritorio aberto",
+   "detalhes": [
+    "plano geral 1"
+   ],
+   "duracao_s": 6,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-equipe__escritorio-com-toda-equipe__escritorio-aberto__plano-geral-2__12s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e equipe",
+   "acao": "escritorio com toda equipe",
+   "local": "escritorio aberto",
+   "detalhes": [
+    "plano geral 2"
+   ],
+   "duracao_s": 12,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-equipe__orientando-equipe-com-documentos__mesa-da-equipe__terno-verde__2s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e equipe",
+   "acao": "orientando equipe com documentos",
+   "local": "mesa da equipe",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 2,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-equipe__reuniao-com-o-time__sala-de-reuniao-logo-liv__terno-verde__angulo-1__13s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e equipe",
+   "acao": "reuniao com o time",
+   "local": "sala de reuniao logo liv",
+   "detalhes": [
+    "terno verde",
+    "angulo 1"
+   ],
+   "duracao_s": 13,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-equipe__reuniao-com-o-time__sala-de-reuniao-logo-liv__terno-verde__angulo-2__6s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e equipe",
+   "acao": "reuniao com o time",
+   "local": "sala de reuniao logo liv",
+   "detalhes": [
+    "terno verde",
+    "angulo 2"
+   ],
+   "duracao_s": 6,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-equipe__revisando-processo__mesa-da-equipe__terno-verde__angulo-1__27s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e equipe",
+   "acao": "revisando processo",
+   "local": "mesa da equipe",
+   "detalhes": [
+    "terno verde",
+    "angulo 1"
+   ],
+   "duracao_s": 27,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-equipe__revisando-processo__mesa-da-equipe__terno-verde__angulo-2__15s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e equipe",
+   "acao": "revisando processo",
+   "local": "mesa da equipe",
+   "detalhes": [
+    "terno verde",
+    "angulo 2"
+   ],
+   "duracao_s": 15,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-equipe__revisando-processo__mesa-da-equipe__terno-verde__zoom__3s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e equipe",
+   "acao": "revisando processo",
+   "local": "mesa da equipe",
+   "detalhes": [
+    "terno verde",
+    "zoom"
+   ],
+   "duracao_s": 3,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-filha-bianca__abraco-no-escritorio__sala-dela__uso-especial-familia__18s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e filha bianca",
+   "acao": "abraco no escritorio",
+   "local": "sala dela",
+   "detalhes": [
+    "uso especial familia"
+   ],
+   "duracao_s": 18,
+   "uso_especial": true,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-marinna-damasio-imigrar__conversando__mesa-computador__terno-verde__18s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e marinna damasio imigrar",
+   "acao": "conversando",
+   "local": "mesa computador",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 18,
+   "uso_especial": false,
+   "outra_marca": true
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-marinna-damasio-imigrar__reuniao__sala-de-reuniao__terno-verde__4s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e marinna damasio imigrar",
+   "acao": "reuniao",
+   "local": "sala de reuniao",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 4,
+   "uso_especial": false,
+   "outra_marca": true
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-marinna-damasio-imigrar__trabalhando-no-notebook__mesa-de-reuniao__terno-verde__15s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e marinna damasio imigrar",
+   "acao": "trabalhando no notebook",
+   "local": "mesa de reuniao",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 15,
+   "uso_especial": false,
+   "outra_marca": true
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-paloma__revisando-processo__mesa-da-equipe__terno-verde__6s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e paloma",
+   "acao": "revisando processo",
+   "local": "mesa da equipe",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 6,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-patricia-simonin__conversando-sobre-cliente__mesa-da-equipe__blazer-bege__1s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e patricia simonin",
+   "acao": "conversando sobre cliente",
+   "local": "mesa da equipe",
+   "detalhes": [
+    "blazer bege"
+   ],
+   "duracao_s": 1,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-pedro-garcia__conversando-com-a-equipe__escritorio-aberto__terno-verde__21s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e pedro garcia",
+   "acao": "conversando com a equipe",
+   "local": "escritorio aberto",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 21,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-pedro-garcia__conversando-em-pe__escritorio-aberto__terno-verde__close__12s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e pedro garcia",
+   "acao": "conversando em pe",
+   "local": "escritorio aberto",
+   "detalhes": [
+    "terno verde",
+    "close"
+   ],
+   "duracao_s": 12,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-pedro-garcia__conversando__escritorio-aberto__terno-verde__15s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e pedro garcia",
+   "acao": "conversando",
+   "local": "escritorio aberto",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 15,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia-e-thiago-sakamoto__reuniao-com-o-time__sala-de-reuniao-logo-liv__terno-verde__14s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia e thiago sakamoto",
+   "acao": "reuniao com o time",
+   "local": "sala de reuniao logo liv",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 14,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia__andando-com-processo-na-mao__escritorio-aberto__terno-verde__5s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia",
+   "acao": "andando com processo na mao",
+   "local": "escritorio aberto",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 5,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia__assinando-processo__mesa-dela__terno-risca-de-giz__19s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia",
+   "acao": "assinando processo",
+   "local": "mesa dela",
+   "detalhes": [
+    "terno risca de giz"
+   ],
+   "duracao_s": 19,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia__checando-e-anotando-processo__mesa-dela__terno-verde__46s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia",
+   "acao": "checando e anotando processo",
+   "local": "mesa dela",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 46,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia__concentrada-no-computador__sala-dela__blazer-azul__16s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia",
+   "acao": "concentrada no computador",
+   "local": "sala dela",
+   "detalhes": [
+    "blazer azul"
+   ],
+   "duracao_s": 16,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia__concentrada-no-computador__sala-dela__blazer-azul__vista-de-baixo__16s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia",
+   "acao": "concentrada no computador",
+   "local": "sala dela",
+   "detalhes": [
+    "blazer azul",
+    "vista de baixo"
+   ],
+   "duracao_s": 16,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia__folheando-processo__mesa-dela__terno-verde__vista-de-cima__1s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia",
+   "acao": "folheando processo",
+   "local": "mesa dela",
+   "detalhes": [
+    "terno verde",
+    "vista de cima"
+   ],
+   "duracao_s": 1,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia__organizando-processo-de-cliente__mesa-dela__terno-risca-de-giz__close__17s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia",
+   "acao": "organizando processo de cliente",
+   "local": "mesa dela",
+   "detalhes": [
+    "terno risca de giz",
+    "close"
+   ],
+   "duracao_s": 17,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia__revisando-processo-formal__mesa-dela__terno-risca-de-giz__por-cima-do-ombro__9s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia",
+   "acao": "revisando processo formal",
+   "local": "mesa dela",
+   "detalhes": [
+    "terno risca de giz",
+    "por cima do ombro"
+   ],
+   "duracao_s": 9,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__dra-livia__sorrindo-e-conversando__sala-de-reuniao__blazer-xadrez__10s.mp4",
+   "orientacao": "vertical",
+   "quem": "dra livia",
+   "acao": "sorrindo e conversando",
+   "local": "sala de reuniao",
+   "detalhes": [
+    "blazer xadrez"
+   ],
+   "duracao_s": 10,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__equipe-liv__time-trabalhando__escritorio-aberto__4s.mp4",
+   "orientacao": "vertical",
+   "quem": "equipe liv",
+   "acao": "time trabalhando",
+   "local": "escritorio aberto",
+   "detalhes": [],
+   "duracao_s": 4,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__equipe-liv__time-trabalhando__escritorio-aberto__close__6s.mp4",
+   "orientacao": "vertical",
+   "quem": "equipe liv",
+   "acao": "time trabalhando",
+   "local": "escritorio aberto",
+   "detalhes": [
+    "close"
+   ],
+   "duracao_s": 6,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__equipe-liv__time-trabalhando__escritorio-aberto__plano-geral-em-movimento__15s.mp4",
+   "orientacao": "vertical",
+   "quem": "equipe liv",
+   "acao": "time trabalhando",
+   "local": "escritorio aberto",
+   "detalhes": [
+    "plano geral em movimento"
+   ],
+   "duracao_s": 15,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "vertical__marinna-damasio-imigrar-e-dra-livia__conversando__sala-de-reuniao__terno-verde__16s.mp4",
+   "orientacao": "vertical",
+   "quem": "marinna damasio imigrar e dra livia",
+   "acao": "conversando",
+   "local": "sala de reuniao",
+   "detalhes": [
+    "terno verde"
+   ],
+   "duracao_s": 16,
+   "uso_especial": false,
+   "outra_marca": true
+  },
+  {
+   "arquivo": "vertical__patricia-simonin__falando-e-gesticulando__sala-de-reuniao__blazer-bege__11s.mp4",
+   "orientacao": "vertical",
+   "quem": "patricia simonin",
+   "acao": "falando e gesticulando",
+   "local": "sala de reuniao",
+   "detalhes": [
+    "blazer bege"
+   ],
+   "duracao_s": 11,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__dra-livia__atendendo-cliente-sorrindo__sala-de-reuniao__blazer-xadrez__por-cima-do-ombro__7s.mp4",
+   "orientacao": "wide",
+   "quem": "dra livia",
+   "acao": "atendendo cliente sorrindo",
+   "local": "sala de reuniao",
+   "detalhes": [
+    "blazer xadrez",
+    "por cima do ombro"
+   ],
+   "duracao_s": 7,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__dra-livia__concentrada-no-computador__sala-dela__blazer-xadrez__plano-aberto__7s.mp4",
+   "orientacao": "wide",
+   "quem": "dra livia",
+   "acao": "concentrada no computador",
+   "local": "sala dela",
+   "detalhes": [
+    "blazer xadrez",
+    "plano aberto"
+   ],
+   "duracao_s": 7,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__dra-livia__falando-em-reuniao-online-com-advogados__sala-dela__blazer-xadrez__vista-atras-da-tela__11s.mp4",
+   "orientacao": "wide",
+   "quem": "dra livia",
+   "acao": "falando em reuniao online com advogados",
+   "local": "sala dela",
+   "detalhes": [
+    "blazer xadrez",
+    "vista atras da tela"
+   ],
+   "duracao_s": 11,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__dra-livia__folheando-processo-com-cliente__sala-de-reuniao__blazer-xadrez__6s.mp4",
+   "orientacao": "wide",
+   "quem": "dra livia",
+   "acao": "folheando processo com cliente",
+   "local": "sala de reuniao",
+   "detalhes": [
+    "blazer xadrez"
+   ],
+   "duracao_s": 6,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__dra-livia__gesticulando-e-falando__sala-de-reuniao__blazer-xadrez__angulo-lateral__9s.mp4",
+   "orientacao": "wide",
+   "quem": "dra livia",
+   "acao": "gesticulando e falando",
+   "local": "sala de reuniao",
+   "detalhes": [
+    "blazer xadrez",
+    "angulo lateral"
+   ],
+   "duracao_s": 9,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__dra-livia__sorrindo-e-falando__sala-de-reuniao__blazer-xadrez__close__8s.mp4",
+   "orientacao": "wide",
+   "quem": "dra livia",
+   "acao": "sorrindo e falando",
+   "local": "sala de reuniao",
+   "detalhes": [
+    "blazer xadrez",
+    "close"
+   ],
+   "duracao_s": 8,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__patricia-simonin__atendendo-clientes-no-computador__mesa-escritorio__blazer-bege__camera-em-movimento__7s.mp4",
+   "orientacao": "wide",
+   "quem": "patricia simonin",
+   "acao": "atendendo clientes no computador",
+   "local": "mesa escritorio",
+   "detalhes": [
+    "blazer bege",
+    "camera em movimento"
+   ],
+   "duracao_s": 7,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__patricia-simonin__digitando-no-notebook__mesa-escritorio__blazer-bege__perfil-lateral__10s.mp4",
+   "orientacao": "wide",
+   "quem": "patricia simonin",
+   "acao": "digitando no notebook",
+   "local": "mesa escritorio",
+   "detalhes": [
+    "blazer bege",
+    "perfil lateral"
+   ],
+   "duracao_s": 10,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__patricia-simonin__falando-e-gesticulando__sala-de-reuniao__blazer-bege__plano-aberto__7s.mp4",
+   "orientacao": "wide",
+   "quem": "patricia simonin",
+   "acao": "falando e gesticulando",
+   "local": "sala de reuniao",
+   "detalhes": [
+    "blazer bege",
+    "plano aberto"
+   ],
+   "duracao_s": 7,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__patricia-simonin__organizando-atendimentos-no-computador__mesa-escritorio__blazer-bege__vista-de-costas__7s.mp4",
+   "orientacao": "wide",
+   "quem": "patricia simonin",
+   "acao": "organizando atendimentos no computador",
+   "local": "mesa escritorio",
+   "detalhes": [
+    "blazer bege",
+    "vista de costas"
+   ],
+   "duracao_s": 7,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__patricia-simonin__trabalhando-no-computador__mesa-escritorio__blazer-bege__vista-de-costas-tela__10s.mp4",
+   "orientacao": "wide",
+   "quem": "patricia simonin",
+   "acao": "trabalhando no computador",
+   "local": "mesa escritorio",
+   "detalhes": [
+    "blazer bege",
+    "vista de costas tela"
+   ],
+   "duracao_s": 10,
+   "uso_especial": false,
+   "outra_marca": false
+  },
+  {
+   "arquivo": "wide__reuniao-online-advogados-licenciados-nos-eua__dra-livia-pedro-garcia-debora-breno-ceo__tela-do-computador__7s.mp4",
+   "orientacao": "wide",
+   "quem": "reuniao online advogados licenciados nos eua",
+   "acao": "dra livia pedro garcia debora breno ceo",
+   "local": "tela do computador",
+   "detalhes": [],
+   "duracao_s": 7,
+   "uso_especial": false,
+   "outra_marca": false
+  }
+ ]
+}
