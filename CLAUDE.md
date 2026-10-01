@@ -41,6 +41,7 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 ## Ferramentas por formato
 - Reels/Shorts, anúncio, stories: `editor/editor_reels.py` (vertical).
 - Corte longo YouTube: `editor/editor_reels.py --layout youtube` (vinheta da LIV entra sozinha; Imigrar: `--sem-vinheta`).
+- **Balão "Inscreva-se" (só corte longo da live da LIV; nunca em shorts nem na Imigrar):** entra sozinho no `--layout youtube` da LIV (`editor/inscricao.py`, asset `assets/inscreva_liv.webm`): ~1 por minuto com variação de alguns segundos, centralizado embaixo (40% da largura). **Nunca junto com o banner da live** (card do QR Code, embaixo no centro): o banner é detectado no vídeo e o balão espera ele sair ou pula aquela vez. Validar com `inscricao.py VIDEO --quadro 75` (PNG). Desligar: `--sem-inscreva`.
 - WhatsApp: `--layout quadrado`. Live: `--layout dividido` / `quadro`.
 - Carrossel: `editor/carrossel.py roteiro.json`.
 - Fonte e cores são sempre as da marca (`--marca`); `--cor-caixa` só aceita cores da paleta.
@@ -55,6 +56,7 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 - **Variar a cada vídeo:** a rota BR → EUA e os cards não são padrão. Use etapas, checklist, cartoes, degraus, barra, colunas, numero, anel, contador conforme a fala; rota só quando a fala é sobre ir de um lugar a outro. O gerador avisa repetição.
 - **Imigrar explora mais** (`"marca": "imigrar"` no roteiro): interfaces (`chat`, `status`, `notificacao`, `busca`), contadores, marca-texto, painel diagonal. Nunca rosa sobre azul nem azul sobre rosa; fundo animado muda a cada cena; conteúdo no meio da tela, não no canto de cima.
 - **Design:** itens equivalentes (títulos de colunas e cartões) sempre no mesmo tamanho de fonte; o fio entre colunas com a mesma margem dos dois lados (medido pelo texto, nunca posição fixa).
+- **Quantidade de motion varia no lote (shorts com motion):** nunca todos com a mesma cobertura. Antes dos roteiros, `python3 motion/cobertura.py plano --marca <liv|imigrar> --fala ID=seg ...` sorteia uma meta por short (uns com pouco, outros com muito; Imigrar mais alto, LIV mais contido); o motion entra onde o assunto pede ilustração (lista, número, etapa, comparação, processo, prazo) e o resto fica com a pessoa. Depois, `motion/cobertura.py conferir projetos/<p>/motion/*.json` tem que passar sem o aviso de lote padronizado.
 - **Tela dividida:** motion sempre em tela cheia (nunca cobrir o rosto de um e deixar o outro).
 - **Motion na tela = sem legenda.** O editor tira a legenda sozinho enquanto o motion cobre a tela; o conteúdo da cena fica centralizado na vertical na zona segura (200-1300 px). Maioria alinhada à esquerda, ~1 em 4 cenas centralizada.
 - **CTA nos shorts:** depois da fala final, numa cauda de 3-4s (`--cauda 3.8`) com o CTA animado em tela cheia; vale para a versão A e a B.

@@ -858,7 +858,7 @@ def quadros(dec, fsize, n):
 
 # ---------------------------------------------------------------- 5. render
 def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=None,
-               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda", girar=0.0, dinamico=False, endireitar=False, vinheta=True):
+               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda", girar=0.0, dinamico=False, endireitar=False, vinheta=True, inscreva=True):
     garantir_detector()
     W, H = tamanho_real(video)
     ent_args, ent_filtro = entrada_video(video)
@@ -894,7 +894,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     img_gancho = caixa_texto(gancho, marca, estilo=estilo_caixa) if gancho else None
     img_cta = caixa_texto(cta, marca, estilo=estilo_caixa) if cta else None
     if layout == "youtube":
-        return renderizar_youtube(video, cortes, saida, marca, vinheta=vinheta, so_checar=so_checar)
+        return renderizar_youtube(video, cortes, saida, marca, vinheta=vinheta, so_checar=so_checar, inscreva=inscreva)
     if layout == "quadrado":
         return renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta, total,
                                    seg_gancho, seg_cta, so_checar, girar=girar, dinamico=dinamico, endireitar=endireitar)
@@ -1090,7 +1090,7 @@ def montar_audio(video, cortes, tmp_v, saida, vinheta=None, seg_vinheta=0.0, sfx
     os.remove(tmp_v)
 
 # ---------------------------------------------------------------- 5a. corte longo do YouTube
-def renderizar_youtube(video, cortes, saida, marca, vinheta=True, so_checar=False, lado=(1920, 1080)):
+def renderizar_youtube(video, cortes, saida, marca, vinheta=True, so_checar=False, lado=(1920, 1080), inscreva=True):
     """corte longo 16:9: a cena da live inteira (sem recorte, sem legenda, sem gancho), com a vinheta
     da marca na abertura. Grava ao lado um .tempos.txt com o tempo de cada trecho no vídeo final (capítulos)."""
     W, H = lado
@@ -1135,6 +1135,11 @@ def renderizar_youtube(video, cortes, saida, marca, vinheta=True, so_checar=Fals
         print(f"  trecho {ci + 1}/{len(cortes)} ok")
     enc.stdin.close(); enc.wait()
     montar_audio(video, cortes, tmp_v, saida, vinheta=arq_vin, seg_vinheta=seg_vin)
+    if marca == "liv" and inscreva:                # balão "Inscreva-se" ~1/min, nunca em cima do banner da live
+        import inscricao
+        tmp_i = saida + ".inscreva.mp4"
+        inscricao.aplicar(saida, tmp_i)
+        os.replace(tmp_i, saida)
     return total
 
 
@@ -1562,6 +1567,7 @@ def main():
                     help='CTA animado da marca no fim ("Comente PALAVRA"). Substitui a caixa --cta')
     ap.add_argument("--cta-rotulo", default="Comente", help="texto antes da palavra no --cta-animado")
     ap.add_argument("--sem-vinheta", action="store_true", help="youtube: não põe a vinheta da marca na abertura")
+    ap.add_argument("--sem-inscreva", action="store_true", help="youtube (LIV): não põe o balão Inscreva-se")
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
     a = ap.parse_args()
@@ -1670,7 +1676,7 @@ def main():
         BROLLS.append((os.path.abspath(arq), quando))
     renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, "" if a.cta_animado else a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
                so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima, girar=a.girar,
-               dinamico=a.dinamico, endireitar=a.endireitar, vinheta=not a.sem_vinheta)
+               dinamico=a.dinamico, endireitar=a.endireitar, vinheta=not a.sem_vinheta, inscreva=not a.sem_inscreva)
     animacoes = []
     for x in a.animacao:
         arq, _, t = x.rpartition("@")
