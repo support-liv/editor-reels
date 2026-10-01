@@ -47,7 +47,7 @@ ROTEIRO = {
         dict(t0=6.28, t1=7.80, arq=BR.format(7247829), ss=1.0),     # "não é só encher formulários"
         dict(t0=9.30, t1=11.66, arq=BR.format(8731320), ss=7.5),    # "estratégia jurídica, prova de impacto"
         dict(t0=18.62, t1=19.90, arq=BR.format(39402632), ss=2.0),  # "aqui nos Estados Unidos": orla de Miami
-        dict(t0=24.40, t1=25.70, arq=BR.format(38740033), ss=0.5),  # "projeto de vida": pôr do sol na praia
+        dict(t0=24.40, t1=25.70, arq=BR.format(27947592), ss=0.3),  # "projeto de vida": pôr do sol no píer de Santa Monica (EUA)
     ],
     "burns_arquivos": [TR.format(n) for n in (24, 41, 19, 44)],
     "burns": [3.34, 6.28, 9.30, 14.18, 18.62, 24.4],

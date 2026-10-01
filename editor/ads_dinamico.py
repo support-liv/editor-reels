@@ -21,7 +21,6 @@ CACHE = os.path.expanduser("~/Library/Caches/editor-reels/ads")
 COR = {"azul": (44, 54, 66), "laranja": (255, 110, 31), "bege": (255, 240, 230), "branco": (255, 255, 255),
        "marrom": (148, 89, 67)}
 FONTE = os.path.join(RAIZ, "assets", "fontes", "DarkerGrotesque[wght].ttf")
-SFX = os.path.join(RAIZ, "motion", "sfx", "whoosh.wav")
 _fontes = {}
 
 
@@ -310,6 +309,13 @@ def carregar_burns(arquivos):
     return out
 
 
+def max_volume(arq):
+    """pico do áudio do arquivo em dB (None se não tem áudio)."""
+    r = subprocess.run(["ffmpeg", "-i", arq, "-vn", "-af", "volumedetect", "-f", "null", "-"], capture_output=True, text=True)
+    m = re.search(r"max_volume: (-?[\d.]+) dB", r.stderr)
+    return float(m.group(1)) if m else None
+
+
 def tela(a, b, k=1.0):
     """mistura 'tela' (screen): a luz clareia, o preto não muda nada."""
     return 255.0 - (255.0 - a) * (255.0 - b * k) / 255.0
@@ -464,14 +470,21 @@ def montar(rot, versao, saida, quadros_png=None):
         if i % 150 == 0:
             print(f"  {t:5.1f}s / {dur:.1f}s", flush=True)
     enc.stdin.close(); enc.wait()
-    # áudio: a fala + whoosh baixinho em cada film burn
+    # áudio: a fala + o som do próprio film burn (alinhado com a imagem dele), equalizado por baixo da voz
     ent = ["-i", tmp_v, "-i", base_v]
-    filt, mix = [], ["[1:a]volume=1.0[voz]"]
+    filt, rot_alvo = ["[1:a]volume=1.0[voz]"], rot.get("burn_som_db", -10.0)   # pico do som da transição
+    usados = 0
     for k, c in enumerate(cortes):
-        ent += ["-i", SFX]
-        filt.append(f"[{k + 2}:a]volume=0.22,adelay={int(max(0, c - 0.35) * 1000)}:all=1[w{k}]")
-    rotulos = "[voz]" + "".join(f"[w{k}]" for k in range(len(cortes)))
-    fc = ";".join(mix + filt + [f"{rotulos}amix=inputs={len(cortes) + 1}:normalize=0:duration=first[a]"])
+        arq = rot["burns_arquivos"][k % len(burns)]
+        pico = max_volume(arq)
+        if pico is None:
+            continue
+        ent += ["-i", arq]
+        ini = max(0.0, c - burns[k % len(burns)]["pico"] / FPS)
+        filt.append(f"[{usados + 2}:a]volume={rot_alvo - pico:.1f}dB,afade=t=out:st=1.0:d=0.4,adelay={int(ini * 1000)}:all=1[w{usados}]")
+        usados += 1
+    rotulos = "[voz]" + "".join(f"[w{k}]" for k in range(usados))
+    fc = ";".join(filt + [f"{rotulos}amix=inputs={usados + 1}:normalize=0:duration=first[a]"])
     run(["ffmpeg", "-v", "error", "-y"] + ent + ["-filter_complex", fc, "-map", "0:v", "-map", "[a]",
          "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", saida])
     os.remove(tmp_v)
