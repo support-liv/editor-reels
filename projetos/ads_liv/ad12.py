@@ -3,7 +3,7 @@
     python3 editor/ads_dinamico.py projetos/ads_liv/ad12.py --versao A    # "Médico?" atrás dela no gancho
     python3 editor/ads_dinamico.py projetos/ads_liv/ad12.py --versao B    # tela dividida no gancho
 
-Inserts: médicos (Pexels, conferidos quadro a quadro), sonho americano (Miami), estoque interno da LIV
+Inserts: médicos com postura de autoridade (Pexels, conferidos quadro a quadro: formal, profissional), sonho americano (Miami), estoque interno da LIV
 (Dra. Lívia revisando processo em "baseado em mérito").
 """
 import os
@@ -43,7 +43,7 @@ ROTEIRO = {
         dict(t0=6.44, t1=8.84, arq=BR.format(39402632), ss=1.0),     # "viver aqui nos EUA": orla de Miami
         dict(t0=10.30, t1=11.60, arq=EST.format(                     # "baseado em mérito": Dra. Lívia (estoque LIV)
             "vertical__dra-livia__revisando-processo-formal__mesa-dela__terno-risca-de-giz__por-cima-do-ombro__9s.mp4"), ss=2.0),
-        dict(t0=12.30, t1=13.75, arq=BR.format(6998654), ss=3.0),     # "sem vínculo com empregador": médica no corredor
+        dict(t0=12.30, t1=13.75, arq=BR.format(5453692), ss=2.0),     # "sem vínculo com empregador": médico de braços cruzados
     ],
     "burns_arquivos": [TR.format(n) for n in (24, 41, 19, 44)],
     "burns": [2.95, 6.44, 8.84, 10.30, 13.75],
@@ -51,7 +51,7 @@ ROTEIRO = {
     "burn_forca": 0.9,
     "cta": {"t0": 14.0, "t_seta": 17.84, "linha1": "Faça sua", "linha2": "análise de perfil",
             "linha3": "sem custo, toque em Saiba Mais"},
-    "dividido": {"t0": 0.0, "t1": 1.48, "arq": BR.format(6998552), "ss": 6.0, "y_topo": 220, "y_pessoa": 120,
+    "dividido": {"t0": 0.0, "t1": 1.48, "arq": BR.format(6130565), "ss": 1.0, "y_topo": 300, "y_pessoa": 120,
                  "faixa": {"t0": 0.0, "t1": 1.48, "altura": 230, "cor": "bege", "linhas": [
                      {"y": 960, "tam": 120, "peso": 900, "track": -0.03, "espaco": 0.22,
                       "spans": [sp("Você é", 0.1, tam=96, peso=300, cor="azul"), sp("médico?", 0.5, cor="laranja")]}]}},

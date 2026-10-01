@@ -270,6 +270,53 @@ def escurecer_base(q, forca=0.55):
     return q * (1 - forca * g)[:, None, None]
 
 
+def oculto(bloco, ms, n):
+    """fração do texto (já todo na tela) que a pessoa cobre, no pior trecho do bloco (média por quadro, pega o p90)."""
+    camada = np.zeros((H, W, 3), np.float32)
+    Linhas(dict(bloco, linhas=[dict(l, spans=[dict(s_, t=-10) for s_ in l["spans"]]) for l in bloco["linhas"]])).desenhar(camada, bloco["t0"])
+    alfa = (camada.max(axis=2) > 8).astype(np.float32)
+    tot = alfa.sum()
+    if tot == 0:
+        return 0.0
+    fr = []
+    for i in range(int(bloco["t0"] * FPS), min(n, int(bloco["t1"] * FPS)), 3):
+        m = cv2.resize(ms[i], (W, H)).astype(np.float32) / 255.0
+        fr.append(float((alfa * m).sum() / tot))
+    return float(np.percentile(fr, 90)) if fr else 0.0
+
+
+def ajustar_legibilidade(rot, atras, frente, ms, n, limite=0.18):
+    """texto atrás que não dá pra ler: (1) se tem mais de uma palavra numa linha, quebra em linhas;
+    (2) se ainda não dá, vai pra FRENTE, acima da legenda (mesmo tamanho de leitura). Mostra a medição."""
+    novos_atras = []
+    for b in atras:
+        oc = oculto(b.b, ms, n)
+        print(f"  texto atrás ({b.b['t0']:.1f}s): {oc:.0%} coberto pela pessoa", flush=True)
+        if oc <= limite or b.b.get("forcar_atras"):
+            novos_atras.append(b); continue
+        modo = b.b.get("se_ilegivel", "auto")
+        linhas = b.b["linhas"]
+        if modo in ("auto", "quebrar") and any(len(l["spans"]) > 1 for l in linhas):
+            quebradas, y = [], linhas[0]["y"]
+            for l in linhas:
+                for s_ in l["spans"]:
+                    quebradas.append(dict(l, y=y, spans=[s_])); y += int(l.get("tam", 100) * 0.82)
+            nb = dict(b.b, linhas=quebradas)
+            oc2 = oculto(nb, ms, n)
+            print(f"    quebrando em linhas: {oc2:.0%} coberto", flush=True)
+            if oc2 <= limite:
+                novos_atras.append(Linhas(nb)); continue
+        # na frente, acima da legenda: uma linha, tamanho que caiba na área segura
+        tam = min(max(l.get("tam", 100) for l in linhas), rot.get("tam_frente", 190))
+        y_leg = rot.get("y_legenda", int(H * 0.62))
+        # pé da palavra ~40 px acima da caixa da legenda (respiro), nunca encostado
+        nb = dict(b.b, linhas=[dict(linhas[0], y=y_leg - 88 - int(tam * 0.42),
+                                    spans=[s_ for l in linhas for s_ in l["spans"]], tam=tam)])
+        print(f"    → na frente, acima da legenda", flush=True)
+        frente.append(Linhas(nb))
+    return novos_atras
+
+
 # ------------------------------------------------------------------ legenda 1-3 palavras
 def blocos_legenda(palavras, trocas, destaques):
     ws = []
@@ -400,6 +447,7 @@ def montar(rot, versao, saida, quadros_png=None):
     cortes = rot["burns"] if versao == "A" else rot.get("burns_B", rot["burns"])
     atras = [Linhas(b) for b in rot["atras"] if versao == "A" or not b.get("so_A")]
     frente = [Linhas(b) for b in rot.get("frente", []) if versao == "A" or not b.get("so_A")]
+    atras = ajustar_legibilidade(rot, atras, frente, ms, n, rot.get("limite_oculto", 0.18))
     faixa = Linhas(dividido["faixa"]) if dividido else None
     # legenda: o padrão minimalista da LIV do editor (palavra falada em laranja), sem mexer no editor
     sys.path.insert(0, AQUI)
@@ -429,8 +477,11 @@ def montar(rot, versao, saida, quadros_png=None):
                            stdin=subprocess.PIPE)
     alvo_png = sorted(quadros_png or [])
     m_ant = None
+    ate = rot.get("_ate")
     for i in range(n):
         t = i / FPS
+        if ate and t > ate:
+            break
         z = next((z for z in zooms if z["t0"] <= t < z["t1"]), None)
         s = 1.0
         if z:
@@ -504,6 +555,8 @@ def montar(rot, versao, saida, quadros_png=None):
         if i % 150 == 0:
             print(f"  {t:5.1f}s / {dur:.1f}s", flush=True)
     enc.stdin.close(); enc.wait()
+    if ate:
+        os.remove(tmp_v); return None
     # áudio: a fala + o som do próprio film burn (alinhado com a imagem dele), equalizado por baixo da voz
     ent = ["-i", tmp_v, "-i", base_v]
     filt, rot_alvo = ["[1:a]volume=1.0[voz]"], rot.get("burn_som_db", -10.0)   # pico do som da transição
@@ -538,10 +591,19 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("roteiro"); ap.add_argument("--versao", default="A", choices=["A", "B"])
     ap.add_argument("--quadros", default="", help="segundos pra salvar PNG de conferência (ex.: 1.5,12.8)")
+    ap.add_argument("--ate", type=float, help="prévia: renderiza só até esse segundo (sem áudio), pra conferir quadros")
+    ap.add_argument("--se-ilegivel", choices=["auto", "quebrar", "frente", "atras"], help="força o tratamento do texto atrás")
     a = ap.parse_args()
     rot = carregar_roteiro(a.roteiro)
+    rot["_ate"] = a.ate
+    if a.se_ilegivel:
+        for b in rot.get("atras", []):
+            if a.se_ilegivel == "atras":
+                b["forcar_atras"] = True
+            else:
+                b["se_ilegivel"] = a.se_ilegivel
     os.makedirs(os.path.expanduser(rot["saida"]), exist_ok=True)
-    nome = rot["nome"] + ("_A_texto_atras" if a.versao == "A" else "_B_tela_dividida") + ".mp4"
+    nome = rot["nome"] + ("_A_texto_atras" if a.versao == "A" else "_B_tela_dividida") + (f"_teste_{a.se_ilegivel}" if a.se_ilegivel else "") + ".mp4"
     saida = os.path.join(os.path.expanduser(rot["saida"]), nome)
     qs = [float(x) for x in a.quadros.split(",") if x.strip()]
     print("pronto:", montar(rot, a.versao, saida, qs))
