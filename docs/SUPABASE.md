@@ -17,6 +17,9 @@ Só a palavra de busca sai do Mac. Vídeo de cliente nunca sobe.
 - `editor/supabase_config.json`: URL e chave *publishable* (pública por design; sozinha não acessa nada).
 
 ## Administração (no painel do Supabase ou SQL)
+- Quem pode entrar: e-mail com domínio permitido **e** cadastrado em `usuarios_permitidos` (ou em `administradores`).
+- Liberar uma pessoa: `insert into usuarios_permitidos (email) values ('nome@liv.law');`
+- Tirar o acesso: `delete from usuarios_permitidos where email = 'nome@liv.law';` (e, se for urgente, `acessos_bloqueados`).
 - Domínios liberados: `liv.law` e `imigrareua.com`. Liberar outro: `insert into dominios_permitidos (dominio) values ('exemplo.com');`
 - Bloquear uma pessoa: `insert into acessos_bloqueados (email, motivo) values ('fulano@liv.law', 'saiu do time');`
 - Ver uso: `select email, consulta, criado_em from uso_api order by criado_em desc limit 50;`

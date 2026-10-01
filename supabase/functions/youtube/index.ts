@@ -35,12 +35,13 @@ Deno.serve(async (req) => {
   const { data: u, error: eu } = await admin.auth.getUser(token);
   if (eu || !u?.user?.email) return json({ erro: "sessão inválida: python3 editor/conta.py entrar" }, 401);
   const email = u.user.email.toLowerCase();
-  const [{ data: dom }, { data: bloq }, { data: adm }] = await Promise.all([
+  const [{ data: dom }, { data: bloq }, { data: adm }, { data: lista }] = await Promise.all([
     admin.from("dominios_permitidos").select("dominio").eq("dominio", email.split("@")[1] ?? "").maybeSingle(),
     admin.from("acessos_bloqueados").select("email").eq("email", email).maybeSingle(),
     admin.from("administradores").select("email").eq("email", email).maybeSingle(),
+    admin.from("usuarios_permitidos").select("email").eq("email", email).maybeSingle(),
   ]);
-  if (!dom || bloq) return json({ erro: "acesso não autorizado para este e-mail" }, 403);
+  if (!dom || bloq || !(lista || adm)) return json({ erro: "acesso não autorizado para este e-mail" }, 403);
 
   let p: any;
   try { p = await req.json(); } catch { return json({ erro: "corpo JSON inválido" }, 400); }

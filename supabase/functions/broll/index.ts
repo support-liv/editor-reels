@@ -30,11 +30,13 @@ Deno.serve(async (req) => {
   const email = u.user.email.toLowerCase();
   const dominio = email.split("@")[1] ?? "";
 
-  const [{ data: dom }, { data: bloq }] = await Promise.all([
+  const [{ data: dom }, { data: bloq }, { data: lista }, { data: adm }] = await Promise.all([
     admin.from("dominios_permitidos").select("dominio").eq("dominio", dominio).maybeSingle(),
     admin.from("acessos_bloqueados").select("email").eq("email", email).maybeSingle(),
+    admin.from("usuarios_permitidos").select("email").eq("email", email).maybeSingle(),
+    admin.from("administradores").select("email").eq("email", email).maybeSingle(),
   ]);
-  if (!dom || bloq) return json({ erro: "acesso não autorizado para este e-mail" }, 403);
+  if (!dom || bloq || !(lista || adm)) return json({ erro: "acesso não autorizado para este e-mail" }, 403);
 
   const desde = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
   const { count } = await admin.from("uso_api").select("id", { count: "exact", head: true })
