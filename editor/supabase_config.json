@@ -1,0 +1,5 @@
+{
+  "_comentario": "Projeto Supabase do editor (reels-editor). A chave publishable é pública por design: sozinha não dá acesso a nada (tabelas fechadas e a função exige login). Chaves de APIs pagas ficam só nos secrets do projeto.",
+  "url": "https://eteolienohxnxojacqec.supabase.co",
+  "publishable_key": "sb_publishable_84yYnmVA-gw_Iq1z4IlYYQ_qdXYeX6C"
+}
