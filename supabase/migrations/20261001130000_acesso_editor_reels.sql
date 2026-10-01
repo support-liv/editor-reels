@@ -53,3 +53,6 @@ grant usage on schema public to supabase_auth_admin;
 grant select on public.dominios_permitidos to supabase_auth_admin;
 grant execute on function public.hook_cadastro_por_dominio(jsonb) to supabase_auth_admin;
 revoke execute on function public.hook_cadastro_por_dominio(jsonb) from authenticated, anon, public;
+
+-- 01/10/2026: usuários da Imigrar também
+insert into public.dominios_permitidos (dominio, observacao) values ('imigrareua.com', 'Imigrar EUA') on conflict do nothing;

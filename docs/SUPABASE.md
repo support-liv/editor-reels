@@ -17,7 +17,7 @@ Só a palavra de busca sai do Mac. Vídeo de cliente nunca sobe.
 - `editor/supabase_config.json`: URL e chave *publishable* (pública por design; sozinha não acessa nada).
 
 ## Administração (no painel do Supabase ou SQL)
-- Liberar um domínio: `insert into dominios_permitidos (dominio) values ('imigrar.com');`
+- Domínios liberados: `liv.law` e `imigrareua.com`. Liberar outro: `insert into dominios_permitidos (dominio) values ('exemplo.com');`
 - Bloquear uma pessoa: `insert into acessos_bloqueados (email, motivo) values ('fulano@liv.law', 'saiu do time');`
 - Ver uso: `select email, consulta, criado_em from uso_api order by criado_em desc limit 50;`
 - Trocar a chave do Pexels: Edge Functions → Secrets → `PEXELS_API_KEY` (todo mundo passa a usar a nova na hora).
