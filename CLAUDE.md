@@ -63,3 +63,8 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 
 ## Git
 Commits locais à vontade; `git push` só quando a pessoa pedir. Mudança no editor: registrar no `CHANGELOG.md` e nos docs.
+
+## Publicação (YouTube)
+- Sem auditoria do Google, a API do YouTube só sobe vídeo privado: a publicação é feita por uma pessoa no Studio.
+- Depois dos cortes, escreva `projetos/<projeto>/publicacao.json` (título até 100 caracteres, descrição com o CTA do canal e hashtags, tags) a partir do que foi dito no vídeo e gere o pacote: `python3 editor/pacote_publicacao.py projetos/<projeto>/publicacao.json --inicio AAAA-MM-DD --hora 12:00 --por-dia 1`. Sai uma pasta por short (vídeo + titulo/descricao/tags .txt) e a `AGENDA.md` com checklist. Use `--copiar` se a pasta for para o Drive (o padrão é link simbólico).
+
