@@ -70,5 +70,7 @@ Commits locais à vontade; `git push` só quando a pessoa pedir. Mudança no edi
 - Login no servidor do time: `python3 editor/conta.py entrar --email <email>` (rodar em segundo plano; a pessoa clica no link do e-mail e a sessão fica no Chaveiro do Mac).
 
 ## Publicação (YouTube)
-- Envio direto pelo servidor do time: escreva `projetos/<projeto>/publicacao.json` (título até 100 caracteres, descrição com o CTA do canal e hashtags, tags) a partir do que foi dito no vídeo e rode `python3 editor/youtube.py lote projetos/<projeto>/publicacao.json --canal <liv|imigrar> --inicio AAAA-MM-DD --hora 12:00`. Publicar é ação externa: confirme a lista com o usuário antes de enviar, e comece com `--so 1` num canal novo.
-- Os vídeos sobem privados (projeto sem auditoria do Google); se o canal estiver restrito, alguém programa pelo Studio. Ver `docs/SUPABASE.md`.
+- Caminho principal: `editor/studio.py`, que envia pelo YouTube Studio com o login da própria pessoa (editor ou administrador do canal; não precisa ser dono nem de credencial do Google). Escreva `projetos/<projeto>/publicacao.json` (título até 100 caracteres, descrição com o CTA do canal e hashtags, tags) e rode `python3 editor/studio.py lote projetos/<projeto>/publicacao.json --canal <liv|imigrar>` em segundo plano (Bash com run_in_background): sem janela, a pessoa segue usando o Mac.
+- Primeiro uso no Mac: `python3 editor/studio.py abrir` abre o "Chrome do editor" (perfil próprio); a pessoa faz login com a conta dela (a senha nunca passa pelo Claude). Depois `studio.py fechar`; `studio.py status` mostra os canais que a conta enxerga. IDs dos canais em `editor/canais_youtube.json`.
+- Publicar é ação externa: confirme a lista com o usuário antes de cada lote, e comece com `--so 1` num canal novo. Os vídeos sobem privados; alguém programa depois pelo Studio.
+- `editor/youtube.py` (API pelo Supabase) fica como alternativa, mas só funciona com a conta dona do canal. Ver `docs/SUPABASE.md`.
