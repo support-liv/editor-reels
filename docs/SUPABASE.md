@@ -21,3 +21,15 @@ Só a palavra de busca sai do Mac. Vídeo de cliente nunca sobe.
 - Bloquear uma pessoa: `insert into acessos_bloqueados (email, motivo) values ('fulano@liv.law', 'saiu do time');`
 - Ver uso: `select email, consulta, criado_em from uso_api order by criado_em desc limit 50;`
 - Trocar a chave do Pexels: Edge Functions → Secrets → `PEXELS_API_KEY` (todo mundo passa a usar a nova na hora).
+
+## YouTube (envio dos shorts)
+- `supabase/functions/youtube`: conecta canais (só quem está em `administradores`) e abre a sessão de envio de cada vídeo.
+  A autorização do canal fica no Vault (`youtube_canais` guarda só o id); o arquivo vai do Mac direto pro YouTube.
+- Secrets: `YOUTUBE_CLIENT_ID` e `YOUTUBE_CLIENT_SECRET` (cliente OAuth do tipo **App para computador**).
+- Tela de consentimento do Google em **Produção** (em "Teste" a autorização expira em 7 dias).
+- Conectar um canal (uma vez): `python3 editor/youtube.py conectar --canal liv --nome "LIV Immigration Law"`.
+- Enviar: `python3 editor/youtube.py lote projetos/<projeto>/publicacao.json --canal liv --inicio AAAA-MM-DD --hora 12:00`.
+  Sobe como privado, com título, descrição, tags e (se pedido) o horário de publicação. Sem auditoria do Google, o canal
+  pode ficar restrito a privado: aí alguém programa pelo Studio.
+- Histórico: `select email, titulo, status, video_id, criado_em from youtube_envios order by criado_em desc;`
+- Revogar: remover o app em myaccount.google.com/permissions da conta do canal (e conectar de novo se precisar).
