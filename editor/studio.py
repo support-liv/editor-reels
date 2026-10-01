@@ -11,7 +11,8 @@ uma vez na janela "Chrome do editor" (a senha é digitada por ela, nunca passa p
     python3 editor/studio.py lote projetos/live80/publicacao.json --canal liv --agendar --plano   # confere antes
     python3 editor/studio.py lote projetos/live80/publicacao.json --canal liv --agendar [--so S2]
 
-Sem --agendar o vídeo fica privado; com ele, 1 por dia às 12h a partir do dia seguinte ao último short do canal.
+Shorts: --agendar programa 1 por dia às 12h a partir do dia seguinte ao último short do canal.
+Longos (--tipo longo): sempre PRIVADOS, sem agendar e sem estreia (alguém programa depois pelo Studio).
 Sempre marca: não é para crianças, sem promoção paga, sem conteúdo alterado/sintético. Descrição pelo modelo do
 canal (editor/descricoes.py). Canais e IDs em editor/canais_youtube.json.
 """
@@ -281,7 +282,7 @@ def _finalizar(p, publicar_em, log, estreia=False):
         vista = p.locator("#datepicker-trigger").inner_text().strip(), hora.input_value().strip()
         if vista != (_data_pt(publicar_em), publicar_em.strftime("%H:%M")):
             raise RuntimeError(f"o Studio não aceitou a data: mostra {vista}")
-        if estreia:                                              # longos da LIV saem como Estreia
+        if estreia:                                              # só se pedido explicitamente (padrão: longo privado)
             caixa = p.locator("#schedule-type-checkbox #checkbox").first
             if caixa.get_attribute("aria-checked") != "true":
                 p.locator("#schedule-type-checkbox").first.click()
@@ -360,6 +361,52 @@ def _conferir(ctx, link, titulo, estado):
         q.close()
 
 
+def atualizar(video_id, descricao=None, privado=False, log=print):
+    """corrige um vídeo já enviado: troca a descrição e/ou deixa privado (tira agendamento/estreia) e salva."""
+    pw, nav, ctx = conectar()
+    p = ctx.new_page()
+    try:
+        p.goto(f"https://studio.youtube.com/video/{video_id}/edit", wait_until="domcontentloaded")
+        p.locator("#title-textarea #textbox").wait_for(state="visible", timeout=60000)
+        p.wait_for_timeout(2500)
+        if descricao is not None:
+            _preencher(p.locator("#description-textarea #textbox"), descricao)
+            p.wait_for_timeout(800)
+        if privado:
+            p.locator("ytcp-video-metadata-visibility").first.click()
+            radio = p.locator("tp-yt-paper-radio-button[name='PRIVATE']").filter(visible=True).first
+            radio.wait_for(state="visible", timeout=20000)
+            if p.locator("#first-container-expand-button").is_visible():
+                p.locator("#first-container-expand-button").click(); p.wait_for_timeout(600)
+            radio.click(); p.wait_for_timeout(600)
+            p.get_by_role("button", name=re.compile(r"^\s*(Concluir|Concluído|Done)\s*$", re.I)).filter(visible=True).first.click()
+            p.wait_for_timeout(1500)
+        p.locator("ytcp-button#save").click()
+        p.locator("ytcp-button#save[disabled], ytcp-button#save[aria-disabled='true']").wait_for(timeout=60000)
+        p.wait_for_timeout(2000)
+        t = p.locator("#title-textarea #textbox").inner_text().strip()
+    except Exception:
+        p.screenshot(path=os.path.expanduser("~/Library/Caches/editor-reels/studio_erro.png"))
+        raise
+    finally:
+        p.close(); pw.stop()
+    # confere relendo do Studio
+    pw, nav, ctx = conectar()
+    q = ctx.new_page()
+    try:
+        q.goto(f"https://studio.youtube.com/video/{video_id}/edit", wait_until="domcontentloaded")
+        q.locator("#title-textarea #textbox").wait_for(state="visible", timeout=60000); q.wait_for_timeout(2500)
+        d = q.locator("#description-textarea #textbox").inner_text().strip()
+        v = " ".join(q.locator("ytcp-video-metadata-visibility").first.inner_text().split())
+    finally:
+        q.close(); pw.stop()
+    if descricao is not None and " ".join(d.split()) != " ".join(descricao.split()):
+        raise RuntimeError(f"{video_id}: a descrição salva não confere")
+    if privado and "Privado" not in v:
+        raise RuntimeError(f"{video_id}: não ficou privado ({v})")
+    return v
+
+
 def reprogramar(video_id, quando):
     """muda a data de publicação de um vídeo programado (página de edição → Visibilidade → Salvar)."""
     pw, nav, ctx = conectar()
@@ -422,7 +469,6 @@ def main():
     l.add_argument("--inicio", help="AAAA-MM-DD (em vez de ler o último do canal)"); l.add_argument("--hora", default="12:00")
     l.add_argument("--tipo", default="short", choices=["short", "longo"])
     l.add_argument("--plano", action="store_true", help="só mostra o que vai subir (não envia)")
-    l.add_argument("--sem-estreia", action="store_true", help="longo programado sem 'Definir como Estreia'")
     a = ap.parse_args()
     if a.cmd == "abrir":
         abrir()
@@ -440,6 +486,8 @@ def main():
                                  [t.strip() for t in a.tags.split(",") if t.strip()], quando))
     else:
         cfg = json.load(open(os.path.expanduser(a.json)))
+        if a.tipo == "longo" and a.agendar:
+            sys.exit("Regra do time: vídeo longo sobe PRIVADO (sem agendar e sem estreia). Rode sem --agendar.")
         chave = "shorts" if a.tipo == "short" else "longos"
         if a.so:
             cfg[chave] = [s for s in cfg[chave] if s["id"] in a.so]
@@ -450,7 +498,7 @@ def main():
                 continue
             print(f"{s['id']}: enviando ({quando})…", flush=True)
             print(f"{s['id']}: {'programado ' + quando if h else 'enviado (privado)'} "
-                  f"{enviar(s['video'], a.canal, s['titulo'], desc, s.get('tags', []), h, estreia=bool(h) and a.tipo == 'longo' and not a.sem_estreia)}", flush=True)
+                  f"{enviar(s['video'], a.canal, s['titulo'], desc, s.get('tags', []), h)}", flush=True)
             if h:
                 _anotar(a.canal, a.tipo, s["id"], h)
         if not a.plano:
