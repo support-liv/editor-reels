@@ -16,6 +16,19 @@ CFG = json.load(open(os.path.join(AQUI, "supabase_config.json")))
 SERVICO_CHAVEIRO = "editor-reels-supabase"
 
 
+def _contexto_ssl():
+    """certificados: o Python do python.org no Mac vem sem eles; usa o certifi quando existir."""
+    import ssl
+    try:
+        import certifi
+        return ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        return ssl.create_default_context()
+
+
+SSL = _contexto_ssl()
+
+
 def _req(caminho, corpo=None, token=None, metodo="POST"):
     cab = {"apikey": CFG["publishable_key"], "Content-Type": "application/json"}
     if token:
@@ -23,7 +36,7 @@ def _req(caminho, corpo=None, token=None, metodo="POST"):
     dados = json.dumps(corpo).encode() if corpo is not None else None
     r = urllib.request.Request(CFG["url"] + caminho, data=dados, headers=cab, method=metodo)
     try:
-        with urllib.request.urlopen(r, timeout=60) as resp:
+        with urllib.request.urlopen(r, timeout=60, context=SSL) as resp:
             txt = resp.read().decode()
             return resp.status, (json.loads(txt) if txt else {})
     except urllib.error.HTTPError as e:

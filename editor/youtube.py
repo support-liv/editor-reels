@@ -71,7 +71,7 @@ def enviar(video, canal, titulo, descricao, tags, publicar_em=None):
         req = urllib.request.Request(r["upload_url"], data=f, method="PUT",
                                      headers={"Content-Type": "video/mp4", "Content-Length": str(tam)})
         try:
-            with urllib.request.urlopen(req, timeout=1800) as resp:
+            with urllib.request.urlopen(req, timeout=1800, context=conta.SSL) as resp:
                 vid = json.loads(resp.read().decode()).get("id")
         except urllib.error.HTTPError as e:
             chamar({"acao": "concluir", "envio_id": r["envio_id"], "video_id": ""})

@@ -36,7 +36,8 @@ def baixar(video, altura_max=1920):
     os.makedirs(CACHE, exist_ok=True)
     destino = os.path.join(CACHE, f"pexels_{video['id']}.mp4")
     if not os.path.exists(destino):
-        urllib.request.urlretrieve(melhor_arquivo(video, altura_max)["link"], destino)
+        with urllib.request.urlopen(melhor_arquivo(video, altura_max)["link"], context=conta.SSL) as r, open(destino, "wb") as f:
+            f.write(r.read())
     json.dump({k: video[k] for k in ("id", "pagina", "autor", "autor_url", "fonte", "duracao")},
               open(destino.replace(".mp4", ".json"), "w"), ensure_ascii=False)
     return destino
