@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
     if (p.acao === "url_autorizacao") {
       const q = new URLSearchParams({
         client_id: Deno.env.get("YOUTUBE_CLIENT_ID")!, redirect_uri: redirect, response_type: "code", scope: ESCOPO,
-        access_type: "offline", prompt: "consent", code_challenge: String(p.code_challenge), code_challenge_method: "S256",
+        access_type: "offline", prompt: "select_account consent", code_challenge: String(p.code_challenge), code_challenge_method: "S256",
         state: String(p.state ?? ""),
       });
       return json({ url: `https://accounts.google.com/o/oauth2/v2/auth?${q}` });
