@@ -70,6 +70,7 @@ Commits locais à vontade; `git push` só quando a pessoa pedir. Mudança no edi
 - Login no servidor do time: `python3 editor/conta.py entrar --email <email>` (rodar em segundo plano; a pessoa clica no link do e-mail e a sessão fica no Chaveiro do Mac).
 
 ## Publicação (YouTube)
+- **Canais não se misturam:** vídeo da LIV só vai pro canal da LIV, e da Imigrar só pro da Imigrar (nem para procurar). O canal sai da marca do projeto.
 - Caminho principal: `editor/studio.py`, que envia pelo YouTube Studio com o login da própria pessoa (editor ou administrador do canal; não precisa ser dono nem de credencial do Google). Roda num Chrome **invisível** (`--headless=new`) com o perfil do editor: rode com Bash `run_in_background` e a pessoa segue usando o Mac. Se a janela do login estiver aberta, o script fecha e usa o invisível; no fim do lote fecha tudo.
 - Primeiro uso no Mac: `python3 editor/studio.py abrir` abre o "Chrome do editor" (perfil próprio, com janela); a pessoa faz login com a conta dela (a senha nunca passa pelo Claude). Depois `studio.py fechar`. `studio.py status` lista os canais que a conta enxerga; IDs em `editor/canais_youtube.json` (liv, imigrar).
 - `projetos/<projeto>/publicacao.json`: por vídeo `titulo` (até 100 caracteres, no estilo do canal: pergunta sem resposta, 1 palavra em MAIÚSCULAS, emoji, 2 hashtags no fim), `resumo` (2 parágrafos fiéis ao que é falado; transcreva com Whisper local), `hashtags` (do vídeo) e `tags`. Longo: `resumo` (abertura) + `topicos` [[título, explicação], ...].

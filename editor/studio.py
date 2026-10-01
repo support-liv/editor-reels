@@ -144,7 +144,7 @@ def _preencher(campo, texto):
     campo.press("Meta+A")
     campo.press("Backspace")
     if texto:
-        campo.type(texto, delay=5)
+        campo.type(texto, delay=5, timeout=0)                     # descrição de longo leva mais de 30 s digitando
 
 
 MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"]
@@ -211,7 +211,7 @@ def _anexar(ctx, p, video):
         cdp.detach()
 
 
-def enviar(video, canal, titulo, descricao, tags, publicar_em=None, log=print):
+def enviar(video, canal, titulo, descricao, tags, publicar_em=None, log=print, estreia=False):
     """sobe pelo Studio. publicar_em (datetime no fuso de São Paulo) programa; sem ele, fica privado."""
     cid = canais().get(canal, {}).get("id")
     if not cid:
@@ -249,7 +249,7 @@ def enviar(video, canal, titulo, descricao, tags, publicar_em=None, log=print):
             campo.wait_for(timeout=20000)
             campo.click()
             campo.type(",".join(tags) + ",", delay=5)
-        link = _finalizar(p, publicar_em, log)
+        link = _finalizar(p, publicar_em, log, estreia)
         _conferir(ctx, link, titulo, "Programado" if publicar_em else "Privado")
         return link
     except Exception:
@@ -260,7 +260,7 @@ def enviar(video, canal, titulo, descricao, tags, publicar_em=None, log=print):
         p.close(); pw.stop()
 
 
-def _finalizar(p, publicar_em, log):
+def _finalizar(p, publicar_em, log, estreia=False):
     """da etapa de detalhes até a confirmação do Studio: visibilidade/agendamento, espera do envio e "Programar"."""
     privado = p.locator("tp-yt-paper-radio-button[name='PRIVATE']")
     for _ in range(4):                                           # Detalhes → Elementos → Verificações → Visibilidade
@@ -281,12 +281,19 @@ def _finalizar(p, publicar_em, log):
         vista = p.locator("#datepicker-trigger").inner_text().strip(), hora.input_value().strip()
         if vista != (_data_pt(publicar_em), publicar_em.strftime("%H:%M")):
             raise RuntimeError(f"o Studio não aceitou a data: mostra {vista}")
+        if estreia:                                              # longos da LIV saem como Estreia
+            caixa = p.locator("#schedule-type-checkbox #checkbox").first
+            if caixa.get_attribute("aria-checked") != "true":
+                p.locator("#schedule-type-checkbox").first.click()
+                p.wait_for_timeout(800)
+            if caixa.get_attribute("aria-checked") != "true":
+                raise RuntimeError("não consegui marcar 'Definir como Estreia'")
     else:
         p.locator("tp-yt-paper-radio-button[name='PRIVATE']").click()
     link = p.locator("ytcp-video-info a, .video-url-fadeable a").first.get_attribute("href", timeout=30000)
     # espera o arquivo subir e as verificações terminarem: fechar a página antes deixa o vídeo como rascunho
     anterior = None
-    for _ in range(1800):
+    for _ in range(5400):                                   # até 3 h (vídeo longo + verificações)
         txt = " ".join(p.locator("ytcp-uploads-dialog ytcp-video-upload-progress").first.inner_text(timeout=10000).split())
         if txt != anterior:
             log(f"  progresso: {txt[:90]}"); anterior = txt
@@ -346,7 +353,8 @@ def _conferir(ctx, link, titulo, estado):
         q.wait_for_timeout(2500)
         t = q.locator("#title-textarea #textbox").inner_text().strip()
         v = q.locator("ytcp-video-metadata-visibility").first.inner_text(timeout=15000)
-        if t != titulo.strip() or estado not in v:
+        ok = estado in v or (estado == "Programado" and re.search(r"Estreia|Premiere", v))
+        if t != titulo.strip() or not ok:
             raise RuntimeError(f"o Studio não confirmou o envio de {vid}: título '{t[:40]}', visibilidade '{' '.join(v.split())}'")
     finally:
         q.close()
@@ -414,6 +422,7 @@ def main():
     l.add_argument("--inicio", help="AAAA-MM-DD (em vez de ler o último do canal)"); l.add_argument("--hora", default="12:00")
     l.add_argument("--tipo", default="short", choices=["short", "longo"])
     l.add_argument("--plano", action="store_true", help="só mostra o que vai subir (não envia)")
+    l.add_argument("--sem-estreia", action="store_true", help="longo programado sem 'Definir como Estreia'")
     a = ap.parse_args()
     if a.cmd == "abrir":
         abrir()
@@ -441,7 +450,7 @@ def main():
                 continue
             print(f"{s['id']}: enviando ({quando})…", flush=True)
             print(f"{s['id']}: {'programado ' + quando if h else 'enviado (privado)'} "
-                  f"{enviar(s['video'], a.canal, s['titulo'], desc, s.get('tags', []), h)}", flush=True)
+                  f"{enviar(s['video'], a.canal, s['titulo'], desc, s.get('tags', []), h, estreia=bool(h) and a.tipo == 'longo' and not a.sem_estreia)}", flush=True)
             if h:
                 _anotar(a.canal, a.tipo, s["id"], h)
         if not a.plano:
