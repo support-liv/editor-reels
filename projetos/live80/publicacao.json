@@ -133,5 +133,49 @@
         "#LIVImmigration"
       ]
     }
+  ],
+  "longos": [
+    {
+      "id": "L2",
+      "video": "~/Desktop/LIVE_80/corte_longo/L2_ajuste_de_status.mp4",
+      "titulo": "Ajuste de Status nos EUA: quando fazer e quando pode ser um ERRO no seu Green Card?",
+      "resumo": "Este vídeo traz uma análise sobre o ajuste de status nos EUA: quando ele faz sentido, quando pode atrapalhar o seu planejamento e quais caminhos permitem morar e trabalhar legalmente no país enquanto o processo de green card avança, além da diferença prática entre ajuste de status e mudança de status para um visto temporário.",
+      "topicos": [
+        [
+          "Patrocínio de Empresa e o Caminho Mais Rápido",
+          "Por que o processo com sponsor passa pelo Departamento de Trabalho (prevailing wage, publicação da vaga e Labor Certification), etapa que hoje leva cerca de dois anos, e por que o EB-2 com patrocinador tende a ser mais rápido que o EB-3."
+        ],
+        [
+          "Ajuste de Status x Mudança de Status",
+          "A diferença entre o ajuste de status, que leva ao green card, e a troca para um visto temporário como O-1 ou H-1B, que vale a partir da aprovação, além da exceção do EB-1C (transferência executiva)."
+        ],
+        [
+          "EB-2 NIW e o Dates for Filing de Março de 2026",
+          "Por que hoje não é possível entrar com um EB-2 NIW e já fazer o ajuste de status, já que a data de prioridade precisa ser anterior ao Dates for Filing de março de 2026, e por que quem protocolou antes disso já pode ajustar."
+        ],
+        [
+          "Imigração é um Jogo de Médio e Longo Prazo",
+          "A importância de protocolar e garantir uma data de prioridade como parte do planejamento, e por que os vistos temporários são o caminho para morar e trabalhar nos EUA com rapidez enquanto o processo imigratório corre em paralelo."
+        ],
+        [
+          "Por que o Ajuste Não Pode Ser o Seu Plano A",
+          "Os riscos de protocolar o ajuste antes da aprovação da petição, como demonstrar intenção imigratória e prejudicar um E-2 no consulado, e a alternativa de mudar para um visto que autorize o trabalho até a aprovação da elegibilidade."
+        ],
+        [
+          "Começar pelo Brasil e Terminar nos EUA",
+          "As duas etapas do processo de green card, a elegibilidade no USCIS e a etapa final por ajuste de status ou pelo consulado (NVC), a restrição de viagem durante o ajuste (salvo exceções como L-1 e H-1B) e as categorias que permitem o ajuste: EB-1, EB-2, EB-3, EB-5 e família."
+        ]
+      ],
+      "tags": [
+        "ajuste de status",
+        "mudança de status",
+        "green card",
+        "EB-2 NIW",
+        "EB-3",
+        "visto temporário",
+        "Labor Certification",
+        "imigração EUA"
+      ]
+    }
   ]
 }

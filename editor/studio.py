@@ -155,6 +155,29 @@ def _data_pt(d):
     return f"{d.day} de {MESES[d.month - 1]}. de {d.year}"
 
 
+AGENDA = os.path.expanduser("~/Library/Application Support/editor-reels/agenda_youtube.json")
+
+
+def _anotar(canal, tipo, vid_id, quando):
+    """guarda o que já foi programado: a lista do Studio demora a mostrar o vídeo recém-enviado."""
+    try:
+        ag = json.load(open(AGENDA))
+    except Exception:
+        ag = []
+    ag.append({"canal": canal, "tipo": tipo, "id": vid_id, "quando": quando.isoformat()})
+    os.makedirs(os.path.dirname(AGENDA), exist_ok=True)
+    json.dump(ag, open(AGENDA, "w"), ensure_ascii=False, indent=1)
+
+
+def _ultima_anotada(canal, tipo):
+    try:
+        ds = [dt.datetime.fromisoformat(x["quando"]).date() for x in json.load(open(AGENDA))
+              if x["canal"] == canal and x["tipo"] == tipo]
+        return max(ds) if ds else None
+    except Exception:
+        return None
+
+
 def ultima_data(canal, aba="short"):
     """data mais recente entre os vídeos da aba (programados ou publicados), lida da lista do Studio."""
     cid = canais()[canal]["id"]
@@ -175,6 +198,19 @@ def ultima_data(canal, aba="short"):
     return max(achadas) if achadas else None
 
 
+def _anexar(ctx, p, video):
+    """entrega o caminho do arquivo direto ao Chrome (mesmo Mac): nada de copiar o vídeo pela conexão de controle."""
+    cdp = ctx.new_cdp_session(p)
+    try:
+        raiz = cdp.send("DOM.getDocument", {"depth": -1, "pierce": True})["root"]["nodeId"]
+        no = cdp.send("DOM.querySelector", {"nodeId": raiz, "selector": "input[type=file]"})["nodeId"]
+        if not no:
+            raise RuntimeError("campo de arquivo do Studio não encontrado")
+        cdp.send("DOM.setFileInputFiles", {"files": [video], "nodeId": no})
+    finally:
+        cdp.detach()
+
+
 def enviar(video, canal, titulo, descricao, tags, publicar_em=None, log=print):
     """sobe pelo Studio. publicar_em (datetime no fuso de São Paulo) programa; sem ele, fica privado."""
     cid = canais().get(canal, {}).get("id")
@@ -188,9 +224,19 @@ def enviar(video, canal, titulo, descricao, tags, publicar_em=None, log=print):
         if "accounts.google.com" in p.url:
             sys.exit("O Chrome do editor não está logado: faça login nele e tente de novo.")
         p.wait_for_selector("input[type=file]", state="attached", timeout=60000)
-        p.set_input_files("input[type=file]", video)
+        p.wait_for_timeout(2000)
+        criancas = p.locator("tp-yt-paper-radio-button[name='VIDEO_MADE_FOR_KIDS_NOT_MFK']")
+        for tentativa in range(2):
+            _anexar(ctx, p, video)
+            try:
+                criancas.wait_for(state="visible", timeout=120000)      # formulário de detalhes aberto de verdade
+                break
+            except Exception:
+                if tentativa:
+                    raise
+                log("  o Studio não abriu os detalhes, anexando de novo…")
         log("  arquivo enviado ao Studio, preenchendo os dados…")
-        p.wait_for_selector("#title-textarea #textbox", timeout=120000)
+        p.locator("#title-textarea #textbox").wait_for(state="visible", timeout=60000)
         p.wait_for_timeout(1500)
         _preencher(p.locator("#title-textarea #textbox"), titulo)
         _preencher(p.locator("#description-textarea #textbox"), descricao)
@@ -203,33 +249,8 @@ def enviar(video, canal, titulo, descricao, tags, publicar_em=None, log=print):
             campo.wait_for(timeout=20000)
             campo.click()
             campo.type(",".join(tags) + ",", delay=5)
-        for _ in range(3):                                           # Detalhes → Elementos → Verificações → Visibilidade
-            p.locator("#next-button").click()
-            p.wait_for_timeout(1200)
-        if publicar_em:
-            p.locator("#second-container-expand-button").click()
-            p.wait_for_timeout(800)
-            p.locator("#datepicker-trigger").click()
-            data = p.locator("ytcp-date-picker tp-yt-paper-input input").first
-            data.fill(_data_pt(publicar_em)); data.press("Enter")
-            p.wait_for_timeout(600)
-            hora = p.locator("#time-of-day-container input").first
-            hora.fill(publicar_em.strftime("%H:%M")); hora.press("Enter")
-            p.wait_for_timeout(600)
-            vista = p.locator("#datepicker-trigger").inner_text().strip(), hora.input_value().strip()
-            if vista != (_data_pt(publicar_em), publicar_em.strftime("%H:%M")):
-                raise RuntimeError(f"o Studio não aceitou a data: mostra {vista}")
-        else:
-            p.locator("tp-yt-paper-radio-button[name='PRIVATE']").click()
-        link = p.locator("ytcp-video-info a, .video-url-fadeable a").first.get_attribute("href", timeout=30000)
-        # espera o envio do arquivo terminar antes de fechar (fechar no meio cancela o upload)
-        for _ in range(900):
-            txt = (p.locator("ytcp-video-upload-progress .progress-label").first.inner_text(timeout=5000) or "").lower()
-            if not re.search(r"enviando|uploading|\d+\s*%", txt):
-                break
-            p.wait_for_timeout(2000)
-        p.locator("#done-button").click()
-        p.wait_for_timeout(4000)
+        link = _finalizar(p, publicar_em, log)
+        _conferir(ctx, link, titulo, "Programado" if publicar_em else "Privado")
         return link
     except Exception:
         os.makedirs(os.path.expanduser("~/Library/Caches/editor-reels"), exist_ok=True)
@@ -239,15 +260,139 @@ def enviar(video, canal, titulo, descricao, tags, publicar_em=None, log=print):
         p.close(); pw.stop()
 
 
+def _finalizar(p, publicar_em, log):
+    """da etapa de detalhes até a confirmação do Studio: visibilidade/agendamento, espera do envio e "Programar"."""
+    privado = p.locator("tp-yt-paper-radio-button[name='PRIVATE']")
+    for _ in range(4):                                           # Detalhes → Elementos → Verificações → Visibilidade
+        if privado.is_visible():
+            break
+        p.locator("#next-button").click()
+        p.wait_for_timeout(1200)
+    if publicar_em:
+        p.locator("#second-container-expand-button").click()
+        p.wait_for_timeout(800)
+        p.locator("#datepicker-trigger").click()
+        data = p.locator("ytcp-date-picker tp-yt-paper-input input").first
+        data.fill(_data_pt(publicar_em)); data.press("Enter")
+        p.wait_for_timeout(600)
+        hora = p.locator("#time-of-day-container input").first
+        hora.fill(publicar_em.strftime("%H:%M")); hora.press("Enter")
+        p.wait_for_timeout(600)
+        vista = p.locator("#datepicker-trigger").inner_text().strip(), hora.input_value().strip()
+        if vista != (_data_pt(publicar_em), publicar_em.strftime("%H:%M")):
+            raise RuntimeError(f"o Studio não aceitou a data: mostra {vista}")
+    else:
+        p.locator("tp-yt-paper-radio-button[name='PRIVATE']").click()
+    link = p.locator("ytcp-video-info a, .video-url-fadeable a").first.get_attribute("href", timeout=30000)
+    # espera o arquivo subir e as verificações terminarem: fechar a página antes deixa o vídeo como rascunho
+    anterior = None
+    for _ in range(1800):
+        txt = " ".join(p.locator("ytcp-uploads-dialog ytcp-video-upload-progress").first.inner_text(timeout=10000).split())
+        if txt != anterior:
+            log(f"  progresso: {txt[:90]}"); anterior = txt
+        # só programa com as verificações (direitos autorais) concluídas; antes disso o Studio trava o agendamento
+        if re.search(r"Verificações concluídas|Checks complete", txt, re.I) or (txt and not re.search(
+                r"enviando|uploading|\d+\s*%|restante|remaining|aguardando|waiting|verifica|checking|processando|processing",
+                txt, re.I)):
+            break
+        p.wait_for_timeout(2000)
+    p.locator("#done-button").click()
+    # confirmação do Studio ("Vídeo programado" / "Vídeo salvo"...): só depois disso o vídeo deixa de ser rascunho
+    confirmado = p.get_by_text(re.compile(r"^\s*(Vídeo (programado|publicado|salvo)|Processando vídeo|Video (scheduled|published|saved)|Processing video)", re.I)).filter(visible=True).first
+    aviso = p.get_by_text(re.compile(r"Ainda estamos verificando|still checking", re.I)).filter(visible=True).first
+    for _ in range(90):
+        if confirmado.is_visible():
+            break
+        if aviso.is_visible():                 # verificação de direitos autorais ainda rodando: o Studio pede "Ok"
+            log("  o Studio ainda está verificando o conteúdo; confirmando o agendamento…")
+            p.get_by_role("button", name=re.compile(r"^\s*ok\s*$", re.I)).last.click()
+        p.wait_for_timeout(2000)
+    else:
+        raise RuntimeError("o Studio não confirmou o agendamento")
+    p.wait_for_timeout(2000)
+    return link
+
+
+def concluir_rascunho(canal, titulo, publicar_em=None, log=print):
+    """termina um rascunho que já tem o arquivo inteiro no Studio (sem subir o vídeo de novo)."""
+    cid = canais()[canal]["id"]
+    pw, nav, ctx = conectar()
+    p = ctx.new_page()
+    try:
+        p.goto(f"https://studio.youtube.com/channel/{cid}/videos/short", wait_until="domcontentloaded")
+        p.wait_for_selector("ytcp-video-row", timeout=60000); p.wait_for_timeout(2500)
+        linha = p.locator("ytcp-video-row", has_text=titulo.strip()[:60]).first
+        linha.hover()
+        linha.locator("ytcp-button.edit-draft-button").click()
+        p.locator("#title-textarea #textbox").wait_for(state="visible", timeout=60000)
+        p.wait_for_timeout(1500)
+        link = _finalizar(p, publicar_em, log)
+        _conferir(ctx, link, titulo, "Programado" if publicar_em else "Privado")
+        return link
+    except Exception:
+        p.screenshot(path=os.path.expanduser("~/Library/Caches/editor-reels/studio_erro.png"))
+        raise
+    finally:
+        p.close(); pw.stop()
+
+
+def _conferir(ctx, link, titulo, estado):
+    """abre o vídeo no Studio e confere título e visibilidade; sem isso o envio não conta como feito."""
+    vid = re.search(r"(?:shorts/|youtu\.be/|v=)([\w-]{11})", link).group(1)
+    q = ctx.new_page()
+    try:
+        q.goto(f"https://studio.youtube.com/video/{vid}/edit", wait_until="domcontentloaded")
+        q.locator("#title-textarea #textbox").wait_for(state="visible", timeout=60000)
+        q.wait_for_timeout(2500)
+        t = q.locator("#title-textarea #textbox").inner_text().strip()
+        v = q.locator("ytcp-video-metadata-visibility").first.inner_text(timeout=15000)
+        if t != titulo.strip() or estado not in v:
+            raise RuntimeError(f"o Studio não confirmou o envio de {vid}: título '{t[:40]}', visibilidade '{' '.join(v.split())}'")
+    finally:
+        q.close()
+
+
+def reprogramar(video_id, quando):
+    """muda a data de publicação de um vídeo programado (página de edição → Visibilidade → Salvar)."""
+    pw, nav, ctx = conectar()
+    p = ctx.new_page()
+    try:
+        p.goto(f"https://studio.youtube.com/video/{video_id}/edit", wait_until="domcontentloaded")
+        p.locator("#title-textarea #textbox").wait_for(state="visible", timeout=60000)
+        p.wait_for_timeout(2000)
+        p.locator("ytcp-video-metadata-visibility").first.click()
+        p.locator("#datepicker-trigger").wait_for(state="visible", timeout=20000)
+        p.locator("#datepicker-trigger").click()
+        data = p.locator("ytcp-date-picker tp-yt-paper-input input").first
+        data.fill(_data_pt(quando)); data.press("Enter")
+        p.wait_for_timeout(600)
+        hora = p.locator("#time-of-day-container input").first
+        hora.fill(quando.strftime("%H:%M")); hora.press("Enter")
+        p.wait_for_timeout(600)
+        vista = p.locator("#datepicker-trigger").inner_text().strip(), hora.input_value().strip()
+        if vista != (_data_pt(quando), quando.strftime("%H:%M")):
+            raise RuntimeError(f"o Studio não aceitou a data: mostra {vista}")
+        p.locator("#save-button, ytcp-button#save-button").last.click()          # fecha o painel de visibilidade
+        p.wait_for_timeout(1500)
+        p.locator("ytcp-button#save").click()                                    # salva o vídeo
+        p.wait_for_timeout(4000)
+    except Exception:
+        p.screenshot(path=os.path.expanduser("~/Library/Caches/editor-reels/studio_erro.png"))
+        raise
+    finally:
+        p.close(); pw.stop()
+
+
 def plano(cfg, canal, agendar, inicio=None, hora="12:00", tipo="short"):
     """lista (item, descrição, horário) do lote. Agendando: 1 por dia, a partir do dia seguinte ao último do canal."""
-    itens = cfg["shorts"]
+    itens = cfg["shorts" if tipo == "short" else "longos"]
     horarios = [None] * len(itens)
     if agendar:
         if inicio:
             d0 = dt.date.fromisoformat(inicio)
         else:
-            ult = ultima_data(canal, "short" if tipo == "short" else "upload")
+            ult = max([d for d in (ultima_data(canal, "short" if tipo == "short" else "upload"),
+                                   _ultima_anotada(canal, tipo)) if d], default=None)
             d0 = (ult or dt.date.today()) + dt.timedelta(days=1)
         hh, mm = map(int, hora.split(":"))
         horarios = [dt.datetime.combine(d0 + dt.timedelta(days=i), dt.time(hh, mm)) for i in range(len(itens))]
@@ -258,6 +403,7 @@ def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("abrir"); sub.add_parser("status"); sub.add_parser("fechar")
+    r = sub.add_parser("reprogramar"); r.add_argument("video_id"); r.add_argument("--em", required=True, help="AAAA-MM-DDTHH:MM")
     u = sub.add_parser("ultima"); u.add_argument("--canal", required=True); u.add_argument("--aba", default="short")
     e = sub.add_parser("enviar"); e.add_argument("video"); e.add_argument("--canal", required=True)
     e.add_argument("--titulo", required=True); e.add_argument("--descricao", default=""); e.add_argument("--tags", default="")
@@ -275,6 +421,8 @@ def main():
         status()
     elif a.cmd == "fechar":
         fechar(); print("Chrome do editor fechado (login salvo).")
+    elif a.cmd == "reprogramar":
+        reprogramar(a.video_id, dt.datetime.fromisoformat(a.em)); print("reprogramado:", a.video_id, a.em)
     elif a.cmd == "ultima":
         print(ultima_data(a.canal, a.aba))
     elif a.cmd == "enviar":
@@ -283,8 +431,9 @@ def main():
                                  [t.strip() for t in a.tags.split(",") if t.strip()], quando))
     else:
         cfg = json.load(open(os.path.expanduser(a.json)))
+        chave = "shorts" if a.tipo == "short" else "longos"
         if a.so:
-            cfg["shorts"] = [s for s in cfg["shorts"] if s["id"] in a.so]
+            cfg[chave] = [s for s in cfg[chave] if s["id"] in a.so]
         for s, desc, h in plano(cfg, a.canal, a.agendar, a.inicio, a.hora, a.tipo):
             quando = h.strftime("%d/%m/%Y %H:%M") if h else "privado"
             if a.plano:
@@ -293,7 +442,10 @@ def main():
             print(f"{s['id']}: enviando ({quando})…", flush=True)
             print(f"{s['id']}: {'programado ' + quando if h else 'enviado (privado)'} "
                   f"{enviar(s['video'], a.canal, s['titulo'], desc, s.get('tags', []), h)}", flush=True)
-        fechar()
+            if h:
+                _anotar(a.canal, a.tipo, s["id"], h)
+        if not a.plano:
+            fechar()
 
 
 if __name__ == "__main__":
