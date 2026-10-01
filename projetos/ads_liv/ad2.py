@@ -32,16 +32,16 @@ ROTEIRO = {
     # texto entre o fundo e a pessoa
     "atras": [
         {"t0": 0.0, "t1": 3.34, "so_A": True, "legenda": True, "linhas": [
-            {"y": 268, "tam": 236, "peso": 900, "cor": "laranja", "track": -0.035, "espaco": 0.18,
+            {"y": 335, "tam": 236, "peso": 900, "cor": "laranja", "track": -0.035, "espaco": 0.18,
              "spans": [sp("Green", 0.25), sp("card", 0.45)]}]},
     ],
     # lettering grande nos inserts de imagem (ênfase pelo peso)
     "lettering": [
-        {"t0": 6.28, "t1": 7.80, "y": 1150, "linhas": [L("Não é só", 6.3, 110, 400), L("formulário.", 6.8, 170, 900)]},
-        {"t0": 9.30, "t1": 10.85, "y": 1150, "linhas": [L("Estratégia", 9.3, 170, 900), L("jurídica", 9.86, 130, 400)]},
-        {"t0": 10.85, "t1": 11.66, "y": 1130, "linhas": [L("Prova de", 10.9, 120, 400), L("impacto.", 11.2, 190, 900)]},
-        {"t0": 18.62, "t1": 19.90, "y": 1180, "linhas": [L("Aqui nos", 18.62, 110, 400), L("Estados Unidos", 18.92, 150, 900)]},
-        {"t0": 24.40, "t1": 25.70, "y": 1130, "linhas": [L("Um projeto", 24.5, 120, 400), L("de vida.", 25.1, 200, 900)]},
+        {"t0": 6.28, "t1": 7.80, "linhas": [L("Não é só", 6.3, 110, 400), L("formulário.", 6.8, 170, 900)]},
+        {"t0": 9.30, "t1": 10.85, "linhas": [L("Estratégia", 9.3, 170, 900), L("jurídica", 9.86, 130, 400)]},
+        {"t0": 10.85, "t1": 11.66, "linhas": [L("Prova de", 10.9, 120, 400), L("impacto.", 11.2, 190, 900)]},
+        {"t0": 18.62, "t1": 19.90, "linhas": [L("Aqui nos", 18.62, 110, 400), L("Estados Unidos", 18.92, 150, 900)]},
+        {"t0": 24.40, "t1": 25.70, "linhas": [L("Um projeto", 24.5, 120, 400), L("de vida.", 25.1, 200, 900)]},
     ],
     "broll": [
         dict(t0=6.28, t1=7.80, arq=BR.format(7247829), ss=1.0),     # "não é só encher formulários"
@@ -52,7 +52,7 @@ ROTEIRO = {
     "burns_arquivos": [TR.format(n) for n in (24, 41, 19, 44)],
     "burns": [3.34, 6.28, 9.30, 14.18, 18.62, 24.4],
     "burn_forca": 0.9,
-    "cta": {"t0": 27.62, "t_seta": 29.68, "y": 1150, "linha1": "Comece pela", "linha2": "análise de perfil",
+    "cta": {"t0": 27.62, "t_seta": 29.68, "linha1": "Comece pela", "linha2": "análise de perfil",
             "linha3": "sem custo, é só tocar no botão"},
     # versão B: tela dividida no gancho
     "dividido": {"t0": 0.0, "t1": 3.34, "arq": BR.format(35194304), "ss": 0.5, "y_topo": 380, "y_pessoa": 150,

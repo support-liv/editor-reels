@@ -225,7 +225,15 @@ class Lettering:
         b = self.b
         if not self.ativo(t):
             return
-        x, y = b.get("x", 84), b["y"]
+        for li, ln in enumerate(b["linhas"]):
+            if li not in self.cache:
+                self.cache[li] = render_span(ln["texto"], ln["tam"], ln.get("cor", "bege"), ln.get("peso", 900), ln.get("track", -0.03))
+        x = b.get("x", SEGURA["x0"])
+        if "y" in b:
+            y = b["y"]
+        else:                                               # pé do bloco na base comum (área segura, acima da legenda do app)
+            total = sum(int(ln["tam"] * b.get("entrelinha", 0.98)) for ln in b["linhas"][:-1]) + self.cache[len(b["linhas"]) - 1].height
+            y = b.get("pe", SEGURA["y1"] - 60) - total
         if b.get("barra", True):
             p = max(0.0, min(1.0, (t - b["linhas"][0]["t"] + 0.1) / 0.35))
             e = 1 - (1 - p) ** 4
@@ -299,13 +307,14 @@ def render_legenda(texto, dest, tam=88):
 
 
 # ------------------------------------------------------------------ film burn
-def carregar_burns(arquivos):
+def carregar_burns(arquivos, vel=1.0):
+    """film burns acelerados (vel > 1 = flash mais curto); o pico de luz continua caindo no corte."""
     out = []
     for arq in arquivos:
-        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", arq, "-vf", f"fps={FPS},scale={W // 2}:{H // 2}:force_original_aspect_ratio=increase,crop={W // 2}:{H // 2}",
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-i", arq, "-vf", f"setpts=PTS/{vel},fps={FPS},scale={W // 2}:{H // 2}:force_original_aspect_ratio=increase,crop={W // 2}:{H // 2}",
                               "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True, check=True).stdout
         q = np.frombuffer(raw, np.uint8).reshape(-1, H // 2, W // 2, 3)   # luz desfocada: meia resolução não perde nada
-        out.append({"q": q, "pico": int(q.reshape(len(q), -1).mean(1).argmax())})
+        out.append({"q": q, "pico": int(q.reshape(len(q), -1).mean(1).argmax()), "dur": len(q) / FPS})
     return out
 
 
@@ -322,22 +331,46 @@ def tela(a, b, k=1.0):
 
 
 # ------------------------------------------------------------------ CTA
+# área segura do anúncio: sobrevive ao corte 4:5 (y 285-1635) e 3:4 do feed e fica acima da interface do Reels
+SEGURA = {"x0": 72, "x1": W - 72, "y0": 300, "y1": 1400}
+
+
+def _tinta(im):
+    """caixa da tinta (pixels visíveis) de uma imagem RGBA: o espaçamento é medido pelo desenho, não pela caixa."""
+    return im.getbbox() or (0, 0, im.width, im.height)
+
+
 def render_cta(c, p_seta):
-    """faixa azul da marca embaixo: Light + Black da mesma família, seta laranja pro botão do anúncio."""
-    w, h = W, 450
-    im = Image.new("RGBA", (w, h), COR["azul"] + (255,))
-    l1 = render_span(c["linha1"], 70, "bege", 400, -0.01)
-    l2 = render_span(c["linha2"], 132, "bege", 900, -0.03)
-    l3 = render_span(c["linha3"], 60, "laranja", 600, 0.0)
-    y = 58
-    for l, passo in ((l1, 72), (l2, 168), (l3, 0)):
-        im.alpha_composite(l, (84, y)); y += passo
-    if p_seta > 0:
+    """card da marca: respiro igual em cima, embaixo e dos lados; ritmo vertical pelo desenho das letras;
+    Light + Black da mesma família; seta laranja centrada na linha principal."""
+    P = c.get("respiro", 64)                                 # respiro interno (igual nos 4 lados)
+    l1 = render_span(c["linha1"], c.get("tam1", 64), "bege", 400, -0.005)
+    larg = SEGURA["x1"] - SEGURA["x0"]
+    tam2 = c.get("tam2", 124)
+    while True:                                              # linha principal + vão (= respiro) + seta cabem no card
+        l2 = render_span(c["linha2"], tam2, "bege", 900, -0.03)
+        if P + (_tinta(l2)[2] - _tinta(l2)[0]) + P + 80 + P <= larg or tam2 <= 80:
+            break
+        tam2 -= 4
+    l3 = render_span(c["linha3"], c.get("tam3", 50), "laranja", 600, 0.005)
+    linhas = [(l1, _tinta(l1)), (l2, _tinta(l2)), (l3, _tinta(l3))]
+    gaps = [int(tam2 * 0.22), int(tam2 * 0.26)]               # entre as linhas, proporcional à principal
+    altura = 2 * P + sum(t[3] - t[1] for _, t in linhas) + sum(gaps)
+    im = Image.new("RGBA", (larg, altura), (0, 0, 0, 0))
+    ImageDraw.Draw(im).rounded_rectangle((0, 0, larg - 1, altura - 1), radius=40, fill=COR["azul"] + (255,))
+    y = P
+    pos = []
+    for k, (l, t) in enumerate(linhas):
+        im.alpha_composite(l.crop(t), (P, y))
+        pos.append((y, y + t[3] - t[1]))
+        y += t[3] - t[1] + (gaps[k] if k < 2 else 0)
+    if p_seta > 0:                                           # seta: centro óptico da linha principal, margem = respiro
         d = ImageDraw.Draw(im)
         a = int(255 * min(1, p_seta * 3))
-        dy = int(12 * np.sin(p_seta * 8))
-        cx, cy = W - 150, h // 2 + dy
-        d.line([(cx - 44, cy - 22), (cx, cy + 22), (cx + 44, cy - 22)], fill=COR["laranja"] + (a,), width=14, joint="curve")
+        dy = int(8 * np.sin(p_seta * 8))
+        cy = (pos[1][0] + pos[1][1]) // 2 + dy
+        cx = larg - P - 40
+        d.line([(cx - 38, cy - 19), (cx, cy + 19), (cx + 38, cy - 19)], fill=COR["laranja"] + (a,), width=13, joint="curve")
     return im
 
 
@@ -362,7 +395,8 @@ def montar(rot, versao, saida, quadros_png=None):
     if versao == "B" and rot.get("dividido"):
         dv = rot["dividido"]
         dividido = dict(dv, f=Fluxo(os.path.expanduser(dv["arq"]), ss=dv.get("ss", 0), dur=dv["t1"] - dv["t0"] + 0.3))
-    burns = carregar_burns(rot["burns_arquivos"])
+    vel = rot.get("burn_velocidade", 1.6)                  # ~38% mais curto: um flash rápido, som junto
+    burns = carregar_burns(rot["burns_arquivos"], vel)
     cortes = rot["burns"] if versao == "A" else rot.get("burns_B", rot["burns"])
     atras = [Linhas(b) for b in rot["atras"] if versao == "A" or not b.get("so_A")]
     frente = [Linhas(b) for b in rot.get("frente", []) if versao == "A" or not b.get("so_A")]
@@ -444,17 +478,17 @@ def montar(rot, versao, saida, quadros_png=None):
                 g = grupos[gi]
                 ativo = max(k for k, p in enumerate(g) if p["s"] <= t + 0.02)
                 colar(q, leg.render(gi, g, ativo), W / 2, rot.get("y_legenda", int(H * 0.62)))
-        # CTA: faixa sobe de baixo
+        # CTA: card sobe para o lugar (pé do card no limite da área segura)
         if t >= cta["t0"]:
             p = min(1.0, (t - cta["t0"]) / 0.45)
             e = 1 - (1 - p) ** 4
             im = render_cta(cta, max(0.0, t - cta["t_seta"]) if t >= cta["t_seta"] else 0)
-            topo = cta.get("y", 1150)
-            a = np.asarray(im).astype(np.float32)
-            dy = int((1 - e) * im.height)
-            vis = im.height - dy
-            if vis > 0:
-                q[topo + dy:topo + im.height] = a[:vis, :, :3]
+            if im.height + 0 > SEGURA["y1"] - SEGURA["y0"]:
+                print("  ⚠️  CTA maior que a área segura")
+            pe = cta.get("pe", SEGURA["y1"])
+            topo = pe - im.height + int((1 - e) * 90)
+            a = np.array(im); a[..., 3] = (a[..., 3] * e).astype(np.uint8)
+            colar(q, Image.fromarray(a), SEGURA["x0"] + im.width / 2, topo + im.height / 2)
         # film burn: o pico de luz cai exatamente no corte
         for ci, c in enumerate(cortes):
             bn = burns[ci % len(burns)]
@@ -480,8 +514,11 @@ def montar(rot, versao, saida, quadros_png=None):
         if pico is None:
             continue
         ent += ["-i", arq]
-        ini = max(0.0, c - burns[k % len(burns)]["pico"] / FPS)
-        filt.append(f"[{usados + 2}:a]volume={rot_alvo - pico:.1f}dB,afade=t=out:st=1.0:d=0.4,adelay={int(ini * 1000)}:all=1[w{usados}]")
+        bn = burns[k % len(burns)]
+        ini = max(0.0, c - bn["pico"] / FPS)
+        fim = max(0.2, bn["dur"] - 0.22)                     # o som acaba junto com a luz (nada tocando na cena seguinte)
+        filt.append(f"[{usados + 2}:a]atempo={vel},volume={rot_alvo - pico:.1f}dB,atrim=0:{bn['dur']:.2f},"
+                    f"afade=t=out:st={fim:.2f}:d=0.22,adelay={int(ini * 1000)}:all=1[w{usados}]")
         usados += 1
     rotulos = "[voz]" + "".join(f"[w{k}]" for k in range(usados))
     fc = ";".join(filt + [f"{rotulos}amix=inputs={usados + 1}:normalize=0:duration=first[a]"])
