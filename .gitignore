@@ -15,6 +15,7 @@ __pycache__/
 
 # vinheta oficial (exceção aos vídeos)
 !assets/*.mp4
+!assets/*.mov
 
 # motion (HyperFrames)
 motion/node_modules/

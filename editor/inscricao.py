@@ -6,14 +6,15 @@
 Aparece a cada ~1 minuto (com uma variação de alguns segundos pra não ficar mecânico), centralizado na parte
 de baixo, e NUNCA junto com o banner da live (o card "Faça uma análise de perfil… QR Code", que fica no mesmo
 lugar): o banner é detectado no próprio vídeo e o balão espera ele sair (ou pula aquela vez).
-O balão é assets/inscreva_liv.webm (fundo removido, entra subindo e sai com a entrada invertida, 5,5 s).
+O balão é assets/inscreva_liv.mov (PNG sem perda com transparência; fundo verde tirado pela "verdice" do pixel, então
+cinza/preto/branco/laranja ficam opacos; entra subindo e sai com a entrada invertida, 5,5 s).
 --quadro T só gera um PNG do vídeo no segundo T com o balão (pra validar posição e tamanho).
 """
 import argparse, os, random, subprocess, sys
 import numpy as np
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
-BALAO = os.path.join(os.path.dirname(AQUI), "assets", "inscreva_liv.webm")
+BALAO = os.path.join(os.path.dirname(AQUI), "assets", "inscreva_liv.mov")
 DUR = 5.466                  # duração do balão
 LARGURA = 0.40               # fração da largura do vídeo
 MARGEM_BAIXO = 0.045         # distância da borda de baixo (fração da altura)
@@ -69,7 +70,7 @@ def _filtro(ts, W, H):
     x, y = (W - w) // 2, H - h - int(H * MARGEM_BAIXO)
     partes, ant = [], "0:v"
     for k, t in enumerate(ts):
-        partes.append(f"[{k + 1}:v]scale={w}:{h}:flags=lanczos,format=yuva420p,setpts=PTS-STARTPTS+{t}/TB[b{k}]")
+        partes.append(f"[{k + 1}:v]scale={w}:{h}:flags=lanczos,format=rgba,setpts=PTS-STARTPTS+{t}/TB[b{k}]")
         partes.append(f"[{ant}][b{k}]overlay={x}:{y}:eof_action=pass:enable='between(t,{t},{t + DUR})'[v{k}]")
         ant = f"v{k}"
     return ";".join(partes), f"[{ant}]"
@@ -89,7 +90,7 @@ def aplicar(video, saida=None, intervalo=60.0, log=print):
     filtro, saida_v = _filtro(ts, W, H)
     entradas = ["-i", video]
     for _ in ts:
-        entradas += ["-c:v", "libvpx-vp9", "-i", BALAO]
+        entradas += ["-i", BALAO]
     cmd = ["ffmpeg", "-v", "error", "-y"] + entradas + ["-filter_complex", filtro, "-map", saida_v, "-map", "0:a?",
            "-c:v", "h264_videotoolbox", "-b:v", "12M", "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", saida]
     subprocess.run(cmd, check=True)
@@ -111,7 +112,7 @@ def quadro(video, t, png):
     W, H = map(int, subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v", "-show_entries", "stream=width,height",
                                     "-of", "csv=p=0", video], capture_output=True, text=True).stdout.strip().split(","))
     filtro, saida_v = _filtro([0.0], W, H)
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(t), "-i", video, "-ss", "2", "-c:v", "libvpx-vp9", "-i", BALAO,
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(t), "-i", video, "-ss", "2", "-i", BALAO,
                     "-filter_complex", filtro.replace("setpts=PTS-STARTPTS+0.0/TB", "setpts=PTS-STARTPTS"),
                     "-map", saida_v, "-frames:v", "1", png], check=True)
     return png

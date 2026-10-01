@@ -41,7 +41,7 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 ## Ferramentas por formato
 - Reels/Shorts, anúncio, stories: `editor/editor_reels.py` (vertical).
 - Corte longo YouTube: `editor/editor_reels.py --layout youtube` (vinheta da LIV entra sozinha; Imigrar: `--sem-vinheta`).
-- **Balão "Inscreva-se" (só corte longo da live da LIV; nunca em shorts nem na Imigrar):** entra sozinho no `--layout youtube` da LIV (`editor/inscricao.py`, asset `assets/inscreva_liv.webm`): ~1 por minuto com variação de alguns segundos, centralizado embaixo (40% da largura). **Nunca junto com o banner da live** (card do QR Code, embaixo no centro): o banner é detectado no vídeo e o balão espera ele sair ou pula aquela vez. Validar com `inscricao.py VIDEO --quadro 75` (PNG). Desligar: `--sem-inscreva`.
+- **Balão "Inscreva-se" (só corte longo da live da LIV; nunca em shorts nem na Imigrar):** entra sozinho no `--layout youtube` da LIV (`editor/inscricao.py`, asset `assets/inscreva_liv.mov`): ~1 por minuto com variação de alguns segundos, centralizado embaixo (40% da largura). **Nunca junto com o banner da live** (card do QR Code, embaixo no centro): o banner é detectado no vídeo e o balão espera ele sair ou pula aquela vez. Validar com `inscricao.py VIDEO --quadro 75` (PNG). Desligar: `--sem-inscreva`.
 - WhatsApp: `--layout quadrado`. Live: `--layout dividido` / `quadro`.
 - Carrossel: `editor/carrossel.py roteiro.json`.
 - Fonte e cores são sempre as da marca (`--marca`); `--cor-caixa` só aceita cores da paleta.
