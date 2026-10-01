@@ -1,84 +1,137 @@
 {
- "canal": "LIV Immigration Law",
- "saida": "~/Desktop/LIVE_80/pacote_youtube",
- "shorts": [
-  {
-   "id": "S1",
-   "video": "~/Desktop/LIVE_80/shorts_B/S1B_visa_bulletin_brasil.mp4",
-   "titulo": "O Visa Bulletin retrocedeu. Muda algo pra quem está no Brasil? 🇧🇷",
-   "descricao": "O Visa Bulletin retrocedeu, mas o efeito não é igual pra todo mundo. Quem está no Brasil pelo consulado e quem está nos EUA fazendo ajuste de status vivem situações bem diferentes.\n\nAssista à live completa no canal.\n\n#visabulletin #eb2niw #greencard #imigracao #eua",
-   "tags": [
-    "visa bulletin",
-    "EB-2 NIW",
-    "green card",
-    "processo consular",
-    "ajuste de status",
-    "imigração EUA"
-   ]
-  },
-  {
-   "id": "S2",
-   "video": "~/Desktop/LIVE_80/shorts_B/S2B_ajuste_plano_a.mp4",
-   "titulo": "Correr pro ajuste de status pode atrapalhar o seu plano?",
-   "descricao": "Querer fazer o ajuste de status logo é natural. Mas protocolar antes da hora pode fechar portas que você ainda vai precisar.\n\nAssista à live completa no canal.\n\n#ajustedestatus #greencard #vistoamericano #imigracao #eua",
-   "tags": [
-    "ajuste de status",
-    "green card",
-    "visto americano",
-    "imigração EUA"
-   ]
-  },
-  {
-   "id": "S3",
-   "video": "~/Desktop/LIVE_80/shorts_B/S3B_momento_certo.mp4",
-   "titulo": "Existe um momento certo pra entrar com o seu processo?",
-   "descricao": "Muita gente espera o \"momento certo\" pra dar entrada no processo. A imigração é cíclica, e a data de prioridade faz parte do planejamento.\n\nAssista à live completa no canal.\n\n#greencard #eb2niw #planejamento #imigracao #eua",
-   "tags": [
-    "green card",
-    "EB-2 NIW",
-    "data de prioridade",
-    "visa bulletin",
-    "imigração EUA"
-   ]
-  },
-  {
-   "id": "S4",
-   "video": "~/Desktop/LIVE_80/shorts_B/S4B_brasil_eua.mp4",
-   "titulo": "Começou pelo Brasil. Dá pra terminar o processo nos EUA? 🇺🇸",
-   "descricao": "Todo processo de green card tem duas partes. Entender cada uma muda o que você pode fazer, esteja no Brasil ou nos EUA.\n\nAssista à live completa no canal.\n\n#greencard #processoconsular #ajustedestatus #imigracao #eua",
-   "tags": [
-    "green card",
-    "processo consular",
-    "ajuste de status",
-    "NVC",
-    "imigração EUA"
-   ]
-  },
-  {
-   "id": "S5",
-   "video": "~/Desktop/LIVE_80/shorts_B/S5B_business_plan.mp4",
-   "titulo": "Business plan ou professional plan: qual a imigração prefere?",
-   "descricao": "No EB-2 NIW, a pergunta de sempre é qual documento usar. A resposta da Dra. Lívia vai por outro caminho.\n\nAssista à live completa no canal.\n\n#eb2niw #businessplan #greencard #imigracao #eua",
-   "tags": [
-    "EB-2 NIW",
-    "business plan",
-    "professional plan",
-    "green card",
-    "imigração EUA"
-   ]
-  },
-  {
-   "id": "S6",
-   "video": "~/Desktop/LIVE_80/shorts_B/S6B_filho_18.mp4",
-   "titulo": "Seu filho já tem 18 anos? Isso pode mudar o seu plano",
-   "descricao": "Quando o filho já tem 18 anos, o tempo do processo passa a pesar na estratégia. Veja como a Dra. Lívia pensaria esse caso.\n\nAssista à live completa no canal.\n\n#greencard #imigracaoemfamilia #eb2niw #imigracao #eua",
-   "tags": [
-    "green card",
-    "imigração em família",
-    "filho 21 anos",
-    "EB-2 NIW",
-    "imigração EUA"
-   ]
-  }
- ]
+  "canal": "LIV Immigration Law",
+  "saida": "~/Desktop/LIVE_80/pacote_youtube",
+  "shorts": [
+    {
+      "id": "S1",
+      "video": "~/Desktop/LIVE_80/shorts_B/S1B_visa_bulletin_brasil.mp4",
+      "titulo": "Visa Bulletin RETROCEDEU: o que muda para quem está no Brasil 🇧🇷? #VisaBulletin #EB2NIW",
+      "tags": [
+        "visa bulletin",
+        "EB-2 NIW",
+        "green card",
+        "processo consular",
+        "ajuste de status",
+        "imigração EUA"
+      ],
+      "resumo": "O novo Visa Bulletin trouxe retrocesso nas datas do EB-2, e muita gente quer saber o que isso muda na prática para quem está no Brasil. A resposta depende do caminho do seu processo: o processo consular e o ajuste de status sentem esse movimento de formas bem diferentes.\n\nEntenda por que, no consular, quase nada muda para quem aplica para o EB-2 NIW, já que os consulados não vinham agendando entrevistas nem emitindo vistos para esses casos, e por que, para quem está nos EUA aplicando ajuste de status, o impacto é real.",
+      "hashtags": [
+        "#VisaBulletin",
+        "#EB2NIW",
+        "#ProcessoConsular",
+        "#AjusteDeStatus",
+        "#GreenCard",
+        "#DireitoImigratorio",
+        "#LIVImmigration"
+      ]
+    },
+    {
+      "id": "S2",
+      "video": "~/Desktop/LIVE_80/shorts_B/S2B_ajuste_plano_a.mp4",
+      "titulo": "Correr para o ajuste de status pode ATRAPALHAR o seu plano? ⚠️ #AjusteDeStatus #GreenCard",
+      "tags": [
+        "ajuste de status",
+        "green card",
+        "visto americano",
+        "imigração EUA"
+      ],
+      "resumo": "Fazer o ajuste de status o quanto antes parece o caminho mais rápido, mas o ajuste não deveria ser o seu plano A enquanto você não tem a petição aprovada. Um protocolo feito antes da hora pode eliminar outras opções que você ainda teria, inclusive vistos temporários.\n\nVeja como um ajuste enviado sem a aprovação de elegibilidade pode prejudicar um pedido de E-2 no consulado, ao demonstrar intenção imigratória, e por que é possível trabalhar com outros vistos temporários sem comprometer o seu futuro nos EUA.",
+      "hashtags": [
+        "#AjusteDeStatus",
+        "#GreenCard",
+        "#VistoE2",
+        "#VistoTemporario",
+        "#PlanejamentoMigratorio",
+        "#DireitoImigratorio",
+        "#LIVImmigration"
+      ]
+    },
+    {
+      "id": "S3",
+      "video": "~/Desktop/LIVE_80/shorts_B/S3B_momento_certo.mp4",
+      "titulo": "Existe um momento CERTO para entrar com o seu processo? ⏳ #GreenCard #EB2NIW",
+      "tags": [
+        "green card",
+        "EB-2 NIW",
+        "data de prioridade",
+        "visa bulletin",
+        "imigração EUA"
+      ],
+      "resumo": "A imigração é cíclica e funciona como um planejamento de médio ou longo prazo. Muitas pessoas esperam o \"momento certo\" e deixam de protocolar justamente quando deveriam agir.\n\nEntenda por que quem já tinha data de prioridade anterior a 15 de março de 2026 hoje pode fazer o ajuste de status, e como ter um caso protocolado e uma data de prioridade garantida traz flexibilidade para o seu planejamento.",
+      "hashtags": [
+        "#GreenCard",
+        "#EB2NIW",
+        "#DataDePrioridade",
+        "#VisaBulletin",
+        "#PlanejamentoMigratorio",
+        "#DireitoImigratorio",
+        "#LIVImmigration"
+      ]
+    },
+    {
+      "id": "S4",
+      "video": "~/Desktop/LIVE_80/shorts_B/S4B_brasil_eua.mp4",
+      "titulo": "Começou pelo Brasil 🇧🇷: dá para terminar o processo nos EUA 🇺🇸? #GreenCard #ProcessoConsular",
+      "tags": [
+        "green card",
+        "processo consular",
+        "ajuste de status",
+        "NVC",
+        "imigração EUA"
+      ],
+      "resumo": "É possível começar o processo de green card pelo Brasil e terminá-lo nos EUA com outro visto? Sim, desde que tudo seja planejado, porque todo processo imigratório tem duas partes: a elegibilidade para a categoria e a etapa final para obter o green card.\n\nA elegibilidade pode ser protocolada no USCIS de qualquer lugar do mundo. Já a segunda etapa depende de onde você está: nos EUA com visto temporário, é possível pedir o ajuste de status; no Brasil, após a aprovação do USCIS, o caso segue para o NVC, que cuida da documentação e do formulário DS antes da entrevista no consulado.",
+      "hashtags": [
+        "#GreenCard",
+        "#ProcessoConsular",
+        "#AjusteDeStatus",
+        "#NVC",
+        "#USCIS",
+        "#DireitoImigratorio",
+        "#LIVImmigration"
+      ]
+    },
+    {
+      "id": "S5",
+      "video": "~/Desktop/LIVE_80/shorts_B/S5B_business_plan.mp4",
+      "titulo": "EB-2 NIW: business plan ou professional plan? Qual a imigração PREFERE? 🧠 #EB2NIW #GreenCard",
+      "tags": [
+        "EB-2 NIW",
+        "business plan",
+        "professional plan",
+        "green card",
+        "imigração EUA"
+      ],
+      "resumo": "No EB-2 NIW, uma dúvida frequente é qual documento apresentar: business plan ou professional plan. Mais importante do que o formato é a proposta em si, porque é ela que precisa demonstrar interesse nacional para o USCIS.\n\nEntenda por que um business plan focado em prestar serviços a clientes imediatos pode enfraquecer o seu caso, e como apresentar uma proposta específica, como um projeto, um framework ou uma metodologia, com amplo alcance (broad applications) e que vá além do exercício comum da sua profissão.",
+      "hashtags": [
+        "#EB2NIW",
+        "#BusinessPlan",
+        "#ProfessionalPlan",
+        "#InteresseNacional",
+        "#GreenCard",
+        "#DireitoImigratorio",
+        "#LIVImmigration"
+      ]
+    },
+    {
+      "id": "S6",
+      "video": "~/Desktop/LIVE_80/shorts_B/S6B_filho_18.mp4",
+      "titulo": "Filho com 18 anos: isso pode MUDAR o seu plano de imigração? ⚠️ #GreenCard #PERM",
+      "tags": [
+        "green card",
+        "PERM",
+        "visto F-1",
+        "imigração em família",
+        "imigração EUA"
+      ],
+      "resumo": "Para quem está nos EUA com visto F-1, trabalhando com CPT, e tem um filho de 18 anos, o tempo do processo passa a ser decisivo. Um patrocínio pelo empregador exige teste do mercado de trabalho e certificação do Departamento de Trabalho (DOL) antes da próxima etapa.\n\nVeja por que esse caminho fica no limite para o filho que já completou 18 anos, e por que vale tratá-lo como plano B e buscar, se você for elegível, um plano A que não dependa só da certificação do DOL.",
+      "hashtags": [
+        "#GreenCard",
+        "#PERM",
+        "#VistoF1",
+        "#ImigracaoEmFamilia",
+        "#DireitoImigratorio",
+        "#LIVImmigration"
+      ]
+    }
+  ]
 }
