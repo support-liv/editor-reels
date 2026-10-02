@@ -32,7 +32,7 @@ ROTEIRO = {
     # texto entre o fundo e a pessoa
     "atras": [
         {"t0": 0.0, "t1": 3.34, "so_A": True, "legenda": True, "linhas": [
-            {"y": 335, "tam": 236, "peso": 900, "cor": "laranja", "track": -0.035, "espaco": 0.18,
+            {"y": 335, "tam": 236, "peso": 900, "cor": "laranja", "track": -0.035,
              "spans": [sp("Green", 0.25), sp("card", 0.45)]}]},
     ],
     # lettering grande nos inserts de imagem (ênfase pelo peso)
@@ -59,6 +59,6 @@ ROTEIRO = {
                  "faixa": {"t0": 0.0, "t1": 3.34, "altura": 270, "cor": "bege", "linhas": [
                      {"y": 900, "tam": 70, "peso": 400, "cor": "azul", "track": -0.01,
                       "spans": [sp("Como", 0.15), sp("o", 0.3), sp("seu", 0.45), sp("processo", 1.56), sp("de", 1.8)]},
-                     {"y": 1000, "tam": 120, "peso": 900, "track": -0.03, "espaco": 0.22,
+                     {"y": 1000, "tam": 120, "peso": 900, "track": -0.03,
                       "spans": [sp("green card", 2.02, cor="laranja"), sp("é montado?", 2.42, tam=90, peso=300, cor="azul")]}]}},
 }

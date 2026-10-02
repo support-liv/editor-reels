@@ -53,6 +53,6 @@ ROTEIRO = {
             "linha3": "sem custo, toque em Saiba Mais"},
     "dividido": {"t0": 0.0, "t1": 1.48, "arq": BR.format(6130565), "ss": 1.0, "y_topo": 300, "y_pessoa": 120,
                  "faixa": {"t0": 0.0, "t1": 1.48, "altura": 230, "cor": "bege", "linhas": [
-                     {"y": 960, "tam": 120, "peso": 900, "track": -0.03, "espaco": 0.22,
+                     {"y": 960, "tam": 120, "peso": 900, "track": -0.03,
                       "spans": [sp("Você é", 0.1, tam=96, peso=300, cor="azul"), sp("médico?", 0.5, cor="laranja")]}]}},
 }

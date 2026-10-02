@@ -152,7 +152,9 @@ def render_span(texto, tam, cor, peso=800, track=-0.02, protecao=0.0):
         sombra[..., 3] = np.clip(halo * protecao, 0, 255).astype(np.uint8)
         im = Image.alpha_composite(Image.fromarray(sombra), im)
     bb = im.getbbox() or (0, 0, im.width, im.height)
-    return im.crop((bb[0], 0, bb[2], im.height))
+    out = im.crop((bb[0], 0, bb[2], im.height))
+    out.info["tinta"] = (max(0, int(pad - bb[0])), int(pad - bb[0] + larg))
+    return out
 
 
 def _pad(tam, protecao=0.0):
@@ -228,8 +230,12 @@ class Linhas:
                                                     sp.get("peso", linha.get("peso", 800)), sp.get("track", linha.get("track", -0.02)),
                                                     linha.get("protecao", 0.0))
                 imgs.append((self.cache[k], sp["t"]))
-            esp = int(linha.get("tam", 100) * linha.get("espaco", 0.26))   # espaço entre palavras (texto recortado justo)
-            larg = sum(im.size[0] for im, _ in imgs) + esp * (len(imgs) - 1)
+            # espaço entre palavras = o espaço natural da fonte (como texto digitado), medido entre as LETRAS,
+            # nunca pela imagem (que pode ter halo/margem); "espaco" no roteiro só ajusta esse espaço natural
+            tam_e = max(sp.get("tam", linha.get("tam", 100)) for sp in linha["spans"])
+            esp = int(fonte(tam_e, linha.get("peso", 800)).getlength(" ") * linha.get("espaco_fator", 1.0))
+            tintas = [im.info.get("tinta", (0, im.size[0])) for im, _ in imgs]
+            larg = sum(t1 - t0 for t0, t1 in tintas) + esp * (len(imgs) - 1)
             x = W / 2 - larg / 2 if linha.get("alinha", "centro") == "centro" else linha.get("x", 80)
             # y da linha = centro óptico: do topo das letras (sem contar acento) até a linha de base comum
             base_y = linha["y"] + altura_optica(linha) / 2
@@ -245,8 +251,10 @@ class Linhas:
                         tam_s, peso_s = sp.get("tam", linha.get("tam", 100)), sp.get("peso", linha.get("peso", 800))
                         topo = base_y - (_pad(tam_s, linha.get("protecao", 0)) + fonte(tam_s, peso_s).getmetrics()[0])
                         cy = topo + im.size[1] / 2
-                    colar(base, v, x + im.size[0] / 2, cy)
-                x += im.size[0] + esp
+                    t0_, t1_ = im.info.get("tinta", (0, im.size[0]))
+                    colar(base, v, x - t0_ + im.size[0] / 2, cy)          # a letra começa exatamente em x
+                t0_, t1_ = im.info.get("tinta", (0, im.size[0]))
+                x += (t1_ - t0_) + esp
 
 
 class Lettering:
