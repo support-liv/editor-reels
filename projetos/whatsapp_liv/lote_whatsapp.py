@@ -4,11 +4,13 @@ Quadrado 1080x1080, enquadramento fixo, legenda na cor da LIV, sem gancho nem CT
 Rodar: python3 lote_whatsapp.py [--so-cortes] [W01 W02]
 """
 import subprocess, sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
+import plataforma as PLAT
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 PASTA = os.path.expanduser(os.environ.get("WHATS_PASTA", "~/Downloads"))
-SAIDA = os.path.expanduser(os.environ.get("WHATS_SAIDA", "~/Desktop/WHATSAPP_LIV"))
+SAIDA = PLAT.caminho(os.environ.get("WHATS_SAIDA", "~/Desktop/WHATSAPP_LIV"))
 TROCAS = ["da Livre=da LIV", "na Livre=na LIV", "na Alive=na LIV", "no Alive=na LIV", "na Alivia=na LIV",
           "com case=com o case", "com o queijo=com o case", "fervo=perfil", "já andou=agendou",
           "Marina Damás=Marinna Damásio", "Mariana Damase=Marinna Damásio"]

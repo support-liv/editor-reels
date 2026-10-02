@@ -652,8 +652,9 @@ if __name__ == "__main__":
                 b["forcar_atras"] = True
             else:
                 b["se_ilegivel"] = a.se_ilegivel
-    os.makedirs(os.path.expanduser(rot["saida"]), exist_ok=True)
+    rot["saida"] = PLAT.caminho(rot.get("saida", "~/Desktop/Editor Reels/anuncios"))
+    os.makedirs(rot["saida"], exist_ok=True)
     nome = rot["nome"] + ("_A_texto_atras" if a.versao == "A" else "_B_tela_dividida") + (f"_teste_{a.se_ilegivel}" if a.se_ilegivel else "") + ".mp4"
-    saida = os.path.join(os.path.expanduser(rot["saida"]), nome)
+    saida = os.path.join(rot["saida"], nome)
     qs = [float(x) for x in a.quadros.split(",") if x.strip()]
     print("pronto:", montar(rot, a.versao, saida, qs))

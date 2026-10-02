@@ -44,6 +44,37 @@ def pasta_dados(*partes):
     return p
 
 
+def pasta_desktop():
+    """a Mesa (Desktop) de verdade. No Windows com OneDrive ela fica em ...\\OneDrive\\Desktop: lê do registro."""
+    if WIN:
+        try:
+            import winreg
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                                r"Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders") as k:
+                p = os.path.expandvars(winreg.QueryValueEx(k, "Desktop")[0])
+                if os.path.isdir(p):
+                    return p
+        except OSError:
+            pass
+        for p in (os.path.join(os.environ.get("OneDrive", ""), "Desktop"), os.path.expanduser("~/Desktop")):
+            if p and os.path.isdir(p):
+                return p
+    return os.path.expanduser("~/Desktop")
+
+
+def pasta_renders(*partes):
+    """onde os vídeos prontos vão: Mesa/Editor Reels/<projeto> (Mac e Windows). Cria a pasta."""
+    p = os.path.join(pasta_desktop(), "Editor Reels", *partes)
+    os.makedirs(p, exist_ok=True)
+    return p
+
+
+def caminho(p):
+    """expande ~ e troca "~/Desktop" pela Mesa real (no Windows pode estar no OneDrive)."""
+    p = os.path.expanduser(p) if not p.startswith("~/Desktop") else os.path.join(pasta_desktop(), p[len("~/Desktop/"):])
+    return os.path.normpath(p)
+
+
 # ------------------------------------------------------------------ codificação de vídeo
 _ENC = None
 

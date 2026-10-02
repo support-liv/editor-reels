@@ -9,6 +9,8 @@ depois da fala final (cauda de 3,8s).
     python3 projetos/plano_eua_2027/lote_motion.py B [L05 L10 ...]          # monta com motion/renders/plano27_<id>.mov
 """
 import os, subprocess, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
+import plataforma as PLAT
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI)
@@ -18,7 +20,7 @@ import lote_mari_solo as solo                         # M01-M14: a Marinna sozin
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 MOTION = os.path.join(AQUI, "..", "..", "motion", "renders")
 PALAVRAS = os.path.join(AQUI, "motion", "palavras")
-SAIDA = os.path.expanduser(os.environ.get("LIVE_SAIDA_MOTION", "~/Desktop/PLANO_EUA_2027/motion"))
+SAIDA = PLAT.caminho(os.environ.get("LIVE_SAIDA_MOTION", "~/Desktop/PLANO_EUA_2027/motion"))
 CAUDA = 3.8
 
 

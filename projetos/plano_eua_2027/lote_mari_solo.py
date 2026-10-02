@@ -6,11 +6,13 @@ Rodar tudo:            python3 lote_mari_solo.py
 Só conferir os cortes: python3 lote_mari_solo.py --so-cortes
 """
 import subprocess, sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
+import plataforma as PLAT
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 VIDEO = os.path.expanduser(os.environ.get("LIVE_VIDEO", "~/Downloads/PLANO EUA 2027 - 28_09 - 20H.mp4"))
-SAIDA = os.path.expanduser(os.environ.get("LIVE_SAIDA", "~/Desktop/PLANO_EUA_2027/prontos"))
+SAIDA = PLAT.caminho(os.environ.get("LIVE_SAIDA", "~/Desktop/PLANO_EUA_2027/prontos"))
 CTA = "Quer saber se existe um caminho pro seu perfil? Link na bio"
 CORES = ["azul", "rosa", "branco"]
 TROCAS = ["ninguém chega que fluente=ninguém chega fluente", "gafel=gafe", "o Toro de Viva=a doutora Lívia",

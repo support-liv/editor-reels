@@ -18,6 +18,8 @@ roteiro.json:
 A imagem nunca é distorcida: é ampliada por igual e recortada (cover).
 """
 import argparse, json, os, subprocess, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import plataforma as PLAT
 from PIL import Image, ImageDraw, ImageFont
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -127,7 +129,7 @@ def card(marca, c, i, n):
 def main():
     ap = argparse.ArgumentParser(description="Gera o carrossel (1080x1350) na identidade da marca")
     ap.add_argument("roteiro")
-    ap.add_argument("--saida", default="prontos")
+    ap.add_argument("--saida", default=PLAT.pasta_renders("carrossel"))
     a = ap.parse_args()
     r = json.load(open(a.roteiro))
     marca, nome = r["marca"], r.get("nome", "carrossel")

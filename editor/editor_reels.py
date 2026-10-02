@@ -1526,7 +1526,7 @@ def main():
     ap.add_argument("--pergunta", help='faixas que são a pergunta do entrevistador (ficam em quadro aberto), ex: "169.8-173.5"')
     ap.add_argument("--trocar", action="append", default=[], help='corrige a legenda: "um gente sério=com gente séria"')
     ap.add_argument("--nome", help="nome do arquivo final (sem extensão)")
-    ap.add_argument("--saida", default=os.path.join(os.getcwd(), "prontos"), help="pasta do arquivo final (padrão: ./prontos)")
+    ap.add_argument("--saida", default=PLAT.pasta_renders("prontos"), help="pasta do arquivo final (padrão: Mesa/Editor Reels/prontos)")
     ap.add_argument("--so-cortes", action="store_true", help="só mostra o plano de cortes")
     ap.add_argument("--sem-ajuste-audio", action="store_true", help="não corta pelo áudio (usa só o tempo do Whisper)")
     ap.add_argument("--checar-olhar", action="store_true", help="avisa trechos em que a pessoa olha pra baixo (lendo) ou pro lado")

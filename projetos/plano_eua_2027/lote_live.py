@@ -7,11 +7,13 @@ Só conferir os cortes: python3 lote_live.py --so-cortes
 Só alguns:             python3 lote_live.py L01 L07
 """
 import subprocess, sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
+import plataforma as PLAT
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 VIDEO = os.path.expanduser(os.environ.get("LIVE_VIDEO", "~/Downloads/PLANO EUA 2027 - 28_09 - 20H.mp4"))
-SAIDA = os.path.expanduser(os.environ.get("LIVE_SAIDA", "~/Desktop/PLANO_EUA_2027/prontos"))
+SAIDA = PLAT.caminho(os.environ.get("LIVE_SAIDA", "~/Desktop/PLANO_EUA_2027/prontos"))
 CTA = "Quer saber se existe um caminho pro seu perfil? Link na bio"
 CORES = ["branco", "azul", "rosa"]              # a tarja alterna entre os cortes
 TROCAS = ["Green Car=green card", "Green Kind=green card", "o Brincar=o green card", "na cidade da Andes=a cidadania",

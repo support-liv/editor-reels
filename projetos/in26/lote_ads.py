@@ -9,11 +9,13 @@ e legenda um pouco mais alta (0.55), longe do botão e do texto do anúncio. Nas
 Takes escolhidos com a auditoria (auditar.py): só trechos falados olhando pra câmera, nunca lendo o celular.
 """
 import subprocess, sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
+import plataforma as PLAT
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 # pasta com os vídeos brutos e onde saem os prontos (mude com: export IN26_DIR=/caminho/da/pasta)
-IN26 = os.path.expanduser(os.environ.get("IN26_DIR", "~/Desktop/IN26"))
+IN26 = PLAT.caminho(os.environ.get("IN26_DIR", "~/Desktop/IN26"))
 D = os.path.join(IN26, "ADS") + "/"
 PASTA = os.path.join(IN26, "ADS", "prontos", "teste_A")
 TROCAS = ["InVin 6=IN26", "pomegamento=planejamento", "Se a dentista=Se você, dentista,",

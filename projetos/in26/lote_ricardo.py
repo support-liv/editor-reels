@@ -5,11 +5,13 @@ Só conferir os cortes: python3 lote_ricardo.py --so-cortes
 Só alguns:             python3 lote_ricardo.py R07 P01
 """
 import subprocess, sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
+import plataforma as PLAT
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 # pasta com os vídeos brutos e onde saem os prontos (mude com: export IN26_DIR=/caminho/da/pasta)
-IN26 = os.path.expanduser(os.environ.get("IN26_DIR", "~/Desktop/IN26"))
+IN26 = PLAT.caminho(os.environ.get("IN26_DIR", "~/Desktop/IN26"))
 V18, V5, V1 = [os.path.join(IN26, n) for n in ("IMG_3463.MOV", "IMG_3465.MOV", "IMG_3464.MOV")]
 CTA = "Quer saber se existe um caminho pro seu perfil? Link na bio"
 TROCAS = ["mas aquele não tem=mas aqui não tem", "só dentista=sou dentista", "dr=Dr.", "um gente sério=com gente séria", "uma gente conversou=como a gente conversou",

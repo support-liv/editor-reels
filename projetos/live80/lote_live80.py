@@ -13,13 +13,15 @@ Os shorts usam os trechos recortados da live (LIVE80_TRECHOS), cada um transcrit
 (tempo por palavra exato). A live inteira usa a transcrição do .vtt do YouTube (só nos cortes longos).
 """
 import os, subprocess, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
+import plataforma as PLAT
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 MOTION = os.path.join(AQUI, "..", "..", "motion", "renders")
 LIVE = os.path.expanduser(os.environ.get("LIVE80_VIDEO", "~/Downloads/LIVE 80 _ Perguntas e Respostas com advogada de imigração.mp4"))
-TRECHOS = os.path.expanduser(os.environ.get("LIVE80_TRECHOS", "~/Desktop/LIVE_80/trechos"))
-SAIDA = os.path.expanduser(os.environ.get("LIVE80_SAIDA", "~/Desktop/LIVE_80"))
+TRECHOS = PLAT.caminho(os.environ.get("LIVE80_TRECHOS", "~/Desktop/LIVE_80/trechos"))
+SAIDA = PLAT.caminho(os.environ.get("LIVE80_SAIDA", "~/Desktop/LIVE_80"))
 
 LONGOS = [
     ("L1_visa_bulletin_outubro", "270.6-868.1"),                                   # 4:30 - 14:28

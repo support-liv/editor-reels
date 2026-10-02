@@ -5,12 +5,14 @@ Só conferir os cortes: python3 lote_modelo.py --so-cortes
 Só alguns:             python3 lote_modelo.py V01 V03
 """
 import subprocess, sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
+import plataforma as PLAT
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 
 # pasta com os vídeos brutos (ou: export PASTA_PROJETO=/caminho)
-PASTA_PROJETO = os.path.expanduser(os.environ.get("PASTA_PROJETO", "~/Desktop/MEU_PROJETO"))
+PASTA_PROJETO = PLAT.caminho(os.environ.get("PASTA_PROJETO", "~/Desktop/Editor Reels/MEU_PROJETO"))
 PASTA = PASTA_PROJETO + "/"
 SAIDA = os.path.join(PASTA_PROJETO, "prontos")
 

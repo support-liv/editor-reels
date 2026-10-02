@@ -24,7 +24,7 @@ import plataforma as PLAT
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 MOTION = os.path.join(AQUI, "..", "..", "motion", "renders")
 LIVE = os.path.expanduser(os.environ.get("JORNADA_VIDEO", "~/Downloads/JORNADA DO DENTISTA NOS EUA- 14_09 às 20h.mp4"))
-SAIDA = os.path.expanduser(os.environ.get("JORNADA_SAIDA", "~/Desktop/JORNADA_DENTISTA"))
+SAIDA = PLAT.caminho(os.environ.get("JORNADA_SAIDA", "~/Desktop/JORNADA_DENTISTA"))
 
 # (início, fim) em segundos da live, na ordem da lista da equipe; o 1º é o cold open
 LONGO = [

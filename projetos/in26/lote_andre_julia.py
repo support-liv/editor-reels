@@ -7,11 +7,13 @@ Só alguns:             python3 lote_andre_julia.py A01 C03
 Trechos: "a-b?" = pergunta do Lucas nessa posição. Na conversa (IMG_3455) o quadro fecha em quem fala (tom de voz).
 """
 import subprocess, sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
+import plataforma as PLAT
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 # pasta com os vídeos brutos e onde saem os prontos (mude com: export IN26_DIR=/caminho/da/pasta)
-IN26 = os.path.expanduser(os.environ.get("IN26_DIR", "~/Desktop/IN26"))
+IN26 = PLAT.caminho(os.environ.get("IN26_DIR", "~/Desktop/IN26"))
 O = os.path.join(IN26, "videos ja gravados", "outros") + "/"
 PASTA = os.path.join(IN26, "prontos", "andre_julia")
 TOPO = os.path.join(IN26, "prontos", "topo_brasil_sem_futuro")
