@@ -19,6 +19,8 @@ Transcrição do corte longo: legenda .vtt do YouTube (editor/vtt_para_json.py).
 import os, subprocess, sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
+import plataforma as P
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 MOTION = os.path.join(AQUI, "..", "..", "motion", "renders")
 LIVE = os.path.expanduser(os.environ.get("JORNADA_VIDEO", "~/Downloads/JORNADA DO DENTISTA NOS EUA- 14_09 às 20h.mp4"))
@@ -172,7 +174,7 @@ def main():
     modo = sys.argv[1] if len(sys.argv) > 1 else "longo"
     if modo == "longo":
         trechos = longo_preciso()
-        cmd = ["python3", EDITOR, LIVE, "--layout", "youtube", "--marca", "imigrar", "--sem-vinheta", "--manter-perguntas",
+        cmd = [sys.executable, EDITOR, LIVE, "--layout", "youtube", "--marca", "imigrar", "--sem-vinheta", "--manter-perguntas",
                "--trechos", trechos, "--nome", "jornada_dentista_corte_longo", "--saida", os.path.join(SAIDA, "corte_longo")]
         for t in TROCAS:
             cmd += ["--trocar", t]
@@ -187,13 +189,13 @@ def main():
         arq = os.path.join(TRECHOS, f"{sid}_{nome}.mp4")
         if modo == "trechos":                       # recorte exato (reencodado) pra o Whisper transcrever só o trecho
             rodar(["ffmpeg", "-v", "error", "-y", "-ss", f"{a - 1.5:.3f}", "-to", f"{b + 2.0:.3f}", "-i", LIVE,
-                   "-c:v", "h264_videotoolbox", "-b:v", "24M", "-c:a", "aac", "-b:a", "192k", arq])
+                   *P.h264("24M"), "-c:a", "aac", "-b:a", "192k", arq])
             continue
         if modo == "transcrever":                   # só o Whisper (o editor guarda a transcrição do trecho)
-            rodar(["python3", EDITOR, arq, "--marca", "imigrar", "--so-cortes"])
+            rodar([sys.executable, EDITOR, arq, "--marca", "imigrar", "--so-cortes"])
             continue
         rel = rel_por_frases(arq, f_ini, f_fim)
-        cmd = ["python3", EDITOR, arq, "--marca", "imigrar", "--manter-perguntas", "--trechos", rel, "--gancho", gancho,
+        cmd = [sys.executable, EDITOR, arq, "--marca", "imigrar", "--manter-perguntas", "--trechos", rel, "--gancho", gancho,
                "--cor-caixa", cor, "--tirar-hesitacoes", "--respiro", "0.18", "--cauda", str(CAUDA)]
         if pessoas:
             cmd += ["--layout", "dividido", "--colunas", "3", "--pessoas", pessoas]

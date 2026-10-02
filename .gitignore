@@ -9,7 +9,6 @@ prontos/
 editor/transcricoes/
 editor/rostos
 editor/emoji
-editor/bandeira_*.png
 __pycache__/
 .DS_Store
 

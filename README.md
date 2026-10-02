@@ -10,15 +10,26 @@ Editor automático de Reels e anúncios em vídeo vertical. Pega o vídeo bruto 
 - normaliza o áudio para o volume do Instagram (-14 LUFS)
 - tem auditorias antes (takes lidos do celular) e depois (buracos entre falas)
 
-Roda 100% local no Mac, sem serviço pago: ffmpeg, Whisper, o detector de rostos do macOS (Vision) e Python.
+Roda 100% local no **Mac ou no Windows**, sem serviço pago: ffmpeg, Whisper, Python e o detector de rostos do sistema (Vision no Mac, OpenCV no Windows).
 
 ## Começo rápido
 
+Mac:
 ```bash
-git clone <url-do-repo> editor-reels
+git clone https://github.com/support-liv/editor-reels.git
 cd editor-reels
 ./setup.sh
 ```
+
+Windows (PowerShell):
+```powershell
+git clone https://github.com/support-liv/editor-reels.git
+cd editor-reels
+powershell -ExecutionPolicy Bypass -File .\setup.ps1
+```
+
+Depois, abra o Claude **dentro da pasta `editor-reels`** (assim ele lê o `CLAUDE.md`, as skills e os agentes do projeto)
+e arraste o vídeo para a conversa. O Claude roda os comandos; você só faz os logins (link no e-mail e o YouTube Studio).
 
 Um vídeo, com uma pessoa só:
 ```bash

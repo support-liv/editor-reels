@@ -12,6 +12,8 @@ cinza/preto/branco/laranja ficam opacos; entra subindo e sai com a entrada inver
 """
 import argparse, os, random, subprocess, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import plataforma as P
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 BALAO = os.path.join(os.path.dirname(AQUI), "assets", "inscreva_liv.mov")
@@ -92,7 +94,7 @@ def aplicar(video, saida=None, intervalo=60.0, log=print):
     for _ in ts:
         entradas += ["-i", BALAO]
     cmd = ["ffmpeg", "-v", "error", "-y"] + entradas + ["-filter_complex", filtro, "-map", saida_v, "-map", "0:a?",
-           "-c:v", "h264_videotoolbox", "-b:v", "12M", "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", saida]
+           *P.h264("12M"), "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", saida]
     subprocess.run(cmd, check=True)
     return saida, ts, blocos
 

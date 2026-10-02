@@ -17,6 +17,7 @@ Veja COMO_USAR.md pra todas as opções.
 import argparse, json, os, re, shutil, subprocess, sys, tempfile, unicodedata
 import numpy as np
 import cv2
+import plataforma as P
 from PIL import Image, ImageDraw, ImageFont
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -100,12 +101,7 @@ def entrada_video(path):
     hdr = st.get("color_transfer") in ("arib-std-b67", "smpte2084")
     if not hdr:
         return [], ""
-    rot = next((int(sd.get("rotation", 0)) for sd in st.get("side_data_list", []) if "rotation" in sd), 0) % 360
-    gira = {90: "transpose=2,", 270: "transpose=1,", 180: "hflip,vflip,"}.get(rot, "")
-    args = ["-hwaccel", "videotoolbox", "-hwaccel_output_format", "videotoolbox_vld", "-noautorotate"]
-    filtro = (f"scale_vt=w={st['width']}:h={st['height']}:color_matrix=bt709:color_primaries=bt709:"
-              f"color_transfer=bt709,hwdownload,format=p010le,{gira}")
-    return args, filtro
+    return P.entrada_hdr(st)                        # Mac: VideoToolbox; Windows: zscale + tonemap
 
 
 # ---------------------------------------------------------------- 1. transcrição
@@ -390,7 +386,7 @@ def olhar(video, fps=4):
     pontos = []
     for i in range(0, len(imgs), 400):
         lote = imgs[i:i + 400]
-        for j, ln in enumerate(run([DETECTOR] + [os.path.join(tmp, f) for f in lote]).strip().splitlines()):
+        for j, ln in enumerate(_detectar([os.path.join(tmp, f) for f in lote])):
             faces = [f for f in json.loads(ln) if len(f) >= 6]
             if faces:
                 f = max(faces, key=lambda f: f[2])
@@ -418,10 +414,12 @@ DETECTOR = os.path.join(AQUI, "rostos")
 
 
 def garantir_detector():
-    fonte = DETECTOR + ".swift"
-    if not os.path.exists(DETECTOR) or os.path.getmtime(DETECTOR) < os.path.getmtime(fonte):
-        print("Compilando o detector de rostos...")
-        run(["swiftc", "-O", fonte, "-o", DETECTOR])
+    """o detector é escolhido pela plataforma (Mac: Vision; Windows: OpenCV YuNet)."""
+
+
+def _detectar(imgs):
+    """uma linha JSON por imagem: [[cx, cy, w, h, pitch, yaw], ...] (mesmo formato nos dois sistemas)."""
+    return [json.dumps(r) for r in P.rostos(imgs)] if imgs else []
 
 
 def trajetoria(video, c, pessoa, alvo_x=None):
@@ -430,7 +428,7 @@ def trajetoria(video, c, pessoa, alvo_x=None):
     run(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s']:.3f}", "-i", video,
          "-vf", f"fps={AMOSTRAS_POR_SEG},scale=540:-2", "-q:v", "4", os.path.join(tmp, "%04d.jpg")])
     imgs = sorted(os.listdir(tmp))
-    linhas = run([DETECTOR] + [os.path.join(tmp, f) for f in imgs]).strip().splitlines() if imgs else []
+    linhas = _detectar([os.path.join(tmp, f) for f in imgs]) if imgs else []
     shutil.rmtree(tmp)
     if isinstance(alvo_x, int):
         return _trajetoria_por_ordem([json.loads(ln) for ln in linhas], alvo_x)
@@ -534,7 +532,7 @@ def posicoes_pessoas(video, n_amostras=16):
                         "-vf", "scale=540:-2", os.path.join(tmp, f"{i:03d}.jpg")])
     imgs = sorted(os.listdir(tmp))
     xs = []
-    for ln in run([DETECTOR] + [os.path.join(tmp, f) for f in imgs]).strip().splitlines():
+    for ln in _detectar([os.path.join(tmp, f) for f in imgs]):
         faces = [f for f in json.loads(ln) if f[2] > 0.03]
         if faces:
             maior = max(f[2] for f in faces)
@@ -698,10 +696,7 @@ EMOJIS = {"🇺🇸": os.path.join(AQUI, "bandeira_eua.png"), "🇧🇷": os.pat
 
 def _emoji(tok, altura):
     if not os.path.exists(EMOJIS[tok]):
-        gerador = os.path.join(AQUI, "emoji")
-        if not os.path.exists(gerador):
-            run(["swiftc", "-O", gerador + ".swift", "-o", gerador])
-        run([gerador, tok, EMOJIS[tok]])
+        P.emoji_png(tok, EMOJIS[tok])               # bandeiras já vêm no repo (o Windows não desenha bandeira)
     im = Image.open(EMOJIS[tok]).convert("RGBA")
     im = im.crop(im.getbbox())
     return im.resize((int(im.width * altura / im.height), altura), Image.LANCZOS)
@@ -951,7 +946,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
             fr = quadro_saida(t)
             if fr is not None:
                 arqs.append(os.path.join(tmp, f"{i}.jpg")); cv2.imwrite(arqs[-1], fr)
-        linhas = run([DETECTOR] + arqs).strip().splitlines() if arqs else []
+        linhas = _detectar(arqs) if arqs else []
         shutil.rmtree(tmp)
         return [f for ln in linhas for f in json.loads(ln) if f[2] >= 0.04]
 
@@ -988,7 +983,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{OUT_W}x{OUT_H}", "-r", str(FPS), "-i", "-",
-                            "-c:v", "h264_videotoolbox", "-b:v", "14M", "-pix_fmt", "yuv420p",
+                            *P.h264("14M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v],
                            stdin=subprocess.PIPE)
@@ -1115,7 +1110,7 @@ def renderizar_youtube(video, cortes, saida, marca, vinheta=True, so_checar=Fals
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-                            "-c:v", "h264_videotoolbox", "-b:v", "12M", "-pix_fmt", "yuv420p",
+                            *P.h264("12M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     fsize = W * H * 3
@@ -1153,7 +1148,7 @@ def rostos_por_lado(video, c, fps=2):
     imgs = sorted(os.listdir(tmp))
     esq, dir_ = [], []
     if imgs:
-        for ln in run([DETECTOR] + [os.path.join(tmp, f) for f in imgs]).strip().splitlines():
+        for ln in _detectar([os.path.join(tmp, f) for f in imgs]):
             for f in json.loads(ln):
                 if f[2] < 0.06:
                     continue
@@ -1172,7 +1167,7 @@ def rostos_por_coluna(video, c, n, fps=2):
     imgs = sorted(os.listdir(tmp))
     cols = [[] for _ in range(n)]
     if imgs:
-        for ln in run([DETECTOR] + [os.path.join(tmp, f) for f in imgs]).strip().splitlines():
+        for ln in _detectar([os.path.join(tmp, f) for f in imgs]):
             for f in json.loads(ln):
                 if f[2] < 0.04:
                     continue
@@ -1239,7 +1234,7 @@ def _dividido_render(video, cortes, saida, grupos, leg, img_gancho, img_cta, tot
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{OUT_W}x{OUT_H}", "-r", str(FPS), "-i", "-",
-                            "-c:v", "h264_videotoolbox", "-b:v", "14M", "-pix_fmt", "yuv420p",
+                            *P.h264("14M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     camadas = preparar_brolls(cortes, OUT_W, OUT_H)
@@ -1307,7 +1302,7 @@ def renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, to
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{OUT_W}x{OUT_H}", "-r", str(FPS), "-i", "-",
-                            "-c:v", "h264_videotoolbox", "-b:v", "14M", "-pix_fmt", "yuv420p",
+                            *P.h264("14M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     camadas = preparar_brolls(cortes, OUT_W, OUT_H)
@@ -1357,7 +1352,7 @@ def rosto_principal(video, cortes, por_corte=3):
                             "-vf", "scale=640:-2", os.path.join(tmp, f"{i:03d}_{k}.jpg")])
     imgs = sorted(os.listdir(tmp))
     pts = []
-    for ln in (run([DETECTOR] + [os.path.join(tmp, f) for f in imgs]).strip().splitlines() if imgs else []):
+    for ln in (_detectar([os.path.join(tmp, f) for f in imgs]) if imgs else []):
         faces = json.loads(ln)
         if faces:
             f = max(faces, key=lambda f: f[2]); pts.append(f[:2])
@@ -1443,7 +1438,7 @@ def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{lado_px}x{lado_px}", "-r", str(FPS), "-i", "-",
-                            "-c:v", "h264_videotoolbox", "-b:v", "6M", "-pix_fmt", "yuv420p",
+                            *P.h264("6M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     n_out, gi = 0, 0
@@ -1507,7 +1502,7 @@ def aplicar_animacoes(saida, animacoes):
         ult = f"v{k}"
     tmp = saida + ".motion.mp4"
     run(["ffmpeg", "-v", "error", "-y"] + entradas + ["-filter_complex", ";".join(cadeia), "-map", f"[{ult}]", "-map", "0:a",
-         "-c:v", "h264_videotoolbox", "-b:v", "14M", "-pix_fmt", "yuv420p",
+         *P.h264("14M"), "-pix_fmt", "yuv420p",
          "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
          "-c:a", "copy", "-movflags", "+faststart", tmp])
     os.replace(tmp, saida)

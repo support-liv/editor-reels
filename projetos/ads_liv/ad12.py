@@ -6,10 +6,12 @@
 Inserts: médicos com postura de autoridade (Pexels, conferidos quadro a quadro: formal, profissional), sonho americano (Miami), estoque interno da LIV
 (Dra. Lívia revisando processo em "baseado em mérito").
 """
-import os
+import os, sys
 AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.join(AQUI, "..", "..")
-BR = "~/Library/Caches/editor-reels/broll/pexels_{}.mp4"
+sys.path.insert(0, os.path.join(AQUI, "..", "..", "editor"))
+import plataforma as P
+BR = os.path.join(P.pasta_cache("broll"), "pexels_{}.mp4")
 EST = os.path.join(RAIZ, "assets", "estoque_liv", "{}")
 TR = os.path.join(RAIZ, "assets", "transicoes", "FILM BURNS {}.mp4")
 

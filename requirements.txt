@@ -5,3 +5,6 @@ numpy>=1.26
 librosa>=0.10
 playwright>=1.40
 certifi
+# só no Windows/Linux (no Mac o editor usa Vision e o Chaveiro do sistema)
+mediapipe>=0.10; sys_platform != "darwin"
+keyring>=24; sys_platform != "darwin"

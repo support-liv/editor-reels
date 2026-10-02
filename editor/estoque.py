@@ -13,6 +13,7 @@ import json, os, re, subprocess, sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI)
+import plataforma as P
 PASTA = os.path.join(os.path.dirname(AQUI), "assets", "estoque_liv")
 CATALOGO = os.path.join(PASTA, "catalogo.json")
 
@@ -36,7 +37,7 @@ def converter(origem, destino, orientacao):
             cor = f"colorspace=all=bt709:iprimaries={prim}:itrc=bt709:ispace=bt709:range=tv,"
     vf = f"{filtro}{cor}scale={lado}:force_original_aspect_ratio=decrease:flags=lanczos:out_range=tv,format=yuv420p"
     subprocess.run(["ffmpeg", "-v", "error", "-y"] + args + ["-i", origem, "-vf", vf,
-                    "-c:v", "h264_videotoolbox", "-b:v", "7M", "-maxrate", "9M", "-bufsize", "14M",
+                    *P.h264("7M"), "-maxrate", "9M", "-bufsize", "14M",
                     "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
                     "-c:a", "aac", "-b:a", "96k", "-ac", "2", "-movflags", "+faststart", destino], check=True)
 

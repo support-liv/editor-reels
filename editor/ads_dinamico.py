@@ -6,18 +6,20 @@ dividida no gancho (B-roll em cima, pessoa embaixo, pergunta na divisória).
     python3 editor/ads_dinamico.py projetos/ads_liv/ad2.py [--versao A|B] [--quadros 1.5,12.8,...]
 
 O roteiro (um .py com ROTEIRO = {...}) descreve tempos e textos; a fala vem do Whisper (palavras com tempo).
-Tudo roda no Mac: recorte da pessoa pelo Vision (editor/recorte_pessoa.swift), B-roll baixado pelo
+Roda no computador (Mac ou Windows): recorte da pessoa pelo Vision no Mac / MediaPipe no Windows, B-roll baixado pelo
 servidor do time (editor/broll_api.py). Marca LIV: sem sombra/contorno, cores e fonte do manual.
 """
 import argparse, hashlib, importlib.util, json, os, re, subprocess, sys, tempfile
 import numpy as np
 import cv2
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import plataforma as P
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.dirname(AQUI)
 W, H, FPS = 1080, 1920, 30
-CACHE = os.path.expanduser("~/Library/Caches/editor-reels/ads")
+CACHE = P.pasta_cache("ads")
 COR = {"azul": (44, 54, 66), "laranja": (255, 110, 31), "bege": (255, 240, 230), "branco": (255, 255, 255),
        "marrom": (148, 89, 67)}
 FONTE = os.path.join(RAIZ, "assets", "fontes", "DarkerGrotesque[wght].ttf")
@@ -85,16 +87,13 @@ def mascaras(video, n):
     if os.path.exists(npz):
         return np.load(npz, mmap_mode="r")
     os.makedirs(CACHE, exist_ok=True)
-    binario = os.path.join(CACHE, "recorte_pessoa")
-    if not os.path.exists(binario):
-        run(["swiftc", "-O", "-o", binario, os.path.join(AQUI, "recorte_pessoa.swift")])
     with tempfile.TemporaryDirectory() as tmp:
         ent, sai = os.path.join(tmp, "q"), os.path.join(tmp, "m")
         os.makedirs(ent)
         fl = Fluxo(video, lado=(W // 2, H // 2))          # meia resolução basta pra máscara (e é 4x mais rápido)
         for i in range(n):
             Image.fromarray(fl.quadro(i)).save(os.path.join(ent, f"{i:05d}.png"), compress_level=1)
-        run([binario, ent, sai])
+        P.mascaras_pessoa(ent, sai)                  # Mac: Vision; Windows: MediaPipe
         ms = np.zeros((n, H // 2, W // 2), np.uint8)
         for i in range(n):
             ms[i] = np.array(Image.open(os.path.join(sai, f"{i:05d}.png")).convert("L"))
@@ -518,7 +517,7 @@ def montar(rot, versao, saida, quadros_png=None):
 
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
-                            "-r", str(FPS), "-i", "-", "-c:v", "h264_videotoolbox", "-b:v", "16M", "-pix_fmt", "yuv420p",
+                            "-r", str(FPS), "-i", "-", *P.h264("16M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", tmp_v],
                            stdin=subprocess.PIPE)
     alvo_png = sorted(quadros_png or [])

@@ -8,9 +8,11 @@ Tipografia: só Darker Grotesque (marca), ênfase pelo peso (Black x Light), tra
 Legenda: padrão minimalista da LIV (palavra falada em laranja) nas cenas dela; lettering grande nos inserts.
 Imagens externas sempre aspiracionais (sonho americano). B-roll: Pexels pelo servidor do time.
 """
-import os
+import os, sys
 AQUI = os.path.dirname(os.path.abspath(__file__))
-BR = "~/Library/Caches/editor-reels/broll/pexels_{}.mp4"
+sys.path.insert(0, os.path.join(AQUI, "..", "..", "editor"))
+import plataforma as P
+BR = os.path.join(P.pasta_cache("broll"), "pexels_{}.mp4")
 TR = os.path.join(AQUI, "..", "..", "assets", "transicoes", "FILM BURNS {}.mp4")
 
 

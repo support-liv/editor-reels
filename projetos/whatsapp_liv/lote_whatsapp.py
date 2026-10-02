@@ -32,7 +32,7 @@ if __name__ == "__main__":
         if filtro and vid not in filtro:
             continue
         print(f"\n######## {vid} {nome}", flush=True)
-        cmd = ["python3", EDITOR, os.path.join(PASTA, arq), "--layout", "quadrado", "--marca", "liv",
+        cmd = [sys.executable, EDITOR, os.path.join(PASTA, arq), "--layout", "quadrado", "--marca", "liv",
                "--girar", str(girar), "--trechos", trechos, "--nome", f"{vid}_{nome}", "--saida", SAIDA]
         cmd += extras
         if dinamico:

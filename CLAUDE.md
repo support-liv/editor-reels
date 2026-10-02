@@ -69,6 +69,11 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 ## Git
 Commits locais à vontade; `git push` só quando a pessoa pedir. Mudança no editor: registrar no `CHANGELOG.md` e nos docs.
 
+## Mac e Windows
+- O repositório roda nos dois. Tudo que muda entre sistemas está em `editor/plataforma.py` (pastas de cache, codificador H.264 — VideoToolbox no Mac, NVENC/QuickSync/AMF ou libx264 no Windows —, HDR do iPhone, Chrome, detector de rostos — Vision no Mac, OpenCV YuNet no Windows —, recorte da pessoa — Vision / MediaPipe —, emoji e login guardado — Chaveiro / Gerenciador de Credenciais). **Nunca escreva caminho de Mac (`~/Library/...`, `/Applications/...`) nem `h264_videotoolbox` direto no código: use `plataforma`.**
+- Instalação: Mac `./setup.sh`; Windows `powershell -ExecutionPolicy Bypass -File .\setup.ps1` (instala via winget; Python 3.12 por causa do MediaPipe).
+- No Windows os comandos são no PowerShell e o Python é `py -3.12` (no lugar de `python3`); scripts que chamam outros scripts usam `sys.executable`.
+
 ## Quem roda os comandos
 - **O Claude roda todos os comandos** (login, conectar canal, buscar B-roll, enviar vídeo, editar). Nunca peça para o usuário abrir o terminal ou rodar comando.
 - O usuário só faz o que exige a identidade dele: clicar no link de login que chega no e-mail e clicar em "Permitir" na tela do Google ao conectar um canal. Códigos, senhas e chaves não passam pelo chat: se precisar de um segredo, ele mesmo cadastra no painel (Supabase → Secrets).

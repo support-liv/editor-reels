@@ -19,9 +19,11 @@ canal (editor/descricoes.py). Canais e IDs em editor/canais_youtube.json.
 import argparse, datetime as dt, json, os, re, subprocess, sys, time
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
-PERFIL = os.path.expanduser("~/Library/Application Support/editor-reels/chrome-studio")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import plataforma as P
+PERFIL = P.pasta_dados("chrome-studio")
 PORTA = 9333
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+CHROME = P.chrome()
 CANAIS = os.path.join(AQUI, "canais_youtube.json")
 sys.path.insert(0, AQUI)
 import descricoes
@@ -156,7 +158,7 @@ def _data_pt(d):
     return f"{d.day} de {MESES[d.month - 1]}. de {d.year}"
 
 
-AGENDA = os.path.expanduser("~/Library/Application Support/editor-reels/agenda_youtube.json")
+AGENDA = P.pasta_dados("agenda_youtube.json")
 
 
 def _anotar(canal, tipo, vid_id, quando):
@@ -254,8 +256,7 @@ def enviar(video, canal, titulo, descricao, tags, publicar_em=None, log=print, e
         _conferir(ctx, link, titulo, "Programado" if publicar_em else "Privado")
         return link
     except Exception:
-        os.makedirs(os.path.expanduser("~/Library/Caches/editor-reels"), exist_ok=True)
-        p.screenshot(path=os.path.expanduser("~/Library/Caches/editor-reels/studio_erro.png"))
+        p.screenshot(path=P.pasta_cache("studio_erro.png"))
         raise
     finally:
         p.close(); pw.stop()
@@ -338,7 +339,7 @@ def concluir_rascunho(canal, titulo, publicar_em=None, log=print):
         _conferir(ctx, link, titulo, "Programado" if publicar_em else "Privado")
         return link
     except Exception:
-        p.screenshot(path=os.path.expanduser("~/Library/Caches/editor-reels/studio_erro.png"))
+        p.screenshot(path=P.pasta_cache("studio_erro.png"))
         raise
     finally:
         p.close(); pw.stop()
@@ -386,7 +387,7 @@ def atualizar(video_id, descricao=None, privado=False, log=print):
         p.wait_for_timeout(2000)
         t = p.locator("#title-textarea #textbox").inner_text().strip()
     except Exception:
-        p.screenshot(path=os.path.expanduser("~/Library/Caches/editor-reels/studio_erro.png"))
+        p.screenshot(path=P.pasta_cache("studio_erro.png"))
         raise
     finally:
         p.close(); pw.stop()
@@ -432,7 +433,7 @@ def reprogramar(video_id, quando):
         p.locator("ytcp-button#save").click()                                    # salva o vídeo
         p.wait_for_timeout(4000)
     except Exception:
-        p.screenshot(path=os.path.expanduser("~/Library/Caches/editor-reels/studio_erro.png"))
+        p.screenshot(path=P.pasta_cache("studio_erro.png"))
         raise
     finally:
         p.close(); pw.stop()

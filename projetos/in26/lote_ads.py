@@ -55,7 +55,7 @@ if __name__ == "__main__":
         if filtro and rid not in filtro:
             continue
         print(f"\n######## {rid} {nome}", flush=True)
-        cmd = ["python3", EDITOR, video, "--marca", "imigrar",
+        cmd = [sys.executable, EDITOR, video, "--marca", "imigrar",
                "--trechos", trechos, "--gancho", gancho, "--nome", f"{rid}_{nome}", "--saida", PASTA,
                "--y-legenda", y_leg, "--checar-olhar"]
         if aperto:

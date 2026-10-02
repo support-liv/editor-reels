@@ -6,12 +6,14 @@
     python3 editor/conta.py status      # quem está logado
     python3 editor/conta.py sair        # apaga a sessão deste Mac
 
-A sessão fica no Chaveiro do macOS (criptografada), não em arquivo. Ela se renova sozinha; se ficar muito tempo
+A sessão fica no Chaveiro do macOS ou no Gerenciador de Credenciais do Windows (criptografada), não em arquivo. Ela se renova sozinha; se ficar muito tempo
 sem uso, é só entrar de novo. Nenhuma chave de API passa por aqui: elas ficam no servidor.
 """
 import getpass, http.server, json, os, subprocess, sys, time, urllib.error, urllib.parse, urllib.request
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, AQUI)
+import plataforma as P
 CFG = json.load(open(os.path.join(AQUI, "supabase_config.json")))
 SERVICO_CHAVEIRO = "editor-reels-supabase"
 
@@ -50,14 +52,12 @@ def _req(caminho, corpo=None, token=None, metodo="POST"):
 def _guardar(sessao):
     s = {k: sessao[k] for k in ("access_token", "refresh_token", "expires_at") if k in sessao}
     s["email"] = sessao.get("user", {}).get("email") or sessao.get("email")
-    subprocess.run(["security", "add-generic-password", "-U", "-a", getpass.getuser(), "-s", SERVICO_CHAVEIRO,
-                    "-w", json.dumps(s)], check=True, capture_output=True)
+    P.guardar_segredo(SERVICO_CHAVEIRO, json.dumps(s))     # Chaveiro (Mac) / Gerenciador de Credenciais (Windows)
 
 
 def _ler():
-    r = subprocess.run(["security", "find-generic-password", "-a", getpass.getuser(), "-s", SERVICO_CHAVEIRO, "-w"],
-                       capture_output=True, text=True)
-    return json.loads(r.stdout) if r.returncode == 0 and r.stdout.strip() else None
+    v = P.ler_segredo(SERVICO_CHAVEIRO)
+    return json.loads(v) if v else None
 
 
 def token():
@@ -149,8 +149,7 @@ def status():
 
 
 def sair():
-    subprocess.run(["security", "delete-generic-password", "-a", getpass.getuser(), "-s", SERVICO_CHAVEIRO],
-                   capture_output=True)
+    P.apagar_segredo(SERVICO_CHAVEIRO)
     print("Sessão apagada deste Mac.")
 
 

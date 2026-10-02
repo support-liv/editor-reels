@@ -33,7 +33,7 @@ def main():
     for cid, nome, trechos, gancho, layout, trocas in todos:
         if filtro and cid not in filtro:
             continue
-        cmd = ["python3", EDITOR, VIDEO, "--marca", "imigrar", "--trechos", trechos, "--gancho", gancho,
+        cmd = [sys.executable, EDITOR, VIDEO, "--marca", "imigrar", "--trechos", trechos, "--gancho", gancho,
                "--tirar-hesitacoes", "--respiro", "0.18", "--cauda", str(CAUDA)] + layout   # fala enxuta + cauda pro CTA
         for t in trocas:
             cmd += ["--trocar", t]

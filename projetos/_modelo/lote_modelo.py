@@ -31,7 +31,7 @@ if __name__ == "__main__":
         if filtro and vid not in filtro:
             continue
         print(f"\n######## {vid} {nome}", flush=True)
-        cmd = ["python3", EDITOR, video, "--marca", MARCA, "--trechos", trechos, "--gancho", gancho,
+        cmd = [sys.executable, EDITOR, video, "--marca", MARCA, "--trechos", trechos, "--gancho", gancho,
                "--nome", f"{vid}_{nome}", "--saida", SAIDA]
         if CTA:
             cmd += ["--cta", CTA]

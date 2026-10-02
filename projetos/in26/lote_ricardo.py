@@ -118,7 +118,7 @@ if __name__ == "__main__":
         if filtro and rid not in filtro:
             continue
         print(f"\n######## {rid} {nome}", flush=True)
-        cmd = ["python3", EDITOR, video, "--pessoa", "direita",
+        cmd = [sys.executable, EDITOR, video, "--pessoa", "direita",
                "--marca", "imigrar", "--trechos", trechos, "--gancho", gancho, "--cta", CTA,
                "--nome", f"{rid}_{nome}"]
         for t in TROCAS:

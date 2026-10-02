@@ -4,3 +4,7 @@ assets/estoque_liv/**/*.mov filter=lfs diff=lfs merge=lfs -text
 assets/estoque_liv/**/*.MP4 filter=lfs diff=lfs merge=lfs -text
 assets/trilhas/*.mp3 filter=lfs diff=lfs merge=lfs -text
 assets/transicoes/*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.sh text eol=lf
+*.ps1 text eol=crlf
+*.py text eol=lf
+*.swift text eol=lf

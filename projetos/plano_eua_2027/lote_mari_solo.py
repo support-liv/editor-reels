@@ -55,7 +55,7 @@ if __name__ == "__main__":
         if filtro and cid not in filtro:
             continue
         print(f"\n######## {cid} {nome} (tarja {CORES[i % 3]})", flush=True)
-        cmd = ["python3", EDITOR, VIDEO, "--layout", "quadro", "--marca", "imigrar", "--cor-caixa", CORES[i % 3],
+        cmd = [sys.executable, EDITOR, VIDEO, "--layout", "quadro", "--marca", "imigrar", "--cor-caixa", CORES[i % 3],
                "--trechos", trechos, "--gancho", gancho, "--cta", CTA, "--nome", f"{cid}_{nome}", "--saida", SAIDA]
         for t in TROCAS:
             cmd += ["--trocar", t]

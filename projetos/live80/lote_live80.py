@@ -63,13 +63,13 @@ def main():
     filtro = sys.argv[2:]
     if modo == "longos":
         for nome, trechos in LONGOS:
-            rodar(["python3", EDITOR, LIVE, "--layout", "youtube", "--marca", "liv", "--trechos", trechos,
+            rodar([sys.executable, EDITOR, LIVE, "--layout", "youtube", "--marca", "liv", "--trechos", trechos,
                    "--nome", nome, "--saida", os.path.join(SAIDA, "corte_longo")])
         return
     for sid, arq, trechos, gancho, cor in SHORTS:
         if filtro and sid not in filtro:
             continue
-        cmd = ["python3", EDITOR, os.path.join(TRECHOS, arq + ".mp4"), "--layout", "dividido", "--cima", "esquerda",
+        cmd = [sys.executable, EDITOR, os.path.join(TRECHOS, arq + ".mp4"), "--layout", "dividido", "--cima", "esquerda",
                "--marca", "liv", "--manter-perguntas", "--trechos", trechos, "--gancho", gancho, "--cor-caixa", cor,
                "--tirar-hesitacoes", "--respiro", "0.18"]      # shorts: sem "éé"/"então, assim" e com pausas curtas
         for t in TROCAS:
