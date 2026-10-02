@@ -17,6 +17,8 @@ __pycache__/
 !assets/*.mov
 !assets/transicoes/
 !assets/transicoes/*.mp4
+!assets/teste/
+!assets/teste/*.mp4
 !assets/estoque_liv/
 !assets/estoque_liv/**
 
