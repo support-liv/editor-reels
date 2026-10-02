@@ -4,7 +4,8 @@ As APIs externas do editor (hoje: B-roll do Pexels) passam por um servidor do ti
 (projeto **reels-editor**). Assim ninguém precisa de chave de API no computador.
 
 ## Para quem usa
-1. Uma vez por Mac, o Claude roda `python3 editor/conta.py entrar --email <email>` e a pessoa só clica no link que chega no e-mail
+1. Uma vez por computador (Mac ou Windows), o Claude roda `editor/conta.py entrar --email <email>` e a pessoa só clica no link que chega no e-mail.
+   O e-mail sai pelo **SMTP próprio** (Office 365, remetente "Reels Editor LIV/Imigrar" <contato@imigrareua.com>; Authentication → Emails → SMTP), configurado e testado em 01/10/2026 — sem ele o Supabase só envia para membros do projeto. Pode cair no spam na primeira vez. Limite padrão ~30 e-mails de login/hora (Authentication → Rate Limits)
    (o link volta para `http://127.0.0.1:8723`, cadastrado em Auth → URL Configuration → Redirect URLs).
 2. Pronto. A sessão fica no Chaveiro do macOS e se renova sozinha. `conta.py status` mostra quem está logado; `conta.py sair` apaga.
 3. B-roll: `python3 editor/broll_api.py "airport crowd" --baixar 1`.
