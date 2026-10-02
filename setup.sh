@@ -11,6 +11,8 @@ command -v swiftc >/dev/null && ok "swiftc" || falta "instale: xcode-select --in
 command -v ffmpeg >/dev/null && ok "ffmpeg" || falta "instale: brew install ffmpeg"
 ffmpeg -hide_banner -filters 2>/dev/null | grep -q scale_vt && ok "ffmpeg com VideoToolbox" || falta "ffmpeg sem scale_vt: atualize (brew upgrade ffmpeg)"
 command -v python3 >/dev/null && ok "python3" || falta "instale o Python 3.10+"
+command -v git-lfs >/dev/null || brew install git-lfs
+git lfs install --local >/dev/null && git lfs pull && ok "Git LFS (estoque de vídeos, trilhas, transições)"
 
 echo "Instalando pacotes Python..."
 python3 -m pip install -r requirements.txt --quiet && ok "pacotes"
@@ -18,6 +20,7 @@ python3 -m pip install -r requirements.txt --quiet && ok "pacotes"
 echo "Compilando os utilitários do macOS..."
 swiftc -O editor/rostos.swift -o editor/rostos && ok "detector de rostos"
 swiftc -O editor/emoji.swift -o editor/emoji && ok "gerador de emoji"
+mkdir -p ~/Library/Caches/editor-reels/ads && swiftc -O editor/recorte_pessoa.swift -o ~/Library/Caches/editor-reels/ads/recorte_pessoa && ok "recorte da pessoa (texto atrás)"
 
 echo "Baixando o modelo do Whisper (medium, ~1,5 GB, só na primeira vez)..."
 python3 -c "import whisper; whisper.load_model('medium')" && ok "modelo medium" \
@@ -32,4 +35,5 @@ else
 fi
 [ -d "/Applications/Google Chrome.app" ] && ok "Chrome (render das animações)" || echo "  ! instale o Google Chrome para renderizar animações"
 
-echo "Pronto. Teste: python3 editor/editor_reels.py --help"
+echo "Pronto. Falta só o login de cada pessoa (o Claude dispara): conta do time (python3 editor/conta.py entrar --email ...)"
+echo "e, para publicar, o YouTube Studio (python3 editor/studio.py abrir)."
