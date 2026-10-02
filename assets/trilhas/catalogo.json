@@ -1,0 +1,3633 @@
+{
+ "trilhas": [
+  {
+   "arquivo": "calmo__free-lo-fi-type-beat-blue-moon__78bpm__Fs-menor.mp3",
+   "origem": "(FREE) Lo-fi Type Beat - Blue Moon(MP3_160K).mp3",
+   "climas": [
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 251.7,
+   "bpm": 78,
+   "tom": "F# menor",
+   "modo": "menor",
+   "energia": 0.0755,
+   "variacao": 0.73,
+   "brilho_hz": 578,
+   "percussao": 0.31,
+   "lufs": -17.7
+  },
+  {
+   "arquivo": "calmo__cozy-lo-fi-background-calm-music-by-mokkamusic-night-city__103bpm__Cs-maior.mp3",
+   "origem": "(No Copyright Music) Cozy Lo Fi Background [Calm Music] by MokkaMusic _ Night City(MP3_320K).mp3",
+   "climas": [
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 121.2,
+   "bpm": 103,
+   "tom": "C# maior",
+   "modo": "maior",
+   "energia": 0.2415,
+   "variacao": 0.55,
+   "brilho_hz": 1210,
+   "percussao": 0.2,
+   "lufs": -10.4
+  },
+  {
+   "arquivo": "epico__intense-action-background-music-cinematic-music-by-argsound__78bpm__C-menor.mp3",
+   "origem": "(No Copyright) Intense Action Background Music _ Cinematic Music by Argsound(MP3_320K).mp3",
+   "climas": [
+    "epico",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 151.5,
+   "bpm": 78,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.2467,
+   "variacao": 0.22,
+   "brilho_hz": 1327,
+   "percussao": 0.26,
+   "lufs": -10.0
+  },
+  {
+   "arquivo": "energetico__angry-dubstep-music-cyberpunk-by-alex-productions__86bpm__As-menor.mp3",
+   "origem": "-- Angry Dubstep Music (No Copyright) - _Cyberpunk_ by Alex Productions ----(MP3_320K).mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 164.3,
+   "bpm": 86,
+   "tom": "A# menor",
+   "modo": "menor",
+   "energia": 0.2272,
+   "variacao": 0.65,
+   "brilho_hz": 2375,
+   "percussao": 0.35,
+   "lufs": -9.5
+  },
+  {
+   "arquivo": "calmo__aesthetic-music-eastridge-turnstile-by-the-loyalist__74bpm__Ds-maior.mp3",
+   "origem": "-- Copyright Free Aesthetic Music - _Eastridge Turnstile_ by The Loyalist ----(MP3_320K).mp3",
+   "climas": [
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 149.7,
+   "bpm": 74,
+   "tom": "D# maior",
+   "modo": "maior",
+   "energia": 0.1436,
+   "variacao": 0.71,
+   "brilho_hz": 1487,
+   "percussao": 0.24,
+   "lufs": -13.2
+  },
+  {
+   "arquivo": "calmo__indian-music-chill-trap-reality-by-ashutosh__89bpm__E-menor.mp3",
+   "origem": "-- Copyright Free Indian Music [Chill   Trap] _Reality_ by _ASHUTOSH  ----(MP3_320K).mp3",
+   "climas": [
+    "calmo",
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 140.2,
+   "bpm": 89,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.2405,
+   "variacao": 0.43,
+   "brilho_hz": 1826,
+   "percussao": 0.29,
+   "lufs": -8.1
+  },
+  {
+   "arquivo": "emocional__indian-r-b-electronic-music-for-videos-ethereal-dream-by-art__96bpm__C-menor.mp3",
+   "origem": "-- Indian R_B Electronic Music (For Videos) - _Ethereal Dream_ by Artificial.Music _ ASHUTOSH(MP3_320K).mp3",
+   "climas": [
+    "emocional"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 222.6,
+   "bpm": 96,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.2435,
+   "variacao": 0.49,
+   "brilho_hz": 1680,
+   "percussao": 0.25,
+   "lufs": -8.7
+  },
+  {
+   "arquivo": "calmo__lofi-hip-hop-beat-no-soft-calm-aesthetic-background-music-ch__152bpm__G-maior.mp3",
+   "origem": "-- Lofi Hip Hop Beat No Copyright Free Soft _ Calm Aesthetic Background Music _ Chill Vibes by Pufino(MP3_160K).mp3",
+   "climas": [
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 134.0,
+   "bpm": 152,
+   "tom": "G maior",
+   "modo": "maior",
+   "energia": 0.131,
+   "variacao": 0.66,
+   "brilho_hz": 942,
+   "percussao": 0.24,
+   "lufs": -15.9
+  },
+  {
+   "arquivo": "corporativo__indian-electronic-music-for-videos-inspire-by-ashutosh__89bpm__Gs-menor.mp3",
+   "origem": "-- Royalty Free Indian Electronic Music (For Videos) - _Inspire_ by ASHUTOSH ----(MP3_320K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 189.9,
+   "bpm": 89,
+   "tom": "G# menor",
+   "modo": "menor",
+   "energia": 0.274,
+   "variacao": 0.33,
+   "brilho_hz": 1795,
+   "percussao": 0.25,
+   "lufs": -8.2
+  },
+  {
+   "arquivo": "calmo__vlog-happy-lofi-music-for-videos-whistle-by-alex-productions__89bpm__B-maior.mp3",
+   "origem": "-- Vlog _ Happy Lofi (Music For Videos) - _Whistle_ by Alex Productions ----(MP3_160K).mp3",
+   "climas": [
+    "calmo",
+    "alegre"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 163.4,
+   "bpm": 89,
+   "tom": "B maior",
+   "modo": "maior",
+   "energia": 0.2759,
+   "variacao": 0.35,
+   "brilho_hz": 1583,
+   "percussao": 0.36,
+   "lufs": -8.8
+  },
+  {
+   "arquivo": "energetico__electronic-japanese-music-warrior-by-yoitrax__76bpm__D-menor.mp3",
+   "origem": "---- Electronic Japanese Music (Royalty Free) - _Warrior_ by Yoitrax(MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 141.3,
+   "bpm": 76,
+   "tom": "D menor",
+   "modo": "menor",
+   "energia": 0.1999,
+   "variacao": 0.45,
+   "brilho_hz": 2350,
+   "percussao": 0.28,
+   "lufs": -12.3
+  },
+  {
+   "arquivo": "tenso__1st__144bpm__Gs-menor.mp3",
+   "origem": "1st.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 99.3,
+   "bpm": 144,
+   "tom": "G# menor",
+   "modo": "menor",
+   "energia": 0.1502,
+   "variacao": 0.82,
+   "brilho_hz": 1578,
+   "percussao": 0.5,
+   "lufs": -13.3
+  },
+  {
+   "arquivo": "tenso__akacia-electric__161bpm__D-menor.mp3",
+   "origem": "Akacia - Electric [NCS Release].mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 141.5,
+   "bpm": 161,
+   "tom": "D menor",
+   "modo": "menor",
+   "energia": 0.2072,
+   "variacao": 0.58,
+   "brilho_hz": 1691,
+   "percussao": 0.18,
+   "lufs": -9.5
+  },
+  {
+   "arquivo": "tenso__anno-domini-beats-arms-dealer__86bpm__E-menor.mp3",
+   "origem": "Anno Domini Beats - Arms Dealer(MP3_160K).mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 271.4,
+   "bpm": 86,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.2724,
+   "variacao": 0.48,
+   "brilho_hz": 2379,
+   "percussao": 0.39,
+   "lufs": -8.6
+  },
+  {
+   "arquivo": "corporativo__anno-domini-beats-glass__99bpm__Fs-maior.mp3",
+   "origem": "Anno Domini Beats - Glass(MP3_160K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 167.7,
+   "bpm": 99,
+   "tom": "F# maior",
+   "modo": "maior",
+   "energia": 0.182,
+   "variacao": 0.79,
+   "brilho_hz": 1373,
+   "percussao": 0.38,
+   "lufs": -10.6
+  },
+  {
+   "arquivo": "tenso__anno-domini-beats-sinister__76bpm__C-menor.mp3",
+   "origem": "Anno Domini Beats - Sinister(MP3_160K).mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 219.6,
+   "bpm": 76,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.2916,
+   "variacao": 0.29,
+   "brilho_hz": 703,
+   "percussao": 0.25,
+   "lufs": -10.7
+  },
+  {
+   "arquivo": "corporativo__arrival__117bpm__C-menor.mp3",
+   "origem": "Arrival(MP3_320K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 255.1,
+   "bpm": 117,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.1902,
+   "variacao": 0.37,
+   "brilho_hz": 1246,
+   "percussao": 0.19,
+   "lufs": -11.1
+  },
+  {
+   "arquivo": "tenso__ava-low-tin-man-music__76bpm__Cs-menor.mp3",
+   "origem": "Ava Low - Tin man (Royalty Free Music)(MP3_320K).mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 150.4,
+   "bpm": 76,
+   "tom": "C# menor",
+   "modo": "menor",
+   "energia": 0.2982,
+   "variacao": 0.64,
+   "brilho_hz": 1794,
+   "percussao": 0.46,
+   "lufs": -8.0
+  },
+  {
+   "arquivo": "tenso__beauz-heleen-alone__103bpm__Cs-menor.mp3",
+   "origem": "BEAUZ & Heleen - Alone [NCS Release].mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 157.7,
+   "bpm": 103,
+   "tom": "C# menor",
+   "modo": "menor",
+   "energia": 0.2532,
+   "variacao": 0.49,
+   "brilho_hz": 1543,
+   "percussao": 0.26,
+   "lufs": -9.2
+  },
+  {
+   "arquivo": "corporativo__back-to-1981-iaio-free-background-music-audio-library-releas__117bpm__D-maior.mp3",
+   "origem": "Back to 1981 _ Iaio _ Free Background Music _ Audio Library Release(MP3_160K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 230.0,
+   "bpm": 117,
+   "tom": "D maior",
+   "modo": "maior",
+   "energia": 0.2232,
+   "variacao": 0.48,
+   "brilho_hz": 1578,
+   "percussao": 0.19,
+   "lufs": -10.3
+  },
+  {
+   "arquivo": "humor__bathtub-explorations__92bpm__Ds-maior.mp3",
+   "origem": "Bathtub Explorations(M4A_128K).mp3",
+   "climas": [
+    "humor"
+   ],
+   "marcas": [],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 108.3,
+   "bpm": 92,
+   "tom": "D# maior",
+   "modo": "maior",
+   "energia": 0.0996,
+   "variacao": 0.79,
+   "brilho_hz": 3093,
+   "percussao": 0.57,
+   "lufs": -14.5
+  },
+  {
+   "arquivo": "tenso__book-the-rental-wit-it-rage__92bpm__C-menor.mp3",
+   "origem": "Book The Rental Wit It - RAGE.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 151.4,
+   "bpm": 92,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.1175,
+   "variacao": 0.53,
+   "brilho_hz": 928,
+   "percussao": 0.3,
+   "lufs": -13.9
+  },
+  {
+   "arquivo": "tenso__breakpoint-eoin-mantell__123bpm__Cs-menor.mp3",
+   "origem": "Breakpoint - Eoin Mantell(MP3_320K).mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 141.7,
+   "bpm": 123,
+   "tom": "C# menor",
+   "modo": "menor",
+   "energia": 0.1236,
+   "variacao": 0.39,
+   "brilho_hz": 1577,
+   "percussao": 0.32,
+   "lufs": -13.8
+  },
+  {
+   "arquivo": "humor__comedy-music-background-instrumental-no-copyright-background__117bpm__G-maior.mp3",
+   "origem": "COMEDY MUSIC BACKGROUND INSTRUMENTAL _ NO COPYRIGHT BACKGROUND MUSIC(MP3_320K).mp3",
+   "climas": [
+    "humor"
+   ],
+   "marcas": [],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 217.2,
+   "bpm": 117,
+   "tom": "G maior",
+   "modo": "maior",
+   "energia": 0.1572,
+   "variacao": 0.45,
+   "brilho_hz": 1886,
+   "percussao": 0.26,
+   "lufs": -11.5
+  },
+  {
+   "arquivo": "calmo__chill-electronic-calm-by-unfeel-traveller__89bpm__B-menor.mp3",
+   "origem": "Chill Electronic Calm by unfeel [No Copyright Music] _ Traveller(MP3_320K).mp3",
+   "climas": [
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 133.0,
+   "bpm": 89,
+   "tom": "B menor",
+   "modo": "menor",
+   "energia": 0.2463,
+   "variacao": 0.51,
+   "brilho_hz": 1800,
+   "percussao": 0.31,
+   "lufs": -7.9
+  },
+  {
+   "arquivo": "calmo__chilling-stylish-lo-fi-hip-hop-by-alex-productions-breakfast__117bpm__A-menor.mp3",
+   "origem": "Chilling Stylish Lo-Fi Hip Hop by Alex-Productions [No Copyright Music] _ Breakfast in Paris(MP3_160K).mp3",
+   "climas": [
+    "calmo",
+    "luxo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 128.0,
+   "bpm": 117,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.099,
+   "variacao": 1.02,
+   "brilho_hz": 751,
+   "percussao": 0.34,
+   "lufs": -14.8
+  },
+  {
+   "arquivo": "energetico__chosen-one-verified-picasso__129bpm__Ds-menor.mp3",
+   "origem": "Chosen One - Verified Picasso.mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 155.0,
+   "bpm": 129,
+   "tom": "D# menor",
+   "modo": "menor",
+   "energia": 0.2486,
+   "variacao": 0.67,
+   "brilho_hz": 2201,
+   "percussao": 0.23,
+   "lufs": -11.2
+  },
+  {
+   "arquivo": "tenso__christoffer-moe-ditlevsen-tales-from-the-grave-music__81bpm__Cs-menor.mp3",
+   "origem": "Christoffer Moe Ditlevsen - Tales From the Grave (Royalty Free Music)(MP3_320K).mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 140.1,
+   "bpm": 81,
+   "tom": "C# menor",
+   "modo": "menor",
+   "energia": 0.1677,
+   "variacao": 0.32,
+   "brilho_hz": 1157,
+   "percussao": 0.13,
+   "lufs": -9.9
+  },
+  {
+   "arquivo": "epico__cinematic-background-music-for-videos-cinema__89bpm__G-menor.mp3",
+   "origem": "Cinematic Background Music for videos (No Copyright Music) _ CINEMA(MP3_160K).mp3",
+   "climas": [
+    "epico",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 140.0,
+   "bpm": 89,
+   "tom": "G menor",
+   "modo": "menor",
+   "energia": 0.1448,
+   "variacao": 0.32,
+   "brilho_hz": 1293,
+   "percussao": 0.27,
+   "lufs": -13.0
+  },
+  {
+   "arquivo": "epico__cinematic-epic-orchestra-by-alex-productions-epic-shield__117bpm__C-menor.mp3",
+   "origem": "Cinematic Epic Orchestra by Alex-Productions [No Copyright Music] _ Epic Shield(MP3_160K).mp3",
+   "climas": [
+    "epico",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 178.0,
+   "bpm": 117,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.1228,
+   "variacao": 0.43,
+   "brilho_hz": 1299,
+   "percussao": 0.25,
+   "lufs": -14.4
+  },
+  {
+   "arquivo": "tenso__contrast-anno-domini-beats__96bpm__D-menor.mp3",
+   "origem": "Contrast - Anno Domini Beats.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 136.1,
+   "bpm": 96,
+   "tom": "D menor",
+   "modo": "menor",
+   "energia": 0.1028,
+   "variacao": 0.91,
+   "brilho_hz": 1567,
+   "percussao": 0.43,
+   "lufs": -14.9
+  },
+  {
+   "arquivo": "tenso__crazy-patrick-patrikios__99bpm__F-menor.mp3",
+   "origem": "Crazy - Patrick Patrikios.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 134.5,
+   "bpm": 99,
+   "tom": "F menor",
+   "modo": "menor",
+   "energia": 0.2601,
+   "variacao": 0.38,
+   "brilho_hz": 1748,
+   "percussao": 0.28,
+   "lufs": -10.0
+  },
+  {
+   "arquivo": "tenso__culture-anno-domini-beats__108bpm__G-menor.mp3",
+   "origem": "Culture - Anno Domini Beats.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 154.8,
+   "bpm": 108,
+   "tom": "G menor",
+   "modo": "menor",
+   "energia": 0.271,
+   "variacao": 0.41,
+   "brilho_hz": 1275,
+   "percussao": 0.21,
+   "lufs": -11.2
+  },
+  {
+   "arquivo": "energetico__cutting-it-close-dj-freedem__74bpm__D-maior.mp3",
+   "origem": "Cutting It Close - DJ Freedem.mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 155.4,
+   "bpm": 74,
+   "tom": "D maior",
+   "modo": "maior",
+   "energia": 0.2632,
+   "variacao": 0.64,
+   "brilho_hz": 1129,
+   "percussao": 0.31,
+   "lufs": -10.2
+  },
+  {
+   "arquivo": "corporativo__cyberpunk-electro-retro-by-infraction-risky-business__129bpm__G-menor.mp3",
+   "origem": "Cyberpunk Electro Retro by Infraction [No Copyright Music] _ Risky Business(MP3_320K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador",
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 178.0,
+   "bpm": 129,
+   "tom": "G menor",
+   "modo": "menor",
+   "energia": 0.2837,
+   "variacao": 0.23,
+   "brilho_hz": 3100,
+   "percussao": 0.34,
+   "lufs": -8.5
+  },
+  {
+   "arquivo": "tenso__dark-tranquility-anno-domini-beats__81bpm__Fs-menor.mp3",
+   "origem": "Dark Tranquility - Anno Domini Beats.mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 183.0,
+   "bpm": 81,
+   "tom": "F# menor",
+   "modo": "menor",
+   "energia": 0.1988,
+   "variacao": 0.45,
+   "brilho_hz": 1458,
+   "percussao": 0.32,
+   "lufs": -12.8
+  },
+  {
+   "arquivo": "tenso__dark-zephyr-audio-hertz__129bpm__Ds-maior.mp3",
+   "origem": "Dark Zephyr - Audio Hertz.mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 142.5,
+   "bpm": 129,
+   "tom": "D# maior",
+   "modo": "maior",
+   "energia": 0.1584,
+   "variacao": 0.71,
+   "brilho_hz": 1419,
+   "percussao": 0.32,
+   "lufs": -13.0
+  },
+  {
+   "arquivo": "tenso__deathtown-free-no-copyright-beat-2023__144bpm__Fs-menor.mp3",
+   "origem": "Deathtown - [FREE NO COPYRIGHT BEAT 2023].mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 137.3,
+   "bpm": 144,
+   "tom": "F# menor",
+   "modo": "menor",
+   "energia": 0.128,
+   "variacao": 0.94,
+   "brilho_hz": 2131,
+   "percussao": 0.53,
+   "lufs": -14.1
+  },
+  {
+   "arquivo": "energetico__drop-anno-domini-beats__81bpm__C-maior.mp3",
+   "origem": "Drop - Anno Domini Beats.mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 180.0,
+   "bpm": 81,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.2623,
+   "variacao": 0.62,
+   "brilho_hz": 1041,
+   "percussao": 0.24,
+   "lufs": -10.1
+  },
+  {
+   "arquivo": "emocional__eine-kleine-nachtmusik-mozart__144bpm__D-maior.mp3",
+   "origem": "Eine Kleine Nachtmusik - Mozart(MP3_320K).mp3",
+   "climas": [
+    "emocional"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 347.6,
+   "bpm": 144,
+   "tom": "D maior",
+   "modo": "maior",
+   "energia": 0.0415,
+   "variacao": 0.7,
+   "brilho_hz": 1411,
+   "percussao": 0.23,
+   "lufs": -18.5
+  },
+  {
+   "arquivo": "tenso__el-secreto-yung-logos__161bpm__Fs-menor.mp3",
+   "origem": "El Secreto - Yung Logos.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 210.7,
+   "bpm": 161,
+   "tom": "F# menor",
+   "modo": "menor",
+   "energia": 0.4705,
+   "variacao": 0.24,
+   "brilho_hz": 1202,
+   "percussao": 0.15,
+   "lufs": -7.1
+  },
+  {
+   "arquivo": "energetico__electronic-hybrid-future-bass-by-alex-productions-how-many-t__144bpm__Ds-menor.mp3",
+   "origem": "Electronic Hybrid Future Bass by Alex-Productions [No Copyright Music] _ How Many Times(MP3_160K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 133.0,
+   "bpm": 144,
+   "tom": "D# menor",
+   "modo": "menor",
+   "energia": 0.2375,
+   "variacao": 0.54,
+   "brilho_hz": 2615,
+   "percussao": 0.33,
+   "lufs": -8.4
+  },
+  {
+   "arquivo": "epico__epic-trailer-build-up-free-no-copyright-legendary-movie-film__108bpm__C-menor.mp3",
+   "origem": "Epic Trailer Build-up Free No Copyright Legendary Movie_Film Background Music _ Cinematic by Aylex(MP3_160K).mp3",
+   "climas": [
+    "epico",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 103.0,
+   "bpm": 108,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.2028,
+   "variacao": 0.3,
+   "brilho_hz": 1896,
+   "percussao": 0.27,
+   "lufs": -9.5
+  },
+  {
+   "arquivo": "epico__extreme-electronic-stomp-trailer-by-alex-productions-ritmo__161bpm__E-menor.mp3",
+   "origem": "Extreme Electronic Stomp Trailer  by Alex-Productions [No Copyright Music] _ Ritmo(MP3_160K).mp3",
+   "climas": [
+    "epico",
+    "inspirador",
+    "energetico"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 56.0,
+   "bpm": 161,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.2218,
+   "variacao": 0.68,
+   "brilho_hz": 3184,
+   "percussao": 0.46,
+   "lufs": -8.9
+  },
+  {
+   "arquivo": "energetico__extreme-powerful-energetic-midtempo-cyberpunk-music-by-alex__89bpm__F-menor.mp3",
+   "origem": "Extreme Powerful Energetic Midtempo Cyberpunk music by Alex-Productions (No Copyright Music ) Fight(MP3_160K).mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 126.0,
+   "bpm": 89,
+   "tom": "F menor",
+   "modo": "menor",
+   "energia": 0.3289,
+   "variacao": 0.42,
+   "brilho_hz": 2972,
+   "percussao": 0.31,
+   "lufs": -7.3
+  },
+  {
+   "arquivo": "energetico__extreme-sport-electronic-stomp-by-alex-productions-push__161bpm__A-menor.mp3",
+   "origem": "Extreme Sport Electronic Stomp by Alex-Productions [No Copyright Music] _ Push(MP3_160K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 60.0,
+   "bpm": 161,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.2661,
+   "variacao": 0.56,
+   "brilho_hz": 2925,
+   "percussao": 0.31,
+   "lufs": -8.5
+  },
+  {
+   "arquivo": "energetico__fayzed-matrix-hard-flute-type-beat-trap-instrumental-beat-fr__152bpm__Fs-menor.mp3",
+   "origem": "FAYZED - MATRIX - Hard Flute Type Beat - Trap Instrumental Beat [ FREE NO COPYRIGHT MUSIC ](MP3_160K).mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 178.8,
+   "bpm": 152,
+   "tom": "F# menor",
+   "modo": "menor",
+   "energia": 0.3436,
+   "variacao": 0.61,
+   "brilho_hz": 1926,
+   "percussao": 0.27,
+   "lufs": -7.5
+  },
+  {
+   "arquivo": "energetico__free-beats-no-copyright-heads-up-free-type-beat-hype-type-tr__144bpm__E-menor.mp3",
+   "origem": "FREE BEATS NO COPYRIGHT - _Heads Up_ _ Free Type Beat _ Hype Type Trap Beat Instrumental(MP3_160K).mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 197.4,
+   "bpm": 144,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.2815,
+   "variacao": 0.83,
+   "brilho_hz": 2001,
+   "percussao": 0.33,
+   "lufs": -10.0
+  },
+  {
+   "arquivo": "tenso__free-old-school-dark-rap-beat-cutthroat-prod-by-syndrome__81bpm__D-maior.mp3",
+   "origem": "FREE Old School Dark Rap Beat _ Cutthroat (Prod. By Syndrome)(MP3_160K).mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 159.1,
+   "bpm": 81,
+   "tom": "D maior",
+   "modo": "maior",
+   "energia": 0.1933,
+   "variacao": 0.71,
+   "brilho_hz": 1990,
+   "percussao": 0.33,
+   "lufs": -12.4
+  },
+  {
+   "arquivo": "calmo__faraway-lucjo-free-background-music-audio-library-release__123bpm__Fs-menor.mp3",
+   "origem": "Faraway _ Lucjo _ Free Background Music _ Audio Library Release(MP3_160K).mp3",
+   "climas": [
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 213.1,
+   "bpm": 123,
+   "tom": "F# menor",
+   "modo": "menor",
+   "energia": 0.1238,
+   "variacao": 0.39,
+   "brilho_hz": 1541,
+   "percussao": 0.34,
+   "lufs": -15.5
+  },
+  {
+   "arquivo": "calmo__fashion-calm-technology-by-infraction-magazines__74bpm__C-maior.mp3",
+   "origem": "Fashion Calm Technology by Infraction [No Copyright Music] _ Magazines(MP3_320K).mp3",
+   "climas": [
+    "calmo",
+    "luxo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 183.0,
+   "bpm": 74,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.2446,
+   "variacao": 0.49,
+   "brilho_hz": 1988,
+   "percussao": 0.46,
+   "lufs": -9.0
+  },
+  {
+   "arquivo": "corporativo__fashion-saxophone-rnb-beat-by-infraction-stand-up__72bpm__D-menor.mp3",
+   "origem": "Fashion Saxophone Rnb Beat by Infraction [No Copyright Music] _ Stand Up(MP3_160K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador",
+    "luxo",
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 170.0,
+   "bpm": 72,
+   "tom": "D menor",
+   "modo": "menor",
+   "energia": 0.3243,
+   "variacao": 0.43,
+   "brilho_hz": 2891,
+   "percussao": 0.29,
+   "lufs": -8.3
+  },
+  {
+   "arquivo": "energetico__fashion-saxophone-trap-by-infraction-music-feelin-fine__72bpm__D-menor.mp3",
+   "origem": "Fashion Saxophone Trap by Infraction [Copyright Free Music] _ Feelin Fine(MP3_320K).mp3",
+   "climas": [
+    "energetico",
+    "polemico",
+    "luxo",
+    "calmo"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 209.0,
+   "bpm": 72,
+   "tom": "D menor",
+   "modo": "menor",
+   "energia": 0.285,
+   "variacao": 0.38,
+   "brilho_hz": 2447,
+   "percussao": 0.35,
+   "lufs": -8.3
+  },
+  {
+   "arquivo": "luxo__fashion-stylish-house-by-infraction-oddvision-sunset-lounge__112bpm__C-maior.mp3",
+   "origem": "Fashion Stylish House by Infraction_ OddVision [No Copyright Music] _ Sunset Lounge(MP3_320K).mp3",
+   "climas": [
+    "luxo",
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 77.0,
+   "bpm": 112,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.252,
+   "variacao": 0.73,
+   "brilho_hz": 2211,
+   "percussao": 0.51,
+   "lufs": -8.8
+  },
+  {
+   "arquivo": "luxo__fashion-stylish-r-b-by-infraction-whistling-rap__99bpm__E-menor.mp3",
+   "origem": "Fashion Stylish R_B by Infraction [No Copyright Music] _ Whistling Rap(MP3_160K).mp3",
+   "climas": [
+    "luxo",
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 92.0,
+   "bpm": 99,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.3488,
+   "variacao": 0.63,
+   "brilho_hz": 2769,
+   "percussao": 0.39,
+   "lufs": -7.4
+  },
+  {
+   "arquivo": "calmo__fashion-vlog-lo-fi-hip-hop-by-oddvision-infraction-chilling__152bpm__B-menor.mp3",
+   "origem": "Fashion Vlog Lo-Fi Hip-Hop by OddVision_ Infraction [No Copyright Music] _ Chilling Time(MP3_320K).mp3",
+   "climas": [
+    "calmo",
+    "luxo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 137.0,
+   "bpm": 152,
+   "tom": "B menor",
+   "modo": "menor",
+   "energia": 0.2868,
+   "variacao": 0.64,
+   "brilho_hz": 1420,
+   "percussao": 0.18,
+   "lufs": -8.9
+  },
+  {
+   "arquivo": "tenso__feel-land-of-fire-release-preview__74bpm__E-menor.mp3",
+   "origem": "Feel - Land of Fire (No Copyright Music) _ Release Preview(MP3_320K).mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 61.4,
+   "bpm": 74,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.3113,
+   "variacao": 0.43,
+   "brilho_hz": 1157,
+   "percussao": 0.22,
+   "lufs": -9.1
+  },
+  {
+   "arquivo": "corporativo__finally-the-sun-fact-background-music-ncs-ff__89bpm__F-menor.mp3",
+   "origem": "Finally The Sun _ Fact Background Music _ NCS FF(MP3_320K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 142.2,
+   "bpm": 89,
+   "tom": "F menor",
+   "modo": "menor",
+   "energia": 0.1514,
+   "variacao": 0.76,
+   "brilho_hz": 2176,
+   "percussao": 0.42,
+   "lufs": -14.2
+  },
+  {
+   "arquivo": "energetico__flute-beat-music-beatbox__96bpm__F-menor.mp3",
+   "origem": "Flute Beat Copyright Free Music  __ [BeatboX](MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 245.4,
+   "bpm": 96,
+   "tom": "F menor",
+   "modo": "menor",
+   "energia": 0.1739,
+   "variacao": 0.67,
+   "brilho_hz": 2110,
+   "percussao": 0.55,
+   "lufs": -13.0
+  },
+  {
+   "arquivo": "luxo__funk-stylish-groove-by-infraction-funky-thing__117bpm__C-maior.mp3",
+   "origem": "Funk Stylish Groove by Infraction [No Copyright Music] _ Funky Thing(MP3_320K).mp3",
+   "climas": [
+    "luxo",
+    "calmo",
+    "alegre"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 149.0,
+   "bpm": 117,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.2988,
+   "variacao": 0.3,
+   "brilho_hz": 2417,
+   "percussao": 0.42,
+   "lufs": -6.6
+  },
+  {
+   "arquivo": "alegre__funky-background-music-for-video-funk-music__152bpm__E-maior.mp3",
+   "origem": "Funky Background Music For Video __ Royalty Free Funk Music(MP3_160K).mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 107.7,
+   "bpm": 152,
+   "tom": "E maior",
+   "modo": "maior",
+   "energia": 0.3494,
+   "variacao": 0.39,
+   "brilho_hz": 2331,
+   "percussao": 0.42,
+   "lufs": -5.4
+  },
+  {
+   "arquivo": "humor__funny-background-music-music-04-scheming-weasel-kevin-macleo__161bpm__C-maior.mp3",
+   "origem": "Funny Background Music _ Music _04 Scheming Weasel(Kevin MacLeod) _ NO COPYRIGHT _ SS 1912(MP3_320K).mp3",
+   "climas": [
+    "humor"
+   ],
+   "marcas": [],
+   "licenca": {
+    "status": "credito",
+    "fonte": "Kevin MacLeod (CC BY: creditar)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 110.1,
+   "bpm": 161,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.0412,
+   "variacao": 0.67,
+   "brilho_hz": 853,
+   "percussao": 0.24,
+   "lufs": -23.4
+  },
+  {
+   "arquivo": "energetico__gully-dreams-hanu-dixit__99bpm__Ds-menor.mp3",
+   "origem": "Gully Dreams - Hanu Dixit.mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 112.7,
+   "bpm": 99,
+   "tom": "D# menor",
+   "modo": "menor",
+   "energia": 0.2265,
+   "variacao": 0.66,
+   "brilho_hz": 2394,
+   "percussao": 0.48,
+   "lufs": -11.3
+  },
+  {
+   "arquivo": "tenso__hidden-oco-alex-productions__99bpm__D-menor.mp3",
+   "origem": "Hidden ÔÇô Alex-Productions (No Copyright Music)(MP3_160K).mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 202.3,
+   "bpm": 99,
+   "tom": "D menor",
+   "modo": "menor",
+   "energia": 0.3164,
+   "variacao": 0.29,
+   "brilho_hz": 2012,
+   "percussao": 0.33,
+   "lufs": -8.0
+  },
+  {
+   "arquivo": "emocional__hopeless-jimena-contreras__72bpm__C-menor.mp3",
+   "origem": "Hopeless - Jimena Contreras.mp3",
+   "climas": [
+    "emocional"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 252.3,
+   "bpm": 72,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.1484,
+   "variacao": 0.26,
+   "brilho_hz": 1416,
+   "percussao": 0.07,
+   "lufs": -12.4
+  },
+  {
+   "arquivo": "energetico__illusions-anno-domini-beats__83bpm__G-maior.mp3",
+   "origem": "Illusions - Anno Domini Beats.mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 194.3,
+   "bpm": 83,
+   "tom": "G maior",
+   "modo": "maior",
+   "energia": 0.2675,
+   "variacao": 0.44,
+   "brilho_hz": 758,
+   "percussao": 0.23,
+   "lufs": -10.2
+  },
+  {
+   "arquivo": "luxo__jazz-in-paris__117bpm__A-menor.mp3",
+   "origem": "Jazz In Paris(MP3_320K).mp3",
+   "climas": [
+    "luxo",
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 102.3,
+   "bpm": 117,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.2903,
+   "variacao": 0.37,
+   "brilho_hz": 1687,
+   "percussao": 0.44,
+   "lufs": -8.6
+  },
+  {
+   "arquivo": "tenso__klondike-audio-hertz__92bpm__As-menor.mp3",
+   "origem": "Klondike - Audio Hertz.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 159.1,
+   "bpm": 92,
+   "tom": "A# menor",
+   "modo": "menor",
+   "energia": 0.2324,
+   "variacao": 0.59,
+   "brilho_hz": 1600,
+   "percussao": 0.28,
+   "lufs": -10.9
+  },
+  {
+   "arquivo": "calmo__late-night-driving-broke-in-summer-free-background-music-aud__96bpm__A-menor.mp3",
+   "origem": "Late Night Driving _ Broke In Summer _ Free Background Music _ Audio Library Release(MP3_320K).mp3",
+   "climas": [
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 300.0,
+   "bpm": 96,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.3363,
+   "variacao": 0.17,
+   "brilho_hz": 1237,
+   "percussao": 0.17,
+   "lufs": -8.6
+  },
+  {
+   "arquivo": "epico__legendary-epic-heroic-cinematic-music-by-alex-productions-fr__74bpm__C-menor.mp3",
+   "origem": "Legendary Epic Heroic Cinematic Music by Alex-Productions (No Copyright Music) Free Music _ Heroic(MP3_160K).mp3",
+   "climas": [
+    "epico",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 120.0,
+   "bpm": 74,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.1673,
+   "variacao": 0.44,
+   "brilho_hz": 1518,
+   "percussao": 0.22,
+   "lufs": -13.4
+  },
+  {
+   "arquivo": "corporativo__less-rake-oco-tubebackr__99bpm__C-maior.mp3",
+   "origem": "Less Rake ÔÇô tubebackr (No Copyright Music)(MP3_160K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 244.4,
+   "bpm": 99,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.2182,
+   "variacao": 0.54,
+   "brilho_hz": 2198,
+   "percussao": 0.39,
+   "lufs": -10.4
+  },
+  {
+   "arquivo": "calmo__lofi-hip-hop-instrumental-rap-free-no-copyright-sound-chill__89bpm__G-menor.mp3",
+   "origem": "Lofi Hip Hop Instrumental_ Rap [ FREE NO COPYRIGHT SOUND ] [ Chill Type Beat ] ITALICS - Forgive Me(MP3_160K).mp3",
+   "climas": [
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 183.4,
+   "bpm": 89,
+   "tom": "G menor",
+   "modo": "menor",
+   "energia": 0.1291,
+   "variacao": 0.78,
+   "brilho_hz": 1270,
+   "percussao": 0.4,
+   "lufs": -13.6
+  },
+  {
+   "arquivo": "energetico__lottery-anno-domini-beats__161bpm__C-maior.mp3",
+   "origem": "Lottery - Anno Domini Beats.mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 208.3,
+   "bpm": 161,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.2316,
+   "variacao": 0.67,
+   "brilho_hz": 1080,
+   "percussao": 0.22,
+   "lufs": -10.5
+  },
+  {
+   "arquivo": "tenso__luck-witch-audio-hertz__108bpm__G-menor.mp3",
+   "origem": "Luck Witch - Audio Hertz.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 120.2,
+   "bpm": 108,
+   "tom": "G menor",
+   "modo": "menor",
+   "energia": 0.0925,
+   "variacao": 0.79,
+   "brilho_hz": 1266,
+   "percussao": 0.33,
+   "lufs": -16.6
+  },
+  {
+   "arquivo": "corporativo__mbb-take-it-easy__117bpm__C-maior.mp3",
+   "origem": "MBB - Take It Easy (MP3).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 140.4,
+   "bpm": 117,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.2078,
+   "variacao": 0.47,
+   "brilho_hz": 2729,
+   "percussao": 0.33,
+   "lufs": -9.5
+  },
+  {
+   "arquivo": "tenso__mission-start-the-brothers-records__117bpm__F-menor.mp3",
+   "origem": "Mission Start - The Brothers Records.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 122.2,
+   "bpm": 117,
+   "tom": "F menor",
+   "modo": "menor",
+   "energia": 0.335,
+   "variacao": 0.44,
+   "brilho_hz": 1682,
+   "percussao": 0.14,
+   "lufs": -10.0
+  },
+  {
+   "arquivo": "tenso__mission-to-mars-audio-hertz__136bpm__A-menor.mp3",
+   "origem": "Mission to Mars - Audio Hertz.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 180.0,
+   "bpm": 136,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.165,
+   "variacao": 0.48,
+   "brilho_hz": 1696,
+   "percussao": 0.27,
+   "lufs": -13.5
+  },
+  {
+   "arquivo": "energetico__mr-gyani-fact-fact-background-music-ncs-ff__86bpm__F-menor.mp3",
+   "origem": "Mr Gyani Fact _ Fact Background Music _ NCS FF(MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 142.2,
+   "bpm": 86,
+   "tom": "F menor",
+   "modo": "menor",
+   "energia": 0.1486,
+   "variacao": 0.52,
+   "brilho_hz": 2271,
+   "percussao": 0.42,
+   "lufs": -14.8
+  },
+  {
+   "arquivo": "corporativo__never-surrender-anno-domini-beats__117bpm__F-menor.mp3",
+   "origem": "Never Surrender - Anno Domini Beats.mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 164.0,
+   "bpm": 117,
+   "tom": "F menor",
+   "modo": "menor",
+   "energia": 0.1784,
+   "variacao": 0.84,
+   "brilho_hz": 2284,
+   "percussao": 0.25,
+   "lufs": -13.9
+  },
+  {
+   "arquivo": "alegre__no-copyright-groove-day-hip-hop-beat-groove-and-modern-backg__83bpm__As-menor.mp3",
+   "origem": "No_Copyright_Groove_Day_Hip_Hop_Beat_Groove_and_Modern_Background.mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 134.4,
+   "bpm": 83,
+   "tom": "A# menor",
+   "modo": "menor",
+   "energia": 0.1655,
+   "variacao": 0.81,
+   "brilho_hz": 1854,
+   "percussao": 0.34,
+   "lufs": -10.6
+  },
+  {
+   "arquivo": "corporativo__music-aoeris-resonate-bc-release__112bpm__B-maior.mp3",
+   "origem": "Non Copyrighted Music _ Aoeris - Resonate [BC Release](MP3_320K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 220.0,
+   "bpm": 112,
+   "tom": "B maior",
+   "modo": "maior",
+   "energia": 0.2568,
+   "variacao": 0.38,
+   "brilho_hz": 2544,
+   "percussao": 0.26,
+   "lufs": -7.3
+  },
+  {
+   "arquivo": "energetico__not-for-nothing-oco-otis-mcdonald__86bpm__Gs-maior.mp3",
+   "origem": "Not For Nothing ÔÇô Otis McDonald (No Copyright Music)(MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 118.4,
+   "bpm": 86,
+   "tom": "G# maior",
+   "modo": "maior",
+   "energia": 0.1863,
+   "variacao": 0.96,
+   "brilho_hz": 1992,
+   "percussao": 0.69,
+   "lufs": -9.2
+  },
+  {
+   "arquivo": "energetico__ote-her-name-is-edith-instrumental-version-music__86bpm__C-maior.mp3",
+   "origem": "OTE - Her Name Is Edith (Instrumental Version) (Royalty Free Music)(MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 200.9,
+   "bpm": 86,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.3309,
+   "variacao": 0.26,
+   "brilho_hz": 2147,
+   "percussao": 0.22,
+   "lufs": -7.6
+  },
+  {
+   "arquivo": "alegre__ote-orange-marmalade-music__83bpm__C-maior.mp3",
+   "origem": "OTE - Orange Marmalade (Royalty Free Music)(MP3_320K).mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 158.6,
+   "bpm": 83,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.327,
+   "variacao": 0.14,
+   "brilho_hz": 1914,
+   "percussao": 0.19,
+   "lufs": -7.0
+  },
+  {
+   "arquivo": "alegre__ote-sea-lion-music__81bpm__C-menor.mp3",
+   "origem": "OTE - Sea Lion (Royalty Free Music)(MP3_320K).mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 211.2,
+   "bpm": 81,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.2711,
+   "variacao": 0.42,
+   "brilho_hz": 2455,
+   "percussao": 0.32,
+   "lufs": -8.3
+  },
+  {
+   "arquivo": "humor__oh-what-a-whirl__74bpm__A-menor.mp3",
+   "origem": "Oh What A Whirl(MP3_320K).mp3",
+   "climas": [
+    "humor"
+   ],
+   "marcas": [],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 163.8,
+   "bpm": 74,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.2811,
+   "variacao": 0.46,
+   "brilho_hz": 2126,
+   "percussao": 0.44,
+   "lufs": -7.5
+  },
+  {
+   "arquivo": "corporativo__okay-energy__129bpm__E-maior.mp3",
+   "origem": "Okay Energy(MP3_160K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 132.0,
+   "bpm": 129,
+   "tom": "E maior",
+   "modo": "maior",
+   "energia": 0.3454,
+   "variacao": 0.29,
+   "brilho_hz": 2725,
+   "percussao": 0.32,
+   "lufs": -4.7
+  },
+  {
+   "arquivo": "energetico__oa-chase-fast-music-for-videos-chase-by-alexander-nakarada__117bpm__A-menor.mp3",
+   "origem": "ÔÅ® Royalty Free Chase Fast Music (For Videos) - _Chase_ by Alexander Nakarada ----(MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 128.8,
+   "bpm": 117,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.2434,
+   "variacao": 0.27,
+   "brilho_hz": 1587,
+   "percussao": 0.24,
+   "lufs": -6.6
+  },
+  {
+   "arquivo": "energetico__past-oco-alex-productions__81bpm__Gs-maior.mp3",
+   "origem": "PAST ÔÇô Alex-Productions (No Copyright Music)(MP3_160K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 179.3,
+   "bpm": 81,
+   "tom": "G# maior",
+   "modo": "maior",
+   "energia": 0.2448,
+   "variacao": 0.76,
+   "brilho_hz": 1459,
+   "percussao": 0.19,
+   "lufs": -9.6
+  },
+  {
+   "arquivo": "emocional__patrick-patrikios-forget-me-not__129bpm__G-menor.mp3",
+   "origem": "Patrick Patrikios _ Forget Me Not(MP3_320K).mp3",
+   "climas": [
+    "emocional"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 196.5,
+   "bpm": 129,
+   "tom": "G menor",
+   "modo": "menor",
+   "energia": 0.2431,
+   "variacao": 0.21,
+   "brilho_hz": 2779,
+   "percussao": 0.32,
+   "lufs": -10.0
+  },
+  {
+   "arquivo": "corporativo__powerful-indie-rock-music-by-alex-productions-promotional-vi__103bpm__D-maior.mp3",
+   "origem": "Powerful Indie Rock music by Alex-Productions (No Copyright Music) _ Promotional Video(MP3_160K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador",
+    "energetico"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 112.0,
+   "bpm": 103,
+   "tom": "D maior",
+   "modo": "maior",
+   "energia": 0.1696,
+   "variacao": 0.42,
+   "brilho_hz": 2166,
+   "percussao": 0.45,
+   "lufs": -12.1
+  },
+  {
+   "arquivo": "energetico__powerful-trap-beat-by-alex-productions-extreme-car-trap-musi__81bpm__Fs-menor.mp3",
+   "origem": "Powerful Trap Beat By Alex-Productions ( No Copyright Music ) _ Extreme  Car Trap Music _ Strong _(MP3_160K).mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 121.2,
+   "bpm": 81,
+   "tom": "F# menor",
+   "modo": "menor",
+   "energia": 0.2633,
+   "variacao": 0.46,
+   "brilho_hz": 2020,
+   "percussao": 0.27,
+   "lufs": -10.0
+  },
+  {
+   "arquivo": "calmo__powerful-upbeat-energetic-lo-fi-hip-hop-by-alex-productions__99bpm__E-maior.mp3",
+   "origem": "Powerful Upbeat Energetic Lo-Fi Hip Hop by Alex-Productions [No Copyright Music] _ The GOAT(MP3_160K).mp3",
+   "climas": [
+    "calmo",
+    "energetico",
+    "alegre"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 103.0,
+   "bpm": 99,
+   "tom": "E maior",
+   "modo": "maior",
+   "energia": 0.3061,
+   "variacao": 0.47,
+   "brilho_hz": 2163,
+   "percussao": 0.45,
+   "lufs": -7.8
+  },
+  {
+   "arquivo": "corporativo__pray-anno-domini-beats__99bpm__Gs-maior.mp3",
+   "origem": "Pray - Anno Domini Beats.mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 115.2,
+   "bpm": 99,
+   "tom": "G# maior",
+   "modo": "maior",
+   "energia": 0.1712,
+   "variacao": 0.97,
+   "brilho_hz": 1039,
+   "percussao": 0.62,
+   "lufs": -11.6
+  },
+  {
+   "arquivo": "energetico__quincas-moreira-firefly__86bpm__G-menor.mp3",
+   "origem": "Quincas Moreira _ Firefly(MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 147.2,
+   "bpm": 86,
+   "tom": "G menor",
+   "modo": "menor",
+   "energia": 0.4142,
+   "variacao": 0.42,
+   "brilho_hz": 2202,
+   "percussao": 0.26,
+   "lufs": -6.8
+  },
+  {
+   "arquivo": "humor__raost-funny-background-music-ncs-ff__108bpm__C-maior.mp3",
+   "origem": "RAOST (FUNNY) BACKGROUND MUSIC _ NCS FF(MP3_320K).mp3",
+   "climas": [
+    "humor"
+   ],
+   "marcas": [],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 189.6,
+   "bpm": 108,
+   "tom": "C maior",
+   "modo": "maior",
+   "energia": 0.051,
+   "variacao": 0.56,
+   "brilho_hz": 2552,
+   "percussao": 0.33,
+   "lufs": -18.0
+  },
+  {
+   "arquivo": "humor__raost-funny-background-music-ncs-ff-1__103bpm__Fs-menor.mp3",
+   "origem": "RAOST (FUNNY) BACKGROUND MUSIC _ NCS FF(MP3_320K)_1.mp3",
+   "climas": [
+    "humor"
+   ],
+   "marcas": [],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 141.2,
+   "bpm": 103,
+   "tom": "F# menor",
+   "modo": "menor",
+   "energia": 0.2073,
+   "variacao": 0.63,
+   "brilho_hz": 2357,
+   "percussao": 0.46,
+   "lufs": -9.5
+  },
+  {
+   "arquivo": "energetico__racing-sport-gaming-by-alex-productions-racing-free-music-do__99bpm__E-menor.mp3",
+   "origem": "Racing Sport Gaming by Alex-Productions [No Copyright Music] _ RACING _ FREE MUSIC DOWNLOAD _(MP3_160K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 129.6,
+   "bpm": 99,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.2987,
+   "variacao": 0.44,
+   "brilho_hz": 3133,
+   "percussao": 0.39,
+   "lufs": -6.9
+  },
+  {
+   "arquivo": "energetico__rebel-oco-alex-productions__103bpm__E-menor.mp3",
+   "origem": "Rebel ÔÇô Alex-Productions (No Copyright Music)(MP3_160K).mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 218.2,
+   "bpm": 103,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.3157,
+   "variacao": 0.31,
+   "brilho_hz": 2535,
+   "percussao": 0.35,
+   "lufs": -7.7
+  },
+  {
+   "arquivo": "energetico__heavy-metal-instrumental-game-over__92bpm__D-menor.mp3",
+   "origem": "Royalty Free Heavy Metal Instrumental - Game Over(MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 231.0,
+   "bpm": 92,
+   "tom": "D menor",
+   "modo": "menor",
+   "energia": 0.165,
+   "variacao": 0.17,
+   "brilho_hz": 2745,
+   "percussao": 0.38,
+   "lufs": -10.7
+  },
+  {
+   "arquivo": "energetico__runaway-deer__108bpm__E-menor.mp3",
+   "origem": "Runaway Deer(MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 159.8,
+   "bpm": 108,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.3296,
+   "variacao": 0.29,
+   "brilho_hz": 2136,
+   "percussao": 0.36,
+   "lufs": -6.7
+  },
+  {
+   "arquivo": "tenso__schizo-anno-domini-beats__86bpm__As-menor.mp3",
+   "origem": "Schizo - Anno Domini Beats.mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 295.4,
+   "bpm": 86,
+   "tom": "A# menor",
+   "modo": "menor",
+   "energia": 0.2284,
+   "variacao": 0.67,
+   "brilho_hz": 2256,
+   "percussao": 0.45,
+   "lufs": -10.3
+  },
+  {
+   "arquivo": "emocional__schubert-ave-maria__161bpm__F-maior.mp3",
+   "origem": "Schubert - Ave Maria(MP3_320K).mp3",
+   "climas": [
+    "emocional"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 376.0,
+   "bpm": 161,
+   "tom": "F maior",
+   "modo": "maior",
+   "energia": 0.0363,
+   "variacao": 0.68,
+   "brilho_hz": 1119,
+   "percussao": 0.13,
+   "lufs": -23.7
+  },
+  {
+   "arquivo": "tenso__serial-killer-music-background-music-audio-instore__103bpm__E-menor.mp3",
+   "origem": "Serial Killer Music [No Copyright Background  Music] _ Royalty Free Background music _ Audio Instore(MP3_320K).mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 140.0,
+   "bpm": 103,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.1359,
+   "variacao": 0.57,
+   "brilho_hz": 1441,
+   "percussao": 0.28,
+   "lufs": -15.1
+  },
+  {
+   "arquivo": "tenso__shake-anno-domini-beats__99bpm__G-menor.mp3",
+   "origem": "Shake - Anno Domini Beats.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 145.5,
+   "bpm": 99,
+   "tom": "G menor",
+   "modo": "menor",
+   "energia": 0.1494,
+   "variacao": 0.71,
+   "brilho_hz": 1679,
+   "percussao": 0.57,
+   "lufs": -12.3
+  },
+  {
+   "arquivo": "corporativo__skylines-anno-domini-beats__99bpm__A-maior.mp3",
+   "origem": "Skylines - Anno Domini Beats.mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 164.3,
+   "bpm": 99,
+   "tom": "A maior",
+   "modo": "maior",
+   "energia": 0.2024,
+   "variacao": 0.72,
+   "brilho_hz": 1713,
+   "percussao": 0.38,
+   "lufs": -10.1
+  },
+  {
+   "arquivo": "tenso__spaceship__144bpm__A-menor.mp3",
+   "origem": "Spaceship.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 205.7,
+   "bpm": 144,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.2937,
+   "variacao": 0.2,
+   "brilho_hz": 1552,
+   "percussao": 0.13,
+   "lufs": -10.5
+  },
+  {
+   "arquivo": "energetico__sport-future-bass-energy-by-alex-productions-digital-love__99bpm__As-maior.mp3",
+   "origem": "Sport Future Bass Energy by Alex-Productions ]No Copyright music] _ Digital Love(MP3_160K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 124.0,
+   "bpm": 99,
+   "tom": "A# maior",
+   "modo": "maior",
+   "energia": 0.2575,
+   "variacao": 0.47,
+   "brilho_hz": 2109,
+   "percussao": 0.34,
+   "lufs": -8.3
+  },
+  {
+   "arquivo": "energetico__sport-percussive-rap-by-alex-productions-bubbles__152bpm__Cs-menor.mp3",
+   "origem": "Sport Percussive Rap by Alex-Productions (No Copyright Music) _ Bubbles(MP3_160K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 78.0,
+   "bpm": 152,
+   "tom": "C# menor",
+   "modo": "menor",
+   "energia": 0.1885,
+   "variacao": 0.68,
+   "brilho_hz": 3513,
+   "percussao": 0.5,
+   "lufs": -11.4
+  },
+  {
+   "arquivo": "energetico__sport-racing-electro-punk-by-infraction-full-speed__92bpm__B-menor.mp3",
+   "origem": "Sport Racing Electro Punk by Infraction [No Copyright Music] _ Full Speed(MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 211.0,
+   "bpm": 92,
+   "tom": "B menor",
+   "modo": "menor",
+   "energia": 0.2889,
+   "variacao": 0.42,
+   "brilho_hz": 2730,
+   "percussao": 0.36,
+   "lufs": -7.8
+  },
+  {
+   "arquivo": "energetico__sport-racing-rock-by-infraction-rock-and-ride__99bpm__D-menor.mp3",
+   "origem": "Sport Racing Rock by Infraction [No Copyright Music] _ Rock And Ride(MP3_160K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 125.0,
+   "bpm": 99,
+   "tom": "D menor",
+   "modo": "menor",
+   "energia": 0.2323,
+   "variacao": 0.24,
+   "brilho_hz": 2559,
+   "percussao": 0.31,
+   "lufs": -9.2
+  },
+  {
+   "arquivo": "energetico__sport-rock-racing-workout-by-infraction-punch__81bpm__E-menor.mp3",
+   "origem": "Sport Rock Racing Workout by Infraction [No Copyright Music] _ Punch(MP3_160K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 132.0,
+   "bpm": 81,
+   "tom": "E menor",
+   "modo": "menor",
+   "energia": 0.2689,
+   "variacao": 0.33,
+   "brilho_hz": 2140,
+   "percussao": 0.34,
+   "lufs": -7.3
+  },
+  {
+   "arquivo": "corporativo__stand-anno-domini-beats__129bpm__Gs-menor.mp3",
+   "origem": "Stand - Anno Domini Beats.mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 195.7,
+   "bpm": 129,
+   "tom": "G# menor",
+   "modo": "menor",
+   "energia": 0.4133,
+   "variacao": 0.18,
+   "brilho_hz": 745,
+   "percussao": 0.17,
+   "lufs": -7.5
+  },
+  {
+   "arquivo": "energetico__street-rhapsody-dj-freedem__86bpm__E-maior.mp3",
+   "origem": "Street Rhapsody - DJ Freedem.mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 169.1,
+   "bpm": 86,
+   "tom": "E maior",
+   "modo": "maior",
+   "energia": 0.2189,
+   "variacao": 0.69,
+   "brilho_hz": 1719,
+   "percussao": 0.39,
+   "lufs": -10.8
+  },
+  {
+   "arquivo": "corporativo__sunny-days-anno-domini-beats__89bpm__Gs-maior.mp3",
+   "origem": "Sunny Days - Anno Domini Beats.mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 185.3,
+   "bpm": 89,
+   "tom": "G# maior",
+   "modo": "maior",
+   "energia": 0.1541,
+   "variacao": 1.06,
+   "brilho_hz": 1274,
+   "percussao": 0.65,
+   "lufs": -10.6
+  },
+  {
+   "arquivo": "tenso__suspense-music-background-music-tension-music-free-to-use__86bpm__Ds-menor.mp3",
+   "origem": "Suspense - copyright free music - royalty free Background music - Tension Music - free to use(MP3_320K).mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 262.2,
+   "bpm": 86,
+   "tom": "D# menor",
+   "modo": "menor",
+   "energia": 0.1649,
+   "variacao": 0.64,
+   "brilho_hz": 1695,
+   "percussao": 0.2,
+   "lufs": -14.0
+  },
+  {
+   "arquivo": "energetico__t-rexed-audio-hertz__99bpm__D-menor.mp3",
+   "origem": "T-Rexed - Audio Hertz.mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 150.0,
+   "bpm": 99,
+   "tom": "D menor",
+   "modo": "menor",
+   "energia": 0.139,
+   "variacao": 0.8,
+   "brilho_hz": 1891,
+   "percussao": 0.25,
+   "lufs": -13.7
+  },
+  {
+   "arquivo": "energetico__trap-futuristic-stylish-technology-by-infraction-unreal__144bpm__A-menor.mp3",
+   "origem": "Trap Futuristic Stylish Technology by Infraction [No Copyright Music] _ Unreal(MP3_320K).mp3",
+   "climas": [
+    "energetico",
+    "polemico",
+    "luxo",
+    "calmo"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 105.0,
+   "bpm": 144,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.4143,
+   "variacao": 0.48,
+   "brilho_hz": 1568,
+   "percussao": 0.22,
+   "lufs": -7.1
+  },
+  {
+   "arquivo": "tenso__triple-six__108bpm__A-menor.mp3",
+   "origem": "Triple Six(MP3_320K).mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 166.8,
+   "bpm": 108,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.3148,
+   "variacao": 0.46,
+   "brilho_hz": 2042,
+   "percussao": 0.18,
+   "lufs": -9.3
+  },
+  {
+   "arquivo": "alegre__tropic-anno-domini-beats__99bpm__A-menor.mp3",
+   "origem": "Tropic - Anno Domini Beats.mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 140.1,
+   "bpm": 99,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.1803,
+   "variacao": 0.74,
+   "brilho_hz": 1364,
+   "percussao": 0.35,
+   "lufs": -11.4
+  },
+  {
+   "arquivo": "alegre__tropic-fuse-french-fuse__99bpm__Cs-maior.mp3",
+   "origem": "Tropic Fuse - French Fuse.mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 109.3,
+   "bpm": 99,
+   "tom": "C# maior",
+   "modo": "maior",
+   "energia": 0.1944,
+   "variacao": 0.48,
+   "brilho_hz": 1905,
+   "percussao": 0.37,
+   "lufs": -11.9
+  },
+  {
+   "arquivo": "alegre__upbeat-dance-funk-pop-by-infraction-the-disc__103bpm__Gs-menor.mp3",
+   "origem": "Upbeat Dance Funk Pop by Infraction [No Copyright Music] _ The Disc(MP3_320K).mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 154.0,
+   "bpm": 103,
+   "tom": "G# menor",
+   "modo": "menor",
+   "energia": 0.2172,
+   "variacao": 0.68,
+   "brilho_hz": 2521,
+   "percussao": 0.4,
+   "lufs": -10.0
+  },
+  {
+   "arquivo": "luxo__upbeat-energetic-hip-hop-by-infraction-jazzy__92bpm__Cs-menor.mp3",
+   "origem": "Upbeat Energetic Hip-Hop by Infraction [No Copyright Music] _ Jazzy(MP3_160K).mp3",
+   "climas": [
+    "luxo",
+    "calmo",
+    "alegre"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 110.0,
+   "bpm": 92,
+   "tom": "C# menor",
+   "modo": "menor",
+   "energia": 0.2984,
+   "variacao": 0.48,
+   "brilho_hz": 2928,
+   "percussao": 0.4,
+   "lufs": -7.6
+  },
+  {
+   "arquivo": "alegre__upbeat-funk-positive-by-infraction-groovy-town__99bpm__A-menor.mp3",
+   "origem": "Upbeat Funk Positive by Infraction [No Copyright Music] _ Groovy Town(MP3_320K).mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 129.0,
+   "bpm": 99,
+   "tom": "A menor",
+   "modo": "menor",
+   "energia": 0.3053,
+   "variacao": 0.33,
+   "brilho_hz": 2110,
+   "percussao": 0.4,
+   "lufs": -7.4
+  },
+  {
+   "arquivo": "alegre__upbeat-funky-background-music-for-video-funk-music-for-comme__74bpm__F-menor.mp3",
+   "origem": "Upbeat Funky Background Music for Video __ ROYALTY FREE Funk Music for Commercial Use(MP3_160K).mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 68.4,
+   "bpm": 74,
+   "tom": "F menor",
+   "modo": "menor",
+   "energia": 0.1947,
+   "variacao": 0.5,
+   "brilho_hz": 2693,
+   "percussao": 0.51,
+   "lufs": -8.7
+  },
+  {
+   "arquivo": "alegre__upbeat-hip-hop-background-music-for-videos__89bpm__Fs-menor.mp3",
+   "origem": "Upbeat Hip Hop Background Music for Videos (No Copyright)(MP3_160K).mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 130.6,
+   "bpm": 89,
+   "tom": "F# menor",
+   "modo": "menor",
+   "energia": 0.366,
+   "variacao": 0.46,
+   "brilho_hz": 1817,
+   "percussao": 0.36,
+   "lufs": -6.2
+  },
+  {
+   "arquivo": "alegre__upbeat-reggaeton-latin-by-infraction-shake-head__99bpm__C-menor.mp3",
+   "origem": "Upbeat Reggaeton Latin by Infraction [No Copyright Music] _ Shake Head(MP3_160K).mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 102.0,
+   "bpm": 99,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.3642,
+   "variacao": 0.54,
+   "brilho_hz": 2422,
+   "percussao": 0.32,
+   "lufs": -7.0
+  },
+  {
+   "arquivo": "corporativo__uplifting-hip-hop-background-music-for-videos-free-for-non-c__152bpm__F-maior.mp3",
+   "origem": "Uplifting Hip Hop Background Music for Videos (Free For Non-Commercial Use)(MP3_160K).mp3",
+   "climas": [
+    "corporativo",
+    "inspirador"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 117.6,
+   "bpm": 152,
+   "tom": "F maior",
+   "modo": "maior",
+   "energia": 0.2702,
+   "variacao": 0.39,
+   "brilho_hz": 2052,
+   "percussao": 0.36,
+   "lufs": -7.2
+  },
+  {
+   "arquivo": "emocional__violin-instrumental-violin-music-no-download__99bpm__G-maior.mp3",
+   "origem": "Violin Instrumental No Copyright Music Royalty free violin music no copyright Free Download (320kbps).mp3",
+   "climas": [
+    "emocional"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 83.9,
+   "bpm": 99,
+   "tom": "G maior",
+   "modo": "maior",
+   "energia": 0.2747,
+   "variacao": 0.61,
+   "brilho_hz": 2016,
+   "percussao": 0.08,
+   "lufs": -5.7
+  },
+  {
+   "arquivo": "tenso__warzone-anno-domini-beats__152bpm__Cs-menor.mp3",
+   "origem": "Warzone - Anno Domini Beats.mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 249.6,
+   "bpm": 152,
+   "tom": "C# menor",
+   "modo": "menor",
+   "energia": 0.3505,
+   "variacao": 0.35,
+   "brilho_hz": 1823,
+   "percussao": 0.19,
+   "lufs": -9.6
+  },
+  {
+   "arquivo": "energetico__where-the-trap-is-audio-hertz__96bpm__D-menor.mp3",
+   "origem": "Where The Trap Is - Audio Hertz.mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 146.5,
+   "bpm": 96,
+   "tom": "D menor",
+   "modo": "menor",
+   "energia": 0.1405,
+   "variacao": 0.77,
+   "brilho_hz": 2085,
+   "percussao": 0.37,
+   "lufs": -13.7
+  },
+  {
+   "arquivo": "tenso__world-war-outerspace-audio-hertz__86bpm__F-menor.mp3",
+   "origem": "World War Outerspace - Audio Hertz.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "YouTube Audio Library",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 199.7,
+   "bpm": 86,
+   "tom": "F menor",
+   "modo": "menor",
+   "energia": 0.2034,
+   "variacao": 0.58,
+   "brilho_hz": 1427,
+   "percussao": 0.25,
+   "lufs": -14.1
+  },
+  {
+   "arquivo": "energetico__free-no-copyright-beat-2020-free-instrumental-trap-11__99bpm__C-menor.mp3",
+   "origem": "[FREE NO COPYRIGHT BEAT 2020] FREE INSTRUMENTAL TRAP _11(MP3_160K).mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 182.0,
+   "bpm": 99,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.229,
+   "variacao": 0.67,
+   "brilho_hz": 2003,
+   "percussao": 0.31,
+   "lufs": -10.6
+  },
+  {
+   "arquivo": "energetico__free-no-copyright-beat-2020-free-instrumental-trap-8__129bpm__E-maior.mp3",
+   "origem": "[FREE NO COPYRIGHT BEAT 2020] FREE INSTRUMENTAL TRAP _8(MP3_160K).mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 201.6,
+   "bpm": 129,
+   "tom": "E maior",
+   "modo": "maior",
+   "energia": 0.1953,
+   "variacao": 0.75,
+   "brilho_hz": 1411,
+   "percussao": 0.26,
+   "lufs": -12.5
+  },
+  {
+   "arquivo": "alegre__free-dancehall-riddim-instrumental-2023-big-plans__129bpm__As-maior.mp3",
+   "origem": "[FREE] Dancehall Riddim Instrumental 2023 - Big Plans(MP3_160K).mp3",
+   "climas": [
+    "alegre"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 186.3,
+   "bpm": 129,
+   "tom": "A# maior",
+   "modo": "maior",
+   "energia": 0.1697,
+   "variacao": 0.65,
+   "brilho_hz": 1573,
+   "percussao": 0.34,
+   "lufs": -12.7
+  },
+  {
+   "arquivo": "energetico__free-hard-bass-type-beat-russian-slav-prod-leo-hard-bass-typ__83bpm__Cs-menor.mp3",
+   "origem": "[FREE] Hard Bass Type Beat Russian _Slav_ (prod. Leo) hard bass type beat(MP3_320K).mp3",
+   "climas": [
+    "energetico",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "beat 'free' (em geral só uso não comercial)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 117.2,
+   "bpm": 83,
+   "tom": "C# menor",
+   "modo": "menor",
+   "energia": 0.4378,
+   "variacao": 0.24,
+   "brilho_hz": 1468,
+   "percussao": 0.29,
+   "lufs": -6.6
+  },
+  {
+   "arquivo": "tenso__horror-music-no-copyright-horror-background-music-no-copyrig__86bpm__A-maior.mp3",
+   "origem": "[Horror Music No Copyright]Horror Background Music No Copyright - Non Copyrighted Scary Music(MP3_320K).mp3",
+   "climas": [
+    "tenso",
+    "polemico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "conferir",
+    "fonte": "origem não identificada pelo nome",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 177.1,
+   "bpm": 86,
+   "tom": "A maior",
+   "modo": "maior",
+   "energia": 0.1351,
+   "variacao": 0.53,
+   "brilho_hz": 1275,
+   "percussao": 0.24,
+   "lufs": -14.9
+  },
+  {
+   "arquivo": "energetico__kubbi-ember-chiptune__99bpm__C-menor.mp3",
+   "origem": "[No Copyright Music] Kubbi - Ember [Chiptune](MP3_160K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 290.9,
+   "bpm": 99,
+   "tom": "C menor",
+   "modo": "menor",
+   "energia": 0.2019,
+   "variacao": 0.5,
+   "brilho_hz": 1902,
+   "percussao": 0.2,
+   "lufs": -10.5
+  },
+  {
+   "arquivo": "luxo__lensko-circles-norwegian-house__129bpm__D-maior.mp3",
+   "origem": "[No Copyright Music] Lensko - Circles [Norwegian House](MP3_320K).mp3",
+   "climas": [
+    "luxo",
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "NCS / Infraction (crédito obrigatório; uso comercial só com licença)",
+    "anuncio_pago": "nao"
+   },
+   "duracao_s": 281.8,
+   "bpm": 129,
+   "tom": "D maior",
+   "modo": "maior",
+   "energia": 0.2108,
+   "variacao": 0.44,
+   "brilho_hz": 2148,
+   "percussao": 0.28,
+   "lufs": -10.1
+  },
+  {
+   "arquivo": "calmo__music-smarttoaster-herbal-tea-lo-fi__129bpm__Ds-menor.mp3",
+   "origem": "[Non Copyrighted Music] _SmartToaster  - Herbal Tea [Lo-fi](MP3_160K).mp3",
+   "climas": [
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 184.8,
+   "bpm": 129,
+   "tom": "D# menor",
+   "modo": "menor",
+   "energia": 0.1633,
+   "variacao": 1.09,
+   "brilho_hz": 1603,
+   "percussao": 0.21,
+   "lufs": -9.5
+  },
+  {
+   "arquivo": "energetico__awake-by-sappheiros-chinese-electronic-music__136bpm__D-maior.mp3",
+   "origem": "_Awake_ by _Sappheiros  _ ---- Chinese Electronic Music (No Copyright)(MP3_320K).mp3",
+   "climas": [
+    "energetico"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 271.0,
+   "bpm": 136,
+   "tom": "D maior",
+   "modo": "maior",
+   "energia": 0.233,
+   "variacao": 0.47,
+   "brilho_hz": 1392,
+   "percussao": 0.19,
+   "lufs": -10.0
+  },
+  {
+   "arquivo": "luxo__jazzaddicts-by-cosimo-fogg-jazz-hip-hop__96bpm__F-menor.mp3",
+   "origem": "_Jazzaddicts_ by Cosimo Fogg ---- _ Jazz Hip Hop (No Copyright Music) --(MP3_160K).mp3",
+   "climas": [
+    "luxo",
+    "calmo"
+   ],
+   "marcas": [
+    "liv",
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "credito",
+    "fonte": "criador independente (livre com crédito)",
+    "anuncio_pago": "conferir"
+   },
+   "duracao_s": 205.9,
+   "bpm": 96,
+   "tom": "F menor",
+   "modo": "menor",
+   "energia": 0.2249,
+   "variacao": 0.53,
+   "brilho_hz": 1495,
+   "percussao": 0.46,
+   "lufs": -10.4
+  },
+  {
+   "arquivo": "tenso__mixkit-cbpd-400__144bpm__Gs-menor.mp3",
+   "origem": "mixkit-cbpd-400.mp3",
+   "climas": [
+    "tenso"
+   ],
+   "marcas": [
+    "imigrar"
+   ],
+   "licenca": {
+    "status": "liberada",
+    "fonte": "Mixkit (licença livre, uso comercial)",
+    "anuncio_pago": "sim"
+   },
+   "duracao_s": 99.3,
+   "bpm": 144,
+   "tom": "G# menor",
+   "modo": "menor",
+   "energia": 0.1502,
+   "variacao": 0.82,
+   "brilho_hz": 1578,
+   "percussao": 0.5,
+   "lufs": -13.3
+  }
+ ],
+ "bloqueadas_fora_do_repo": [
+  {
+   "origem": "AndreoBee Full Outro Song(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "CarryMinati Background Music _2(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "Digi G_Alessio - Darix Togni(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "Doraemon(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "It Takes Two to Tango - Vanoss Gaming Background Music (HD)(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "John Swihart -- Bus Rider(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "Out Of The Blue [Instrumental Version] by Aldenmark Niklasson - [2010s Pop Music](MP3_320K).mp3",
+   "motivo": "Epidemic Sound (exige assinatura)"
+  },
+  {
+   "origem": "Palm City- Getaway Instrumental (Ryan Trahan Donation List Music)(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "ProBoiz 95 Outro Song ----------(SONG NAME___)(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "SebastiAn - Pleasant(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "SpongeBob Music_ Happy-Go-Lively(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "SpongeBob Production Music House of Horror(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "Teddy gaming cinematic background music download _ teddy gaming cinematic background song(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "Wii Shop Channel Main Theme (HQ)(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "Zack Hemsey - _Mind Heist_(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "_CarryMinati BackGround Music(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "_Cold War_ - Call of Duty┬«_ Black Ops Cold War Main Theme(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "doraemon lofi _ doraemon no uta (theme song)(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  },
+  {
+   "origem": "funny background song_ AndreoBee song(MP3_320K).mp3",
+   "motivo": "trilha/tema de terceiros (franquia, filme, jogo, youtuber ou sample)"
+  }
+ ],
+ "efeitos_sonoros_fora": [
+  "Comical Question Mark   Sound Effect for editing   Free Copyright(MP3_320K).mp3",
+  "FREE Transition Sounds Effects_ _ Swoosh_ Swish_ Whoosh(MP3_320K).mp3",
+  "Mario jump sound effect (download)(M4A_128K).m4a"
+ ]
+}

@@ -2,3 +2,4 @@ assets/estoque_liv/**/*.MOV filter=lfs diff=lfs merge=lfs -text
 assets/estoque_liv/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
 assets/estoque_liv/**/*.mov filter=lfs diff=lfs merge=lfs -text
 assets/estoque_liv/**/*.MP4 filter=lfs diff=lfs merge=lfs -text
+assets/trilhas/*.mp3 filter=lfs diff=lfs merge=lfs -text
