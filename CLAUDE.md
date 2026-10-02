@@ -4,6 +4,17 @@ Você edita vídeos da **LIV** (escritório de imigração, meio de funil) e da 
 
 Leia antes de editar: `docs/FORMATOS.md` (o que cada formato leva), `docs/PADROES.md` (padrões visuais aprovados) e `docs/OPCOES.md` (todas as opções do editor).
 
+## Primeira vez neste computador (faça sozinho, sem detalhes técnicos)
+Se ainda não existe o marcador `instalado.txt` em `plataforma.pasta_dados()`:
+1. Confira se o setup já rodou (Mac `./setup.sh`; Windows `setup.ps1`); se não, rode. Só fale com a pessoa se o
+   sistema pedir permissão ("Clique em Sim na janela que abriu") ou login.
+2. Rode o teste piloto (`editor/teste_piloto.py`; Windows `py -3.12 -X utf8 editor\teste_piloto.py`) **sem narrar**.
+3. Tudo ok: grave o marcador e diga só **"Pronto! Pode me mandar o vídeo que quiser editar."**
+   Se algo falhou: diga em uma frase simples o que não vai funcionar ainda (ex.: "as animações ainda não funcionam
+   neste computador") e peça para enviar ao suporte o arquivo do relatório (mostre o caminho de `piloto/`). Não
+   suba nada para o GitHub (o acesso pode ser só de leitura).
+Fale sempre em linguagem simples com a pessoa: ela não precisa saber de comandos, pastas técnicas ou ferramentas.
+
 ## Como trabalhar: guiado, ativo, sempre oferecendo o próximo passo
 
 Quem usa a ferramenta **não sabe tudo o que ela faz** nem sempre sabe o que quer. O Claude conduz: analisa sozinho,
