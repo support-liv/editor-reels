@@ -20,7 +20,7 @@ import os, subprocess, sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "editor"))
-import plataforma as P
+import plataforma as PLAT
 EDITOR = os.path.join(AQUI, "..", "..", "editor", "editor_reels.py")
 MOTION = os.path.join(AQUI, "..", "..", "motion", "renders")
 LIVE = os.path.expanduser(os.environ.get("JORNADA_VIDEO", "~/Downloads/JORNADA DO DENTISTA NOS EUA- 14_09 às 20h.mp4"))
@@ -189,7 +189,7 @@ def main():
         arq = os.path.join(TRECHOS, f"{sid}_{nome}.mp4")
         if modo == "trechos":                       # recorte exato (reencodado) pra o Whisper transcrever só o trecho
             rodar(["ffmpeg", "-v", "error", "-y", "-ss", f"{a - 1.5:.3f}", "-to", f"{b + 2.0:.3f}", "-i", LIVE,
-                   *P.h264("24M"), "-c:a", "aac", "-b:a", "192k", arq])
+                   *PLAT.h264("24M"), "-c:a", "aac", "-b:a", "192k", arq])
             continue
         if modo == "transcrever":                   # só o Whisper (o editor guarda a transcrição do trecho)
             rodar([sys.executable, EDITOR, arq, "--marca", "imigrar", "--so-cortes"])

@@ -10,8 +10,8 @@ import os, sys
 AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.join(AQUI, "..", "..")
 sys.path.insert(0, os.path.join(AQUI, "..", "..", "editor"))
-import plataforma as P
-BR = os.path.join(P.pasta_cache("broll"), "pexels_{}.mp4")
+import plataforma as PLAT
+BR = os.path.join(PLAT.pasta_cache("broll"), "pexels_{}.mp4")
 EST = os.path.join(RAIZ, "assets", "estoque_liv", "{}")
 TR = os.path.join(RAIZ, "assets", "transicoes", "FILM BURNS {}.mp4")
 

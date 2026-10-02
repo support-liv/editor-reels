@@ -8,3 +8,4 @@ assets/transicoes/*.mp4 filter=lfs diff=lfs merge=lfs -text
 *.ps1 text eol=crlf
 *.py text eol=lf
 *.swift text eol=lf
+assets/teste/*.mp4 filter=lfs diff=lfs merge=lfs -text

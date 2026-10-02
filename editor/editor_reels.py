@@ -17,7 +17,7 @@ Veja COMO_USAR.md pra todas as opções.
 import argparse, json, os, re, shutil, subprocess, sys, tempfile, unicodedata
 import numpy as np
 import cv2
-import plataforma as P
+import plataforma as PLAT
 from PIL import Image, ImageDraw, ImageFont
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -101,7 +101,7 @@ def entrada_video(path):
     hdr = st.get("color_transfer") in ("arib-std-b67", "smpte2084")
     if not hdr:
         return [], ""
-    return P.entrada_hdr(st)                        # Mac: VideoToolbox; Windows: zscale + tonemap
+    return PLAT.entrada_hdr(st)                        # Mac: VideoToolbox; Windows: zscale + tonemap
 
 
 # ---------------------------------------------------------------- 1. transcrição
@@ -419,7 +419,7 @@ def garantir_detector():
 
 def _detectar(imgs):
     """uma linha JSON por imagem: [[cx, cy, w, h, pitch, yaw], ...] (mesmo formato nos dois sistemas)."""
-    return [json.dumps(r) for r in P.rostos(imgs)] if imgs else []
+    return [json.dumps(r) for r in PLAT.rostos(imgs)] if imgs else []
 
 
 def trajetoria(video, c, pessoa, alvo_x=None):
@@ -696,7 +696,7 @@ EMOJIS = {"🇺🇸": os.path.join(AQUI, "bandeira_eua.png"), "🇧🇷": os.pat
 
 def _emoji(tok, altura):
     if not os.path.exists(EMOJIS[tok]):
-        P.emoji_png(tok, EMOJIS[tok])               # bandeiras já vêm no repo (o Windows não desenha bandeira)
+        PLAT.emoji_png(tok, EMOJIS[tok])               # bandeiras já vêm no repo (o Windows não desenha bandeira)
     im = Image.open(EMOJIS[tok]).convert("RGBA")
     im = im.crop(im.getbbox())
     return im.resize((int(im.width * altura / im.height), altura), Image.LANCZOS)
@@ -983,7 +983,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{OUT_W}x{OUT_H}", "-r", str(FPS), "-i", "-",
-                            *P.h264("14M"), "-pix_fmt", "yuv420p",
+                            *PLAT.h264("14M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v],
                            stdin=subprocess.PIPE)
@@ -1110,7 +1110,7 @@ def renderizar_youtube(video, cortes, saida, marca, vinheta=True, so_checar=Fals
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
-                            *P.h264("12M"), "-pix_fmt", "yuv420p",
+                            *PLAT.h264("12M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     fsize = W * H * 3
@@ -1234,7 +1234,7 @@ def _dividido_render(video, cortes, saida, grupos, leg, img_gancho, img_cta, tot
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{OUT_W}x{OUT_H}", "-r", str(FPS), "-i", "-",
-                            *P.h264("14M"), "-pix_fmt", "yuv420p",
+                            *PLAT.h264("14M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     camadas = preparar_brolls(cortes, OUT_W, OUT_H)
@@ -1302,7 +1302,7 @@ def renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, to
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{OUT_W}x{OUT_H}", "-r", str(FPS), "-i", "-",
-                            *P.h264("14M"), "-pix_fmt", "yuv420p",
+                            *PLAT.h264("14M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     camadas = preparar_brolls(cortes, OUT_W, OUT_H)
@@ -1438,7 +1438,7 @@ def renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
                             "-s", f"{lado_px}x{lado_px}", "-r", str(FPS), "-i", "-",
-                            *P.h264("6M"), "-pix_fmt", "yuv420p",
+                            *PLAT.h264("6M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-color_range", "tv", tmp_v], stdin=subprocess.PIPE)
     n_out, gi = 0, 0
@@ -1479,8 +1479,8 @@ def renderizar_modelo(modelo, variaveis, saida):
     """renderiza um modelo de motion/modelos/ em MOV com transparência (ProRes 4444)."""
     env = dict(os.environ, HYPERFRAMES_NO_TELEMETRY="1", HYPERFRAMES_SKIP_SKILLS="1")
     if not os.path.exists(os.path.join(MOTION, "node_modules")):
-        subprocess.run([P.cmd("npm"), "install", "--no-fund", "--no-audit"], cwd=MOTION, env=env, check=True)
-    r = subprocess.run([P.cmd("npx"), "hyperframes", "render", ".", "-c", f"modelos/{modelo}.html", "--format", "mov",
+        subprocess.run([PLAT.cmd("npm"), "install", "--no-fund", "--no-audit"], cwd=MOTION, env=env, check=True)
+    r = subprocess.run([PLAT.cmd("npx"), "hyperframes", "render", ".", "-c", f"modelos/{modelo}.html", "--format", "mov",
                         "--variables", json.dumps(variaveis, ensure_ascii=False), "-o", saida, "--quiet"],
                        cwd=MOTION, env=env, capture_output=True, text=True)
     if r.returncode != 0 or not os.path.exists(saida):
@@ -1502,7 +1502,7 @@ def aplicar_animacoes(saida, animacoes):
         ult = f"v{k}"
     tmp = saida + ".motion.mp4"
     run(["ffmpeg", "-v", "error", "-y"] + entradas + ["-filter_complex", ";".join(cadeia), "-map", f"[{ult}]", "-map", "0:a",
-         *P.h264("14M"), "-pix_fmt", "yuv420p",
+         *PLAT.h264("14M"), "-pix_fmt", "yuv420p",
          "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
          "-c:a", "copy", "-movflags", "+faststart", tmp])
     os.replace(tmp, saida)

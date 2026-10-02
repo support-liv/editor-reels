@@ -203,7 +203,13 @@ def ler_segredo(servico):
         import getpass
         r = subprocess.run(["security", "find-generic-password", "-a", getpass.getuser(), "-s", servico, "-w"],
                            capture_output=True, text=True)
-        return r.stdout.strip() if r.returncode == 0 and r.stdout.strip() else None
+        v = r.stdout.strip() if r.returncode == 0 and r.stdout.strip() else None
+        if v and len(v) % 2 == 0 and all(c in "0123456789abcdef" for c in v):   # com acento o Chaveiro devolve em hex
+            try:
+                v = bytes.fromhex(v).decode("utf-8")
+            except ValueError:
+                pass
+        return v
     import keyring
     return keyring.get_password(servico, "editor-reels")
 

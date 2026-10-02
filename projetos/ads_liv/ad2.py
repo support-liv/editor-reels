@@ -11,8 +11,8 @@ Imagens externas sempre aspiracionais (sonho americano). B-roll: Pexels pelo ser
 import os, sys
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(AQUI, "..", "..", "editor"))
-import plataforma as P
-BR = os.path.join(P.pasta_cache("broll"), "pexels_{}.mp4")
+import plataforma as PLAT
+BR = os.path.join(PLAT.pasta_cache("broll"), "pexels_{}.mp4")
 TR = os.path.join(AQUI, "..", "..", "assets", "transicoes", "FILM BURNS {}.mp4")
 
 

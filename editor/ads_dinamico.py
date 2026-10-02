@@ -14,12 +14,12 @@ import numpy as np
 import cv2
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import plataforma as P
+import plataforma as PLAT
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.dirname(AQUI)
 W, H, FPS = 1080, 1920, 30
-CACHE = P.pasta_cache("ads")
+CACHE = PLAT.pasta_cache("ads")
 COR = {"azul": (44, 54, 66), "laranja": (255, 110, 31), "bege": (255, 240, 230), "branco": (255, 255, 255),
        "marrom": (148, 89, 67)}
 FONTE = os.path.join(RAIZ, "assets", "fontes", "DarkerGrotesque[wght].ttf")
@@ -93,7 +93,7 @@ def mascaras(video, n):
         fl = Fluxo(video, lado=(W // 2, H // 2))          # meia resolução basta pra máscara (e é 4x mais rápido)
         for i in range(n):
             Image.fromarray(fl.quadro(i)).save(os.path.join(ent, f"{i:05d}.png"), compress_level=1)
-        P.mascaras_pessoa(ent, sai)                  # Mac: Vision; Windows: MediaPipe
+        PLAT.mascaras_pessoa(ent, sai)                  # Mac: Vision; Windows: MediaPipe
         ms = np.zeros((n, H // 2, W // 2), np.uint8)
         for i in range(n):
             ms[i] = np.array(Image.open(os.path.join(sai, f"{i:05d}.png")).convert("L"))
@@ -517,7 +517,7 @@ def montar(rot, versao, saida, quadros_png=None):
 
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
-                            "-r", str(FPS), "-i", "-", *P.h264("16M"), "-pix_fmt", "yuv420p",
+                            "-r", str(FPS), "-i", "-", *PLAT.h264("16M"), "-pix_fmt", "yuv420p",
                             "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", tmp_v],
                            stdin=subprocess.PIPE)
     alvo_png = sorted(quadros_png or [])

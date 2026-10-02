@@ -13,7 +13,7 @@ import getpass, http.server, json, os, subprocess, sys, time, urllib.error, urll
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI)
-import plataforma as P
+import plataforma as PLAT
 CFG = json.load(open(os.path.join(AQUI, "supabase_config.json")))
 SERVICO_CHAVEIRO = "editor-reels-supabase"
 
@@ -52,11 +52,11 @@ def _req(caminho, corpo=None, token=None, metodo="POST"):
 def _guardar(sessao):
     s = {k: sessao[k] for k in ("access_token", "refresh_token", "expires_at") if k in sessao}
     s["email"] = sessao.get("user", {}).get("email") or sessao.get("email")
-    P.guardar_segredo(SERVICO_CHAVEIRO, json.dumps(s))     # Chaveiro (Mac) / Gerenciador de Credenciais (Windows)
+    PLAT.guardar_segredo(SERVICO_CHAVEIRO, json.dumps(s))     # Chaveiro (Mac) / Gerenciador de Credenciais (Windows)
 
 
 def _ler():
-    v = P.ler_segredo(SERVICO_CHAVEIRO)
+    v = PLAT.ler_segredo(SERVICO_CHAVEIRO)
     return json.loads(v) if v else None
 
 
@@ -149,7 +149,7 @@ def status():
 
 
 def sair():
-    P.apagar_segredo(SERVICO_CHAVEIRO)
+    PLAT.apagar_segredo(SERVICO_CHAVEIRO)
     print("Sessão apagada deste Mac.")
 
 

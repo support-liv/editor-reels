@@ -16,7 +16,7 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 PASTA = os.path.join(os.path.dirname(AQUI), "assets", "trilhas")
 CATALOGO = os.path.join(PASTA, "catalogo.json")
 sys.path.insert(0, AQUI)
-import plataforma as P
+import plataforma as PLAT
 NOTAS = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 # perfis de Krumhansl-Kessler (tom maior/menor)
 MAIOR = [6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88]
@@ -67,7 +67,7 @@ def medir(arq):
 def analisar(pasta):
     """mede todas as faixas (4 processos, salva a cada faixa: se cair, retoma de onde parou)."""
     pasta = os.path.expanduser(pasta)
-    saida = P.pasta_cache("trilhas_medidas.json")                   # fora da pasta do usuário
+    saida = PLAT.pasta_cache("trilhas_medidas.json")                   # fora da pasta do usuário
     feitas = {x["arquivo_origem"]: x for x in (json.load(open(saida)) if os.path.exists(saida) else []) if "erro" not in x}
     arqs = sorted(os.path.join(pasta, f) for f in os.listdir(pasta)
                   if f.lower().endswith((".mp3", ".m4a", ".wav")) and f not in feitas)
@@ -178,7 +178,7 @@ def catalogar(pasta):
     """monta assets/trilhas/: copia (mp3) só o que não está bloqueado, com nome clima__titulo__bpm__tom, e o catalogo.json."""
     import shutil
     pasta = os.path.expanduser(pasta)
-    med = {x["arquivo_origem"]: x for x in json.load(open(P.pasta_cache("trilhas_medidas.json")))}
+    med = {x["arquivo_origem"]: x for x in json.load(open(PLAT.pasta_cache("trilhas_medidas.json")))}
     os.makedirs(PASTA, exist_ok=True)
     cat, vistos, bloq, sfx = [], {}, [], []
     for nome in sorted(med):

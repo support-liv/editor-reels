@@ -12,9 +12,9 @@ import json, os, sys, urllib.request
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI)
 import conta
-import plataforma as P
+import plataforma as PLAT
 
-CACHE = P.pasta_cache("broll")
+CACHE = PLAT.pasta_cache("broll")
 
 
 def buscar(busca, orientacao="portrait", quantidade=8):
