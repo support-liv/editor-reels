@@ -28,6 +28,10 @@ if (-not (Test-Path "$env:ProgramFiles\Google\Chrome\Application\chrome.exe") -a
 }
 Ok "Chrome (Studio do YouTube e render das animacoes)"
 
+# texto sempre em UTF-8 no Python (acentos e emoji nas legendas, roteiros e JSON)
+[Environment]::SetEnvironmentVariable("PYTHONUTF8", "1", "User"); $env:PYTHONUTF8 = "1"
+Ok "Python em UTF-8"
+
 Write-Host "Baixando os arquivos grandes (estoque de videos, trilhas, transicoes)..."
 git lfs install --local | Out-Null
 git lfs pull

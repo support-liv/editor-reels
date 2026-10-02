@@ -1479,8 +1479,8 @@ def renderizar_modelo(modelo, variaveis, saida):
     """renderiza um modelo de motion/modelos/ em MOV com transparência (ProRes 4444)."""
     env = dict(os.environ, HYPERFRAMES_NO_TELEMETRY="1", HYPERFRAMES_SKIP_SKILLS="1")
     if not os.path.exists(os.path.join(MOTION, "node_modules")):
-        subprocess.run(["npm", "install", "--no-fund", "--no-audit"], cwd=MOTION, env=env, check=True)
-    r = subprocess.run(["npx", "hyperframes", "render", ".", "-c", f"modelos/{modelo}.html", "--format", "mov",
+        subprocess.run([P.cmd("npm"), "install", "--no-fund", "--no-audit"], cwd=MOTION, env=env, check=True)
+    r = subprocess.run([P.cmd("npx"), "hyperframes", "render", ".", "-c", f"modelos/{modelo}.html", "--format", "mov",
                         "--variables", json.dumps(variaveis, ensure_ascii=False), "-o", saida, "--quiet"],
                        cwd=MOTION, env=env, capture_output=True, text=True)
     if r.returncode != 0 or not os.path.exists(saida):

@@ -8,6 +8,13 @@ import json, os, shutil, subprocess, sys, tempfile, urllib.request
 
 MAC = sys.platform == "darwin"
 WIN = os.name == "nt"
+if WIN:                                   # texto sempre em UTF-8 (no Windows o padrão é cp1252: quebra acento e emoji)
+    os.environ.setdefault("PYTHONUTF8", "1")
+
+
+def cmd(nome):
+    """npx/npm no Windows são .cmd (o subprocess não acha sem a extensão)."""
+    return nome + ".cmd" if WIN and nome in ("npx", "npm", "node-gyp") else nome
 AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.dirname(AQUI)
 

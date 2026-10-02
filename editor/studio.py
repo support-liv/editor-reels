@@ -144,7 +144,7 @@ def status():
 
 def _preencher(campo, texto):
     campo.click()
-    campo.press("Meta+A")
+    campo.press("ControlOrMeta+A")                         # ⌘A no Mac, Ctrl+A no Windows
     campo.press("Backspace")
     if texto:
         campo.type(texto, delay=5, timeout=0)                     # descrição de longo leva mais de 30 s digitando

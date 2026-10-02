@@ -78,7 +78,10 @@ def main():
         destino = os.path.join(pasta, os.path.basename(video))
         if os.path.lexists(destino):
             os.remove(destino)
-        (shutil.copy2 if a.copiar else os.symlink)(video, destino)
+        if a.copiar or os.name == "nt":                         # atalho (symlink) no Windows exige administrador
+            shutil.copy2(video, destino)
+        else:
+            os.symlink(video, destino)
         tags = ", ".join(s.get("tags", []))
         open(os.path.join(pasta, "titulo.txt"), "w").write(s["titulo"] + "\n")
         open(os.path.join(pasta, "descricao.txt"), "w").write(s["descricao"].strip() + "\n")

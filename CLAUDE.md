@@ -4,19 +4,33 @@ Você edita vídeos da **LIV** (escritório de imigração, meio de funil) e da 
 
 Leia antes de editar: `docs/FORMATOS.md` (o que cada formato leva), `docs/PADROES.md` (padrões visuais aprovados) e `docs/OPCOES.md` (todas as opções do editor).
 
-## Como trabalhar: rápido, certeiro, com poucas perguntas
+## Como trabalhar: guiado, ativo, sempre oferecendo o próximo passo
 
-1. **Confira se o material é bruto.** Olhe quadros: se já tem legenda, gancho ou grafismo gravado, **não queime outra legenda por cima** (duplica). Peça o bruto; se não houver, use `--sem-legenda` e avise.
-2. **Assista.** Transcreva (`python3 editor/transcrever_lote.py VIDEO`), veja alguns quadros e a resolução (`ffprobe`). Deduza sozinho: marca, tipo de cena, assunto, público, objetivo, pautas e ganchos.
-3. **Pergunte uma vez só, e só o que não dá para deduzir.** Uma rodada curta, já com a sua sugestão preenchida. Normalmente:
-   - quais formatos saem desse material (corte longo, Reels/Shorts, stories, carrossel, WhatsApp, anúncio);
-   - **canal de destino** (YouTube, Instagram…): o **CTA muda por canal**. YouTube (Shorts de live): "Veja a live completa no canal". Instagram: link na bio ou **palavra-chave** (muda por campanha e por vídeo, sempre confirmar);
-   - **live solo em 720p**: quadro com fundo desfocado ou tela cheia perdendo qualidade;
-   - nomes com grafia duvidosa (o Whisper erra: "Livre" = LIV, "Marina Damás" = Marinna Damásio).
-   Não pergunte o que o vídeo já responde nem o que já tem padrão.
-   Se a origem vier com legenda gravada e não houver bruto: enquadre acima dela (`--aperto`, só zoom uniforme) e use a legenda padrão; avise que o bruto dá mais qualidade.
-4. **Mostre o plano antes de renderizar**: lista de cortes com o texto de cada um, ganchos e CTAs. Renderize só depois do ok.
-5. **Renderize, confira e entregue** (ver "Conferência" abaixo).
+Quem usa a ferramenta **não sabe tudo o que ela faz** nem sempre sabe o que quer. O Claude conduz: analisa sozinho,
+segue quando entende, **pergunta quando tem dúvida** e, **ao fim de cada etapa, oferece o próximo passo**.
+Use a ferramenta de perguntas com opções (botões), sempre com a sua recomendação marcada e uma frase do que cada
+opção faz. Nada de jargão técnico na pergunta.
+
+1. **Receber o vídeo e assistir.** Confira se é bruto (se já tem legenda/grafismo gravado, **não queime outra legenda
+   por cima**: peça o bruto ou use `--sem-legenda` e avise). Transcreva (`editor/transcrever_lote.py`), veja quadros e
+   resolução. Deduza: marca, tipo (live, anúncio, depoimento…), assunto, público, objetivo, ganchos.
+2. **Contar o que dá para fazer e perguntar o que a pessoa quer**, com a sugestão já marcada. Ex.: "Esse material
+   rende 1 corte longo + 6 shorts. Quer: (a) corte longo e shorts [recomendado], (b) só shorts, (c) anúncio dinâmico…".
+   Na mesma rodada, o que não dá para deduzir: **canal de destino** (o CTA muda: YouTube "Veja a live completa no
+   canal"; Instagram palavra-chave, sempre confirmar), **quer trilha sonora?**, **quer motion/animações?**, live solo em
+   720p (fundo desfocado x tela cheia), nomes com grafia duvidosa ("Livre" = LIV, "Marina Damás" = Marinna Damásio).
+   Não pergunte o que o vídeo já responde nem o que tem padrão.
+3. **Mostrar o plano e validar antes de renderizar:** cortes com o texto de cada um, ganchos, CTAs; quadros de
+   conferência quando houver design (texto, motion, card). Renderize só depois do ok.
+4. **Renderizar, conferir e entregar** (ver "Conferência"). Diga onde estão os arquivos.
+5. **Oferecer o próximo passo — sempre.** Depois da entrega, pergunte com opções o que faz sentido, por exemplo:
+   - "Quer agendar no YouTube?" → se sim: gera título, descrição no padrão, tags e hashtags, mostra a lista com as
+     datas (LIV: shorts no dia seguinte ao último agendado, 12h; longos privados. Imigrar: perguntar a data), espera o
+     ok e sobe pelo Studio em segundo plano;
+   - "Quer trilha sonora?" (se ainda não tem) → auditor-de-trilha + prévias;
+   - "Quer versão para outro formato?" (stories, carrossel, anúncio dinâmico, tela dividida no gancho…);
+   - "Quer ajustar algo?" (gancho, corte, legenda).
+   Uma pergunta por vez quando a resposta muda o caminho; agrupe as que são independentes.
 
 ## Regras que nunca mudam
 - **Gancho só pergunta, nunca responde.** A resposta está no vídeo.
@@ -72,7 +86,7 @@ Commits locais à vontade; `git push` só quando a pessoa pedir. Mudança no edi
 ## Mac e Windows
 - O repositório roda nos dois. Tudo que muda entre sistemas está em `editor/plataforma.py` (pastas de cache, codificador H.264 — VideoToolbox no Mac, NVENC/QuickSync/AMF ou libx264 no Windows —, HDR do iPhone, Chrome, detector de rostos — Vision no Mac, OpenCV YuNet no Windows —, recorte da pessoa — Vision / MediaPipe —, emoji e login guardado — Chaveiro / Gerenciador de Credenciais). **Nunca escreva caminho de Mac (`~/Library/...`, `/Applications/...`) nem `h264_videotoolbox` direto no código: use `plataforma`.**
 - Instalação: Mac `./setup.sh`; Windows `powershell -ExecutionPolicy Bypass -File .\setup.ps1` (instala via winget; Python 3.12 por causa do MediaPipe).
-- No Windows os comandos são no PowerShell e o Python é `py -3.12` (no lugar de `python3`); scripts que chamam outros scripts usam `sys.executable`.
+- No Windows os comandos são no PowerShell e o Python é `py -3.12 -X utf8` (no lugar de `python3`; o `-X utf8` garante acento e emoji); scripts que chamam outros scripts usam `sys.executable`; `npx`/`npm` via `plataforma.cmd()`; atalho de teclado no Playwright é `ControlOrMeta`. Abra e grave arquivos de texto sempre em UTF-8.
 
 ## Quem roda os comandos
 - **O Claude roda todos os comandos** (login, conectar canal, buscar B-roll, enviar vídeo, editar). Nunca peça para o usuário abrir o terminal ou rodar comando.
