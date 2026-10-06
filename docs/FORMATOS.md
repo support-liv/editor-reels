@@ -21,6 +21,11 @@ Os formatos que o time publica, e como cada um é editado. Definidos com o time 
 - Como fazer: `--layout youtube --marca liv --trechos "..."` (ver OPCOES.md). A Imigrar usa `--sem-vinheta`.
 - Entregas junto com o vídeo: título, descrição, capítulos com minutagem (a partir do `.tempos.txt`), tags e sugestão de texto para a thumbnail.
 
+### Vídeo longo produzido (YouTube, LIV)
+- Vídeo gravado para o canal (não é live), 16:9.
+- **Títulos de capítulo** na tela no começo de cada capítulo: `editor/capitulos.py` (ver CLAUDE.md). Não usar em corte de live nem em shorts.
+- Entregas junto: título, descrição com os capítulos (mesmas minutagens dos títulos na tela), tags e texto para a thumbnail.
+
 ### Reels / Shorts
 - 30 a 50s: gancho, desenvolvimento, CTA.
 - **Gancho:** só a pergunta ou a curiosidade, nunca a resposta (ver PADROES.md).

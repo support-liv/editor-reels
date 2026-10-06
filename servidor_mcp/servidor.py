@@ -261,6 +261,22 @@ def colocar_trilha(video: str, trilha: str, inicio_na_musica_s: float = 0, quant
     return {"arquivo": s, "fala_lufs": voz, "ganho_trilha_db": round(g, 1)}
 
 
+# ------------------------------------------------------------------ títulos de capítulo
+@app.tool()
+def titulos_de_capitulo(video: str, capitulos: list[str], so_previa: bool = True, nome: str = "") -> dict:
+    """Cartela de título de capítulo da LIV, SÓ para vídeo longo PRODUZIDO 16:9 do YouTube (nunca corte de live,
+    nunca shorts). Cada capítulo: "segundo|parte branca|destaque laranja", ex. "12.5|A vida|no Brasil".
+    so_previa=True gera um PNG por capítulo para a pessoa aprovar; depois rode com so_previa=False."""
+    cmd = [PY, os.path.join(EDITOR, "capitulos.py"), os.path.expanduser(video)]
+    for c in capitulos:
+        cmd += ["--capitulo", c]
+    if nome:
+        cmd += ["--nome", nome]
+    if so_previa:
+        cmd.append("--quadros")
+    return {"tarefa": _tarefa(("prévia dos " if so_previa else "") + "títulos de capítulo", cmd)}
+
+
 # ------------------------------------------------------------------ login da equipe
 @app.tool()
 def entrar_na_conta_da_equipe(email: str) -> dict:
