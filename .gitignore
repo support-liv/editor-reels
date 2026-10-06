@@ -28,3 +28,4 @@ motion/renders/
 motion/.hyperframes/
 !motion/sfx/*.wav
 .agents/
+piloto/relatorio_darwin_*.md

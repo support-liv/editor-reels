@@ -644,6 +644,7 @@ if __name__ == "__main__":
     ap.add_argument("--ate", type=float, help="prévia: renderiza só até esse segundo (sem áudio), pra conferir quadros")
     ap.add_argument("--se-ilegivel", choices=["auto", "quebrar", "frente", "atras"], help="força o tratamento do texto atrás")
     a = ap.parse_args()
+    PLAT.limpar_temporarios()
     rot = carregar_roteiro(a.roteiro)
     rot["_ate"] = a.ate
     if a.se_ilegivel:

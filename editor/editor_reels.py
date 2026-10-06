@@ -1510,6 +1510,7 @@ def aplicar_animacoes(saida, animacoes):
 
 # ---------------------------------------------------------------- main
 def main():
+    PLAT.limpar_temporarios()
     ap = argparse.ArgumentParser(description="Editor automático de Reels")
     ap.add_argument("video")
     ap.add_argument("--marca", choices=MARCAS, default="imigrar")

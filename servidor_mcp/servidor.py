@@ -307,6 +307,10 @@ def pasta_dos_videos_prontos(projeto: str = "") -> str:
 
 
 def main():
+    try:
+        PLAT.limpar_temporarios(avisar=False)
+    except Exception:
+        pass
     app.run("stdio")
 
 

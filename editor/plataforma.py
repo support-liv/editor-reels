@@ -75,6 +75,48 @@ def caminho(p):
     return os.path.normpath(p)
 
 
+# ------------------------------------------------------------------ limpeza automática (disco não enche)
+LIMPEZA = [   # (pasta, extensões, dias sem uso até apagar) — nunca o perfil do Chrome (login do Studio)
+    (os.path.join(RAIZ, "motion", "renders"), (".mov", ".mp4", ".webm", ".png"), 2),
+    ("ads/previas", None, 7), ("trilhas_previas", None, 7), ("analise", None, 7), ("piloto", None, 7),
+    ("tarefas", None, 7), ("ads", (".npy",), 14), ("broll", (".mp4", ".json"), 60),
+]
+
+
+def espaco_livre_gb(pasta=None):
+    return shutil.disk_usage(pasta or os.path.expanduser("~")).free / 1e9
+
+
+def limpar_temporarios(forcar=False, avisar=True):
+    """apaga arquivos intermediários antigos (animações, prévias, máscaras, testes) — no máximo 1x por dia.
+    Os vídeos prontos (Mesa/Editor Reels) e o login do YouTube Studio nunca são tocados."""
+    import time
+    marca = os.path.join(pasta_cache(), ".ultima_limpeza")
+    if not forcar and os.path.exists(marca) and time.time() - os.path.getmtime(marca) < 86400:
+        return 0
+    agora, liberado = time.time(), 0
+    for pasta, exts, dias in LIMPEZA:
+        base = pasta if os.path.isabs(pasta) else os.path.join(pasta_cache(), pasta)
+        if not os.path.isdir(base) or "chrome-studio" in base:
+            continue
+        for raiz, _, arqs in os.walk(base):
+            if "chrome-studio" in raiz:
+                continue
+            for a in arqs:
+                p = os.path.join(raiz, a)
+                if exts and not a.lower().endswith(exts):
+                    continue
+                try:
+                    if agora - max(os.path.getmtime(p), os.path.getatime(p)) > dias * 86400:
+                        liberado += os.path.getsize(p); os.remove(p)
+                except OSError:
+                    pass
+    open(marca, "w").write(str(agora))
+    if avisar and espaco_livre_gb() < 10:
+        print(f"  ! pouco espaço no disco ({espaco_livre_gb():.1f} GB livres): renders grandes podem falhar.", file=sys.stderr)
+    return liberado
+
+
 # ------------------------------------------------------------------ codificação de vídeo
 _ENC = None
 
