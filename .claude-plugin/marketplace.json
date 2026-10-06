@@ -1,0 +1,12 @@
+{
+  "name": "liv-imigrar",
+  "description": "Ferramentas internas da LIV e da Imigrar",
+  "owner": { "name": "LIV / Imigrar" },
+  "plugins": [
+    {
+      "name": "editor-reels",
+      "source": "./",
+      "description": "Editor de vídeos da LIV e da Imigrar (shorts, cortes longos, anúncios, trilha, YouTube)."
+    }
+  ]
+}

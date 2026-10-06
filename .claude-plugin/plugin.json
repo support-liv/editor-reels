@@ -1,0 +1,24 @@
+{
+  "name": "editor-reels",
+  "displayName": "Editor Reels (LIV / Imigrar)",
+  "version": "1.0.0",
+  "description": "Editor de vídeos da LIV e da Imigrar: shorts, cortes longos de live, anúncios dinâmicos, trilha, B-roll, estoque interno e publicação no YouTube — tudo no computador da pessoa (Mac ou Windows).",
+  "author": {
+    "name": "LIV / Imigrar"
+  },
+  "skills": [
+    "./skills/",
+    "./.claude/skills/"
+  ],
+  "agents": [
+    "./.claude/agents/auditor-de-trilha.md"
+  ],
+  "mcpServers": {
+    "editor-reels": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/servidor_mcp/iniciar.mjs"
+      ]
+    }
+  }
+}
