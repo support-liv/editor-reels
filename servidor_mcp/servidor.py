@@ -89,7 +89,11 @@ def situacao() -> dict:
         pass
     falta = [n for n, ok in (("ffmpeg", shutil.which("ffmpeg")), ("node (animações)", shutil.which("node")),
                              ("arquivos grandes (git lfs pull)", _lfs_ok())) if not ok]
-    return {"sistema": "Windows" if PLAT.WIN else ("Mac" if PLAT.MAC else "Linux"),
+    atual = {"ok": "atualizado agora", "sem-conexao": "sem internet: usando a última versão baixada",
+             "acesso-vencido": "AS ATUALIZAÇÕES PARARAM: o acesso ao GitHub venceu. Peça um acesso novo ao administrador "
+                               "e guarde no gerenciador de senhas do Git (o editor continua funcionando na versão atual)."}
+    return {"atualizacao": atual.get(os.environ.get("EDITOR_REELS_ATUALIZACAO", ""), "não verificada"),
+            "sistema": "Windows" if PLAT.WIN else ("Mac" if PLAT.MAC else "Linux"),
             "pronto": not falta and os.path.exists(marcador), "falta": falta,
             "teste_piloto_feito": os.path.exists(marcador),
             "login_da_equipe": login or "não conectado (só precisa para buscar imagens externas)",

@@ -58,11 +58,17 @@ if (!pasta) {
   });
 } else {
   // atualiza em silêncio (sem travar o início se estiver sem internet)
-  spawnSync("git", ["-C", pasta, "pull", "--ff-only", "-q"], { timeout: 20000, stdio: "ignore" });
-  spawnSync("git", ["-C", pasta, "lfs", "pull"], { timeout: 60000, stdio: "ignore" });
+  const pull = spawnSync("git", ["-C", pasta, "pull", "--ff-only", "-q"], { timeout: 20000, encoding: "utf8",
+    env: { ...process.env, GIT_TERMINAL_PROMPT: "0" } });
+  const erro = `${pull.stderr || ""}`;
+  // sem internet: segue com a versão local; acesso vencido/negado: avisa (a ferramenta situacao conta à pessoa)
+  const atualizacao = pull.status === 0 ? "ok"
+    : /Authentication failed|403|401|could not read Username|Invalid username or password|Repository not found/i.test(erro) ? "acesso-vencido"
+    : "sem-conexao";
+  if (atualizacao === "ok") spawnSync("git", ["-C", pasta, "lfs", "pull"], { timeout: 60000, stdio: "ignore" });
   const [cmd, pre] = python();
   const p = spawn(cmd, [...pre, join(pasta, "servidor_mcp", "servidor.py")], {
-    stdio: "inherit", env: { ...process.env, PYTHONUTF8: "1", EDITOR_REELS_DIR: pasta },
+    stdio: "inherit", env: { ...process.env, PYTHONUTF8: "1", EDITOR_REELS_DIR: pasta, EDITOR_REELS_ATUALIZACAO: atualizacao },
   });
   p.on("exit", (c) => process.exit(c ?? 0));
 }
