@@ -21,6 +21,14 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTE = os.path.join(RAIZ, "assets", "fontes", "InterTight[wght].ttf")
 AZUL, MARROM, LARANJA, LINHA = (44, 54, 66), (148, 89, 67), (255, 110, 31), (232, 220, 210)
 DUR, ENTRA, SAI = 3.2, 0.45, 0.5       # tempo na tela, fade de entrada e de saída (s)
+SEM_FUNDO = False                      # --sem-fundo: a cartela já é o degradê sólido (sem vídeo atrás)
+
+
+def fundo_solido(L, A):
+    """o degradê da cartela sem vídeo atrás: azul LIV com o calor do canto superior direito."""
+    im = Image.new("RGBA", (L, A), AZUL + (255,))
+    im.alpha_composite(camada_fundo(L, A))
+    return im.convert("RGB")
 
 
 def fonte(tam, peso):
@@ -62,28 +70,62 @@ def camada_monograma(L, A):
     return im.resize((L, A), Image.LANCZOS)
 
 
-def camada_titulo(L, A, branco, destaque):
-    """título centralizado (centro óptico pela tinta das maiúsculas), espaço natural da fonte entre as partes."""
-    tam = round(A * 0.093)
+LARG_MAX, LINHAS_MAX = 0.86, 2                # o título ocupa até 86% da largura, em até 2 linhas
+
+
+def _medidas(tam):
     fb, fd = fonte(tam, 500), fonte(tam, 620)
     track = tam * 0.035                       # a referência é mais aberta que a Inter Tight pura
-    branco, destaque = branco.upper().strip(), destaque.upper().strip()
     larg = lambda txt, f: sum(f.getlength(ch) for ch in txt) + track * max(0, len(txt) - 1)
-    esp = fb.getlength(" ") + track if branco and destaque else 0
-    wb = larg(branco, fb) if branco else 0
-    wd = larg(destaque, fd) if destaque else 0
+    return fb, fd, track, larg
+
+
+def _linhas(branco, destaque, tam, L):
+    """palavras (com a cor de cada uma) quebradas em 1 ou 2 linhas equilibradas. None se não couber."""
+    fb, fd, track, larg = _medidas(tam)
+    pal = [(p, fb, (255, 255, 255, 255)) for p in branco.upper().split()] + \
+          [(p, fd, LARANJA + (255,)) for p in destaque.upper().split()]
+    esp = fb.getlength(" ") + track
+    w = lambda ps: sum(larg(p, f) for p, f, _ in ps) + esp * max(0, len(ps) - 1)
+    lim, nb = L * LARG_MAX, len(branco.split())
+    if w(pal) <= lim:                                       # cabe numa linha
+        return [pal], w, esp
+    # 2 linhas: de preferência branco em cima e laranja embaixo; se não couber, só o branco se divide
+    # (o destaque laranja fica sempre inteiro na 2ª linha, nunca começa no fim da 1ª)
+    for i in [nb] + sorted(range(1, nb), key=lambda i: abs(w(pal[:i]) - w(pal[i:]))):
+        if 0 < i < len(pal) and w(pal[:i]) <= lim and w(pal[i:]) <= lim:
+            return [pal[:i], pal[i:]], w, esp
+    return None
+
+
+def tamanho_comum(L, A, titulos):
+    """um tamanho só para todos os títulos do vídeo (itens equivalentes no mesmo tamanho)."""
+    tam = round(A * 0.075)
+    while tam > A * 0.045 and any(_linhas(b, d, tam, L) is None for b, d in titulos):
+        tam -= 2
+    return tam
+
+
+def camada_titulo(L, A, branco, destaque, tam=None):
+    """pergunta do capítulo centralizada em até 2 linhas: parte branca + final em laranja. Centro óptico pelas
+    maiúsculas; espaço natural da fonte entre as palavras."""
+    tam = tam or tamanho_comum(L, A, [(branco, destaque)])
+    linhas, w, esp = _linhas(branco, destaque, tam, L) or _linhas(branco, destaque, round(A * 0.045), L)
+    fb, fd, track, larg = _medidas(tam)
+    _, topo, _, base = fb.getbbox("H", anchor="ls")
+    cap = base - topo
+    entre = tam * 1.22
+    y = A * 0.515 - (cap + entre * (len(linhas) - 1)) / 2 + cap
     im = Image.new("RGBA", (L, A), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
-    x = (L - (wb + esp + wd)) / 2
-    # altura de maiúscula (sem acento) para centrar na vertical pela massa visual
-    _, topo, _, base = fb.getbbox("H", anchor="ls")
-    y = A * 0.515 - (topo + base) / 2
-    for txt, f, cor in ((branco, fb, (255, 255, 255, 255)), (destaque, fd, LARANJA + (255,))):
-        for ch in txt:
-            d.text((x, y), ch, font=f, fill=cor, anchor="ls")
-            x += f.getlength(ch) + track
-        if txt is branco and branco and destaque:
-            x += fb.getlength(" ")
+    for ls in linhas:
+        x = (L - w(ls)) / 2
+        for p, f, cor in ls:
+            for ch in p:
+                d.text((x, y), ch, font=f, fill=cor, anchor="ls")
+                x += f.getlength(ch) + track
+            x += esp - track
+        y += entre
     return im
 
 
@@ -109,9 +151,10 @@ def camadas(L, A, caps, pasta):
     fundo = os.path.join(pasta, "fundo.png"); camada_fundo(L, A).save(fundo)
     mono = os.path.join(pasta, "monograma.png"); camada_monograma(L, A).save(mono)
     titulos = []
+    tam = tamanho_comum(L, A, [(b, d) for _, b, d in caps])
     for i, (_, b, d) in enumerate(caps):
         p = os.path.join(pasta, f"titulo_{i + 1:02d}.png")
-        camada_titulo(L, A, b, d).save(p)
+        camada_titulo(L, A, b, d, tam).save(p)
         titulos.append(p)
     return fundo, mono, titulos
 
@@ -128,7 +171,7 @@ def quadros(video, caps, nome):
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t + DUR / 2:.2f}", "-i", video, "-frames:v", "1", q],
                        check=True)
         im = Image.open(q).convert("RGBA").resize((L, A))
-        for c in (fundo, mono, titulos[i]):
+        for c in ((fundo,) if not SEM_FUNDO else ()) + (mono, titulos[i]):
             im.alpha_composite(Image.open(c))
         p = os.path.join(pasta, f"previa_capitulo_{i + 1:02d}.png")
         im.convert("RGB").save(p)
@@ -152,7 +195,7 @@ def renderizar(video, caps, saida, so_ate=None):
         ult = "base"
     n = 1
     for i, (t, _, _) in enumerate(caps):
-        for papel, png in (("f", fundo), ("m", mono), ("t", titulos[i])):
+        for papel, png in ((("f", fundo),) if not SEM_FUNDO else ()) + (("m", mono), ("t", titulos[i])):
             ent += ["-loop", "1", "-framerate", f"{fps:.3f}", "-t", f"{DUR:.2f}", "-i", png]
             atraso = {"f": 0.0, "m": 0.15, "t": 0.25}[papel]
             filtro.append(f"[{n}:v]format=rgba,fade=t=in:st={atraso}:d={ENTRA}:alpha=1,"
@@ -179,7 +222,11 @@ def main():
     ap.add_argument("--saida", help="pasta (padrão: Mesa/Editor Reels)")
     ap.add_argument("--quadros", action="store_true", help="só gera as prévias para validar")
     ap.add_argument("--ate", type=float, help="renderiza só até esse segundo (teste)")
+    ap.add_argument("--duracao", type=float, default=DUR, help="tempo da cartela na tela (s)")
+    ap.add_argument("--sem-fundo", action="store_true", help="não escurece: o vídeo já tem a cartela de fundo sólido")
     a = ap.parse_args()
+    globals()["DUR"] = a.duracao
+    globals()["SEM_FUNDO"] = a.sem_fundo
     caps = ler_capitulos(a.capitulo)
     nome = a.nome or os.path.splitext(os.path.basename(a.video))[0] + "_capitulos"
     if a.quadros:

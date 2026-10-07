@@ -4,6 +4,7 @@ No publicacao.json, cada short traz só o que é dele:
     "resumo":   2 parágrafos sobre o que é dito no vídeo (separados por linha em branco)
     "hashtags": ["#VisaBulletin", "#EB2NIW", ...]   (as do vídeo; viram a única linha de hashtags)
 Vídeo longo: "resumo" (abertura) + "topicos": [["Título do bloco", "o que é explicado"], ...]
+  + "capitulos" (opcional): [["0:00", "Nome curto"], ...] -> bloco de capítulos do YouTube (o 1º tem que ser 0:00)
 O resto (chamada, link, disclaimer) vem daqui, igual em todos os vídeos do canal.
 Estrutura fixa: texto → chamada/links → UMA linha de hashtags → disclaimer (sem hashtags) e acabou.
 """
@@ -26,6 +27,7 @@ MODELOS = {
         "longo": ("{resumo}\n\n"
                   "Você vai conferir:\n\n"
                   "{topicos}\n\n"
+                  "{capitulos}"
                   "📲 Avalie seu perfil:\n"
                   "https://to.liv.law/analise-perfil-uXQ4\n\n"
                   "👉 Fale com nossos especialistas:\n"
@@ -47,8 +49,10 @@ def montar(canal, item, tipo="short"):
     tags = item.get("hashtags") or m["rodape"]
     tags = list(dict.fromkeys(h if h.startswith("#") else "#" + h for h in tags))
     topicos = "\n\n".join(f"🔸{t}: {d}" for t, d in item.get("topicos", []))
+    caps = item.get("capitulos") or []
+    capitulos = ("Capítulos:\n" + "\n".join(f"{t} {n}" for t, n in caps) + "\n\n") if caps else ""
     txt = m[tipo].format(resumo=item["resumo"].strip(), hashtags=" ".join(tags), topicos=topicos,
-                         disclaimer=m["disclaimer"])
+                         capitulos=capitulos, disclaimer=m["disclaimer"])
     txt = re.sub(r"\n{3,}", "\n\n", txt)
     if len(txt) > 5000 or re.search(r"[<>]", txt):
         raise ValueError(f"{item.get('id')}: descrição passa de 5.000 caracteres ou tem < >")

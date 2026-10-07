@@ -1,0 +1,95 @@
+{
+  "duracao": 676.91,
+  "capitulos": [
+    {
+      "t": 0.0,
+      "branco": "Entrar como turista",
+      "destaque": "e ajustar?",
+      "pergunta": [
+        "Vir para os EUA como turista e, após 90 dias, fazer ajuste de status com o EB-2 NIW",
+        "é muito arriscado?"
+      ]
+    },
+    {
+      "t": 119.09,
+      "branco": "A regra",
+      "destaque": "dos 90 dias",
+      "pergunta": [
+        "A regra dos 90 dias realmente protege quem entra como turista",
+        "e decide ficar nos EUA?"
+      ]
+    },
+    {
+      "t": 194.26,
+      "branco": "Entrou pensando",
+      "destaque": "em ficar?",
+      "pergunta": [
+        "Quem entrou nos EUA como turista já pensando em ficar",
+        "deve se preocupar?"
+      ]
+    },
+    {
+      "t": 233.17,
+      "branco": "A pausa",
+      "destaque": "dos vistos consulares",
+      "pergunta": [
+        "A pausa nos vistos consulares",
+        "está perto do fim?"
+      ]
+    },
+    {
+      "t": 303.2,
+      "branco": "Vale a pena",
+      "destaque": "o ajuste?",
+      "pergunta": [
+        "Vale a pena",
+        "fazer o ajuste de status?"
+      ]
+    },
+    {
+      "t": 360.73,
+      "branco": "Ajuste",
+      "destaque": "ou consulado?",
+      "pergunta": [
+        "O que está mais seguro hoje:",
+        "ajuste de status ou processo consular?"
+      ]
+    },
+    {
+      "t": 409.48,
+      "branco": "EB-2 NIW aprovado:",
+      "destaque": "e agora?",
+      "pergunta": [
+        "Quem tem um EB-2 NIW aprovado deve priorizar",
+        "o consulado ou o ajuste de status?"
+      ]
+    },
+    {
+      "t": 468.5,
+      "branco": "O governo está",
+      "destaque": "mais rigoroso?",
+      "pergunta": [
+        "O governo americano está mais rigoroso com ajustes de status",
+        "de quem entrou como turista?"
+      ]
+    },
+    {
+      "t": 568.63,
+      "branco": "O cenário",
+      "destaque": "mudou?",
+      "pergunta": [
+        "O ajuste de status continua sendo",
+        "uma boa estratégia ou o cenário mudou?"
+      ]
+    },
+    {
+      "t": 630.06,
+      "branco": "Se fosse",
+      "destaque": "imigrar hoje",
+      "pergunta": [
+        "Se você fosse imigrar hoje, escolheria",
+        "o processo consular ou o ajuste de status?"
+      ]
+    }
+  ]
+}
