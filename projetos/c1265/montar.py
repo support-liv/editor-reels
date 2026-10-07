@@ -292,7 +292,7 @@ def cartelas(ps):
 
 
 def com_trilha(corte, faixas):
-    """trilha por baixo da fala; nas cartelas (sem voz) ela sobe ~9 dB, com rampas de 0,6s."""
+    """trilha contínua e baixinha por baixo de toda a fala (colchão, ducking leve); nas cartelas sobe ~9 dB, rampas de 0,6s."""
     import trilhas
     colchao = os.path.join(TRAB, "trilha_loop.mp3")
     if not os.path.exists(colchao):      # loop de 56 compassos (6,4s-142,2s) com emendas de 2s (auditor de trilha)
@@ -311,7 +311,7 @@ def com_trilha(corte, faixas):
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", corte, "-f", "lavfi", "-i", "color=black:s=64x36:r=30000/1001",
                     "-map", "1:v", "-map", "0:a", "-shortest", "-c:v", "libx264", "-c:a", "copy", sombra], check=True)
     mixado = os.path.join(TRAB, "sombra_trilha.mp4")
-    trilhas.mixar(sombra, moldado, mixado, 0, 20)
+    trilhas.mixar(sombra, moldado, mixado, 0, 21, ducking=1.6)
     return mixado
 
 

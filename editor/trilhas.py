@@ -240,8 +240,9 @@ def sugerir(clima, marca, anuncio=False, dur=None, n=6):
 
 
 # ------------------------------------------------------------------ mixagem
-def mixar(video, trilha, saida=None, ss=0.0, abaixo_db=None, fade=1.2):
+def mixar(video, trilha, saida=None, ss=0.0, abaixo_db=None, fade=1.2, ducking=6):
     """trilha por baixo da fala: nível base ~20 dB abaixo da voz e ducking (abaixa mais quando ela fala).
+    ducking = razão do compressor pela voz (6 = some sob a fala; 1.6 = colchão contínuo, só um leve recuo).
     Retorna a diferença medida voz × trilha."""
     saida = saida or os.path.splitext(video)[0] + "_trilha.mp4"
     dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", video],
@@ -253,7 +254,7 @@ def mixar(video, trilha, saida=None, ss=0.0, abaixo_db=None, fade=1.2):
     fc = (f"[1:a]atrim={ss}:{ss + dur},asetpts=PTS-STARTPTS,volume={ganho:.1f}dB,"
           f"afade=t=in:st=0:d=0.6,afade=t=out:st={max(0, dur - fade):.2f}:d={fade}[m];"
           f"[0:a]asplit=2[v][sc];"
-          f"[m][sc]sidechaincompress=threshold=0.03:ratio=6:attack=40:release=450:makeup=1[md];"
+          f"[m][sc]sidechaincompress=threshold=0.03:ratio={ducking}:attack=40:release=450:makeup=1[md];"
           f"[v][md]amix=inputs=2:normalize=0:duration=first[a]")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-i", trilha, "-filter_complex", fc,
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", saida],
