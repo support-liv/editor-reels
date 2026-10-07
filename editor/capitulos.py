@@ -207,7 +207,8 @@ def renderizar(video, caps, saida, so_ate=None):
             n += 1
     filtro.append(f"[{ult}]format=yuv420p[vout]")
     cmd = ["ffmpeg", "-v", "error", "-stats", "-y", *ent, "-filter_complex", ";".join(filtro),
-           "-map", "[vout]", "-map", "0:a?", "-c:a", "copy", *PLAT.h264("16M"), "-movflags", "+faststart"]
+           "-map", "[vout]", "-map", "0:a?", "-c:a", "copy", *PLAT.h264("16M" if L <= 1920 else "40M"),
+           "-movflags", "+faststart"]
     if so_ate:
         cmd += ["-t", str(so_ate)]
     subprocess.run(cmd + [saida], check=True)

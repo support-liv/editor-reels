@@ -4,13 +4,15 @@
     python3 projetos/c1265/montar.py            # monta o corte (sem títulos) e grava capitulos.json
     python3 projetos/c1265/montar.py --previas  # + prévias dos títulos de capítulo
     python3 projetos/c1265/montar.py --final    # + títulos de capítulo -> Mesa/Editor Reels/C1265
+    ... --4k                                    # sai em 3840x2160 (o YouTube comprime melhor; ~10 GB livres)
 
 Decisões (06/10/2026):
 - cada pergunta ganha uma cartela própria de 4s: degradê sólido da LIV (sem vídeo atrás), a pergunta como foi feita,
   som de entrada suave e a trilha mais presente; passa para a resposta com um light leak (som dele bem baixo);
 - fala limpa: sem muletas, recomeços e restos de frase; cada corte cai no ponto mais silencioso entre as palavras;
 - três enquadramentos (aberto, médio, close) trocando a cada corte, para o corte não parecer pulo;
-- câmera ~2,5° torta corrigida só girando; o plano aberto fecha um pouco para tirar o softbox do canto.
+- câmera ~2,5° torta corrigida só girando; o plano aberto fecha um pouco para tirar o softbox do canto;
+- look "cinema natural" nos trechos da entrevista (as cartelas ficam na cor da marca).
 """
 import json, os, subprocess, sys
 import numpy as np
@@ -25,6 +27,15 @@ TRANSCRICAO = os.path.join(RAIZ, "editor", "transcricoes", "C1265.json")
 NOME = "dra_livia_ajuste_ou_consular"
 TRAB = PLAT.pasta_cache("c1265")
 FPS_Q = 1001 / 30000
+QUATRO_K = "--4k" in sys.argv
+OL, OA = (3840, 2160) if QUATRO_K else (1920, 1080)          # tamanho de saída
+TAXA_PEDACO, TAXA_LUZ = ("45M", "40M") if QUATRO_K else ("24M", "12M")
+SUF = "_4k" if QUATRO_K else ""
+# look "cinema natural" (aprovado 06/10): segura o céu estourado da janela com um joelho suave nos realces (branco
+# em ~0,93) sem escurecer o rosto, céu mais azul, verde menos neon, pele um pouco mais quente e sombras levemente frias
+LOOK = ("format=gbrpf32le,curves=all='0/0.02 0.18/0.17 0.45/0.47 0.7/0.73 0.85/0.85 1/0.93',"
+        "colorbalance=rs=-0.015:bs=0.02:rm=0.02:bm=-0.015:rh=-0.03:bh=0.06,"
+        "huesaturation=colors=g+y:saturation=-0.2:hue=-6,vibrance=intensity=0.12,")
 
 # (nome curto para a descrição, destaque, faixas do bruto: só a resposta, sem a pergunta nem os bastidores)
 CAPITULOS = [
@@ -243,15 +254,15 @@ def enquadrar(ps):
 # ------------------------------------------------------------------ render
 def fundo_cartela():
     import capitulos
-    p = os.path.join(TRAB, "cartela_fundo.png")
-    capitulos.fundo_solido(1920, 1080).save(p)
+    p = os.path.join(TRAB, f"cartela_fundo{SUF}.png")
+    capitulos.fundo_solido(OL, OA).save(p)
     return p
 
 
 def nome_pedaco(p):
     if p.get("cartela"):
-        return f"cartela_{CARTELA:.1f}.mov"
-    return f"p_{p['ini']:.3f}_{p['fim']:.3f}_{p['plano']}_{len(p['crop'])}_{p['crop'][-12:].replace(':', '-').rstrip(',')}.mov"
+        return f"cartela_{CARTELA:.1f}{SUF}.mov"
+    return f"p{SUF}_look_{p['ini']:.3f}_{p['fim']:.3f}_{p['plano']}_{len(p['crop'])}_{p['crop'][-12:].replace(':', '-').rstrip(',')}.mov"
 
 
 def renderizar_pedacos(ps):
@@ -265,21 +276,23 @@ def renderizar_pedacos(ps):
                 if not os.path.exists(out):     # degradê sólido e silêncio (o som entra depois, com nível fixo)
                     subprocess.run(["ffmpeg", "-v", "error", "-y", "-loop", "1", "-framerate", "30000/1001", "-t", f"{d:.5f}",
                                     "-i", bg, "-f", "lavfi", "-t", f"{d:.5f}", "-i", "anullsrc=r=48000:cl=stereo",
-                                    "-vf", "format=yuv420p", *PLAT.h264("24M"), "-c:a", "pcm_s16le", out], check=True)
+                                    "-vf", "format=yuv420p", *PLAT.h264(TAXA_PEDACO), "-c:a", "pcm_s16le", out], check=True)
             elif not os.path.exists(out):
                 af = ",".join(["anull"] + (["afade=t=in:d=0.015"] if p["corte_ini"] else [])
                               + ([f"afade=t=out:st={d - 0.025:.3f}:d=0.025"] if p["corte_fim"] else []))
                 subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{p['ini']:.5f}", "-t", f"{d:.5f}", "-i", BRUTO,
-                                "-vf", f"{p['crop']}scale=1920:1080:flags=lanczos,format=yuv420p", "-af", af,
-                                *PLAT.h264("24M"), "-r", "30000/1001", "-c:a", "pcm_s16le", "-ar", "48000", "-ac", "2",
+                                "-vf", f"{p['crop']}scale={OL}:{OA}:flags=lanczos,{LOOK}format=yuv420p", "-af", af,
+                                *PLAT.h264(TAXA_PEDACO), "-r", "30000/1001", "-c:a", "pcm_s16le", "-ar", "48000", "-ac", "2",
                                 out], check=True)
             f.write(f"file '{out}'\n")
             print(f"  pedaço {k + 1}/{len(ps)} ({p['plano']})", flush=True)
-    corte = os.path.join(TRAB, "corte.mp4")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lista, "-c:v", "copy",
-                    "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "256k", "-ar", "48000",
-                    "-movflags", "+faststart", corte], check=True)
-    return corte
+    # sem juntar o vídeo num arquivo intermediário (em 4K seriam ~4 GB): só a fala sai junta e normalizada;
+    # a passagem da luz lê os pedaços direto da lista
+    voz = os.path.join(TRAB, "voz.m4a")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lista, "-vn",
+                    "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "256k", "-ar", "48000", voz],
+                   check=True)
+    return lista, voz
 
 
 def cartelas(ps):
@@ -311,7 +324,7 @@ def com_trilha(corte, faixas):
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", corte, "-f", "lavfi", "-i", "color=black:s=64x36:r=30000/1001",
                     "-map", "1:v", "-map", "0:a", "-shortest", "-c:v", "libx264", "-c:a", "copy", sombra], check=True)
     mixado = os.path.join(TRAB, "sombra_trilha.mp4")
-    trilhas.mixar(sombra, moldado, mixado, 0, 21, ducking=1.6)
+    trilhas.mixar(sombra, moldado, mixado, 0, 15, ducking=1.6)
     return mixado
 
 
@@ -338,10 +351,10 @@ def som_de_entrada():
 
 def com_luz_e_sons(base, faixas, audio):
     """light leak na passagem cartela -> resposta (pico de luz no corte, mistura 'tela') e os sons em nível fixo."""
-    saida = os.path.join(TRAB, "corte_luz.mp4")
+    saida = os.path.join(TRAB, f"corte_luz{SUF}.mp4")
     som = som_de_entrada()
     g_som = SOM_PICO_DB - pico_db(som)
-    ent = ["-i", base, "-i", som, "-i", audio]
+    ent = ["-f", "concat", "-safe", "0", "-i", base, "-i", som, "-i", audio]
     partes, ev_audio, t_cursor, n = [], [], 0.0, 3
     for k, (a, b) in enumerate(faixas):
         luz = LUZES[k % len(LUZES)]
@@ -351,8 +364,8 @@ def com_luz_e_sons(base, faixas, audio):
         pico = brilho_pico(luz) / LUZ_VEL
         ini = max(t_cursor, b - pico)
         if ini > t_cursor:
-            partes.append(f"color=c=black:s=1920x1080:r=30000/1001:d={ini - t_cursor:.4f}[g{k}]")
-        partes.append(f"[{n}:v]setpts=PTS/{LUZ_VEL},fps=30000/1001,scale=1920:1080,format=yuv420p,trim=duration={dur:.4f}[l{k}]")
+            partes.append(f"color=c=black:s={OL}x{OA}:r=30000/1001:d={ini - t_cursor:.4f}[g{k}]")
+        partes.append(f"[{n}:v]setpts=PTS/{LUZ_VEL},fps=30000/1001,scale={OL}:{OA},format=yuv420p,trim=duration={dur:.4f}[l{k}]")
         g_luz = LUZ_PICO_DB - pico_db(luz)
         partes.append(f"[{n}:a]atempo={LUZ_VEL},volume={g_luz:.1f}dB,adelay={int(ini * 1000)}:all=1[la{k}]")
         partes.append(f"[1:a]volume={g_som:.1f}dB,adelay={int(a * 1000)}:all=1[sa{k}]")
@@ -365,7 +378,7 @@ def com_luz_e_sons(base, faixas, audio):
     partes.append("[0:v]format=gbrp[bv];[luz]format=gbrp[lv];[bv][lv]blend=all_mode=screen:shortest=1,format=yuv420p[v]")
     partes.append(f"[2:a]{''.join(ev_audio)}amix=inputs={1 + len(ev_audio)}:duration=first:normalize=0[a]")
     subprocess.run(["ffmpeg", "-v", "error", "-stats", "-y", *ent, "-filter_complex", ";".join(partes),
-                    "-map", "[v]", "-map", "[a]", *PLAT.h264("12M"), "-c:a", "aac", "-b:a", "256k",
+                    "-map", "[v]", "-map", "[a]", *PLAT.h264(TAXA_LUZ), "-c:a", "aac", "-b:a", "256k",
                     "-movflags", "+faststart", saida], check=True)
     return saida
 
@@ -393,11 +406,9 @@ def tempos_capitulos(ps):
 def main():
     ps = enquadrar(com_cartelas(pedacos()))
     print(f"{len(ps)} pedaços")
-    corte = renderizar_pedacos(ps)
+    lista, voz = renderizar_pedacos(ps)
     faixas = cartelas(ps)
-    montado = corte
-    corte = com_luz_e_sons(montado, faixas, com_trilha(montado, faixas))
-    os.remove(montado)                  # intermediário de 2 GB: o disco é curto (refaz em segundos pelos pedaços)
+    corte = com_luz_e_sons(lista, faixas, com_trilha(voz, faixas))
     caps, total = tempos_capitulos(ps)
     print(f"corte: {corte} ({int(total // 60)}:{int(total % 60):02d})")
     for c in caps:
