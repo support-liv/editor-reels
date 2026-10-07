@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>live81_S5_cta (LIV clean, gerado por gerar_liv.py)</title>
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Darker Grotesque"; src: url("fontes/DarkerGrotesque[wght].ttf") format("truetype"); font-weight: 300 900; }
+      html, body { margin: 0; background: transparent; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: transparent; font-family: "Darker Grotesque", sans-serif; }
+      .marca-texto { position: absolute; transform: scaleX(0) skewX(-8deg); transform-origin: left center; border-radius: 6px; }
+      .linha > span { position: relative; }
+      .faixas { position: absolute; left: 0; width: 3240px; pointer-events: none; }
+      .rotulo span { letter-spacing: 0; }
+      .painel { position: absolute; left: 0; width: 1080px; }
+      .painel > svg.forma { position: absolute; left: 0; top: 0; width: 1080px; }
+      .rotulo { position: absolute; display: flex; align-items: center; gap: 18px; font-size: 40px; font-weight: 700; }
+      .rotulo svg { width: 46px; height: 28px; }
+      .linha { position: absolute; overflow: hidden; padding-bottom: 10px; }
+      .linha > span { display: inline-block; line-height: 1.0; white-space: nowrap; letter-spacing: -0.01em; }
+      .linha .pal { display: inline-block; }
+      .barra { position: absolute; border-radius: 5px; transform-origin: left center; transform: scaleX(0); }
+      .icone { position: absolute; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920" data-duration="48.72">
+      <div id="tudo" class="clip" style="position:absolute;inset:0" data-start="0" data-duration="48.72">
+<div class="painel" id="p0" style="top:-330px;height:2580px">
+<svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#ff6e1f"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#2c3642" stroke-width="16" fill="none"/></svg>
+<div class="cont" id="p0m" style="position:absolute;left:0;top:0;width:1080px;height:2580px">
+<svg class="icone" id="p0e0" viewBox="0 0 46 28" style="left:96px;top:1020px;width:60px;height:36px"><path d="M0 14 11 0 22 14 11 28zM24 14 35 0 46 14 35 28z" fill="#2c3642"/></svg>
+<div class="linha" style="left:96px;width:894px;top:1060px"><span id="p0e1" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:800"><span class="pal" id="p0e1w0">Veja</span>&nbsp;<span class="pal" id="p0e1w1">a</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1150px"><span id="p0e2" class="fit" data-max="894" style="color:#2c3642;font-size:132px;font-weight:800"><span class="pal" id="p0e2w0">live</span>&nbsp;<span class="pal" id="p0e2w1">completa</span></span></div>
+<div class="linha" style="left:96px;width:894px;top:1295px"><span id="p0e3" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:700"><span class="pal" id="p0e3w0">no</span>&nbsp;<span class="pal" id="p0e3w1">canal</span></span></div>
+<div class="barra" id="p0e4" style="left:96px;top:1405px;width:300px;height:7px;background:#2c3642"></div>
+</div></div>
+      </div>
+      <audio id="s01" src="sfx/whoosh.wav" data-start="44.92" data-duration="0.5" data-volume="0.35"></audio>
+      <audio id="s02" src="sfx/sino.wav" data-start="45.67" data-duration="1.2" data-volume="0.3"></audio>
+      <audio id="s03" src="sfx/tick.wav" data-start="45.47" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s04" src="sfx/tick.wav" data-start="45.67" data-duration="0.03" data-volume="0.22"></audio>
+      <audio id="s05" src="sfx/tick.wav" data-start="46.02" data-duration="0.03" data-volume="0.22"></audio>
+    </div>
+    <script>
+      document.fonts.ready.then(() => {
+        // texto ajustado à largura (nunca corta na lateral), medido uma vez
+        document.querySelectorAll(".fit").forEach((el) => {
+          const max = Number(el.dataset.max); let tam = parseFloat(el.style.fontSize);
+          while (el.scrollWidth > max && tam > 30) { tam -= 2; el.style.fontSize = tam + "px"; }
+        });
+        // títulos de uma mesma comparação (colunas, cartões) no mesmo tamanho: o menor que coube
+        const grupos = {};
+        document.querySelectorAll(".fit[data-grupo]").forEach((el) => { (grupos[el.dataset.grupo] = grupos[el.dataset.grupo] || []).push(el); });
+        Object.values(grupos).forEach((els) => {
+          const menor = Math.min(...els.map((el) => parseFloat(el.style.fontSize)));
+          els.forEach((el) => { el.style.fontSize = menor + "px"; });
+        });
+        // colunas: o fio fica no meio do vão real entre as duas colunas (mesma margem dos dois lados),
+        // medido pelo fim do conteúdo da esquerda, não pelo meio da tela
+        document.querySelectorAll("[data-colunas]").forEach((box) => {
+          const id = box.dataset.colunas, x0 = Number(box.dataset.x0), x1 = Number(box.dataset.x1);
+          const esq = document.getElementById(id + "c0"), dir = document.getElementById(id + "c1"), fio = document.getElementById(id + "f");
+          if (!esq || !dir || !fio) return;
+          const largura = (col) => {
+            let m = 0;
+            col.querySelectorAll("div, span").forEach((n) => {
+              if (getComputedStyle(n).position === "absolute" || n.id.endsWith("s0") || n.id.endsWith("s1")) return;
+              const r = n.getBoundingClientRect(), c = col.getBoundingClientRect();
+              if (n.children.length === 0 || n.classList.contains("fit")) m = Math.max(m, r.right - c.left);
+            });
+            return m;
+          };
+          const we = largura(esq), wd = largura(dir);
+          const vao = Math.min(64, Math.max(28, (x1 - x0 - we - wd - 4) / 2));
+          const xf = x0 + we + vao;
+          fio.style.left = xf + "px";
+          dir.style.left = (xf + 4 + vao) + "px"; dir.style.width = (x1 - xf - 4 - vao) + "px";
+          esq.style.width = we + "px";
+        });
+        // risco do tamanho exato do texto que ele risca (funciona alinhado à esquerda ou centralizado)
+        document.querySelectorAll(".barra[data-alvo]").forEach((b) => {
+          const alvo = document.getElementById(b.dataset.alvo); if (!alvo) return;
+          const caixa = alvo.parentElement;
+          if (b.dataset.sob) {
+            b.style.left = (caixa.offsetLeft + alvo.offsetLeft) + "px"; b.style.width = alvo.offsetWidth + "px";
+            b.style.top = (caixa.offsetTop + alvo.offsetTop + alvo.offsetHeight + 2) + "px"; return;
+          }
+          b.style.left = (caixa.offsetLeft + alvo.offsetLeft - 12) + "px"; b.style.width = (alvo.offsetWidth + 24) + "px";
+        });
+        document.querySelectorAll(".marca-texto").forEach((m) => {
+          const alvo = document.getElementById(m.dataset.alvoMk); if (!alvo) return;
+          m.style.left = (alvo.offsetLeft - 18) + "px"; m.style.width = (alvo.offsetWidth + 36) + "px";
+          m.style.top = (alvo.offsetTop + alvo.offsetHeight * 0.08) + "px"; m.style.height = (alvo.offsetHeight * 0.92) + "px";
+        });
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#p0", { y: 2580 }, { y: 0, duration: 0.55, ease: "power3.out" }, 44.92);
+        tl.fromTo("#p0e0", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 45.42);
+        tl.fromTo("#p0e1w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 45.47);
+        tl.fromTo("#p0e1w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 45.47);
+        tl.fromTo("#p0e2w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 45.67);
+        tl.fromTo("#p0e2w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 45.67);
+        tl.fromTo("#p0e3w0", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 46.02);
+        tl.fromTo("#p0e3w1", { yPercent: 115 }, { yPercent: 0, duration: 0.5, ease: "expo.out" }, 46.02);
+        tl.to("#p0e4", { scaleX: 1, duration: 0.5, ease: "power2.out" }, 46.27);
+        tl.fromTo("#p0m", { y: 10, scale: 1 }, { y: -10, scale: 1.015, duration: 4.05, ease: "sine.inOut", transformOrigin: "50% 1290px" }, 44.92);
+        window.__timelines["main"] = tl;
+      });
+    </script>
+  </body>
+</html>

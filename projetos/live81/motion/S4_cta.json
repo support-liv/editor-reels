@@ -1,0 +1,9 @@
+{
+ "nome": "live81_S4_cta",
+ "duracao": 37.7,
+ "tela_dividida": true,
+ "cenas": [
+  {"tipo": "cta", "t0": 34.25, "t1": 37.7, "painel": "cheio", "palavra": "live completa", "texto": "no canal", "acima": "Veja a", "tam_texto": 84}
+ ],
+ "fala": 33.9
+}

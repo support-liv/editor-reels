@@ -1,0 +1,50 @@
+{
+ "nome": "live81_S5",
+ "duracao": 48.72,
+ "tela_dividida": true,
+ "fala": 44.92,
+ "cenas": [
+  {
+   "t0": 3.8,
+   "t1": 8.4,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {"tipo": "rotulo", "texto": "no EB-2 NIW", "y": 250, "t": 3.9},
+    {"tipo": "cartoes", "y": 330, "alt": 320, "itens": [
+      {"titulo": "Sua área", "texto": "mostra o mérito substancial", "t": 4.86},
+      {"titulo": "Sua proposta", "texto": "mostra a importância nacional", "t": 5.96, "destaque_t": 7.22}
+    ]}
+   ]
+  },
+  {
+   "t0": 18.1,
+   "t1": 23.6,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {"tipo": "rotulo", "texto": "o que o oficial disse", "y": 250, "t": 18.24},
+    {"tipo": "linha", "texto": "abrir um negócio,", "y": 360, "t": 19.38},
+    {"tipo": "linha", "texto": "uma clínica,", "y": 480, "t": 20.5},
+    {"tipo": "linha", "texto": "não basta", "y": 600, "t": 21.34, "cor": "destaque"},
+    {"tipo": "risco", "y": 420, "largura": 560, "t": 22.4}
+   ]
+  },
+  {
+   "t0": 33.7,
+   "t1": 40.3,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {"tipo": "rotulo", "texto": "a proposta certa", "y": 250, "t": 33.8},
+    {"tipo": "linha", "texto": "não é abrir uma clínica", "y": 360, "t": 34.47},
+    {"tipo": "linha", "texto": "para atender pacientes,", "y": 480, "t": 36.2},
+    {"tipo": "linha", "texto": "ela vai apresentar", "y": 600, "t": 37.4},
+    {"tipo": "linha", "texto": "o protocolo dela", "y": 720, "t": 38.56, "cor": "destaque"},
+    {"tipo": "sub", "y": 830, "largura": 340, "t": 39.2}
+   ]
+  },
+  {"tipo": "cta", "t0": 45.27, "t1": 48.72, "painel": "cheio", "palavra": "live completa", "texto": "no canal", "acima": "Veja a", "tam_texto": 84}
+ ],
+ "palavras": "palavras/S5.json"
+}

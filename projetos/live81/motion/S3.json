@@ -1,0 +1,62 @@
+{
+ "nome": "live81_S3",
+ "duracao": 39.6,
+ "tela_dividida": true,
+ "fala": 35.8,
+ "cenas": [
+  {
+   "t0": 8.2,
+   "t1": 11.7,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {"tipo": "rotulo", "texto": "com premium processing", "y": 250, "t": 8.3},
+    {"tipo": "linha", "texto": "análise mais rigorosa", "y": 360, "t": 8.98},
+    {"tipo": "linha", "texto": "e errada.", "y": 480, "t": 10.85, "cor": "destaque"}
+   ]
+  },
+  {
+   "t0": 11.8,
+   "t1": 16.5,
+   "painel": "cheio",
+   "cor": "bege",
+   "alinhar": "centro",
+   "elementos": [
+    {"tipo": "rotulo", "texto": "a lei permite", "y": 250, "t": 11.9},
+    {"tipo": "linha", "texto": "vários processos", "y": 360, "t": 14.23},
+    {"tipo": "linha", "texto": "de categorias diferentes", "y": 480, "t": 15.55, "cor": "destaque"}
+   ]
+  },
+  {
+   "t0": 17.4,
+   "t1": 24.5,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {"tipo": "rotulo", "texto": "dois pedidos iguais", "y": 250, "t": 17.5},
+    {"tipo": "linha", "texto": "da mesma categoria:", "y": 360, "t": 18.61},
+    {"tipo": "linha", "texto": "o oficial pode", "y": 480, "t": 19.53},
+    {"tipo": "linha", "texto": "ver os dois", "y": 600, "t": 20.9},
+    {"tipo": "linha", "texto": "e analisar só um", "y": 720, "t": 22.2, "cor": "destaque"},
+    {"tipo": "sub", "y": 830, "largura": 340, "t": 23.3}
+   ]
+  },
+  {
+   "t0": 26.9,
+   "t1": 35.9,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {"tipo": "rotulo", "texto": "o caminho mais seguro", "y": 250, "t": 27.0},
+    {"tipo": "etapas", "y": 330, "itens": [
+      {"texto": "1º pedido com premium", "t": 27.97},
+      {"texto": "não deu certo?", "t": 29.37},
+      {"texto": "o 1º sai mais rápido", "t": 33.17},
+      {"texto": "2º pedido sem premium", "t": 34.95}
+    ]}
+   ]
+  },
+  {"tipo": "cta", "t0": 36.15, "t1": 39.6, "painel": "cheio", "palavra": "live completa", "texto": "no canal", "acima": "Veja a", "tam_texto": 84}
+ ],
+ "palavras": "palavras/S3.json"
+}
