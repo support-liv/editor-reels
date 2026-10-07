@@ -6,7 +6,7 @@
  "cenas": [
   {
    "t0": 9.0,
-   "t1": 18.9,
+   "t1": 15.85,
    "painel": "cheio",
    "cor": "bege",
    "elementos": [
@@ -14,9 +14,8 @@
     {"tipo": "checklist", "y": 330, "itens": [
       {"texto": "documentação financeira", "t": 10.28, "ok": true},
       {"texto": "exame médico atualizado", "t": 11.86, "ok": true},
-      {"texto": "tudo pronto até a entrevista", "t": 16.28, "ok": true}
-    ]},
-    {"tipo": "sub", "y": 720, "largura": 340, "t": 15.0}
+      {"texto": "tudo pronto até a entrevista", "t": 14.68, "ok": true}
+    ]}
    ]
   },
   {"tipo": "cta", "t0": 44.35, "t1": 47.8, "painel": "cheio", "palavra": "live completa", "texto": "no canal", "acima": "Veja a", "tam_texto": 84}

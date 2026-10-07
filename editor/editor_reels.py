@@ -782,7 +782,13 @@ class Broll:
 
 
 def tempo_na_saida(cortes, t_fonte):
-    """tempo do bruto -> tempo no vídeo pronto (soma dos cortes antes dele)."""
+    """tempo do bruto -> tempo no vídeo pronto (soma dos cortes antes dele). Com trechos fora de ordem (--trechos
+    "3870-3885,360-395"), procura primeiro o corte que contém o tempo; antes, o 2º trecho caía todo em 0s."""
+    acc = 0.0
+    for c in cortes:
+        if c["s"] <= t_fonte < c["e"]:
+            return acc + t_fonte - c["s"]
+        acc += c["e"] - c["s"]
     acc = 0.0
     for c in cortes:
         if c["s"] <= t_fonte < c["e"]:
@@ -1210,20 +1216,168 @@ def renderizar_dividido(video, cortes, saida, grupos, leg, img_gancho, img_cta, 
         print(f"  tela dividida: {len(cortes)} cortes | live com {n_col} pessoas: coluna {pessoas[0]} em cima, {pessoas[1]} embaixo")
         return _dividido_render(video, cortes, saida, grupos, leg, img_gancho, img_cta, total, seg_gancho, seg_cta,
                                 so_checar, planos, W, H, PW, PH, y_leg, pos_caixa)
-    # posição média de cada pessoa no vídeo inteiro -> um recorte só por pessoa
-    esqs, dirs = [], []
-    for c in cortes[::max(1, len(cortes) // 8)]:
-        fe, fd = rostos_por_lado(video, c)
-        esqs.append(fe); dirs.append(fd)
-    fe, fd = tuple(np.median(esqs, axis=0)), tuple(np.median(dirs, axis=0))
-    if cima == "esquerda":
-        caixa_cima, caixa_baixo = recorte(fe, "esq", 0.42, frac), recorte(fd, "dir", 0.56, frac)
-    else:
-        caixa_cima, caixa_baixo = recorte(fd, "dir", 0.42, frac), recorte(fe, "esq", 0.56, frac)
-    planos = [(caixa_cima, caixa_baixo)] * len(cortes)
-    print(f"  tela dividida: {len(cortes)} cortes | pessoa da {cima} em cima | enquadramento fixo")
+    # zoom e posição lateral fixos por pessoa (mediana do vídeo); a altura do recorte é decidida corte a corte pelo
+    # topo da cabeça: quem fala numa webcam se inclina e se encosta (LIVE 81: topo da cabeça de 8% a 29% da altura),
+    # e um recorte só para o vídeo inteiro dava teto demais numa postura e cortava a cabeça na outra.
+    amostras = [amostras_por_lado(video, c) for c in cortes]
+    tudo_e = [f for a in amostras for f in a[0]] or [[0.25, 0.38, 0.15, 0.30]]
+    tudo_d = [f for a in amostras for f in a[1]] or [[0.75, 0.40, 0.15, 0.30]]
+    fe, fd = tuple(np.median(tudo_e, axis=0)[:2]), tuple(np.median(tudo_d, axis=0)[:2])
+    lados = [("esq", fe, 0), ("dir", fd, 1)] if cima == "esquerda" else [("dir", fd, 1), ("esq", fe, 0)]
+    planos_lado, relatorio = [], []
+    for painel, (lado, face, k) in zip(("cima", "baixo"), lados):
+        f_painel = zoom_que_cabe([f for a in amostras for f in a[k]], W, H, PW, PH, MARGEM_TOPO[painel], frac)
+        x0, _, cw, ch = recorte(face, lado, 0.42, f_painel)
+        if f_painel > frac + 0.005:
+            print(f"  enquadramento {painel}: zoom aberto de {frac:.0%} pra {f_painel:.0%} da metade da live (a cabeça não cabia)")
+        y_max = max(0, int(H * (1.0 if SEM_SOBREPOSICAO else LIMITE_SOBREPOSICAO)) - ch)
+        ys, rel = enquadrar_vertical([a[k] for a in amostras], H, ch, MARGEM_TOPO[painel], y_max,
+                                     MARGEM_TOPO[painel] + TETO_EXTRA)
+        planos_lado.append([(x0, y, cw, ch) for y in ys])
+        relatorio.append((painel, lado, rel, y_max))
+    planos = list(zip(*planos_lado))
+    print(f"  tela dividida: {len(cortes)} cortes | pessoa da {cima} em cima | zoom fixo, altura pelo topo da cabeça em cada corte")
+    ENQUADRAMENTO.update(avisos=conferir_enquadramento(relatorio, cortes), planos=planos, W=W, H=H, PW=PW, PH=PH)
     return _dividido_render(video, cortes, saida, grupos, leg, img_gancho, img_cta, total, seg_gancho, seg_cta,
                             so_checar, planos, W, H, PW, PH, y_leg, pos_caixa)
+
+
+# ---- enquadramento da tela dividida: guardrails (ver docs/ENQUADRAMENTO.md)
+MARGEM_TOPO = {"cima": 0.08, "baixo": 0.16}   # espaço acima da cabeça (fração do painel). Embaixo é maior: a legenda
+                                               # e a tarja ficam na divisa e não podem cobrir a cabeça de quem está embaixo
+FOLGA_CABELO = 0.12      # o YuNet/Vision marcam a testa; o cabelo sobe ~9-10% da altura do rosto acima da caixa
+                         # (medido na LIVE 81) + folga, porque a amostragem (2 quadros/s) perde a inclinação mais rápida
+TETO_EXTRA = 0.13        # teto acima de MARGEM_TOPO + isso = "teto" demais (aviso): cima 20%, baixo 29%
+CABECA_CORTADA_MAX = 0.10  # mais que 10% das amostras de um corte com a cabeça fora do painel = erro
+SALTO_MIN = 0.04         # mudança de altura menor que isso entre cortes vizinhos é ignorada (sem tremer à toa)
+SEM_SOBREPOSICAO = False  # --sem-sobreposicao: a live não tem chat/banner embaixo, o recorte pode descer até o fim
+ENQUADRAMENTO = {}       # último cálculo (pra prévia e relatório)
+
+
+def amostras_por_lado(video, c, max_q=8):
+    """todas as caixas de rosto [cx, cy, w, h] da esquerda e da direita num corte (até max_q quadros espalhados)."""
+    garantir_detector()
+    dur = max(0.5, c["e"] - c["s"])
+    tmp = tempfile.mkdtemp()
+    run(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{dur:.3f}", "-i", video,
+         "-vf", f"fps={min(2.0, max_q / dur):.3f},scale=640:-2", os.path.join(tmp, "%04d.jpg")])
+    imgs = sorted(os.listdir(tmp))
+    esq, dir_ = [], []
+    if imgs:
+        for ln in _detectar([os.path.join(tmp, f) for f in imgs]):
+            for f in json.loads(ln):
+                if f[2] >= 0.06:
+                    (esq if f[0] < 0.5 else dir_).append(f[:4])
+    shutil.rmtree(tmp)
+    return esq, dir_
+
+
+def topo_cabeca(f):
+    return f[1] - f[3] / 2 - FOLGA_CABELO * f[3]
+
+
+RESERVA_BAIXO = 0.10     # embaixo do queixo sobra pelo menos isso do painel (pescoço; a legenda fica na divisa)
+
+
+def zoom_que_cabe(fs, W, H, PW, PH, margem, frac_min, frac_max=1.0):
+    """fração da metade da live que o recorte usa: a de sempre (frac_min) ou maior, até caber a cabeça inteira
+    (cabelo ao queixo, p90 das amostras) entre a margem do topo e a reserva de baixo. Fixa no vídeo inteiro."""
+    if not fs:
+        return frac_min
+    cabeca = float(np.percentile([(f[1] + f[3] / 2 - topo_cabeca(f)) for f in fs], 90)) * H
+    ch_precisa = cabeca / (1 - margem - RESERVA_BAIXO)
+    larg = W / 2                                           # metade da largura da live
+    return float(np.clip(ch_precisa * PW / PH / larg, frac_min, frac_max))
+
+
+def enquadrar_vertical(por_corte, H, ch, margem, y_max, teto_max):
+    """y0 do recorte em cada corte: o topo da cabeça (o mais alto do corte, p10) fica a 'margem' do topo do painel.
+    Corte sem rosto detectado herda o vizinho. Devolve (ys, relatório por corte)."""
+    alvo = []
+    for fs in por_corte:
+        if not fs:
+            alvo.append(None); continue
+        topo = float(np.percentile([topo_cabeca(f) for f in fs], 10)) * H
+        alvo.append(int(np.clip(topo - margem * ch, 0, y_max)))
+    validos = [y for y in alvo if y is not None]
+    padrao = int(np.median(validos)) if validos else 0
+    ys, ult = [], None
+    for y in alvo:
+        y = ult if y is None and ult is not None else (padrao if y is None else y)
+        if ult is not None and abs(y - ult) < SALTO_MIN * ch:
+            y = ult                                       # diferença pequena: mantém (sem pulinho entre cortes)
+        ys.append(y); ult = y
+    rel = []
+    for fs, y in zip(por_corte, ys):
+        if not fs:
+            rel.append(None); continue
+        topos = np.array([topo_cabeca(f) * H for f in fs])
+        rel.append({"teto": float(np.median(topos) - y) / ch,              # espaço típico acima da cabeça
+                    "cortada": float(np.mean(topos < y - 0.01 * ch)),     # amostras com a cabeça fora do painel
+                    "fora_da_camera": float(np.mean(topos < 0)),          # ... já fora da webcam (nenhum recorte salva)
+                    "queixo_fora": float(np.mean([(f[1] + f[3] / 2) * H > y + ch for f in fs])),
+                    "teto_max": teto_max,
+                    "preso": y >= y_max and float(np.median(topos) - y) / ch > teto_max})
+    return ys, rel
+
+
+def conferir_enquadramento(relatorio, cortes):
+    """guardrail: imprime o enquadramento de cada painel e devolve a lista de avisos (vazia = ok)."""
+    avisos = []
+    for painel, lado, rel, y_max in relatorio:
+        ok = [r for r in rel if r]
+        if not ok:
+            avisos.append(f"{painel}: nenhum rosto detectado: enquadramento no escuro, confira a prévia"); continue
+        tetos = [r["teto"] for r in ok]
+        print(f"  enquadramento {painel} ({lado}): teto {min(tetos):.0%}-{max(tetos):.0%} (mediana {np.median(tetos):.0%})")
+        for i, r in enumerate(rel):
+            if not r:
+                continue
+            t = f"{cortes[i]['s']:.1f}-{cortes[i]['e']:.1f}s"
+            if r["cortada"] > CABECA_CORTADA_MAX and r["cortada"] - r["fora_da_camera"] <= CABECA_CORTADA_MAX:
+                print(f"  info enquadramento: {painel} {t}: a cabeça sai da própria webcam em {r['fora_da_camera']:.0%} "
+                      f"das amostras (limite da câmera, o recorte já está no topo)")
+            elif r["cortada"] > CABECA_CORTADA_MAX:
+                avisos.append(f"{painel} {t}: cabeça cortada em {r['cortada']:.0%} das amostras (a pessoa se mexe muito no corte)")
+            if r["queixo_fora"] > 0.25:
+                avisos.append(f"{painel} {t}: queixo fora do painel em {r['queixo_fora']:.0%} das amostras (rosto grande demais pro zoom)")
+            if r["teto"] > r["teto_max"]:
+                motivo = (": o limite de chat/banner (70%) impede descer; se a live não tem chat na tela, use --sem-sobreposicao"
+                          if r["preso"] else "")
+                avisos.append(f"{painel} {t}: teto de {r['teto']:.0%} acima da cabeça (máx {r['teto_max']:.0%}){motivo}")
+    for a in avisos:
+        print("  AVISO enquadramento:", a)
+    return avisos
+
+
+def previa_enquadramento(video, cortes, saida_img):
+    """folha de conferência ANTES de renderizar: 1 quadro (meio) de cada corte já montado na tela dividida, com as
+    guias (margem do topo e faixa da legenda na divisa). Usa o último cálculo de ENQUADRAMENTO."""
+    E = ENQUADRAMENTO
+    W, H, PW, PH = E["W"], E["H"], E["PW"], E["PH"]
+    miniaturas = []
+    for ci, c in enumerate(cortes):
+        (ax, ay, aw, ah), (bx, by, bw, bh) = E["planos"][ci]
+        t = (c["s"] + c["e"]) / 2
+        buf = subprocess.run(["ffmpeg", "-v", "fatal", "-ss", f"{t:.3f}", "-i", video, "-frames:v", "1",
+                              "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], capture_output=True).stdout
+        if len(buf) < W * H * 3:
+            continue
+        fr = np.frombuffer(buf[:W * H * 3], np.uint8).reshape(H, W, 3)
+        out = np.vstack([cv2.resize(fr[ay:ay + ah, ax:ax + aw], (PW, PH)), cv2.resize(fr[by:by + bh, bx:bx + bw], (PW, PH))])
+        for y, cor in ((int(MARGEM_TOPO["cima"] * PH), (0, 200, 0)), (PH + int(MARGEM_TOPO["baixo"] * PH), (0, 200, 0)),
+                       (PH - 100, (0, 140, 255)), (PH, (255, 255, 255))):
+            cv2.line(out, (0, y), (OUT_W, y), cor, 3)
+        cv2.putText(out, f"{ci + 1}  {c['s']:.1f}s", (24, 70), cv2.FONT_HERSHEY_SIMPLEX, 2.0, (255, 255, 255), 5)
+        miniaturas.append(cv2.resize(out, (OUT_W // 4, OUT_H // 4)))
+    if not miniaturas:
+        return None
+    por_linha = 6
+    while len(miniaturas) % por_linha:
+        miniaturas.append(np.zeros_like(miniaturas[0]))
+    linhas = [np.hstack(miniaturas[i:i + por_linha]) for i in range(0, len(miniaturas), por_linha)]
+    cv2.imwrite(saida_img, np.vstack(linhas), [cv2.IMWRITE_JPEG_QUALITY, 85])
+    return saida_img
 
 
 def _dividido_render(video, cortes, saida, grupos, leg, img_gancho, img_cta, total, seg_gancho, seg_cta,
@@ -1566,9 +1720,16 @@ def main():
     ap.add_argument("--sem-inscreva", action="store_true", help="youtube (LIV): não põe o balão Inscreva-se")
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
+    ap.add_argument("--sem-sobreposicao", action="store_true",
+                    help="tela dividida: a live não tem chat/banner na parte de baixo; o recorte pode descer além de 70%%")
+    ap.add_argument("--previa-enquadramento", metavar="ARQ.jpg",
+                    help="tela dividida: salva a folha de conferência do enquadramento (1 quadro por corte) e sai, sem renderizar")
+    ap.add_argument("--exigir-enquadramento", action="store_true",
+                    help="tela dividida: não renderiza se o guardrail de enquadramento der aviso (cabeça cortada, teto demais)")
     a = ap.parse_args()
-    global HESITACOES, COLUNAS
+    global HESITACOES, COLUNAS, SEM_SOBREPOSICAO
     HESITACOES = a.tirar_hesitacoes
+    SEM_SOBREPOSICAO = a.sem_sobreposicao
     if a.pessoas:
         COLUNAS = (a.colunas, tuple(int(x) for x in a.pessoas.split(",")))
 
@@ -1663,6 +1824,16 @@ def main():
         return
     nome = a.nome or f"{base}_{a.marca}"
     saida = os.path.abspath(os.path.join(a.saida, nome + ".mp4"))
+    if a.layout == "dividido" and (a.previa_enquadramento or a.exigir_enquadramento) and not a.pessoas:
+        # guardrail de enquadramento ANTES do render (o cálculo é o mesmo que o render usa)
+        renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, a.cta, a.pessoa, trocas=a.trocar, so_checar=True,
+                   y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima)
+        if a.previa_enquadramento:
+            arq = previa_enquadramento(a.video, cortes, os.path.abspath(a.previa_enquadramento))
+            print(f"\nPrévia do enquadramento: {arq}")
+            return
+        if ENQUADRAMENTO.get("avisos"):
+            sys.exit("\nEnquadramento com aviso (veja acima). Gere a prévia com --previa-enquadramento, ajuste e rode de novo.")
     print("\nRenderizando...")
     global SEM_LEGENDA, CAUDA
     SEM_LEGENDA = a.sem_legenda

@@ -33,6 +33,9 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--cor-caixa` | Estilo da tarja do gancho/CTA, só com cores da marca. **Imigrar:** `branco`, `azul` (#0E59C5), `rosa` (#F90D5B). **LIV:** `azul` (#2C3642), `laranja` (#FF6E1F), `bege` (#FFF0E6), `marrom` (#945943) |
 | `--layout dividido` | Live com duas pessoas lado a lado: uma em cima, outra embaixo, enquadramento fixo, legenda e tarja na divisa |
 | `--cima esquerda` / `direita` | Na tela dividida, quem da live vai em cima |
+| `--sem-sobreposicao` | Tela dividida: a live não tem chat/banner embaixo; o recorte pode descer além de 70% da altura (ver ENQUADRAMENTO.md) |
+| `--previa-enquadramento ARQ.jpg` | Tela dividida: salva a folha de conferência do enquadramento (1 quadro de cada corte, com as guias de margem e legenda) e sai, **sem renderizar** |
+| `--exigir-enquadramento` | Tela dividida: não renderiza se o guardrail de enquadramento avisar (cabeça cortada, queixo fora, teto demais) |
 | `--colunas 3 --pessoas 3,1` | Live com N pessoas lado a lado: escolhe quem vai em cima e embaixo pela coluna (1 = esquerda) |
 | `--layout youtube` | Corte longo 16:9 1080p: a cena inteira da live, sem legenda e sem gancho, com a vinheta da marca na abertura (LIV). Tira só silêncios longos (respiro 0,8s). Gera junto um `.tempos.txt` com a minutagem de cada trecho, para os capítulos |
 | `--sem-vinheta` | No `youtube`, não põe a vinheta |

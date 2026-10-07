@@ -43,11 +43,16 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 
 ## Tela dividida (live com duas pessoas)
 - Quem vai em cima é escolhido com `--cima` (na Plano EUA 2027: a Dra. Lívia). Cada metade é 1080x960.
-- **Enquadramento fixo** no vídeo inteiro, sem zoom alternado: live é câmera parada, o recorte mexendo fica estranho.
-- Rosto de cima a ~42% do quadro dela e o de baixo a ~56%, pra sobrar fundo na divisa.
+- **Zoom e posição lateral fixos**, sem zoom alternado (live é câmera parada). A **altura** do recorte é decidida
+  **corte a corte** pelo topo da cabeça, porque quem fala na webcam se inclina e se encosta (LIVE 81: topo da cabeça
+  de 8% a 29% da altura). Muda só na emenda entre cortes.
+- **Espaço acima da cabeça:** 8% do painel em cima e 16% embaixo (a legenda na divisa não pode cobrir a cabeça de
+  baixo). O zoom abre de 88% até 100% da metade da live quando a cabeça não cabe. Ver [ENQUADRAMENTO.md](ENQUADRAMENTO.md).
+- **Antes de renderizar shorts de live: prévia do enquadramento** (`--previa-enquadramento`) validada com o time, e
+  render com `--exigir-enquadramento` (não renderiza com cabeça cortada ou teto demais).
 - **Legenda e tarja ficam na divisa** (y = 960). A legenda some enquanto a tarja aparece.
 - **Tarja alternando branco, azul e rosa** entre os cortes. A legenda corrida continua rosa.
-- O recorte fica nos **70% de cima** da imagem da live: abaixo disso o StreamYard mostra comentários e banners (medido: até 73% da altura).
+- O recorte fica nos **70% de cima** da imagem da live: abaixo disso o StreamYard mostra comentários e banners (medido: até 73% da altura). Live **sem** chat/banner na tela (confira no mosaico): `--sem-sobreposicao` libera o recorte para descer.
 
 ## Live com uma pessoa (layout "quadro")
 - A imagem da live aparece **nítida no meio**, sem ampliar demais (live é 720p): recorte de 58% da largura x 66% da altura, centrado na pessoa.

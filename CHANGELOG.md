@@ -2,6 +2,14 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.28 (07/10/2026) - LIVE 81: enquadramento da tela dividida e sublinhado do motion
+- **Correção: enquadramento da tela dividida.** O recorte (88% da metade, ~750 px de altura) com o limite de 70% da altura (chat/banner) só podia começar entre 0 e 6 px: ficava preso no topo da imagem, e a regra "rosto a 42%" nunca valia. Resultado na LIVE 81: até 34% do painel de teto acima da Dra. Lívia e, quando ela se inclinava, cabelo cortado. Agora o zoom e o x são fixos por pessoa, e a altura é decidida corte a corte pelo topo da cabeça (margem 8% em cima, 16% embaixo por causa da legenda na divisa); o zoom abre até 100% quando a cabeça não cabe. Auditoria completa e números em `docs/ENQUADRAMENTO.md`.
+- Guardrails de enquadramento em todo render de tela dividida: avisa cabeça cortada, queixo fora do painel, teto demais e cabeça fora da própria webcam (só informa). `--exigir-enquadramento` não renderiza com aviso; `--previa-enquadramento ARQ.jpg` gera a folha de conferência (1 quadro por corte, com as guias) antes do render.
+- `--sem-sobreposicao`: live sem chat/banner na tela libera o recorte para descer além dos 70%.
+- **Correção: sublinhado e risco do motion desalinhados.** `sub` e `risco` usavam `x`/`largura` fixos do roteiro (e o "no canal" do CTA, 300 px fixos), então ficavam longe da palavra ou maiores que ela. Agora são presos à linha de texto e medidos no navegador (`sob`, `sobre`, `apaga`, `palavra`); o gerador avisa traço solto.
+- Correção: `tempo_na_saida` com trechos fora de ordem (`--trechos "3870-3885,360-395"`) punha todo o 2º trecho em 0s (afetava `--json-palavras`, `--tempos-palavras` e `--broll @fonte:`).
+- `projetos/live81/`: 2 cortes longos e 6 shorts (3 com motion), trilha Skylines, `publicacao.json`; lote com modos `previa` e `final`.
+
 ## 0.27 (30/09/2026) - Plano EUA 2027: todos os shorts com motion
 - Layout `quadro` (live solo 720p) aceita `--broll` (motion em tela cheia, sem legenda nem gancho por cima) e `--cauda` (CTA animado no fim).
 - Batidas da Imigrar: o item da fala pode acender de novo e o respiro da cena pode se repetir (1,4s de intervalo), pra fala pausada não deixar a cena parada. A LIV segue igual.

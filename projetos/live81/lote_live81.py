@@ -9,6 +9,7 @@ Cortes longos (YouTube, 16:9, vinheta da LIV) e 6 shorts (tela dividida, Dra. L�
     py -3.12 -X utf8 projetos/live81/lote_live81.py A [S1 S2 ...]
     py -3.12 -X utf8 projetos/live81/lote_live81.py B [S1 S2 ...]
     py -3.12 -X utf8 projetos/live81/lote_live81.py cortes [S1 ...]   (só confere o plano e o olhar)
+    py -3.12 -X utf8 projetos/live81/lote_live81.py previa [S1 ...]   (folha do enquadramento, 1 quadro por corte, sem renderizar)
     py -3.12 -X utf8 projetos/live81/lote_live81.py final [S1 ...]    (B se tem motion, senão A, + trilha Skylines)
 
 Os shorts usam a live inteira com trechos em segundos do bruto (transcrição em editor/transcricoes).
@@ -87,7 +88,16 @@ def main():
             continue
         cmd = [sys.executable, EDITOR, LIVE, "--layout", "dividido", "--cima", "esquerda",
                "--marca", "liv", "--manter-perguntas", "--trechos", trechos, "--gancho", gancho, "--cor-caixa", cor,
-               "--tirar-hesitacoes", "--respiro", "0.18"]      # shorts: sem "éé"/"então, assim" e com pausas curtas
+               "--tirar-hesitacoes", "--respiro", "0.18",      # shorts: sem "éé"/"então, assim" e com pausas curtas
+               "--sem-sobreposicao"]                           # a LIVE 81 não tem chat/banner na tela (conferido no mosaico)
+        if modo == "previa":                                   # folha de enquadramento pra validar ANTES do render
+            os.makedirs(os.path.join(SAIDA, "previas"), exist_ok=True)
+            for t in TIRAR.get(sid, []):
+                cmd += ["--tirar", t]
+            rodar(cmd + ["--previa-enquadramento", os.path.join(SAIDA, "previas", f"{sid}_enquadramento.jpg")])
+            continue
+        if modo in ("A", "B"):
+            cmd += ["--exigir-enquadramento"]                  # guardrail: não renderiza com cabeça cortada / teto demais
         for t in TROCAS:
             cmd += ["--trocar", t]
         for t in TIRAR.get(sid, []):

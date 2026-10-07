@@ -51,7 +51,7 @@
 <div class="linha" style="left:96px;width:888px;text-align:center;top:1010px"><span id="p2e2" class="fit" data-max="888" style="color:#fff0e6;font-size:124px;font-weight:800"><span class="pal" id="p2e2w0">o</span>&nbsp;<span class="pal" id="p2e2w1">oficial</span>&nbsp;<span class="pal" id="p2e2w2">pode</span></span></div>
 <div class="linha" style="left:96px;width:888px;text-align:center;top:1130px"><span id="p2e3" class="fit" data-max="888" style="color:#fff0e6;font-size:124px;font-weight:800"><span class="pal" id="p2e3w0">ver</span>&nbsp;<span class="pal" id="p2e3w1">os</span>&nbsp;<span class="pal" id="p2e3w2">dois</span></span></div>
 <div class="linha" style="left:96px;width:888px;text-align:center;top:1250px"><span id="p2e4" class="fit" data-max="888" style="color:#ff6e1f;font-size:124px;font-weight:800"><span class="pal" id="p2e4w0">e</span>&nbsp;<span class="pal" id="p2e4w1">analisar</span>&nbsp;<span class="pal" id="p2e4w2">só</span>&nbsp;<span class="pal" id="p2e4w3">um</span></span></div>
-<div class="barra" id="p2e5" style="left:370px;top:1360px;width:340px;height:7px;background:#ff6e1f"></div>
+<div class="barra" id="p2e5" data-alvo="p2e4" data-sob="1" style="left:370px;top:1360px;width:340px;height:7px;background:#ff6e1f"></div>
 </div></div>
 <div class="painel" id="p3" style="top:-330px;height:2580px">
 <svg class="forma" viewBox="0 0 1080 2580" style="height:2580px"><path d="M0 300 C 300 300, 760 210, 1080 0 L1080 2280 C 760 2490, 300 2580, 0 2580 Z" fill="#fff0e6"/><path d="M0 300 C 300 300, 760 210, 1080 0" stroke="#ff6e1f" stroke-width="16" fill="none"/></svg>
@@ -66,7 +66,7 @@
 <div class="linha" style="left:96px;width:894px;top:1060px"><span id="p4e1" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:800"><span class="pal" id="p4e1w0">Veja</span>&nbsp;<span class="pal" id="p4e1w1">a</span></span></div>
 <div class="linha" style="left:96px;width:894px;top:1150px"><span id="p4e2" class="fit" data-max="894" style="color:#2c3642;font-size:132px;font-weight:800"><span class="pal" id="p4e2w0">live</span>&nbsp;<span class="pal" id="p4e2w1">completa</span></span></div>
 <div class="linha" style="left:96px;width:894px;top:1295px"><span id="p4e3" class="fit" data-max="894" style="color:#ffffff;font-size:84px;font-weight:700"><span class="pal" id="p4e3w0">no</span>&nbsp;<span class="pal" id="p4e3w1">canal</span></span></div>
-<div class="barra" id="p4e4" style="left:96px;top:1405px;width:300px;height:7px;background:#2c3642"></div>
+<div class="barra" id="p4e4" data-alvo="p4e3" data-sob="1" style="left:96px;top:1405px;width:300px;height:7px;background:#2c3642"></div>
 </div></div>
       </div>
       <audio id="s01" src="sfx/whoosh.wav" data-start="7.85" data-duration="0.5" data-volume="0.35"></audio>
@@ -137,15 +137,22 @@
           dir.style.left = (xf + 4 + vao) + "px"; dir.style.width = (x1 - xf - 4 - vao) + "px";
           esq.style.width = we + "px";
         });
-        // risco do tamanho exato do texto que ele risca (funciona alinhado à esquerda ou centralizado)
+        // sublinhado e risco do tamanho exato do texto (linha inteira ou uma palavra), alinhado à esquerda ou
+        // centralizado: posição somada pela cadeia de offsetParent até o pai do traço (sem transform no meio)
+        const posEm = (el, ref) => {
+          let x = 0, y = 0, n = el;
+          while (n && n !== ref) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+          return { x, y };
+        };
         document.querySelectorAll(".barra[data-alvo]").forEach((b) => {
           const alvo = document.getElementById(b.dataset.alvo); if (!alvo) return;
-          const caixa = alvo.parentElement;
-          if (b.dataset.sob) {
-            b.style.left = (caixa.offsetLeft + alvo.offsetLeft) + "px"; b.style.width = alvo.offsetWidth + "px";
-            b.style.top = (caixa.offsetTop + alvo.offsetTop + alvo.offsetHeight + 2) + "px"; return;
+          const p = posEm(alvo, b.offsetParent), h = alvo.offsetHeight;
+          if (b.dataset.sob) {                          // logo abaixo da linha de base, do tamanho do texto
+            b.style.left = p.x + "px"; b.style.width = alvo.offsetWidth + "px";
+            b.style.top = (p.y + h * 0.96 + 4) + "px"; return;
           }
-          b.style.left = (caixa.offsetLeft + alvo.offsetLeft - 12) + "px"; b.style.width = (alvo.offsetWidth + 24) + "px";
+          b.style.left = (p.x - 12) + "px"; b.style.width = (alvo.offsetWidth + 24) + "px";
+          if (b.dataset.meio) b.style.top = (p.y + h * 0.55 - b.offsetHeight / 2) + "px";   // risco no meio da altura das letras
         });
         document.querySelectorAll(".marca-texto").forEach((m) => {
           const alvo = document.getElementById(m.dataset.alvoMk); if (!alvo) return;

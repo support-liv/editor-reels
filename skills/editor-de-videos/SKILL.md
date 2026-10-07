@@ -66,6 +66,10 @@ opção faz. Nada de jargão técnico na pergunta.
 - **Bandeira depois da palavra** ("americano 🇺🇸"), nunca no lugar dela.
 - **Nunca distorcer a imagem** (perspectiva, esticar, mudar proporção). Câmera torta: só girar (`--endireitar` ou `--girar`).
 - **Live com 2 pessoas não tem crop** (tela dividida fixa). Fala pra câmera e entrevista são dinâmicas.
+- **Shorts de live (tela dividida): prévia do enquadramento antes de renderizar** (`--previa-enquadramento`), mande
+  a folha pra pessoa validar, e renderize com `--exigir-enquadramento`. Live sem chat na tela: `--sem-sobreposicao`.
+  Ver `docs/ENQUADRAMENTO.md`.
+- **Sublinhado e risco do motion sempre presos a uma linha de texto** (nunca x/largura soltos): o gerador avisa.
 - **Nunca usar take em que a pessoa lê o celular** (`editor/auditar.py`).
 - **Vinheta só no corte longo do YouTube.**
 - Sem promessa de aprovação ou prazo. Números sem fonte ficam de fora ou vão para conferência.

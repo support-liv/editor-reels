@@ -45,6 +45,7 @@ O arquivo sai em `./prontos/`.
 | [docs/FORMATOS.md](docs/FORMATOS.md) | Formatos (corte longo, Reels, stories, WhatsApp, anúncio, carrossel), estilo por cena e marcas |
 | [docs/FLUXO.md](docs/FLUXO.md) | Passo a passo do time: do bruto ao vídeo aprovado |
 | [docs/OPCOES.md](docs/OPCOES.md) | Todas as opções do editor e dos comandos de auditoria |
+| [docs/ENQUADRAMENTO.md](docs/ENQUADRAMENTO.md) | Enquadramento da tela dividida (shorts de live): auditoria, guardrails e prévia antes do render |
 | [docs/PADROES.md](docs/PADROES.md) | Padrões visuais validados (legenda, gancho, bandeira, cor, anúncio x orgânico) e o porquê de cada um |
 | [docs/GRAVACAO.md](docs/GRAVACAO.md) | Como gravar para a edição sair melhor |
 | [docs/NOVO_PROJETO.md](docs/NOVO_PROJETO.md) | Como montar o lote de um projeto novo |

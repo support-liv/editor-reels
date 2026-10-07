@@ -111,8 +111,23 @@ def preparar(r, pasta):
                 ini = min(o["_tempos"][0], teto - 0.12 * (n - 1))
                 o["_tempos"] = [round(ini + 0.12 * q, 2) for q in range(n)]
             o["_tempos"] = [max(v, round(c["t0"] - 0.1 + 0.06 * q, 2)) for q, v in enumerate(o["_tempos"])]   # nada antes do painel chegar
+        ancorar(c.get("elementos", []))
         c["_batidas"] = batidas(c, falas)
     return r
+
+
+def ancorar(els):
+    """sublinhado e risco sempre presos a uma linha de texto (medidos no navegador), nunca em x/largura fixos:
+    'sub' sem "sob" vai sob a última linha antes dele; 'risco' sem "apaga" vai sobre a linha de y mais próximo.
+    "palavra": k (opcional, 0 = 1ª) sublinha/risca só aquela palavra da linha."""
+    linhas = [(ei, e) for ei, e in enumerate(els) if e["tipo"] == "linha"]
+    for ei, e in enumerate(els):
+        if e["tipo"] == "sub" and e.get("sob") is None:
+            antes = [k for k, _ in linhas if k < ei]
+            if antes:
+                e["sob"] = antes[-1]
+        elif e["tipo"] == "risco" and e.get("apaga") is None and e.get("sobre") is None and linhas:
+            e["sobre"] = min(linhas, key=lambda kl: abs(kl[1]["y"] - e["y"]))[0]
 
 
 def revelacoes(c):
@@ -764,6 +779,7 @@ def gerar(r):
                 {"tipo": "linha", "texto": c["texto"], "y": base + 285, "t": t0 + 0.75, "cor": "texto", "tam": c.get("tam_texto", 52), "peso": 700, "sync": False},
                 {"tipo": "sub", "y": base + 285 + int(c.get("tam_texto", 52) * 1.05) + 22, "largura": 300, "t": t0 + 1.0},
             ]
+            c["elementos"][-1]["sob"] = len(c["elementos"]) - 2      # o fio mede o texto de baixo ("no canal")
             som("sino", t0 + 0.4, 0.3, 1.2)
         centro = alinhamento(c, ci)
         if modo == "cheio" and c.get("tipo") != "cta":
@@ -812,9 +828,14 @@ def gerar(r):
             elif e["tipo"] in ("sub", "risco"):
                 alt = 7 if e["tipo"] == "sub" else 9
                 cor = COR[cdest]
-                bx = (W - e["largura"]) // 2 if centro else x
-                alvo = f' data-alvo="{pid}e{e["apaga"]}"' if e["tipo"] == "risco" and e.get("apaga") is not None else ""
-                el.append(f'<div class="barra" id="{eid}"{alvo} style="left:{bx}px;top:{loc(e["y"])}px;width:{e["largura"]}px;height:{alt}px;background:{cor}"></div>')
+                largura = e.get("largura", 300)
+                bx = (W - largura) // 2 if centro else x
+                ref = e.get("sob") if e["tipo"] == "sub" else (e["apaga"] if e.get("apaga") is not None else e.get("sobre"))
+                alvo = ""
+                if ref is not None:                      # mede o texto no navegador (ver o script no fim do HTML)
+                    pal = f'w{e["palavra"]}' if e.get("palavra") is not None else ""
+                    alvo = f' data-alvo="{pid}e{ref}{pal}"' + (' data-sob="1"' if e["tipo"] == "sub" else ' data-meio="1"')
+                el.append(f'<div class="barra" id="{eid}"{alvo} style="left:{bx}px;top:{loc(e["y"])}px;width:{largura}px;height:{alt}px;background:{cor}"></div>')
                 js.append(f'tl.to("#{eid}", {{ scaleX: 1, duration: {0.5 if e["tipo"] == "sub" else 0.3}, ease: "power2.out" }}, {t:.2f});')
                 if e["tipo"] == "risco":
                     som("tick", t, 0.3, 0.03)
@@ -927,15 +948,22 @@ def gerar(r):
           dir.style.left = (xf + 4 + vao) + "px"; dir.style.width = (x1 - xf - 4 - vao) + "px";
           esq.style.width = we + "px";
         }});
-        // risco do tamanho exato do texto que ele risca (funciona alinhado à esquerda ou centralizado)
+        // sublinhado e risco do tamanho exato do texto (linha inteira ou uma palavra), alinhado à esquerda ou
+        // centralizado: posição somada pela cadeia de offsetParent até o pai do traço (sem transform no meio)
+        const posEm = (el, ref) => {{
+          let x = 0, y = 0, n = el;
+          while (n && n !== ref) {{ x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }}
+          return {{ x, y }};
+        }};
         document.querySelectorAll(".barra[data-alvo]").forEach((b) => {{
           const alvo = document.getElementById(b.dataset.alvo); if (!alvo) return;
-          const caixa = alvo.parentElement;
-          if (b.dataset.sob) {{
-            b.style.left = (caixa.offsetLeft + alvo.offsetLeft) + "px"; b.style.width = alvo.offsetWidth + "px";
-            b.style.top = (caixa.offsetTop + alvo.offsetTop + alvo.offsetHeight + 2) + "px"; return;
+          const p = posEm(alvo, b.offsetParent), h = alvo.offsetHeight;
+          if (b.dataset.sob) {{                          // logo abaixo da linha de base, do tamanho do texto
+            b.style.left = p.x + "px"; b.style.width = alvo.offsetWidth + "px";
+            b.style.top = (p.y + h * 0.96 + 4) + "px"; return;
           }}
-          b.style.left = (caixa.offsetLeft + alvo.offsetLeft - 12) + "px"; b.style.width = (alvo.offsetWidth + 24) + "px";
+          b.style.left = (p.x - 12) + "px"; b.style.width = (alvo.offsetWidth + 24) + "px";
+          if (b.dataset.meio) b.style.top = (p.y + h * 0.55 - b.offsetHeight / 2) + "px";   // risco no meio da altura das letras
         }});
         document.querySelectorAll(".marca-texto").forEach((m) => {{
           const alvo = document.getElementById(m.dataset.alvoMk); if (!alvo) return;
@@ -976,6 +1004,11 @@ def conferir_ritmo(r):
             y0, y1 = extensao(e)
             if y0 < 160 or y1 > 1480:
                 avisos.append(f"{nome}: '{e.get('texto', e['tipo'])}' sai da zona segura ({y0:.0f}-{y1:.0f}px)")
+        for e in c.get("elementos", []):             # traço solto (sem texto pra medir) sai desalinhado
+            if e["tipo"] == "sub" and e.get("sob") is None:
+                avisos.append(f"{nome}: sublinhado sem linha de texto antes dele (fica em x/largura fixos)")
+            if e["tipo"] == "risco" and e.get("apaga") is None and e.get("sobre") is None:
+                avisos.append(f"{nome}: risco sem linha de texto pra riscar (fica em x/largura fixos)")
         if r.get("tela_dividida") and c.get("painel", "cheio") != "cheio":
             avisos.append(f"{nome}: tela dividida pede motion em tela cheia (painel 'cheio')")
     # variedade: o mesmo recurso não vira padrão do vídeo

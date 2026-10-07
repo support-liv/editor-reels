@@ -33,6 +33,16 @@ Como fazer uma cena:
 ## Gerador de B-roll da LIV
 `python3 motion/gerar_liv.py roteiro.json` monta o HTML a partir de um roteiro (cenas com tempo, painel `cheio`/`baixo`/`cima`, cor e elementos: `rotulo`, `linha`, `sub`, `risco`, `icone`, e `cta`). Exemplos em `projetos/live80/motion/`. Tempos das palavras: `editor_reels.py VIDEO --trechos ... --tempos-palavras`.
 
+### Sublinhado e risco: sempre presos ao texto
+`sub` (sublinhado) e `risco` são **medidos no navegador** a partir da linha de texto, nunca por `x`/`largura` fixos
+(antes, ficavam longe da palavra ou maiores que ela: LIVE 81). Sem configurar nada:
+- `sub` vai sob a **última `linha` antes dele**, do tamanho exato do texto (`"sob": i` escolhe outra linha);
+- `risco` vai no meio da **`linha` de `y` mais próximo** (`"apaga": i` risca e esmaece; `"sobre": i` só risca);
+- `"palavra": k` (0 = 1ª) sublinha ou risca só aquela palavra da linha;
+- o CTA ("no canal") e o fio automático das batidas usam a mesma medição.
+O gerador avisa `sublinhado sem linha de texto antes dele` / `risco sem linha de texto`: um traço solto (ex.: sob um
+`checklist`) sai desalinhado, então tire ou troque por outro recurso.
+
 ### Componentes de jornada (LIV, clean)
 Além de texto e ícones, o roteiro pode contar a história com componentes chapados, de traço fino e movimento leve:
 - `rota`: dois pontos (ex.: BR → EUA) ligados por um caminho que se desenha, com um ponto viajando (`de`, `para`, `t`, `dur`).
