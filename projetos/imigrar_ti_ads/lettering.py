@@ -5,6 +5,7 @@ Estilos: "rom" (New York regular), "ita" (itálico), "rot" (rótulo pequeno em c
 O bloco fica alinhado à esquerda numa coluna à direita do quadro (sobre o banco), com uma sombra
 difusa bem suave para ler sobre fundo claro, sem contorno.
 """
+import os
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 W, H = 1920, 1080
@@ -95,3 +96,68 @@ def veu(lado="direita", forca=0.42):
     arr[:, :, :3] = (12, 16, 22)
     arr[:, :, 3] = a[None, :]
     return Image.fromarray(arr, "RGBA")
+
+
+# ------------------------------------------------------------------ identidade Imigrar (Inter Tight, rosa e azul)
+INTER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "assets", "fontes", "InterTight[wght].ttf")
+ROSA, AZUL, BRANCO = (249, 13, 91), (14, 89, 197), (255, 255, 255)
+
+
+def inter(peso, tam):
+    f = ImageFont.truetype(INTER, tam)
+    f.set_variation_by_name(peso)
+    return f
+
+
+def desenhar_imigrar(linhas, x0=1100, y_centro=700, tam=92, so_linha=None, margem=110):
+    """bloco de lettering na identidade da Imigrar: caixa alta Inter Tight Black, branco, destaque em tarja rosa
+    (ou azul), rótulo pequeno espaçado. Estilos: "rot", "txt", "rosa" (tarja), "azul" (tarja).
+    Alinhado à esquerda, sombra difusa leve para ler sobre o fundo."""
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    camada = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(camada)
+    f_txt, f_rot = inter(b"Black", tam), inter(b"SemiBold", int(tam * 0.30))
+    pad_x, pad_y = int(tam * 0.16), int(tam * 0.10)
+    alt_txt, alt_rot = int(tam * 1.06), int(tam * 0.46)
+
+    def larg(ln):
+        x = 0
+        for txt, est in ln:
+            if est == "rot":
+                x += sum(d.textlength(c, font=f_rot) + tam * 0.06 for c in txt.upper())
+            else:
+                x += d.textlength(txt.upper(), font=f_txt) + (2 * pad_x if est in ("rosa", "azul") else 0)
+        return x
+
+    altura = [alt_rot if all(e == "rot" for _, e in ln) else alt_txt for ln in linhas]
+    x0 = min(x0, W - margem - max(larg(ln) for ln in linhas))
+    y = y_centro - sum(altura) / 2
+    for i, ln in enumerate(linhas):
+        if so_linha is not None and i != so_linha:
+            y += altura[i]
+            continue
+        x = x0
+        base = y + altura[i] * 0.80
+        for txt, est in ln:
+            if est == "rot":
+                for c in txt.upper():
+                    d.text((x, base), c, font=f_rot, fill=BRANCO + (235,), anchor="ls")
+                    x += d.textlength(c, font=f_rot) + tam * 0.06
+                continue
+            t = txt.upper()
+            w = d.textlength(t, font=f_txt)
+            if est in ("rosa", "azul"):
+                topo = base - tam * 0.74 - pad_y
+                d.rounded_rectangle([x, topo, x + w + 2 * pad_x, base + pad_y + tam * 0.04], radius=int(tam * 0.14),
+                                    fill=(ROSA if est == "rosa" else AZUL) + (255,))
+                d.text((x + pad_x, base), t, font=f_txt, fill=BRANCO + (255,), anchor="ls")
+                x += w + 2 * pad_x
+            else:
+                d.text((x, base), t, font=f_txt, fill=BRANCO + (255,), anchor="ls")
+                x += w
+        y += altura[i]
+    sombra = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    alfa = camada.split()[3].filter(ImageFilter.GaussianBlur(16))
+    sombra.putalpha(alfa.point(lambda v: int(v * 0.50)))
+    img = Image.alpha_composite(img, sombra)
+    return Image.alpha_composite(img, camada)

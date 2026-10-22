@@ -272,6 +272,20 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
         for q in c["idx"]:
             m = (P[q]["s"] + P[q]["e"]) / 2
             donos[min(range(len(faixas)), key=lambda k: dist(m, faixas[k]))].append(q)
+        prot = RESPIRO.get("proteger", 0.0)
+        if prot:
+            # ambiente barulhento: o fim/começo fraco da palavra ("profissionai-s") fica abaixo do limiar de energia.
+            # Estende o pedaço até onde o Whisper diz que a palavra vai, no máximo `prot` segundos.
+            for k, (s, e) in enumerate(faixas):
+                if donos[k]:
+                    ws_ = min(P[q]["s"] for q in donos[k]); we_ = max(P[q]["e"] for q in donos[k])
+                    s2 = min(s, max(ws_ - 0.03, s - prot * 0.5, c["s"]))
+                    e2 = max(e, min(we_ + 0.03, e + prot, c["e"] + 0.05))
+                    if k + 1 < len(faixas):
+                        e2 = min(e2, faixas[k + 1][0] - 0.02)
+                    if k > 0:
+                        s2 = max(s2, faixas[k - 1][1] + 0.02)
+                    faixas[k] = (s2, e2)
         for k, (s, e) in enumerate(faixas):
             if HESITACOES and not donos[k] and e - s < 1.2:   # voz sem palavra nenhuma: "éé", "hmm", respiração
                 print(f"  hesitação sem palavra tirada: {s:.2f}-{e:.2f}")
@@ -306,7 +320,12 @@ def tirar_hesitacoes(cortes, P):
         for j, q in enumerate(idx):
             w, d = norm(P[q]["w"]), P[q]["e"] - P[q]["s"]
             prox = P[idx[j + 1]] if j + 1 < len(idx) else None
-            if w in SONS_HESITACAO or (w == "e" and d >= 0.45):
+            ant = P[idx[j - 1]] if j > 0 else None
+            isolada = (not ant or P[q]["s"] - ant["e"] >= 0.15) and (not prox or prox["s"] - P[q]["e"] >= 0.15)
+            # "é" com acento é o verbo ("a única forma ... é depender"): o norm() tira o acento e ele virava
+            # hesitação. Só sai se vier com reticências ("é...") ou isolado entre pausas.
+            verbo = P[q]["w"].lower().strip(" ,.;:?!") == "é" and "..." not in P[q]["w"] and not isolada
+            if w in SONS_HESITACAO or (w == "e" and d >= 0.45 and not verbo):
                 alvo.append(([q], P[q]["s"], P[q]["e"]))
             elif w == "entao" and prox and norm(prox["w"]) == "assim":
                 depois = P[idx[j + 2]]["s"] - prox["e"] if j + 2 < len(idx) else 1.0
@@ -1712,6 +1731,8 @@ def main():
     ap.add_argument("--broll", action="append", default=[],
                     help='cena de motion por cima da imagem (embaixo da legenda), com os efeitos sonoros dela: '
                          '"arquivo.mov@12.5" (tempo do vídeo pronto) ou "arquivo.mov@fonte:8.4" (tempo da fala no bruto)')
+    ap.add_argument("--proteger-palavra", type=float, default=0.0, metavar="SEG",
+                    help="ambiente barulhento: o corte pelo áudio não come o fim/começo fraco da palavra (estende até SEG s)")
     ap.add_argument("--broll-com-legenda", action="store_true",
                     help="b-roll de imagem real (anúncio): a legenda continua por cima (motion de tela cheia tira a legenda)")
     ap.add_argument("--animacao", action="append", default=[],
@@ -1783,6 +1804,8 @@ def main():
         # respiro maior (fala mais pausada) solta a folga; menor que o padrão (shorts) aperta
         RESPIRO.update({"pausa_max": a.respiro,
                         "depois": 0.08 if a.respiro < 0.25 else min(0.25, 0.10 + (a.respiro - 0.25) / 2)})
+    if a.proteger_palavra:
+        RESPIRO["proteger"] = a.proteger_palavra
     if not a.sem_ajuste_audio:
         cortes = refinar_cortes(a.video, cortes, dados["palavras"])
     if not cortes:

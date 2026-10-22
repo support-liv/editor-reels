@@ -20,78 +20,138 @@ W, H, FPS = 1440, 2560, 30
 
 # correções de legenda (o Whisper erra Green Card e "visto")
 TROCAS = {"Gwincard": "Green Card", "wincard": "Green Card", "Gwin": "Green", "Pego": "Green", "vista.": "visto.",
-          "vista?": "visto?", "baixarelado": "bacharelado", "toquem": "toque", "façam": "faça", "recebem": "receba em",
+          "vista?": "visto?", "baixarelado": "bacharelado", "toquem": "toque", "façam": "faça",
           "Canalis": "que analisa", "developments": "o", "patrocinante.": "patrocinando.", "trajetório": "trajetória",
           "Sao": "nos", "Vinhese": "EUA", "empresa?": "empresa", "Maria": "maioria"}
 
-# id: (gancho, [(arquivo, 1ª palavra, última palavra)], [(b-roll, arquivo, tempo no bruto)])
+# id: ((gancho A, gancho B), [(arquivo, início, fim) em segundos do bruto], [(b-roll, arquivo, tempo no bruto)])
+# Tempos escolhidos na transcrição LITERAL de cada janela (auditar_fala.py): cada pedaço pula a tentativa errada
+# ("sabia que o salário, sabia que o salário" → fica só a 2ª). Os ganchos A/B mudam só o balão.
 ANUNCIOS = {
-    "01_dev_salario_a": ("Quanto ganha um dev nos EUA 🇺🇸?", [
-        ("IMG_4790.MOV", 5.26, 13.36), ("IMG_4790.MOV", 22.78, 26.46), ("IMG_4790.MOV", 33.86, 38.78),
-        ("IMG_4790.MOV", 40.10, 45.14), ("IMG_4789.MOV", 82.38, 86.42)],
-        [("lucas_digitando", "IMG_4790.MOV", 23.3), ("banco_bandeira", "IMG_4790.MOV", 42.4)]),
-    "02_dev_salario_b": ("Dev no Brasil 🇧🇷, já pensou em trabalhar nos EUA 🇺🇸?", [
-        ("IMG_4789.MOV", 7.52, 13.82), ("IMG_4789.MOV", 23.74, 27.14), ("IMG_4789.MOV", 52.30, 56.80),
-        ("IMG_4789.MOV", 64.82, 77.36), ("IMG_4789.MOV", 82.38, 83.28), ("IMG_4789.MOV", 92.40, 95.14)],
-        [("fonte_notebook", "IMG_4789.MOV", 24.3), ("codigo", "IMG_4789.MOV", 67.4)]),
-    "03_dev_salario_c": ("Você sabe quanto um dev ganha nos EUA 🇺🇸?", [
-        ("IMG_4795.MOV", 25.70, 32.12), ("IMG_4795.MOV", 46.76, 55.98), ("IMG_4795.MOV", 113.44, 115.84),
-        ("IMG_4795.MOV", 124.12, 127.46), ("IMG_4795.MOV", 129.90, 134.18), ("IMG_4795.MOV", 135.30, 142.26),
-        ("IMG_4795.MOV", 151.18, 155.14)],
-        [("maos_teclado", "IMG_4795.MOV", 47.4), ("bandeira_notebook", "IMG_4795.MOV", 125.8)]),
-    "04_dev_vagas": ("Quantas vagas de TI os EUA 🇺🇸 vão abrir?", [
-        ("IMG_4796.MOV", 44.24, 52.70), ("IMG_4796.MOV", 60.20, 64.08), ("IMG_4796.MOV", 64.64, 66.64),
-        ("IMG_4796.MOV", 69.28, 73.18), ("IMG_4796.MOV", 90.18, 92.88), ("IMG_4796.MOV", 98.92, 102.84),
-        ("IMG_4796.MOV", 110.20, 115.18)],
-        [("notebook_colo", "IMG_4796.MOV", 60.8), ("digitando_close", "IMG_4796.MOV", 99.4)]),
-    "05_dev_5anos": ("Dev com mais de 5 anos de experiência?", [
-        ("IMG_4797.MOV", 20.50, 24.16), ("IMG_4797.MOV", 27.24, 36.44), ("IMG_4797.MOV", 52.12, 58.92),
-        ("IMG_4797.MOV", 89.28, 94.66)],
+    "01_dev_salario": (("Quanto ganha um dev nos EUA 🇺🇸?", "Desenvolvedor: qual o salário nos EUA 🇺🇸?"), [
+        ("IMG_4790.MOV", 5.15, 6.95), ("IMG_4790.MOV", 8.85, 13.80), ("IMG_4790.MOV", 22.95, 26.85),
+        ("IMG_4790.MOV", 33.70, 39.15), ("IMG_4790.MOV", 39.95, 45.60), ("IMG_4789.MOV", 82.25, 86.90)],
+        [("lucas_digitando", "IMG_4790.MOV", 23.5), ("banco_bandeira", "IMG_4790.MOV", 42.4)]),
+    "02_dev_brasil": (("Dev no Brasil 🇧🇷, já pensou em trabalhar nos EUA 🇺🇸?", "Desenvolvedor: Green Card nos EUA 🇺🇸 sem sponsor?"), [
+        ("IMG_4789.MOV", 7.40, 14.10), ("IMG_4789.MOV", 23.95, 27.60), ("IMG_4789.MOV", 52.15, 57.20),
+        ("IMG_4789.MOV", 64.70, 69.50), ("IMG_4789.MOV", 82.25, 83.85), ("IMG_4789.MOV", 92.30, 95.60)],
+        [("fonte_notebook", "IMG_4789.MOV", 24.4), ("codigo", "IMG_4789.MOV", 66.0)]),
+    "03_dev_residencia": (("Você sabe quanto um dev ganha nos EUA 🇺🇸?", "Dev: residência permanente nos EUA 🇺🇸 sem empresa?"), [
+        ("IMG_4795.MOV", 25.35, 32.60), ("IMG_4795.MOV", 46.60, 56.40), ("IMG_4795.MOV", 113.45, 116.30),
+        ("IMG_4795.MOV", 123.75, 127.70), ("IMG_4795.MOV", 129.85, 134.60), ("IMG_4795.MOV", 136.35, 142.60),
+        ("IMG_4795.MOV", 151.05, 155.60)],
+        [("maos_teclado", "IMG_4795.MOV", 47.4), ("bandeira_notebook", "IMG_4795.MOV", 124.5)]),
+    "04_dev_vagas": (("Quantas vagas de TI os EUA 🇺🇸 vão abrir até 2035?", "Desenvolvedor: os EUA 🇺🇸 precisam de você?"), [
+        ("IMG_4796.MOV", 44.20, 48.20), ("IMG_4796.MOV", 49.78, 53.60), ("IMG_4796.MOV", 60.05, 64.50),
+        ("IMG_4796.MOV", 64.60, 67.05), ("IMG_4796.MOV", 69.38, 73.55), ("IMG_4796.MOV", 90.15, 93.20),
+        ("IMG_4796.MOV", 98.25, 103.20), ("IMG_4796.MOV", 110.15, 115.60)],
+        [("notebook_colo", "IMG_4796.MOV", 61.0), ("digitando_close", "IMG_4796.MOV", 98.8)]),
+    "05_dev_5anos": (("Dev com mais de 5 anos de experiência?", "Dev sênior: Green Card nos EUA 🇺🇸 sem sponsor?"), [
+        ("IMG_4797.MOV", 20.40, 24.70), ("IMG_4797.MOV", 27.10, 36.85), ("IMG_4797.MOV", 52.00, 59.30),
+        ("IMG_4797.MOV", 89.15, 95.00)],
         [("lucas_digitando2", "IMG_4797.MOV", 31.0), ("banco_bandeira", "IMG_4797.MOV", 54.8)]),
-    "06_ti_5anos": ("Profissional de TI com mais de 5 anos de experiência?", [
-        ("IMG_4800.MOV", 2.72, 6.66), ("IMG_4800.MOV", 11.74, 20.58), ("IMG_4797.MOV", 89.28, 94.66)],
-        [("bandeira_notebook", "IMG_4800.MOV", 17.08)]),
-    "07_eng_software": ("Precisa de empresa pra ter visto americano 🇺🇸?", [
-        (LONGO, 28.26, 34.40), (LONGO, 69.58, 76.90), (LONGO, 145.06, 152.54), (LONGO, 161.38, 167.98)],
-        [("lucas_digitando", LONGO, 73.46), ("banco_bandeira", LONGO, 147.54)]),
-    "08_dev_objecao": ("TI é comum demais pro Green Card?", [
-        (LONGO, 181.72, 188.78), (LONGO, 194.86, 200.30), (LONGO, 201.08, 203.90), (LONGO, 211.04, 215.04),
-        (LONGO, 218.32, 228.20)],
+    "06_ti_5anos": (("Profissional de TI com +5 anos de experiência?", "TI: morar e trabalhar nos EUA 🇺🇸 sem sponsor?"), [
+        ("IMG_4800.MOV", 4.05, 7.30), ("IMG_4800.MOV", 13.25, 20.95), ("IMG_4800.MOV", 21.70, 28.00)],
+        [("bandeira_notebook", "IMG_4800.MOV", 17.1)]),
+    "07_eng_software": (("Engenheiro de software: visto americano 🇺🇸 sem empresa?", "Engenheiro de software: precisa de sponsor nos EUA 🇺🇸?"), [
+        (LONGO, 28.10, 34.95), (LONGO, 69.45, 77.40), (LONGO, 145.55, 153.20), (LONGO, 161.25, 162.95),
+        (LONGO, 164.30, 168.40)],
+        [("lucas_digitando", LONGO, 72.0), ("banco_bandeira", LONGO, 147.5)]),
+    "08_dev_objecao": (("Desenvolvedor: sua área é comum demais pro Green Card?", "Dev: dá pra ter Green Card nos EUA 🇺🇸 sendo de TI?"), [
+        (LONGO, 181.60, 189.30), (LONGO, 194.95, 200.90), (LONGO, 200.95, 204.70), (LONGO, 210.95, 215.70),
+        (LONGO, 218.20, 229.90)],
         [("fonte_notebook", LONGO, 201.3), ("codigo", LONGO, 211.2)]),
-    "09_cientista_salario": ("Quanto ganha um cientista de dados nos EUA 🇺🇸?", [
-        (LONGO, 234.56, 243.38), (LONGO, 244.74, 247.34), (LONGO, 250.42, 255.26), (LONGO, 278.60, 283.48),
-        (LONGO, 286.14, 289.52), (LONGO, 290.38, 296.18), (LONGO, 299.76, 302.54)],
+    "09_cientista_salario": (("Quanto ganha um cientista de dados nos EUA 🇺🇸?", "Cientista de dados: qual o salário nos EUA 🇺🇸?"), [
+        (LONGO, 234.40, 239.42), (LONGO, 241.08, 243.90), (LONGO, 244.60, 247.80), (LONGO, 250.30, 256.20),
+        (LONGO, 278.55, 284.40), (LONGO, 286.90, 289.95), (LONGO, 290.25, 296.65), (LONGO, 299.65, 303.30)],
         [("fonte_notebook", LONGO, 245.0), ("banco_bandeira", LONGO, 279.4)]),
-    "10_cientista_crescimento": ("Cientista de dados: quanto sua área vai crescer nos EUA 🇺🇸?", [
-        (LONGO, 311.84, 321.32), (LONGO, 244.74, 247.34), (LONGO, 250.42, 255.26), (LONGO, 278.60, 283.48),
-        (LONGO, 286.14, 289.52), (LONGO, 290.38, 296.18), (LONGO, 299.76, 302.54)],
+    "10_cientista_crescimento": (("Cientista de dados: quanto sua área vai crescer nos EUA 🇺🇸?", "Cientista de dados: sua área está em alta nos EUA 🇺🇸?"), [
+        (LONGO, 311.70, 322.00), (LONGO, 244.60, 247.80), (LONGO, 250.30, 256.20), (LONGO, 278.55, 284.40),
+        (LONGO, 286.90, 289.95), (LONGO, 290.25, 296.65), (LONGO, 299.65, 303.30)],
         [("notebook_colo", LONGO, 245.0), ("lucas_digitando2", LONGO, 279.4)]),
-    "11_cientista_objecao": ("Sua área em alta basta pro Green Card?", [
-        (LONGO, 328.84, 334.00), (LONGO, 340.06, 341.96), (LONGO, 344.10, 346.56), (LONGO, 351.70, 359.18),
-        (LONGO, 387.88, 391.02), (LONGO, 392.04, 400.32)],
-        [("codigo", LONGO, 354.92), ("digitando_close", LONGO, 388.2)]),
+    "11_cientista_objecao": (("Cientista de dados: só a área em alta basta pro Green Card?", "Cientista de dados: o que pesa no Green Card dos EUA 🇺🇸?"), [
+        (LONGO, 328.70, 334.55), (LONGO, 339.95, 342.40), (LONGO, 343.95, 347.40), (LONGO, 351.55, 359.58),
+        (LONGO, 387.75, 391.95), (LONGO, 391.95, 400.75)],
+        [("codigo", LONGO, 354.9), ("digitando_close", LONGO, 388.2)]),
 }
 
 
 def palavras(arq):
+    """transcrição literal (com as repetições: ver transcrever_literal.py); sem ela, a normal."""
     base = os.path.splitext(arq)[0]
-    return json.load(open(os.path.join(TRANSC, base + ".json")))["palavras"]
+    lit = os.path.join(TRANSC, base + ".literal.json")
+    return json.load(open(lit if os.path.exists(lit) else os.path.join(TRANSC, base + ".json")))["palavras"]
+
+
+# números falados por extenso na transcrição literal -> dígitos na legenda
+NUMEROS = [("dois mil e trinta e cinco", "2035"), ("cento e trinta e seis", "136"), ("cento e vinte", "120"),
+           ("trinta e cinco por cento", "35%"), ("trinta e cinco", "35"), ("cem", "100"), ("cinco anos", "5 anos")]
+
+
+# grafia da legenda: frases que o Whisper literal escreve errado (comparadas sem caixa) -> texto certo
+FRASES = [("Seu desenvolvedor no Brasil sabia", "Você é desenvolvedor no Brasil? Sabia"),
+          ("O personal de TI com o Bacharelado", "Profissional de TI com bacharelado"),
+          ("O sinal de TI com o Bacharelado", "Profissional de TI com bacharelado"),
+          ("brincardio,", "Green Card,"), ("firmamentemente", "permanentemente"), ("win hard...", "Green Card."),
+          ("qual vista", "qual visto"), ("sorteios e vistos.", "sorteios de vistos."), ("sorteiros", "sorteios"),
+          ("Colume", "Volume"), ("valia", "avalia"), ("Toquem,", "toque em"), ("façam", "faça"),
+          ("recebem em em", "receba em"), ("recebem em", "receba em"), ("em em", "em"), ("Analise o seu", "que analisa o seu"),
+          ("patrocida.", "patrocine."), ("vista.", "visto."), ("vista?", "visto?"), ("vistas.", "vistos."),
+          ("de vista", "de visto"), ("wincard", "Green Card"), ("GwinCard", "Green Card"), ("Gwyncard", "Green Card")]
+
+
+def corrigir_frases(pal):
+    # reticências do Whisper saem antes de comparar ("o... No Brasil" não casava com "o No Brasil")
+    pal = [dict(p, w=p["w"].replace("...", "")) for p in pal]
+    pal = [p for p in pal if p["w"]]
+    out, i = [], 0
+    while i < len(pal):
+        for errado, certo in FRASES:
+            e = errado.lower().split()
+            if [p["w"].lower() for p in pal[i:i + len(e)]] == e:
+                novas, s0, s1 = certo.split(), pal[i]["s"], pal[i + len(e) - 1]["e"]
+                passo = (s1 - s0) / len(novas)
+                out += [{"w": w, "s": round(s0 + k * passo, 3), "e": round(s0 + (k + 1) * passo, 3)} for k, w in enumerate(novas)]
+                i += len(e)
+                break
+        else:
+            w = dict(pal[i]); w["w"] = w["w"].replace("...", "")      # reticências do Whisper não vão pra legenda
+            if w["w"]:
+                out.append(w)
+            i += 1
+    return out
+
+
+def juntar_numeros(pal):
+    from auditar_fala import norm
+    out, i = [], 0
+    while i < len(pal):
+        for frase, dig in NUMEROS:
+            fs = frase.split()
+            if [norm(p["w"]) for p in pal[i:i + len(fs)]] == fs:
+                ult = pal[i + len(fs) - 1]
+                pont = ult["w"][len(ult["w"].rstrip(".,?!;:")):]
+                if dig.endswith(" anos"):
+                    out += [{"w": "5", "s": pal[i]["s"], "e": pal[i]["e"]}, dict(ult, w="anos" + pont)]
+                else:
+                    out.append({"w": dig + pont, "s": pal[i]["s"], "e": ult["e"]})
+                i += len(fs)
+                break
+        else:
+            out.append(pal[i]); i += 1
+    return out
 
 
 def faixa(arq, a, b):
-    """(início, fim) do pedaço no bruto: das palavras que começam entre a e b, com folga sem invadir as vizinhas."""
-    ps = palavras(arq)
-    idx = [i for i, w in enumerate(ps) if a - 0.02 <= w["s"] <= b + 0.02]
-    i0, i1 = idx[0], idx[-1]
-    ini = ps[i0]["s"] - 0.18
-    if i0 > 0:
-        ini = max(ini, ps[i0 - 1]["e"] + 0.02)
-    fim = ps[i1]["e"] + 0.22
-    if i1 + 1 < len(ps):
-        fim = min(fim, ps[i1 + 1]["s"] - 0.02)
-    ini = round(max(0.0, ini) * FPS) / FPS
-    fim = round(fim * FPS) / FPS
-    return ini, fim, ps[i0:i1 + 1]
+    """(início, fim, palavras) do pedaço: tempos explícitos em quadros inteiros e as palavras da transcrição
+    literal da própria janela (o Whisper no take inteiro esconde repetições)."""
+    from auditar_fala import transcrever_janela
+    ini, fim = round(a * FPS) / FPS, round(b * FPS) / FPS
+    ws = transcrever_janela(os.path.join(BRUTOS, arq), ini, fim)
+    longas = [w for w in ws[:-1] if w["e"] - w["s"] > 0.9]
+    for w in longas:                                     # palavra esticada = pode ter fala escondida embaixo
+        print(f"  ⚠ palavra esticada em {arq} {w['s']:.2f}-{w['e']:.2f}: '{w['w']}'")
+    return ini, fim, ws
 
 
 def montar(id_, pedacos):
@@ -127,6 +187,14 @@ def montar(id_, pedacos):
     # o -noautorotate leva a matriz de rotação do iPhone pro intermediário: zera (a imagem já saiu de pé)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-display_rotation:v", "0", "-i", out + ".tmp.mov", "-c", "copy", out], check=True)
     os.remove(out + ".tmp.mov")
+    pal = juntar_numeros(corrigir_frases(pal))
+    from auditar_fala import repeticoes
+    reps = repeticoes(pal)
+    if reps:
+        for i, n in reps:
+            print(f"  ⚠ REPETIÇÃO em {id_}: '{' '.join(p['w'] for p in pal[i:i + n])}' em {pal[i]['s']:.2f}s e {pal[i + n]['s']:.2f}s")
+        if "--forcar" not in sys.argv:
+            raise SystemExit(f"{id_}: fala repetida nos pedaços, corrija antes de renderizar")
     texto = " ".join(p["w"] for p in pal)
     json.dump({"texto": texto, "palavras": pal, "segmentos": segs},
               open(os.path.join(TRANSC, id_ + ".json"), "w"), ensure_ascii=False, indent=1)
@@ -142,17 +210,23 @@ def no_intermediario(mapa, arq, t_bruto):
 
 def main():
     os.makedirs(SAIDA, exist_ok=True)
-    ids = sys.argv[1:] or list(ANUNCIOS)
+    so_montar = "--so-montar" in sys.argv                 # só junta os pedaços e confere repetição (sem renderizar)
+    ids = [a for a in sys.argv[1:] if not a.startswith("--")] or list(ANUNCIOS)
     for id_ in ids:
-        gancho, pedacos, brolls = ANUNCIOS[id_]
+        ganchos, pedacos, brolls = ANUNCIOS[id_]
         print(f"\n=== {id_}")
         video, mapa = montar(id_, pedacos)
-        cmd = [sys.executable, os.path.join(RAIZ, "editor", "editor_reels.py"), video, "--marca", "imigrar",
-               "--gancho", gancho, "--y-legenda", "0.55", "--tirar-hesitacoes", "--respiro", "0.18",
-               "--manter-perguntas", "--broll-com-legenda", "--nome", f"imigrar_ti_{id_}", "--saida", SAIDA]
-        for nome, arq, tb in brolls:
-            cmd += ["--broll", f"{os.path.join(BROLL, nome + '.mp4')}@fonte:{no_intermediario(mapa, arq, tb):.2f}"]
-        subprocess.run(cmd, check=True)
+        if so_montar:
+            print("  ", json.load(open(os.path.join(TRANSC, id_ + ".json")))["texto"])
+            continue
+        for versao, gancho in zip("AB", ganchos):        # A/B: muda só o gancho do balão
+            cmd = [sys.executable, os.path.join(RAIZ, "editor", "editor_reels.py"), video, "--marca", "imigrar",
+                   "--gancho", gancho, "--y-legenda", "0.55", "--tirar-hesitacoes", "--respiro", "0.18",
+                   "--proteger-palavra", "0.15", "--manter-perguntas", "--broll-com-legenda",
+                   "--nome", f"imigrar_ti_{id_}_{versao}", "--saida", SAIDA]
+            for nome, arq, tb in brolls:
+                cmd += ["--broll", f"{os.path.join(BROLL, nome + '.mp4')}@fonte:{no_intermediario(mapa, arq, tb):.2f}"]
+            subprocess.run(cmd, check=True)
 
 
 if __name__ == "__main__":

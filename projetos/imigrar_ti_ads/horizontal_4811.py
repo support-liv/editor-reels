@@ -5,7 +5,7 @@ Fora da identidade da Imigrar de propósito (teste de anúncio).
 Uso: python3 projetos/imigrar_ti_ads/horizontal_4811.py cortes.json [--quadros 3,12,25]
      cortes.json = plano do editor (editor_reels.py ... --json-cortes), com os ajustes de CORRIGIR abaixo.
 """
-import json, os, shutil, subprocess, sys
+import json, math, os, shutil, subprocess, sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(AQUI, "..", "..", "editor"))
@@ -20,22 +20,20 @@ LUT = os.path.join(AQUI, "cinema_pastel.cube")
 FPS = 30000 / 1001
 SW, SH = 3840, 2160
 # fim dos cortes que pegavam o começo da palavra seguinte ("existe u-", "modalidade no", "perfil 27")
-CORRIGIR = {20.84: 20.66, 26.64: 26.46, 63.40: 63.24}
+CORRIGIR = {}
 # enquadramentos (zoom, centro x, centro y em fração do quadro original), alternando por corte
-PLANOS = [(1.00, 0.50, 0.50), (1.22, 0.40, 0.58), (1.10, 0.46, 0.55)]
+GIRAR = 1.4               # graus, horário: o prédio subia ~1,4° pra direita (medido nas horizontais do topo). Só gira.
+# depois de girar, recorta o retângulo útil (sem canto preto) e volta a 4K; os planos são em cima dele
+UTIL = math.cos(math.radians(GIRAR)) + (16 / 9) * math.sin(math.radians(GIRAR)) + 0.01
+PLANOS = [(1.00, 0.50, 0.50), (1.17, 0.42, 0.00), (1.08, 0.46, 0.00)]   # cy 0 = colado no topo: a bandeira fica na cena
 
 # letterings: (palavra-gatilho no bruto, segundos na tela, linhas)
-CARDS = [
-    (4.56, 3.4, [[("dev no Brasil", "rot", "creme")], [("Sonha em viver", "rom", "creme")],
-                 [("nos ", "rom", "creme"), ("Estados Unidos?", "ita", "rosa")]]),
-    (12.86, 3.1, [[("os dois caminhos de sempre", "rot", "creme")], [("Sponsor", "rom", "creme")],
-                  [("ou ", "ita", "rosa"), ("sorteio.", "rom", "creme")]]),
-    (19.80, 4.6, [[("a realidade", "rot", "creme")], [("Green Card", "rom", "creme")],
-                  [("por ", "ita", "rosa"), ("mérito", "ita", "rosa")], [("e trajetória.", "rom", "creme")]]),
-    (52.64, 4.0, [[("sem precisar de", "rot", "creme")], [("sponsor", "rom", "creme"), (",", "rom", "creme")],
-                  [("nem de ", "ita", "rosa"), ("sorteio.", "rom", "creme")]]),
-    (62.50, 4.2, [[("análise de perfil gratuita", "rot", "creme")], [("Comente", "rom", "creme")],
-                  [("“perfil”", "ita", "rosa")]]),
+CARDS = [   # identidade Imigrar: (palavra-gatilho no bruto, segundos na tela, linhas de (texto, estilo))
+    (4.56, 3.4, [[("dev no Brasil", "rot")], [("Sonha em morar", "txt")], [("nos ", "txt"), ("EUA?", "rosa")]]),
+    (12.86, 3.1, [[("os caminhos de sempre", "rot")], [("Sponsor", "txt")], [("ou ", "txt"), ("sorteio?", "azul")]]),
+    (23.00, 4.6, [[("a realidade", "rot")], [("Green Card", "rosa")], [("por mérito e", "txt")], [("trajetória", "txt")]]),
+    (52.64, 4.0, [[("sem precisar de", "rot")], [("Sponsor", "azul")], [("nem sorteio", "txt")]]),
+    (62.50, 4.2, [[("análise de perfil gratuita", "rot")], [("Comente", "txt")], [("PERFIL", "rosa")]]),
 ]
 
 
@@ -76,10 +74,10 @@ def render_cards(cs):
         t0 = tempo_saida(cs, gatilho)
         for i in range(len(linhas)):
             png = os.path.join(TMP, f"card{k}_l{i}.png")
-            L.desenhar(linhas, x0=1150, y_centro=720, tam=100, so_linha=i).save(png)
+            L.desenhar_imigrar(linhas, x0=1100, y_centro=740, tam=92, so_linha=i).save(png)
             capas.append((png, t0 + 0.22 * i, t0 + dur))
     veu = os.path.join(TMP, "veu.png")
-    L.veu(forca=0.44).save(veu)
+    L.veu(forca=0.40).save(veu)
     return capas, veu
 
 
@@ -101,7 +99,8 @@ def main():
         z, cx, cy = PLANOS[k % len(PLANOS)]
         dur = c["n"] / FPS
         entradas += [*args, "-ss", f"{c['s']:.3f}", "-t", f"{dur:.4f}", "-i", SRC]
-        fc.append(f"[{k}:v]{filtro}{crop(z, cx, cy)},scale=1920:1080:flags=lanczos,fps=30000/1001,format=yuv420p,setsar=1,"
+        fc.append(f"[{k}:v]{filtro}rotate={math.radians(GIRAR):.5f}:fillcolor=black,"
+                  f"crop=iw/{UTIL:.4f}:ih/{UTIL:.4f},scale={SW}:{SH},{crop(z, cx, cy)},scale=1920:1080:flags=lanczos,fps=30000/1001,format=yuv420p,setsar=1,"
                   f"trim=end_frame={c['n']},setpts=PTS-STARTPTS[v{k}];"
                   f"[{k}:a]aresample=48000,atrim=duration={dur:.4f},asetpts=PTS-STARTPTS,"
                   f"afade=t=in:d=0.012,afade=t=out:st={max(0, dur - 0.012):.4f}:d=0.012[a{k}]")

@@ -60,6 +60,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | (padrão) | Corta onde a voz começa e termina de verdade e tira pausas internas acima de 0,25s |
 | `--respiro 0.5` | Mantém pausas internas até esse tamanho (s). Maior que 0,25 = fala mais natural (quem fala pausado); menor = mais enxuto. **Shorts: 0.18** |
 | `--tirar-hesitacoes` | Tira "éé", "hmm", "ah", "e..." esticado, "então, assim" seguido de pausa e voz sem palavra. Mostra no terminal o que tirou. Padrão nos shorts |
+| `--proteger-palavra 0.15` | Ambiente barulhento: o corte pelo áudio não come o fim fraco da palavra (estende até onde o Whisper diz que ela vai, no máximo esse tanto) |
 | `--json-cortes ARQ` | Salva o plano de cortes e sai (usado pelo `motion/remapear.py` quando o corte muda depois do motion pronto) |
 | `--sem-ajuste-audio` | Usa só o tempo do Whisper (mais folgado) |
 

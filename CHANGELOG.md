@@ -2,6 +2,12 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.30 (22/10/2026) - Imigrar · TI (correções) e Ednaldo
+- **Correção: `--tirar-hesitacoes` cortava o verbo "é".** O `norm()` tira o acento, e "é" esticado (≥0,45s) virava hesitação ("a única forma de morar aqui é depender" saía "aqui depender"). Agora "é" acentuado só sai com reticências ou isolado entre pausas.
+- `--proteger-palavra SEG`: em ambiente barulhento, o corte pelo áudio não come o fim/começo fraco da palavra ("profissionai-s"); estende o pedaço até onde o Whisper diz que a palavra vai (no máximo SEG).
+- **Repetições escondidas:** o Whisper limpa a fala e esconde "sabia que, sabia que" dentro do tempo de uma palavra. `projetos/imigrar_ti_ads/transcrever_literal.py` (initial_prompt cheio de hesitações) transcreve literal; `auditar_fala.py` transcreve cada pedaço sozinho em modo literal e acha repetições; o `lote_ti.py` não renderiza com repetição. Anúncios com versões A/B (só o gancho muda).
+- Anúncio horizontal 4811 refeito na identidade da Imigrar (Inter Tight, tarjas rosa/azul), câmera endireitada 1,4° (só giro, recorte da área útil sem canto preto) e zooms presos no topo (a bandeira fica na cena).
+
 ## 0.29 (22/10/2026) - Imigrar · anúncios de TI
 - `--broll-com-legenda`: B-roll de imagem real (anúncio) mantém a legenda por cima. Sem a opção, B-roll de tela cheia tira a legenda (regra do motion). Em anúncio a fala continua durante o B-roll e a legenda não pode sumir.
 - `projetos/imigrar_ti_ads/`: 11 anúncios verticais montados de vários takes (`lote_ti.py` junta gancho de um, corpo e CTA de outro num intermediário SDR, com a transcrição deslocada, sem rodar o Whisper de novo), B-rolls do iPhone (`preparar_broll.py`) e o anúncio horizontal de teste `horizontal_4811.py` (16:9, LUT `cinema_pastel.cube`, letterings em serifa New York com tons pastel, fora da identidade da Imigrar).
