@@ -2,6 +2,11 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.29 (22/10/2026) - Imigrar · anúncios de TI
+- `--broll-com-legenda`: B-roll de imagem real (anúncio) mantém a legenda por cima. Sem a opção, B-roll de tela cheia tira a legenda (regra do motion). Em anúncio a fala continua durante o B-roll e a legenda não pode sumir.
+- `projetos/imigrar_ti_ads/`: 11 anúncios verticais montados de vários takes (`lote_ti.py` junta gancho de um, corpo e CTA de outro num intermediário SDR, com a transcrição deslocada, sem rodar o Whisper de novo), B-rolls do iPhone (`preparar_broll.py`) e o anúncio horizontal de teste `horizontal_4811.py` (16:9, LUT `cinema_pastel.cube`, letterings em serifa New York com tons pastel, fora da identidade da Imigrar).
+- Aviso: arquivo gerado com `-noautorotate` (HDR do iPhone) herda a matriz de rotação; zere com `-display_rotation:v 0` ao remuxar, senão a imagem sai deitada.
+
 ## 0.28 (07/10/2026) - LIVE 81: enquadramento da tela dividida e sublinhado do motion
 - **Correção: enquadramento da tela dividida.** O recorte (88% da metade, ~750 px de altura) com o limite de 70% da altura (chat/banner) só podia começar entre 0 e 6 px: ficava preso no topo da imagem, e a regra "rosto a 42%" nunca valia. Resultado na LIVE 81: até 34% do painel de teto acima da Dra. Lívia e, quando ela se inclinava, cabelo cortado. Agora o zoom e o x são fixos por pessoa, e a altura é decidida corte a corte pelo topo da cabeça (margem 8% em cima, 16% embaixo por causa da legenda na divisa); o zoom abre até 100% quando a cabeça não cabe. Auditoria completa e números em `docs/ENQUADRAMENTO.md`.
 - Guardrails de enquadramento em todo render de tela dividida: avisa cabeça cortada, queixo fora do painel, teto demais e cabeça fora da própria webcam (só informa). `--exigir-enquadramento` não renderiza com aviso; `--previa-enquadramento ARQ.jpg` gera a folha de conferência (1 quadro por corte, com as guias) antes do render.

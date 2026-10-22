@@ -27,6 +27,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--cta "texto"` | Caixa nos últimos 3,5s |
 | `--cta-animado PERFIL` | CTA animado da marca ("Comente PERFIL") nos últimos 4s, no lugar da caixa. `--cta-rotulo` muda o "Comente" |
 | `--broll arq.mov@fonte:8.4` | **B-roll de motion**: cena por cima da imagem, embaixo da legenda, com os efeitos sonoros dela mixados por baixo da voz. `@fonte:` = tempo da fala no bruto (o editor converte); `@12.5` = tempo do vídeo pronto. Pode repetir |
+| `--broll-com-legenda` | B-roll de imagem real (anúncio): a legenda continua por cima. Sem a opção, B-roll de tela cheia tira a legenda |
 | `--sem-legenda` | Não queima legenda. Só quando o vídeo de origem **já tem legenda gravada** (senão duplica) |
 | `--animacao arq.mov@12.5` | Cola uma animação transparente (feita em `motion/`) nesse segundo do vídeo pronto. Pode repetir. Proporção tem que ser a mesma do vídeo |
 | `--y-legenda 0.62` | Altura da legenda (fração da tela). Orgânico 0.62, anúncio 0.55, selfie 0.64 |

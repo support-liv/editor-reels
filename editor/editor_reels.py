@@ -753,6 +753,7 @@ def caixa_texto(texto, marca, tam=52, estilo=None):
 CAUDA = 0.0                                       # --cauda: segundos extras no fim (último quadro parado, silêncio) pro CTA
 SEM_LEGENDA = False                               # --sem-legenda: o vídeo de origem já tem legenda gravada
 BROLLS = []                                       # [(arquivo, "12.5" ou "fonte:8.4")] vindos do --broll
+BROLL_LEGENDA = False                             # --broll-com-legenda: b-roll de imagem real (anúncio) mantém a legenda
 
 
 class Broll:
@@ -1018,7 +1019,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
             out = cv2.resize(fr[y0:y0 + ch, x0:x0 + cw], (OUT_W, OUT_H), interpolation=cv2.INTER_AREA)
             base_ult = out.copy()
             t = n_out / FPS
-            com_motion = aplicar_brolls(out, camadas, t) > 0.5      # motion na tela: sem legenda competindo
+            com_motion = aplicar_brolls(out, camadas, t) > 0.5 and not BROLL_LEGENDA      # motion na tela: sem legenda competindo
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
                 gi += 1
             g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
@@ -1406,7 +1407,7 @@ def _dividido_render(video, cortes, saida, grupos, leg, img_gancho, img_cta, tot
             out = np.vstack([cima, baixo])
             base_ult = out.copy()
             t = n_out / FPS
-            com_motion = aplicar_brolls(out, camadas, t) > 0.5      # motion na tela: sem legenda competindo
+            com_motion = aplicar_brolls(out, camadas, t) > 0.5 and not BROLL_LEGENDA      # motion na tela: sem legenda competindo
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
                 gi += 1
             g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
@@ -1474,7 +1475,7 @@ def renderizar_quadro(video, cortes, saida, grupos, leg, img_gancho, img_cta, to
             out[y_q:y_q + mh] = cv2.resize(fr[:ch, x0:x0 + cw], (OUT_W, mh), interpolation=cv2.INTER_CUBIC)
             base_ult = out.copy()
             t = n_out / FPS
-            com_motion = aplicar_brolls(out, camadas, t) > 0.5      # motion na tela: sem legenda nem gancho por cima
+            com_motion = aplicar_brolls(out, camadas, t) > 0.5 and not BROLL_LEGENDA      # motion na tela: sem legenda nem gancho por cima
             while gi < len(grupos) - 1 and t >= grupos[gi][-1]["e"] + 0.25 and t >= grupos[gi + 1][0]["s"]:
                 gi += 1
             g = grupos[gi] if grupos and grupos[gi][0]["s"] <= t < grupos[gi][-1]["e"] + 0.25 else None
@@ -1711,6 +1712,8 @@ def main():
     ap.add_argument("--broll", action="append", default=[],
                     help='cena de motion por cima da imagem (embaixo da legenda), com os efeitos sonoros dela: '
                          '"arquivo.mov@12.5" (tempo do vídeo pronto) ou "arquivo.mov@fonte:8.4" (tempo da fala no bruto)')
+    ap.add_argument("--broll-com-legenda", action="store_true",
+                    help="b-roll de imagem real (anúncio): a legenda continua por cima (motion de tela cheia tira a legenda)")
     ap.add_argument("--animacao", action="append", default=[],
                     help='animação transparente (.mov/.webm) colada no vídeo: "arquivo.mov@12.5". Pode repetir')
     ap.add_argument("--cta-animado", metavar="PALAVRA",
@@ -1835,8 +1838,9 @@ def main():
         if ENQUADRAMENTO.get("avisos"):
             sys.exit("\nEnquadramento com aviso (veja acima). Gere a prévia com --previa-enquadramento, ajuste e rode de novo.")
     print("\nRenderizando...")
-    global SEM_LEGENDA, CAUDA
+    global SEM_LEGENDA, CAUDA, BROLL_LEGENDA
     SEM_LEGENDA = a.sem_legenda
+    BROLL_LEGENDA = a.broll_com_legenda
     CAUDA = a.cauda
     for x in a.broll:
         arq, _, quando = x.rpartition("@")
