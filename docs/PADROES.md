@@ -34,6 +34,12 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - Não usar o CTA falado "segue o perfil da X" (pedido do time).
 
 ## Cortes
+- **Fim da fala:** o vídeo nunca termina cortando a última palavra: último corte = fim da palavra + 0,35s, com fade de
+  0,12s. Pedaço de take termina no fim da última palavra (não no início).
+- **Palavra curta** ("ou", "mas", "é", "então") some fácil: o Whisper erra o tempo dela. Com `--proteger-palavra` o
+  plano não corta pausa pelos tempos do Whisper (quem corta é o áudio) e bloco de voz curto sem palavra fica com a
+  palavra curta vizinha.
+- **Repetição** só aparece na transcrição literal; a auditoria do pronto compara o esperado com o ouvido.
 - Pelo **áudio**, não só pelo tempo do Whisper (ele estica o fim da palavra para o silêncio, e isso aparece como respiro/olhada pro lado no fim da frase).
 - Folga de 0,05s antes da voz e 0,10s depois. Pausas internas acima de 0,25s saem.
 - **Sincronia:** cada corte tem duração em quadros inteiros, igual no vídeo e no áudio. Conferir com `ffprobe`: a duração do vídeo e a do áudio do arquivo final devem bater.

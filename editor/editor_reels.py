@@ -236,6 +236,22 @@ def energia_db(video):
     return _cache_energia[video]
 
 
+VAD = {}                                          # --vad: máscaras do Silero VAD por vídeo ({"normal", "suave"}, 20 ms)
+WX = os.path.join(AQUI, "..", ".venv-whisperx", "bin", "python")   # ambiente do WhisperX/Silero (alinhar.py, vad.py)
+
+
+def mascaras_vad(video):
+    """detector de voz neural (Silero): separa voz de ruído de shopping/carro melhor que o volume. Cache por vídeo."""
+    if video not in VAD:
+        st = os.stat(video)
+        npz = os.path.join(PLAT.pasta_cache("vad"), f"{os.path.basename(video)}_{int(st.st_mtime)}_{st.st_size}.npz")
+        if not os.path.exists(npz):
+            subprocess.run([WX, os.path.join(AQUI, "vad.py"), video, npz], check=True, capture_output=True)
+        z = np.load(npz)
+        VAD[video] = (z["normal"], z["suave"])
+    return VAD[video]
+
+
 def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
     """corta onde a voz começa/termina de verdade e tira pausas internas (respiro, olhada pro lado).
     O Whisper costuma esticar o fim da última palavra pro silêncio: é isso que denuncia o corte."""
@@ -244,6 +260,12 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
     suave = lambda m: np.convolve(m.astype(int), np.ones(3, int), "same") >= 2   # ignora estalos < 60 ms
     fala_normal = suave(db > lim)
     fala_baixa = suave(db > lim - 8)          # pergunta do entrevistador costuma sair mais baixa no microfone
+    if USAR_VAD:
+        # PAUSA continua pelo volume (o Silero ouve a conversa do fundo do shopping como fala e o ritmo morria). O Silero
+        # entra nas BORDAS: o começo/fim fraco da palavra só conta como voz se o detector neural disser que é voz.
+        vn, vs = mascaras_vad(video)
+        n = min(len(fala_baixa), len(vs))
+        fala_baixa = fala_baixa[:n] & vs[:n] | (vs[:n] & (db[:n] > lim - 12))
     novos = []
     for gi_orig, c in enumerate(cortes):
         fala = fala_baixa if c.get("perg") else fala_normal
@@ -262,8 +284,8 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
         for a, b in blocos:
             s = max(c["s"], (i0 + a) * 0.02 - antes)
             e = min(c["e"] + 0.05, (i0 + b + 1) * 0.02 + depois)
-            if e - s >= 0.25:
-                faixas.append((s, e))
+            if e - s >= 0.10:                    # curto demais só sai se não tiver palavra (ver abaixo): antes, com
+                faixas.append((s, e))            # 0,25s, palavra curta isolada ("ou", "mas", "é") era comida
         if not faixas:
             continue
         # cada palavra vai pro pedaço mais próximo (o tempo do Whisper às vezes cai no silêncio: nenhuma se perde)
@@ -272,22 +294,65 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
         for q in c["idx"]:
             m = (P[q]["s"] + P[q]["e"]) / 2
             donos[min(range(len(faixas)), key=lambda k: dist(m, faixas[k]))].append(q)
+        # o Whisper erra o tempo de palavra curta ("ou" marcado 0,2s depois, já no bloco seguinte): o bloco de voz dela
+        # ficava sem palavra e saía como hesitação. Bloco curto sem palavra colado a um vizinho que começa/termina com
+        # palavra curta fica com essa palavra.
+        curta = lambda q: len(norm(P[q]["w"])) <= 3
+        for k, (s, e) in enumerate(faixas):
+            if donos[k] or not (0.15 <= e - s <= 0.6):
+                continue
+            if k + 1 < len(faixas) and donos[k + 1] and faixas[k + 1][0] - e <= 0.4:
+                q = min(donos[k + 1], key=lambda q: P[q]["s"])
+                if curta(q) and len(donos[k + 1]) > 1:
+                    donos[k + 1].remove(q); donos[k].append(q); continue
+            if k > 0 and donos[k - 1] and s - faixas[k - 1][1] <= 0.4:
+                q = max(donos[k - 1], key=lambda q: P[q]["s"])
+                if curta(q) and len(donos[k - 1]) > 1:
+                    donos[k - 1].remove(q); donos[k].append(q)
         prot = RESPIRO.get("proteger", 0.0)
         if prot:
+            # começo/fim suave da palavra ("ou", "e", "mas", "existe") fica abaixo do limiar: recua o começo e avança o
+            # fim enquanto ainda houver voz fraca (limiar -5 dB) colada ao trecho, até 60% de `prot` (ruído de fundo de
+            # carro/shopping fica abaixo disso)
+            fala_suave = fala_baixa if USAR_VAD else suave(db > lim - 5)
+            for k, (s, e) in enumerate(faixas):
+                fs, fe = int(s / 0.02), int(e / 0.02)
+                lim_s = max(c["s"], faixas[k - 1][1] + 0.02 if k else c["s"]) / 0.02
+                lim_e = min(c["e"] + 0.05, faixas[k + 1][0] - 0.02 if k + 1 < len(faixas) else c["e"] + 0.05) / 0.02
+                passos = int(min(prot * 0.5, 0.15) / 0.02)        # começo: até 0,15s (ataque fraco da palavra)
+                while passos and fs - 1 > lim_s and fs - 1 < len(fala_suave) and fala_suave[fs - 1]:
+                    fs -= 1; passos -= 1
+                passos = int(0.12 / 0.02)                          # fim: até 0,12s (mais que isso já é pausa)
+                while passos and fe + 1 < lim_e and fe < len(fala_suave) and fala_suave[fe]:
+                    fe += 1; passos -= 1
+                faixas[k] = (min(s, fs * 0.02), max(e, fe * 0.02))
             # ambiente barulhento: o fim/começo fraco da palavra ("profissionai-s") fica abaixo do limiar de energia.
             # Estende o pedaço até onde o Whisper diz que a palavra vai, no máximo `prot` segundos.
             for k, (s, e) in enumerate(faixas):
                 if donos[k]:
                     ws_ = min(P[q]["s"] for q in donos[k]); we_ = max(P[q]["e"] for q in donos[k])
-                    s2 = min(s, max(ws_ - 0.03, s - prot * 0.5, c["s"]))
-                    e2 = max(e, min(we_ + 0.03, e + prot, c["e"] + 0.05))
+                    # o fim alinhado às vezes engole o silêncio seguinte: o fim só estica 0,12s (o começo, 0,15s)
+                    s2 = min(s, max(ws_ - 0.04, s - min(prot * 0.5, 0.15), c["s"]))
+                    e2 = max(e, min(we_ + 0.03, e + 0.12, c["e"] + 0.05))
                     if k + 1 < len(faixas):
                         e2 = min(e2, faixas[k + 1][0] - 0.02)
                     if k > 0:
                         s2 = max(s2, faixas[k - 1][1] + 0.02)
                     faixas[k] = (s2, e2)
+        if gi_orig == len(cortes) - 1 and faixas and c["idx"]:
+            # FIM DO VÍDEO: a última palavra nunca é cortada. O fim vai até o fim dela + 0,35s (o fim fraco da voz fica
+            # abaixo do limiar e o Whisper marca o fim cedo), sem pegar a palavra seguinte do bruto.
+            ult = max(c["idx"])
+            limite = P[ult + 1]["s"] - 0.05 if ult + 1 < len(P) else 1e9
+            s_, e_ = faixas[-1]
+            faixas[-1] = (s_, max(e_, min(max(e_, P[ult]["e"]) + 0.35, limite)))
+        # bloco "sem palavra" pelo meio da palavra pode ser o COMEÇO dela (queda de volume no meio de "propicia": o 1º
+        # pedaço ficava órfão e saía como hesitação). Se sobrepõe alguma palavra, fica.
+        sobre = lambda s, e: any(P[q]["s"] < e - 0.04 and P[q]["e"] > s + 0.04 for q in c["idx"])
         for k, (s, e) in enumerate(faixas):
-            if HESITACOES and not donos[k] and e - s < 1.2:   # voz sem palavra nenhuma: "éé", "hmm", respiração
+            if not donos[k] and e - s < 0.25 and not sobre(s, e):    # estalo/respiração curta sem palavra
+                continue
+            if HESITACOES and not donos[k] and e - s < 1.2 and not sobre(s, e):   # voz sem palavra: "éé", "hmm"
                 print(f"  hesitação sem palavra tirada: {s:.2f}-{e:.2f}")
                 continue
             n = dict(c); n.update({"s": round(s, 3), "e": round(e, 3), "idx": donos[k]})
@@ -298,6 +363,17 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
     for a, b in zip(novos, novos[1:]):
         if a["s"] < b["s"] < a["e"]:
             a["e"] = b["s"]
+    # pedaços encostados (buraco <= 0,06s depois de estender as bordas) são fala contínua: junta num só. Senão ficava um
+    # micro-corte de 20 ms no meio da palavra, com troca de zoom ("seu | histórico")
+    juntos = []
+    for n in novos:
+        if juntos and n.get("grupo") == juntos[-1].get("grupo") and n["s"] - juntos[-1]["e"] <= 0.06:
+            juntos[-1]["e"] = n["e"]
+            juntos[-1]["idx"] = juntos[-1]["idx"] + n["idx"]
+            juntos[-1]["texto"] = (juntos[-1]["texto"] + " " + n["texto"]).strip()
+        else:
+            juntos.append(n)
+    novos = juntos
     # palavra que ficou em dois pedaços vai só pro primeiro
     vistos = set()
     for n in novos:
@@ -623,7 +699,10 @@ CORRECOES = {  # erros comuns do Whisper nesses vídeos
     "ALIVE": "LIV", "EB2": "EB-2", "O1": "O-1", "VCB1": "EB-1", "VISTUA": "VISTO",
     "ODOTOLOGIA": "ODONTOLOGIA", "ONONTOLOGIA": "ODONTOLOGIA", "ESPATRIAR": "EXPATRIAR", "BORDS": "BOARD", "HIDROGENISTAS": "HIGIENISTAS",
     "DOUTOLOGIA": "ODONTOLOGIA", "DENTOLOGIA": "ODONTOLOGIA", "PRESADORA": "FRESADORA", "APROPILAXIA": "PROFILAXIA",
-    "RB2": "EB-2", "EB2NW": "EB-2 NIW", "INBZ": "INBDE", "ANVD": "INBDE", "NBDI": "INBDE", "UNBD": "INBDE", "JULIE": "JÚLIA", "MERITOGRAFIA": "MERITOCRACIA",
+    "RB2": "EB-2", "EB2NW": "EB-2 NIW",
+    # vistos sempre no formato oficial (regra fixa): E-2, O-1, O-3, L-1, H-1B, EB-1, EB-2, EB-2 NIW, B1/B2, DS-160
+    "E2": "E-2", "I2": "E-2", "L1": "L-1", "O3": "O-3", "H1B": "H-1B", "EB1": "EB-1", "B1B2": "B1/B2", "DS160": "DS-160",
+    "LEQUINONA": "LAKE NONA", "LAKENONA": "LAKE NONA", "TAVSTOP": "TAVISTOCK", "GREENCAR": "GREEN CARD", "INBZ": "INBDE", "ANVD": "INBDE", "NBDI": "INBDE", "UNBD": "INBDE", "JULIE": "JÚLIA", "MERITOGRAFIA": "MERITOCRACIA",
 }
 
 
@@ -772,6 +851,9 @@ def caixa_texto(texto, marca, tam=52, estilo=None):
 CAUDA = 0.0                                       # --cauda: segundos extras no fim (último quadro parado, silêncio) pro CTA
 SEM_LEGENDA = False                               # --sem-legenda: o vídeo de origem já tem legenda gravada
 BROLLS = []                                       # [(arquivo, "12.5" ou "fonte:8.4")] vindos do --broll
+USAR_VAD = False                                  # --vad: detector de voz Silero no lugar do limiar de volume
+CROP_FIXO = False                                 # --crop-fixo: recorte parado em cada corte (selfie na mão)
+PUNCH = None                                      # --punch: fração do plano fechado em relação ao aberto (padrão 0,82)
 BROLL_LEGENDA = False                             # --broll-com-legenda: b-roll de imagem real (anúncio) mantém a legenda
 
 
@@ -888,7 +970,7 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     if frac_base is None:
         frac_base = 0.34 if pessoa == "voz" else 0.55 if pessoa else 0.93
     if frac_punch is None:
-        frac_punch = frac_base * (0.85 if pessoa else 0.82)
+        frac_punch = frac_base * (PUNCH or (0.85 if pessoa else 0.82))
     mapa_voz = None
     if pessoa == "voz":
         # conversa: pessoa 1 (esquerda) voz grave, pessoa 2 voz aguda (ex.: André e Julia)
@@ -948,6 +1030,15 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
         else:
             ts, xy = trajetoria(video, c, pessoa, alvo_x)
         planos.append((frac, ts, xy))
+    if CROP_FIXO:
+        # selfie na mão: recorte PARADO e igual em todo o bloco de fala (grupo). Seguir o rosto somava ao balanço da mão
+        # e tremia; posição por pedaço fazia a imagem pular a cada micro-corte do mesmo bloco.
+        por_grupo = {}
+        for ci, (c, (frac, ts, xy)) in enumerate(zip(cortes, planos)):
+            por_grupo.setdefault(c.get("grupo", ci), []).append(xy)
+        for ci, c in enumerate(cortes):
+            frac = planos[ci][0]
+            planos[ci] = (frac, np.array([0.0]), np.median(np.vstack(por_grupo[c.get("grupo", ci)]), axis=0, keepdims=True))
 
     def quadro_saida(t_out):
         """o frame final (sem textos) num instante do vídeo de saída."""
@@ -1077,7 +1168,9 @@ def montar_audio(video, cortes, tmp_v, saida, vinheta=None, seg_vinheta=0.0, sfx
     for i, c in enumerate(cortes):
         d = c["e"] - c["s"]
         fade = ("" if c.get("continua") else ",afade=t=in:d=0.02") + \
-               ("" if i + 1 < len(cortes) and cortes[i + 1].get("continua") else f",afade=t=out:st={max(0, d - 0.03):.3f}:d=0.03")
+               ("" if i + 1 < len(cortes) and cortes[i + 1].get("continua") else
+                (f",afade=t=out:st={max(0, d - 0.12):.3f}:d=0.12" if i == len(cortes) - 1      # fim do vídeo: sem clique
+                 else f",afade=t=out:st={max(0, d - 0.03):.3f}:d=0.03"))
         filtros.append(f"[0:a]atrim={c['s']:.4f}:{c['e']:.4f},asetpts=PTS-STARTPTS{fade}[a{i}]")
         partes.append(f"[a{i}]")
     fc = ";".join(filtros) + f";{''.join(partes)}concat=n={len(cortes)}:v=0:a=1,dynaudnorm=f=250:g=15:p=0.9,loudnorm=I=-14:TP=-1.5:LRA=11"
@@ -1689,6 +1782,7 @@ def main():
     ap.add_argument("video")
     ap.add_argument("--marca", choices=MARCAS, default="imigrar")
     ap.add_argument("--gancho", default="", help="texto no topo nos primeiros 3s")
+    ap.add_argument("--seg-gancho", type=float, default=3.2, help="segundos do balão do gancho na tela (padrão 3,2)")
     ap.add_argument("--cta", default="", help="texto no topo nos últimos 3,5s")
     ap.add_argument("--trechos", help='faixas do original em segundos, ex: "124-166.6,1048-1053"')
     ap.add_argument("--comecar")
@@ -1733,6 +1827,13 @@ def main():
                          '"arquivo.mov@12.5" (tempo do vídeo pronto) ou "arquivo.mov@fonte:8.4" (tempo da fala no bruto)')
     ap.add_argument("--proteger-palavra", type=float, default=0.0, metavar="SEG",
                     help="ambiente barulhento: o corte pelo áudio não come o fim/começo fraco da palavra (estende até SEG s)")
+    ap.add_argument("--alinhar", action="store_true",
+                    help="refaz o tempo de cada palavra com alinhamento forçado (WhisperX): o corte não come palavra curta")
+    ap.add_argument("--vad", action="store_true",
+                    help="decide onde há voz com o detector neural Silero (ruído de shopping/carro não engana)")
+    ap.add_argument("--crop-fixo", action="store_true",
+                    help="selfie na mão: o recorte fica parado em cada corte (seguir o rosto somava ao balanço e tremia)")
+    ap.add_argument("--punch", type=float, help="plano fechado = esta fração do aberto (padrão 0,82; 0,70 = zoom bem visível)")
     ap.add_argument("--broll-com-legenda", action="store_true",
                     help="b-roll de imagem real (anúncio): a legenda continua por cima (motion de tela cheia tira a legenda)")
     ap.add_argument("--animacao", action="append", default=[],
@@ -1751,7 +1852,8 @@ def main():
     ap.add_argument("--exigir-enquadramento", action="store_true",
                     help="tela dividida: não renderiza se o guardrail de enquadramento der aviso (cabeça cortada, teto demais)")
     a = ap.parse_args()
-    global HESITACOES, COLUNAS, SEM_SOBREPOSICAO
+    global HESITACOES, COLUNAS, SEM_SOBREPOSICAO, USAR_VAD
+    USAR_VAD = a.vad                              # antes do plano: o refinamento dos cortes usa o detector de voz
     HESITACOES = a.tirar_hesitacoes
     SEM_SOBREPOSICAO = a.sem_sobreposicao
     if a.pessoas:
@@ -1766,6 +1868,12 @@ def main():
     if "audio" not in run(["ffprobe", "-v", "error", "-show_entries", "stream=codec_type", "-of", "csv=p=0", a.video]):
         sys.exit(f"O vídeo não tem áudio: {a.video}")
     dados = transcrever(a.video, os.path.join(cache_dir, base + ".json"))
+    if a.alinhar and not any(p.get("alinhada") for p in dados["palavras"]):
+        # tempo de cada palavra pelo alinhamento forçado (o Whisper erra 0,1-0,5s e o corte comia palavra curta)
+        r = subprocess.run([WX, os.path.join(AQUI, "alinhar.py"), a.video, os.path.join(cache_dir, base + ".json")],
+                           capture_output=True, text=True)
+        print("  " + (r.stdout.strip().splitlines() or ["alinhamento falhou: usando o tempo do Whisper"])[-1])
+        dados = json.load(open(os.path.join(cache_dir, base + ".json")))
     forcar = {}
     trechos = None
     perguntas_inline = []
@@ -1785,19 +1893,22 @@ def main():
     perguntas = [tuple(map(float, x.split("-"))) for x in a.pergunta.split(",")] if a.pergunta else []
     ordem = perguntas + (trechos or [])
     perguntas = perguntas + perguntas_inline
+    # com --proteger-palavra o plano pelo Whisper não corta pausa: quem corta é o áudio (refinar_cortes). O Whisper
+    # erra o tempo de palavra curta ("ou" marcado 0,5s depois) e o "buraco" entre palavras tinha voz que sumia.
+    pausa_plano = 1.5 if a.proteger_palavra and not a.sem_ajuste_audio else 0.35
     if trechos or perguntas:
         # respeita a ordem escrita (pergunta, resposta, outra pergunta... podem estar fora de ordem)
         cortes = []
         for t in ordem:
             novos = plano_de_cortes(dados, a.comecar, a.terminar, a.remover, [t], perguntas=perguntas,
-                                    tirar_perguntas=False)
+                                    tirar_perguntas=False, max_pausa=pausa_plano)
             for c in novos:
                 if t in forcar:
                     c["quem"] = forcar[t]
             cortes += novos
     else:
         cortes = plano_de_cortes(dados, a.comecar, a.terminar, a.remover,
-                                 tirar_perguntas=not a.manter_perguntas)
+                                 tirar_perguntas=not a.manter_perguntas, max_pausa=pausa_plano)
     if a.layout == "youtube" and not a.respiro:
         a.respiro = 0.8                           # corte longo: só tira silêncio de verdade, a conversa fica natural
     if a.respiro:
@@ -1861,16 +1972,18 @@ def main():
         if ENQUADRAMENTO.get("avisos"):
             sys.exit("\nEnquadramento com aviso (veja acima). Gere a prévia com --previa-enquadramento, ajuste e rode de novo.")
     print("\nRenderizando...")
-    global SEM_LEGENDA, CAUDA, BROLL_LEGENDA
+    global SEM_LEGENDA, CAUDA, BROLL_LEGENDA, CROP_FIXO, PUNCH
     SEM_LEGENDA = a.sem_legenda
     BROLL_LEGENDA = a.broll_com_legenda
+    CROP_FIXO, PUNCH = a.crop_fixo, a.punch
     CAUDA = a.cauda
     for x in a.broll:
         arq, _, quando = x.rpartition("@")
         BROLLS.append((os.path.abspath(arq), quando))
     renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, "" if a.cta_animado else a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
                so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima, girar=a.girar,
-               dinamico=a.dinamico, endireitar=a.endireitar, vinheta=not a.sem_vinheta, inscreva=not a.sem_inscreva)
+               dinamico=a.dinamico, endireitar=a.endireitar, vinheta=not a.sem_vinheta, inscreva=not a.sem_inscreva,
+               seg_gancho=a.seg_gancho)
     animacoes = []
     for x in a.animacao:
         arq, _, t = x.rpartition("@")

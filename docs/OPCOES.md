@@ -24,6 +24,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 |---|---|
 | `--marca imigrar` / `liv` | Cores: rosa Imigrar / laranja e azul LIV |
 | `--gancho "texto"` | Caixa nos primeiros 3,2s, em caixa alta. Aceita 🇺🇸 e 🇧🇷 |
+| `--seg-gancho 4.2` | Quanto tempo o balão do gancho fica na tela (padrão 3,2s) |
 | `--cta "texto"` | Caixa nos últimos 3,5s |
 | `--cta-animado PERFIL` | CTA animado da marca ("Comente PERFIL") nos últimos 4s, no lugar da caixa. `--cta-rotulo` muda o "Comente" |
 | `--broll arq.mov@fonte:8.4` | **B-roll de motion**: cena por cima da imagem, embaixo da legenda, com os efeitos sonoros dela mixados por baixo da voz. `@fonte:` = tempo da fala no bruto (o editor converte); `@12.5` = tempo do vídeo pronto. Pode repetir |
@@ -53,6 +54,8 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--pessoa direita` / `esquerda` | Duas pessoas: fecha em quem está desse lado |
 | `--pessoa voz` | Conversa: fecha em quem fala, pelo tom de voz (grave = 1ª da esquerda, aguda = 2ª) |
 | `--aperto 0.5` | Fração da largura original mantida (menor = mais fechado). Padrões: 0.93 solo, 0.55 com `--pessoa`, 0.34 com `voz` |
+| `--crop-fixo` | Selfie gravada na mão: o recorte fica parado em cada corte (seguir o rosto somava ao balanço da mão e a imagem tremia) |
+| `--punch 0.72` | Plano fechado = essa fração do aberto (padrão 0,82). Selfie aberta pede punch mais forte pra o zoom aparecer |
 
 ### Cortes pelo áudio
 | Opção | O que faz |
@@ -61,6 +64,8 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--respiro 0.5` | Mantém pausas internas até esse tamanho (s). Maior que 0,25 = fala mais natural (quem fala pausado); menor = mais enxuto. **Shorts: 0.18** |
 | `--tirar-hesitacoes` | Tira "éé", "hmm", "ah", "e..." esticado, "então, assim" seguido de pausa e voz sem palavra. Mostra no terminal o que tirou. Padrão nos shorts |
 | `--proteger-palavra 0.15` | Ambiente barulhento: o corte pelo áudio não come o fim fraco da palavra (estende até onde o Whisper diz que ela vai, no máximo esse tanto) |
+| `--alinhar` | Refaz o tempo de cada palavra com alinhamento forçado (WhisperX + wav2vec2 PT, precisão de 20-50 ms). O Whisper erra 0,1-0,5s e o corte comia palavra curta. Usa o ambiente `.venv-whisperx` (o `setup.sh` instala) |
+| `--vad` | Detector de voz neural (Silero) nas bordas da palavra: começo/fim fraco só conta como voz se o detector disser que é. A pausa continua pelo volume (no shopping o Silero ouve a conversa do fundo) |
 | `--json-cortes ARQ` | Salva o plano de cortes e sai (usado pelo `motion/remapear.py` quando o corte muda depois do motion pronto) |
 | `--sem-ajuste-audio` | Usa só o tempo do Whisper (mais folgado) |
 

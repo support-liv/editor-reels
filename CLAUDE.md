@@ -55,6 +55,22 @@ opção faz. Nada de jargão técnico na pergunta.
 - **Nunca usar take em que a pessoa lê o celular** (`editor/auditar.py`).
 - **Vinheta só no corte longo do YouTube.**
 - Sem promessa de aprovação ou prazo. Números sem fonte ficam de fora ou vão para conferência.
+- **Nunca cortar palavra, nem no meio nem no FIM do vídeo.** O último corte vai até o fim da última palavra + 0,35s
+  (o editor já faz). Pedaço de take escolhido à mão termina no FIM da última palavra (na transcrição literal), nunca no
+  início dela; o `lote_ti.py` estende sozinho. Palavra curta ("ou", "mas", "é", "então") tem tempo errado no Whisper:
+  use `--proteger-palavra --alinhar --vad` (tempo das palavras por alinhamento forçado WhisperX, bordas pelo detector
+  de voz Silero; o plano não corta pausa pelo Whisper).
+- **Repetição escondida:** o Whisper normal "limpa" a fala ("sabia que, sabia que" vira um). Escolha takes pela
+  transcrição LITERAL (`projetos/imigrar_ti_ads/transcrever_literal.py`) e audite o vídeo pronto
+  (`projetos/imigrar_ti_ads/auditoria.py` + `conferir_alertas.py` + `filtrar_confirmados.py`). Render vai para
+  `_em_revisao/`; só passa para `prontos/` depois da auditoria limpa (palavra a mais/faltando, final da fala).
+- **Nomes de vistos sempre no formato oficial:** E-2, O-1, O-3, L-1, H-1B, EB-1, EB-2, EB-2 NIW, B1/B2, DS-160, Green
+  Card. Nomes em inglês grafados certo na legenda (Lake Nona, Tavistock, USTA...). Confira a legenda inteira antes de
+  entregar: o Whisper escreve "wincard", "Lequinona", "QMK".
+- **Selfie gravada na mão:** `--crop-fixo` (recorte parado por bloco; seguir o rosto treme) e legenda abaixo do queixo,
+  nunca na boca (anúncio de TI: `--aperto 0.80 --punch 0.72 --y-legenda 0.62`; selfie bem fechada: 0.66). Confira em
+  quadros.
+- **CTA da campanha Imigrar (out/2026): PERFIL27** ("Comente PERFIL27"). Muda por campanha: confirme.
 
 ## Corrigir um ponto que a pessoa apontou ("em 0:26 ele trava")
 O tempo que a pessoa fala é do vídeo **pronto**. Converta para o bruto somando a duração dos cortes (`--so-cortes` mostra o plano). No bruto, olhe a energia do áudio e as palavras do Whisper em volta; se precisar, retranscreva só aquele trecho. Tire o trecho exato com `--tirar "a-b"`. Mudou o respiro de alguém? `--respiro`.

@@ -29,3 +29,5 @@ motion/.hyperframes/
 !motion/sfx/*.wav
 .agents/
 piloto/relatorio_darwin_*.md
+.venv/
+.venv-whisperx/

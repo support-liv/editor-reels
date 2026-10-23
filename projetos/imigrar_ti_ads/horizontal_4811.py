@@ -14,13 +14,17 @@ import plataforma as PLAT
 import lettering as L
 
 SRC = "/Users/lucastoledo/Downloads/imigrar/ads/TI/IMG_4811.mov"
-SAIDA = "/Users/lucastoledo/Downloads/imigrar/ads/TI/prontos/imigrar_ti_horizontal_4811.mp4"
+SAIDA = "/Users/lucastoledo/Downloads/imigrar/ads/TI/_em_revisao/imigrar_ti_horizontal_4811.mp4"
 TMP = PLAT.pasta_cache("horizontal_4811")
 LUT = os.path.join(AQUI, "cinema_pastel.cube")
 FPS = 30000 / 1001
 SW, SH = 3840, 2160
 # fim dos cortes que pegavam o começo da palavra seguinte ("existe u-", "modalidade no", "perfil 27")
 CORRIGIR = {}
+# trechos do bruto (o plano de cortes sai do editor: editor_reels.py IMG_4811.mov --trechos TRECHOS ... --json-cortes).
+# 22,45-25,28: fecha antes do 1º "Existe..." (25,42s; ele repete em 27,7s). 27,62-32,15: fecha no silêncio depois de
+# "profissional" (32,10s começa um "que..." abandonado). 62,35-64,40: "Comente perfil 27 aqui abaixo" (PERFIL27 é o CTA).
+TRECHOS = "3.90-5.95,7.65-16.85,22.45-25.28,27.62-32.15,48.88-59.75,62.35-64.40,76.45-83.40"
 # enquadramentos (zoom, centro x, centro y em fração do quadro original), alternando por corte
 GIRAR = 1.4               # graus, horário: o prédio subia ~1,4° pra direita (medido nas horizontais do topo). Só gira.
 # depois de girar, recorta o retângulo útil (sem canto preto) e volta a 4K; os planos são em cima dele
@@ -29,11 +33,11 @@ PLANOS = [(1.00, 0.50, 0.50), (1.17, 0.42, 0.00), (1.08, 0.46, 0.00)]   # cy 0 =
 
 # letterings: (palavra-gatilho no bruto, segundos na tela, linhas)
 CARDS = [   # identidade Imigrar: (palavra-gatilho no bruto, segundos na tela, linhas de (texto, estilo))
-    (4.56, 3.4, [[("dev no Brasil", "rot")], [("Sonha em morar", "txt")], [("nos ", "txt"), ("EUA?", "rosa")]]),
+    (4.56, 4.4, [[("dev no Brasil", "rot")], [("Sonha em morar", "txt")], [("nos ", "txt"), ("EUA?", "rosa")]]),
     (12.86, 3.1, [[("os caminhos de sempre", "rot")], [("Sponsor", "txt")], [("ou ", "txt"), ("sorteio?", "azul")]]),
     (23.00, 4.6, [[("a realidade", "rot")], [("Green Card", "rosa")], [("por mérito e", "txt")], [("trajetória", "txt")]]),
     (52.64, 4.0, [[("sem precisar de", "rot")], [("Sponsor", "azul")], [("nem sorteio", "txt")]]),
-    (62.50, 4.2, [[("análise de perfil gratuita", "rot")], [("Comente", "txt")], [("PERFIL", "rosa")]]),
+    (62.50, 4.2, [[("análise de perfil gratuita", "rot")], [("Comente", "txt")], [("PERFIL27", "rosa")]]),
 ]
 
 

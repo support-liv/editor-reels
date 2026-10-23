@@ -2,7 +2,26 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
-## 0.30 (22/10/2026) - Imigrar · TI (correções) e Ednaldo
+## 0.31 (23/10/2026) - Corte preciso: WhisperX + Silero VAD
+- **`--alinhar`** (editor/alinhar.py): alinhamento forçado (WhisperX + wav2vec2 em português) refaz o tempo de cada palavra com precisão de 20-50 ms. Era a causa principal das palavras comidas: o Whisper marcava o "ou" do Ednaldo em 14,55s e ele estava em 14,29s.
+- **`--vad`** (editor/vad.py): detector de voz neural Silero nas bordas das palavras. A pausa continua pelo volume (o Silero ouve a conversa do fundo do shopping como fala e o ritmo morria).
+- Pedaços encostados (buraco <= 0,06s) viram um só: acabou o micro-corte de 20 ms no meio da palavra com troca de zoom.
+- Extensão das bordas limitada (começo 0,15s, fim 0,12s): o fim alinhado às vezes engole o silêncio e as pausas sumiam.
+- Correção: o `--vad` era ligado depois do refinamento dos cortes (não tinha efeito).
+- Correção: queda de volume no meio da palavra ("propicia") deixava o 1º pedaço sem palavra "dona" e ele saía como hesitação, comendo o começo da palavra. Bloco que sobrepõe palavra alinhada nunca é hesitação.
+- Ambiente separado `.venv-whisperx` (o WhisperX traz versões próprias de torch/torchaudio); o `setup.sh` instala. Transcrições literais dos brutos alinhadas (`<base>.literal.json`; a original fica em `.literal.whisper.json`).
+- Auditoria (`projetos/imigrar_ti_ads/auditoria.py`) ganhou checagens exatas: corte caindo dentro de palavra (com voz) e palavra do trecho que sumiu do pronto.
+
+## 0.30 (22-23/10/2026) - Imigrar · TI (correções) e Ednaldo
+- **Correção: final da fala cortado.** Dois motivos: pedaços de take fechados no INÍCIO da última palavra (escolhidos pelo tempo de início do Whisper) e o último corte com só 0,08s depois da voz. Agora o `lote_ti.py` estende o pedaço até o fim da palavra (+0,30s, sem encostar na vizinha) e o editor leva o último corte até o fim da última palavra + 0,35s, com fade de 0,12s. Regra no CLAUDE.md.
+- Crop fixo agora é por bloco de fala (grupo), não por pedaço: a imagem pulava a cada micro-corte do mesmo bloco.
+- Nomes de vistos e em inglês na legenda (E-2, O-1, L-1, EB-2 NIW, B1/B2, DS-160, Lake Nona...): regra no CLAUDE.md, correção no `CORRECOES` do editor e no `lote_ti.py`.
+- Reels do Ednaldo com B-roll de contexto (banco de cenas da pasta Downloads: escritório, documentos, Flórida, Orlando, Lake Nona, vacas) e CTA PERFIL27.
+- **Correção: palavra curta sumindo ("ou", "mas", "é", "então").** O Whisper erra o tempo de palavra curta (o "ou" do Ednaldo estava de 14,00 a 14,34s; o Whisper marcou 14,55s). Três efeitos somavam: (1) o plano inicial cortava toda pausa >0,35s pelos tempos do Whisper, e a voz da palavra ficava no "buraco"; agora, com `--proteger-palavra`, o plano não corta pausa (quem corta é o áudio); (2) o bloco de voz da palavra ficava sem palavra e saía como hesitação; agora bloco curto sem palavra colado a vizinho que começa/termina com palavra curta fica com ela; (3) começo/fim suave abaixo do limiar: o corte recua/avança enquanto houver voz fraca (-5 dB) colada.
+- **Correção: palavra curta comida no corte.** O corte pelo áudio descartava todo trecho de voz com menos de 0,25s entre pausas; palavra curta isolada ("ou", "mas", "é", "então") sumia. Agora o trecho curto só sai se não tiver palavra.
+- **Correção: imagem tremendo em selfie na mão.** O recorte seguia o rosto amostra a amostra e somava ao balanço da câmera. `--crop-fixo` deixa o recorte parado em cada corte (posição mediana do rosto). `--punch` controla o zoom do plano fechado (0,82 quase não aparecia em selfie aberta; anúncios de TI usam 0,72).
+- Legenda dos anúncios de TI desceu de 55% para 62% (estava na boca do Lucas). Grafia de "Green Card": regra única que pega todas as variações do Whisper (wincard, win card, going card, Green Car...).
+- `--seg-gancho`: duração do balão do gancho (padrão 3,2s). Nos anúncios de TI e do Ednaldo o time pediu 1s a mais: 4,2s.
 - **Correção: `--tirar-hesitacoes` cortava o verbo "é".** O `norm()` tira o acento, e "é" esticado (≥0,45s) virava hesitação ("a única forma de morar aqui é depender" saía "aqui depender"). Agora "é" acentuado só sai com reticências ou isolado entre pausas.
 - `--proteger-palavra SEG`: em ambiente barulhento, o corte pelo áudio não come o fim/começo fraco da palavra ("profissionai-s"); estende o pedaço até onde o Whisper diz que a palavra vai (no máximo SEG).
 - **Repetições escondidas:** o Whisper limpa a fala e esconde "sabia que, sabia que" dentro do tempo de uma palavra. `projetos/imigrar_ti_ads/transcrever_literal.py` (initial_prompt cheio de hesitações) transcreve literal; `auditar_fala.py` transcreve cada pedaço sozinho em modo literal e acha repetições; o `lote_ti.py` não renderiza com repetição. Anúncios com versões A/B (só o gancho muda).

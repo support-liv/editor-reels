@@ -3,7 +3,7 @@ num intermediário SDR 1440x2560 e passa pelo editor (cortes pelo áudio, hesita
 
 Uso: python3 projetos/imigrar_ti_ads/lote_ti.py [id ...]     (sem id: todos)
 """
-import json, os, subprocess, sys
+import json, os, re, subprocess, sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.abspath(os.path.join(AQUI, "..", ".."))
@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.join(RAIZ, "editor"))
 import plataforma as PLAT
 
 BRUTOS = "/Users/lucastoledo/Downloads/imigrar/ads/TI"
-SAIDA = os.path.join(BRUTOS, "prontos")
+SAIDA = os.path.join(BRUTOS, "_em_revisao")      # só vai pra prontos/ depois de aprovado na auditoria
 TRANSC = os.path.join(RAIZ, "editor", "transcricoes")
 INTER = PLAT.pasta_cache("ti_intermediarios")
 BROLL = PLAT.pasta_cache("broll_ti")
@@ -34,8 +34,10 @@ ANUNCIOS = {
         [("lucas_digitando", "IMG_4790.MOV", 23.5), ("banco_bandeira", "IMG_4790.MOV", 42.4)]),
     "02_dev_brasil": (("Dev no Brasil 🇧🇷, já pensou em trabalhar nos EUA 🇺🇸?", "Desenvolvedor: Green Card nos EUA 🇺🇸 sem sponsor?"), [
         ("IMG_4789.MOV", 7.40, 14.10), ("IMG_4789.MOV", 23.95, 27.60), ("IMG_4789.MOV", 52.15, 57.20),
-        ("IMG_4789.MOV", 64.70, 69.50), ("IMG_4789.MOV", 82.25, 83.85), ("IMG_4789.MOV", 92.30, 95.60)],
-        [("fonte_notebook", "IMG_4789.MOV", 24.4), ("codigo", "IMG_4789.MOV", 66.0)]),
+        ("IMG_4789.MOV", 64.70, 67.15), ("IMG_4797.MOV", 79.90, 84.95),   # "...existe uma modalidade" + "do Green Card
+        ("IMG_4789.MOV", 82.25, 83.85), ("IMG_4789.MOV", 92.30, 95.60)],      # baseada na sua trajetória profissional..."
+        [("fonte_notebook", "IMG_4789.MOV", 24.4), ("codigo", "IMG_4789.MOV", 65.9),
+         ("bandeira_notebook", "IMG_4797.MOV", 80.0)]),       # cobre a troca de cenário (4789 -> 4797) no meio da frase
     "03_dev_residencia": (("Você sabe quanto um dev ganha nos EUA 🇺🇸?", "Dev: residência permanente nos EUA 🇺🇸 sem empresa?"), [
         ("IMG_4795.MOV", 25.35, 32.60), ("IMG_4795.MOV", 46.60, 56.40), ("IMG_4795.MOV", 113.45, 116.30),
         ("IMG_4795.MOV", 123.75, 127.70), ("IMG_4795.MOV", 129.85, 134.60), ("IMG_4795.MOV", 136.35, 142.60),
@@ -97,7 +99,7 @@ FRASES = [("Seu desenvolvedor no Brasil sabia", "Você é desenvolvedor no Brasi
           ("Colume", "Volume"), ("valia", "avalia"), ("Toquem,", "toque em"), ("façam", "faça"),
           ("recebem em em", "receba em"), ("recebem em", "receba em"), ("em em", "em"), ("Analise o seu", "que analisa o seu"),
           ("patrocida.", "patrocine."), ("vista.", "visto."), ("vista?", "visto?"), ("vistas.", "vistos."),
-          ("de vista", "de visto"), ("wincard", "Green Card"), ("GwinCard", "Green Card"), ("Gwyncard", "Green Card")]
+          ("de vista", "de visto"), ("que Se precisa", "que precisa"), ("sorteiros", "sorteios"), ("wincard", "Green Card"), ("GwinCard", "Green Card"), ("Gwyncard", "Green Card")]
 
 
 def corrigir_frases(pal):
@@ -119,6 +121,58 @@ def corrigir_frases(pal):
             if w["w"]:
                 out.append(w)
             i += 1
+    return out
+
+
+# "Green Card" sai de mil jeitos no Whisper (wincard, WinCard, Gwyncard, win card, going card, Green Car, brincardio...)
+_GC1 = re.compile(r"^(g?w[iy]n|green|brin|going|pego|wing|grin)(card|cards|car|hard|kard|cardio|tard)$", re.I)
+_GC_A = {"win", "gwin", "gwyn", "going", "green", "brin", "pego", "wing", "grin", "wyn"}
+_GC_B = {"card", "cards", "car", "hard", "kard", "cardio", "tard"}
+
+
+def green_card(pal):
+    out, i = [], 0
+    limpo = lambda w: re.sub(r"[^\wáéíóúãõç]", "", w.lower())
+    pont = lambda w: w[len(w.rstrip(".,?!;:")):]
+    while i < len(pal):
+        a = limpo(pal[i]["w"])
+        b = limpo(pal[i + 1]["w"]) if i + 1 < len(pal) else ""
+        if _GC1.match(a):
+            out += [dict(pal[i], w="Green"), dict(pal[i], w="Card" + pont(pal[i]["w"]))]; i += 1
+        elif a in _GC_A and b in _GC_B:
+            out += [dict(pal[i], w="Green"), dict(pal[i + 1], w="Card" + pont(pal[i + 1]["w"]))]; i += 2
+        else:
+            out.append(pal[i]); i += 1
+    return out
+
+
+# REGRA: nomes de vistos no formato oficial (E-2, O-1, O-3, L-1, H-1B, EB-1, EB-2, EB-2 NIW, B1/B2, DS-160) e nomes em
+# inglês grafados certo (Lake Nona, Tavistock, USTA...). Vale para todo vídeo.
+VISTOS = {"e2": "E-2", "i2": "E-2", "o1": "O-1", "o3": "O-3", "l1": "L-1", "h1b": "H-1B", "eb1": "EB-1", "eb2": "EB-2",
+          "niw": "NIW", "b1b2": "B1/B2", "ds160": "DS-160"}
+NOMES_EN = [(re.compile(r"^l[aeéê](k|qu|c|q)u?[ie]?n[oô]na$", re.I), "Lake Nona"), (re.compile(r"^tav[ia]?st(op|ock)$", re.I), "Tavistock"),
+            (re.compile(r"^usta$", re.I), "USTA")]
+
+
+def nomes(pal):
+    out, i = [], 0
+    chave = lambda w: re.sub(r"[^a-z0-9]", "", w.lower())
+    pont = lambda w: w[len(w.rstrip(".,?!;:")):]
+    while i < len(pal):
+        w = pal[i]["w"]; c = chave(w)
+        c2 = chave(w + (pal[i + 1]["w"] if i + 1 < len(pal) else ""))
+        if c2 in ("ds160", "b1b2", "eb2niw", "lakenona") and i + 1 < len(pal):    # "DS -160", "B1 B2", "Lake Nona"
+            novo = {"ds160": "DS-160", "b1b2": "B1/B2", "eb2niw": "EB-2 NIW", "lakenona": "Lake Nona"}[c2]
+            out.append(dict(pal[i], w=novo + pont(pal[i + 1]["w"]), e=pal[i + 1]["e"])); i += 2; continue
+        if c in VISTOS:
+            out.append(dict(pal[i], w=VISTOS[c] + pont(w)))
+        else:
+            for rx, certo in NOMES_EN:
+                if rx.match(re.sub(r"[.,?!;:]", "", w)):
+                    out.append(dict(pal[i], w=certo + pont(w))); break
+            else:
+                out.append(pal[i])
+        i += 1
     return out
 
 
@@ -146,8 +200,24 @@ def faixa(arq, a, b):
     """(início, fim, palavras) do pedaço: tempos explícitos em quadros inteiros e as palavras da transcrição
     literal da própria janela (o Whisper no take inteiro esconde repetições)."""
     from auditar_fala import transcrever_janela
+    # REGRA: o pedaço nunca corta palavra. Estende o fim até o fim da última palavra + 0,30s e o começo até 0,12s antes
+    # da primeira (pela transcrição literal do take), sem encostar na palavra vizinha. Fechar o pedaço no INÍCIO da
+    # última palavra cortava o final dos vídeos ("ele é", "favorável", "acontecer").
+    ps = palavras(arq)
+    dentro = [i for i, w in enumerate(ps) if a - 0.02 <= w["s"] < b - 0.03]
+    if dentro:
+        i0, i1 = dentro[0], dentro[-1]
+        fim_pal = ps[i1]["e"]
+        prox = ps[i1 + 1]["s"] if i1 + 1 < len(ps) else 1e9
+        if fim_pal - b < 0.6:                            # palavra esticada demais = tempo errado: não confia
+            b = max(b, min(fim_pal + 0.30, prox - 0.05))
+        ant = ps[i0 - 1]["e"] if i0 > 0 else 0.0
+        a = min(a, max(ps[i0]["s"] - 0.12, ant + 0.05))
     ini, fim = round(a * FPS) / FPS, round(b * FPS) / FPS
     ws = transcrever_janela(os.path.join(BRUTOS, arq), ini, fim)
+    from auditar_fala import max_iguais
+    if max_iguais(ws) >= 5:                              # alucinação do prompt literal ("E, e, e, e..."): leitura normal
+        ws = transcrever_janela(os.path.join(BRUTOS, arq), ini, fim, literal=False)
     longas = [w for w in ws[:-1] if w["e"] - w["s"] > 0.9]
     for w in longas:                                     # palavra esticada = pode ter fala escondida embaixo
         print(f"  ⚠ palavra esticada em {arq} {w['s']:.2f}-{w['e']:.2f}: '{w['w']}'")
@@ -187,7 +257,7 @@ def montar(id_, pedacos):
     # o -noautorotate leva a matriz de rotação do iPhone pro intermediário: zera (a imagem já saiu de pé)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-display_rotation:v", "0", "-i", out + ".tmp.mov", "-c", "copy", out], check=True)
     os.remove(out + ".tmp.mov")
-    pal = juntar_numeros(corrigir_frases(pal))
+    pal = juntar_numeros(nomes(green_card(corrigir_frases(pal))))
     from auditar_fala import repeticoes
     reps = repeticoes(pal)
     if reps:
@@ -199,6 +269,20 @@ def montar(id_, pedacos):
     json.dump({"texto": texto, "palavras": pal, "segmentos": segs},
               open(os.path.join(TRANSC, id_ + ".json"), "w"), ensure_ascii=False, indent=1)
     return out, mapa
+
+
+ESPERADO = PLAT.pasta_cache("auditoria_esperado")
+
+
+def rodar_editor(cmd, nome):
+    """roda o editor; com --esperado só salva o que o vídeo pronto deve dizer (palavras no tempo do pronto e cortes)
+    para o auditar_pronto.py comparar com o que o Whisper ouve."""
+    if "--esperado" not in sys.argv:
+        subprocess.run(cmd, check=True)
+    os.makedirs(ESPERADO, exist_ok=True)                 # o esperado sai sempre junto do render (para a auditoria)
+    for opc, suf in (("--json-palavras", ".palavras.json"), ("--json-cortes", ".cortes.json")):
+        subprocess.run(cmd + [opc, os.path.join(ESPERADO, nome + suf)], check=True, capture_output=True)
+    print("  esperado salvo:", nome)
 
 
 def no_intermediario(mapa, arq, t_bruto):
@@ -221,12 +305,14 @@ def main():
             continue
         for versao, gancho in zip("AB", ganchos):        # A/B: muda só o gancho do balão
             cmd = [sys.executable, os.path.join(RAIZ, "editor", "editor_reels.py"), video, "--marca", "imigrar",
-                   "--gancho", gancho, "--y-legenda", "0.55", "--tirar-hesitacoes", "--respiro", "0.18",
-                   "--proteger-palavra", "0.15", "--manter-perguntas", "--broll-com-legenda",
+                   "--gancho", gancho, "--seg-gancho", "4.2", "--y-legenda", "0.62", "--crop-fixo", "--aperto", "0.80", "--punch", "0.72", "--alinhar", "--vad", "--tirar-hesitacoes", "--respiro", "0.22",
+                   "--proteger-palavra", "0.40", "--manter-perguntas", "--broll-com-legenda",
                    "--nome", f"imigrar_ti_{id_}_{versao}", "--saida", SAIDA]
             for nome, arq, tb in brolls:
                 cmd += ["--broll", f"{os.path.join(BROLL, nome + '.mp4')}@fonte:{no_intermediario(mapa, arq, tb):.2f}"]
-            subprocess.run(cmd, check=True)
+            rodar_editor(cmd, f"imigrar_ti_{id_}_{versao}")
+            if "--esperado" in sys.argv:
+                break
 
 
 if __name__ == "__main__":

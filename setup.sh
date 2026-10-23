@@ -17,6 +17,10 @@ git lfs install --local >/dev/null && git lfs pull && ok "Git LFS (estoque de v√
 echo "Instalando pacotes Python..."
 python3 -m pip install -r requirements.txt --quiet && ok "pacotes"
 
+echo "Instalando o corte preciso (WhisperX + Silero VAD, ambiente separado)..."
+[ -x .venv-whisperx/bin/python ] || python3 -m venv .venv-whisperx
+.venv-whisperx/bin/pip install -q whisperx silero-vad && ok "WhisperX + Silero (--alinhar, --vad)"
+
 echo "Compilando os utilit√°rios do macOS..."
 swiftc -O editor/rostos.swift -o editor/rostos && ok "detector de rostos"
 swiftc -O editor/emoji.swift -o editor/emoji && ok "gerador de emoji"
