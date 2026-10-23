@@ -64,7 +64,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--respiro 0.5` | Mantém pausas internas até esse tamanho (s). Maior que 0,25 = fala mais natural (quem fala pausado); menor = mais enxuto. **Shorts: 0.18** |
 | `--tirar-hesitacoes` | Tira "éé", "hmm", "ah", "e..." esticado, "então, assim" seguido de pausa e voz sem palavra. Mostra no terminal o que tirou. Padrão nos shorts |
 | `--proteger-palavra 0.15` | Ambiente barulhento: o corte pelo áudio não come o fim fraco da palavra (estende até onde o Whisper diz que ela vai, no máximo esse tanto) |
-| `--alinhar` | Refaz o tempo de cada palavra com alinhamento forçado (WhisperX + wav2vec2 PT, precisão de 20-50 ms). O Whisper erra 0,1-0,5s e o corte comia palavra curta. Usa o ambiente `.venv-whisperx` (o `setup.sh` instala) |
+| `--alinhar` | Refaz o tempo de cada palavra com alinhamento forçado (WhisperX + wav2vec2 PT, precisão de 20-50 ms). O Whisper erra 0,1-0,5s e o corte comia palavra curta. Usa o ambiente `.venv-whisperx` (o `setup.sh` instala). Palavra com número (2025, E-2, O-1) fica com o tempo do Whisper; transcrição com `pedacos` (vídeo montado de vários takes) é alinhada take a take e o corte não passa da emenda |
 | `--vad` | Detector de voz neural (Silero) nas bordas da palavra: começo/fim fraco só conta como voz se o detector disser que é. A pausa continua pelo volume (no shopping o Silero ouve a conversa do fundo) |
 | `--json-cortes ARQ` | Salva o plano de cortes e sai (usado pelo `motion/remapear.py` quando o corte muda depois do motion pronto) |
 | `--sem-ajuste-audio` | Usa só o tempo do Whisper (mais folgado) |

@@ -2,6 +2,17 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.32 (23/10/2026) - Emendas entre takes e palavras com número
+- **Alinhamento por pedaço (take):** o `lote_ti.py` grava na transcrição de onde veio cada palavra (`pedaco`) e os limites de cada take (`pedacos`). O `alinhar.py` alinha take por take e nunca joga uma palavra para o take vizinho (o "Unidos." do 06 terminava dentro do take seguinte; o "não é?" do R9 caía no take de depois e sumia da legenda).
+- **O corte nunca passa da emenda** (`respeitar_pedacos` no editor): a sobra do take vizinho tocava um pedacinho de sílaba antes da fala (R6, "que é o visto").
+- **Palavra com número:** o número da legenda ("2025,", "100", "1,8") vai para o alinhador como foi falado (campo `falado`, gravado pelo `lote_ti.py` ao trocar "dois mil e vinte e cinco" por "2025"); em dígito o alinhador não lê, inventava o tempo pelos vizinhos e o R3 perdia "mil e vinte e cinco". Sigla com número sem forma falada ("E-2", "O-1", "PERFIL27") fica com o tempo do Whisper.
+- Trava do alinhador: perto de palavra esticada do Whisper (>0,9s) ele pode corrigir até 2s (era 0,7s). O "fortes," do R3 marcado com 1,8s empurrava o "onde" seguinte, que saía como hesitação sem palavra.
+- **Pausa no meio da palavra não é pausa:** volume baixo dentro de uma palavra alinhada com o Silero ouvindo voz (o "f" de "perfil", o "ss" de "assim") não vira corte. Buraco de até 0,12s entre pedaços vira fala contínua (era 0,06s).
+- **`--tirar-hesitacoes`:** "há" com acento é o verbo ("há dez anos"), nunca hesitação. O "e" esticado é medido pela voz real (Silero), não pelo tempo do Whisper (um "E" de 0,1s marcado com 0,94s saía e levava o começo de "descubra"). A hesitação tirada nunca invade a palavra vizinha.
+- Borda fraca da palavra pelo Silero E pelo volume: o fim avança até 0,55s (era 0,35s) enquanto os dois ouvirem voz (o "s" de "Unidos" no 01) e o começo recua até 0,35s até o começo alinhado da 1ª palavra (o "e" baixinho de "coisas, e outros" no R10 ficava pela metade).
+- Auditoria: "corte na palavra" só acusa quando a voz continua do lado de fora do corte (depois do fim / antes do começo). O fim alinhado que engole silêncio ("pra" do R5 com 0,8s) gerava alerta falso.
+- `lote_ti.py`: trava de **repetição na emenda** (o fim de um take e o começo do seguinte dizendo a mesma palavra: "acha que precisa | precisa de uma empresa" no 04; frase terminada seguida de frase nova não conta: "O seu visto. | O visto de turista") e pedaço `"exato"` (4º item da tupla: sem extensão, para tirar gaguejada colada à palavra, "maior que o da, do Brasil" no R3).
+
 ## 0.31 (23/10/2026) - Corte preciso: WhisperX + Silero VAD
 - **`--alinhar`** (editor/alinhar.py): alinhamento forçado (WhisperX + wav2vec2 em português) refaz o tempo de cada palavra com precisão de 20-50 ms. Era a causa principal das palavras comidas: o Whisper marcava o "ou" do Ednaldo em 14,55s e ele estava em 14,29s.
 - **`--vad`** (editor/vad.py): detector de voz neural Silero nas bordas das palavras. A pausa continua pelo volume (o Silero ouve a conversa do fundo do shopping como fala e o ritmo morria).

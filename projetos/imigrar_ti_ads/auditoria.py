@@ -106,15 +106,18 @@ def checagem_exata(nome):
     db, lim = E.energia_db(fonte)
     nn = min(len(vn), len(db))
     voz = vn[:nn] & (db[:nn] > lim - 8)          # os dois: o Silero sozinho ouve o burburinho do fundo como fala
-    com_voz = lambda t: bool(voz[max(0, int(t / 0.02) - 1):int(t / 0.02) + 2].any())
+    # o corte só come som se a voz CONTINUA do lado de fora: depois do fim do corte ou antes do começo (o fim alinhado de
+    # "pra" engolia 0,8s de silêncio e todo corte nesse silêncio virava alerta falso)
+    fora_fim = lambda t: bool(voz[int(t / 0.02) + 1:int(t / 0.02) + 4].any())
+    fora_ini = lambda t: bool(voz[max(0, int(t / 0.02) - 4):max(0, int(t / 0.02) - 1)].any())
     lo, hi = min(c["s"] for c in cortes), max(c["e"] for c in cortes)
     for c in cortes:
         for w in P:
             if not w.get("alinhada"):
                 continue
-            if w["s"] + 0.03 < c["s"] < w["e"] - 0.03 and com_voz(c["s"]):
+            if w["s"] + 0.03 < c["s"] < w["e"] - 0.03 and fora_ini(c["s"]):
                 alertas.append((t_out, "CORTE NA PALAVRA", f"início do corte em {c['s']:.2f}s corta «{w['w']}»", ""))
-            if w["s"] + 0.03 < c["e"] < w["e"] - 0.03 and com_voz(c["e"]):
+            if w["s"] + 0.03 < c["e"] < w["e"] - 0.03 and fora_fim(c["e"]):
                 alertas.append((t_out + c["e"] - c["s"], "CORTE NA PALAVRA", f"fim do corte em {c['e']:.2f}s corta «{w['w']}»", ""))
         t_out += round((c["e"] - c["s"]) * FPS) / FPS
     if id_do_video(nome) == "IMG_4811":                 # bruto inteiro com trechos: o intervalo tem fala de propósito fora

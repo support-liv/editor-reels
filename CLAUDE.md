@@ -59,7 +59,9 @@ opção faz. Nada de jargão técnico na pergunta.
   (o editor já faz). Pedaço de take escolhido à mão termina no FIM da última palavra (na transcrição literal), nunca no
   início dela; o `lote_ti.py` estende sozinho. Palavra curta ("ou", "mas", "é", "então") tem tempo errado no Whisper:
   use `--proteger-palavra --alinhar --vad` (tempo das palavras por alinhamento forçado WhisperX, bordas pelo detector
-  de voz Silero; o plano não corta pausa pelo Whisper).
+  de voz Silero; o plano não corta pausa pelo Whisper). Vídeo montado de vários takes: a transcrição leva o take de
+  cada palavra (`pedaco`/`pedacos`, o `lote_ti.py` grava) e o alinhamento e o corte nunca passam da emenda. Na emenda,
+  o fim de um take e o começo do seguinte não podem repetir palavra (o lote trava).
 - **Repetição escondida:** o Whisper normal "limpa" a fala ("sabia que, sabia que" vira um). Escolha takes pela
   transcrição LITERAL (`projetos/imigrar_ti_ads/transcrever_literal.py`) e audite o vídeo pronto
   (`projetos/imigrar_ti_ads/auditoria.py` + `conferir_alertas.py` + `filtrar_confirmados.py`). Render vai para

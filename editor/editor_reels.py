@@ -266,6 +266,14 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
         vn, vs = mascaras_vad(video)
         n = min(len(fala_baixa), len(vs))
         fala_baixa = fala_baixa[:n] & vs[:n] | (vs[:n] & (db[:n] > lim - 12))
+    def dentro_de_palavra(fa, fb, c):
+        """volume baixo no MEIO de uma palavra alinhada, com o Silero ouvindo voz o tempo todo (o "f" de "perfil", o
+        "ss" de "assim"): não é pausa. Tirar esse "silêncio" comia um pedaço da palavra (06: "per|fil")."""
+        if not USAR_VAD or len(vn[fa:fb]) == 0 or vn[fa:fb].mean() < 0.8:
+            return False
+        ga, gb = fa * 0.02, fb * 0.02
+        return any(P[q].get("alinhada") and P[q]["s"] <= ga + 0.02 and P[q]["e"] >= gb - 0.02 for q in c["idx"])
+
     novos = []
     for gi_orig, c in enumerate(cortes):
         fala = fala_baixa if c.get("perg") else fala_normal
@@ -276,7 +284,7 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
         # blocos de fala separados por silêncios maiores que pausa_max
         blocos, ini, ant = [], idx[0], idx[0]
         for j in idx[1:]:
-            if (j - ant) * 0.02 > pausa_max:
+            if (j - ant) * 0.02 > pausa_max and not dentro_de_palavra(i0 + ant, i0 + j, c):
                 blocos.append((ini, ant)); ini = j
             ant = j
         blocos.append((ini, ant))
@@ -335,11 +343,19 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
                     s2 = min(s, max(ws_ - 0.04, s - min(prot * 0.5, 0.15), c["s"]))
                     e2 = max(e, min(we_ + 0.03, e + 0.12, c["e"] + 0.05))
                     if USAR_VAD:                         # final fraco da palavra ("vist-o"): avança enquanto o detector
-                        fe2 = int(e2 / 0.02)              # ouvir voz, até o fim alinhado dela (no máx. 0,35s)
-                        alvo = min(we_ + 0.03, e + 0.35, c["e"] + 0.05)
-                        while fe2 < len(fala_baixa) and fala_baixa[fe2] and (fe2 + 1) * 0.02 <= alvo:
+                        fe2 = int(e2 / 0.02)              # ouvir voz, até o fim alinhado dela (no máx. 0,35s; 0,55s se
+                        alvo = min(we_ + 0.03, e + 0.55, c["e"] + 0.05)   # o Silero E o volume ainda ouvem voz: o "s"
+                        voz_forte = lambda f: f < len(vn) and vn[f] and db[f] > lim - 8   # de "Unidos" no 01)
+                        while fe2 < len(fala_baixa) and fala_baixa[fe2] and (fe2 + 1) * 0.02 <= alvo \
+                                and ((fe2 + 1) * 0.02 <= e + 0.35 or voz_forte(fe2)):
                             fe2 += 1
                         e2 = max(e2, fe2 * 0.02)
+                        # começo fraco da 1ª palavra ("coisas, e outros" no R10: o "e" baixinho ficava pela metade):
+                        # recua enquanto Silero e volume ouvirem voz, até o começo alinhado dela (no máx. 0,35s)
+                        fs2 = int(s2 / 0.02)
+                        while fs2 - 1 >= 0 and voz_forte(fs2 - 1) and (fs2 - 1) * 0.02 >= max(ws_ - 0.06, s - 0.35, c["s"]):
+                            fs2 -= 1
+                        s2 = min(s2, fs2 * 0.02)
                     if k + 1 < len(faixas):
                         e2 = min(e2, faixas[k + 1][0] - 0.02)
                     if k > 0:
@@ -369,11 +385,12 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
     for a, b in zip(novos, novos[1:]):
         if a["s"] < b["s"] < a["e"]:
             a["e"] = b["s"]
-    # pedaços encostados (buraco <= 0,06s depois de estender as bordas) são fala contínua: junta num só. Senão ficava um
-    # micro-corte de 20 ms no meio da palavra, com troca de zoom ("seu | histórico")
+    # pedaços encostados (buraco <= 0,12s depois de estender as bordas) são fala contínua: junta num só. Senão ficava um
+    # micro-corte no meio da palavra, com troca de zoom ("seu | histórico"; 70 ms tirados do "ss" de "assim" no R1).
+    # Tirar menos de 0,12s não muda o ritmo: só arrisca comer som.
     juntos = []
     for n in novos:
-        if juntos and n.get("grupo") == juntos[-1].get("grupo") and n["s"] - juntos[-1]["e"] <= 0.06:
+        if juntos and n.get("grupo") == juntos[-1].get("grupo") and n["s"] - juntos[-1]["e"] <= 0.12:
             juntos[-1]["e"] = n["e"]
             juntos[-1]["idx"] = juntos[-1]["idx"] + n["idx"]
             juntos[-1]["texto"] = (juntos[-1]["texto"] + " " + n["texto"]).strip()
@@ -391,16 +408,38 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
 HESITACOES = False                                # --tirar-hesitacoes
 COLUNAS = (2, None)                               # --colunas N --pessoas cima,baixo (live com N pessoas lado a lado)
 SONS_HESITACAO = {"ah", "eh", "ha", "hum", "hm", "hmm", "ahn", "uhm", "uh", "ehh", "ee", "eee", "aa"}
+GAGUEJA = {"o", "a", "os", "as", "um", "uma", "de", "do", "da", "no", "na", "e", "pra", "com", "em"}
+GAGUEJA_PAR = {("uma", "um"), ("um", "uma"), ("o", "a"), ("a", "o"), ("do", "da"), ("da", "do"), ("no", "na"),
+               ("na", "no"), ("os", "as"), ("as", "os")}
 
 
-def tirar_hesitacoes(cortes, P):
+def tirar_hesitacoes(cortes, P, video=None):
     """tira muletas e hesitações faladas: "é..."/"e..." esticado (>= 0,45s), "ah/eh/hã/hum", e "então, assim" seguido
     de pausa. A legenda perde a palavra junto."""
+    vn = mascaras_vad(video)[0] if USAR_VAD and video else None
     alvo = []
+    mantidas = {q for c in cortes for q in c["idx"]}
+    fim_frase = lambda q: q > 0 and P[q - 1]["w"].rstrip().endswith((".", "?", "!"))
+    for q in sorted(mantidas):
+        # GAGUEJADA de palavra curta: "o, o itinerário", "um, um stamp", "uma, um desenvolvimento", "É, é muito". Sai a
+        # primeira (com a pausa até a segunda). A trava de repetição do lote não pega palavra de 1-2 letras.
+        if q + 1 not in mantidas or not P[q]["w"].rstrip().endswith(","):
+            continue
+        a_, b_ = norm(P[q]["w"]), norm(P[q + 1]["w"])
+        cru = lambda k: P[k]["w"].strip(" ,.;:?!")
+        visto = cru(q + 1) == "O" or (cru(q) == "O" and not fim_frase(q))   # "aplica o O", "no O, o cônjuge": o visto
+        if a_ in GAGUEJA and (a_ == b_ or (a_, b_) in GAGUEJA_PAR) and not visto:
+            alvo.append(([q], P[q]["s"], P[q + 1]["s"] - 0.06))
     for c in cortes:
         idx = c["idx"]
         for j, q in enumerate(idx):
             w, d = norm(P[q]["w"]), P[q]["e"] - P[q]["s"]
+            if vn is not None:
+                # duração pela VOZ de verdade: o tempo do Whisper engole o silêncio antes/depois ("E" de 0,1s marcado com
+                # 0,94s no E3 saía como "e..." esticado, e o corte levava junto o começo de "descubra")
+                d = min(d, float(vn[int(P[q]["s"] / 0.02):int(P[q]["e"] / 0.02) + 1].sum()) * 0.02)
+            if P[q]["w"].lower().strip(" ,.;:?!") == "há":    # "há dez anos" é o verbo (o norm() deixava "ha" = hã)
+                continue
             prox = P[idx[j + 1]] if j + 1 < len(idx) else None
             ant = P[idx[j - 1]] if j > 0 else None
             isolada = (not ant or P[q]["s"] - ant["e"] >= 0.15) and (not prox or prox["s"] - P[q]["e"] >= 0.15)
@@ -415,11 +454,30 @@ def tirar_hesitacoes(cortes, P):
                     alvo.append(([q, idx[j + 1]], P[q]["s"], prox["e"]))
     for qs, a, b in alvo:
         print(f"  hesitação tirada: {' '.join(P[q]['w'] for q in qs)} ({a:.2f}-{b:.2f})")
-        cortes = tirar_trecho(cortes, P, a - 0.02, b + 0.02)
+        # nunca invade a palavra vizinha (o tempo da hesitação às vezes passa por cima do começo da seguinte)
+        a = max(a - 0.02, P[qs[0] - 1]["e"] + 0.01 if qs[0] > 0 else 0.0)
+        b = min(b + 0.02, P[qs[-1] + 1]["s"] - 0.02 if qs[-1] + 1 < len(P) else 1e9)
+        if b - a < 0.06:
+            continue
+        cortes = tirar_trecho(cortes, P, a, b)
         for c in cortes:
             c["idx"] = [q for q in c["idx"] if q not in qs]
             c["texto"] = " ".join(P[q]["w"] for q in c["idx"])
     return cortes
+
+
+def respeitar_pedacos(cortes, dados):
+    """vídeo montado de vários takes (lote com "pedacos" na transcrição): o corte nunca passa da emenda entre takes.
+    A sobra do take vizinho (começo da frase seguinte, respiração) tocava um pedacinho de sílaba antes da fala (R6)."""
+    pecas, P = dados.get("pedacos"), dados["palavras"]
+    if not pecas:
+        return cortes
+    for c in cortes:
+        ks = [P[q]["pedaco"] for q in c["idx"] if "pedaco" in P[q]]
+        if ks:
+            c["s"] = max(c["s"], pecas[min(ks)][0])
+            c["e"] = min(c["e"], pecas[max(ks)][1])
+    return [c for c in cortes if c["e"] - c["s"] >= 0.10]
 
 
 def tirar_trecho(cortes, P, a, b):
@@ -1930,7 +1988,8 @@ def main():
     for x in a.tirar:
         cortes = tirar_trecho(cortes, dados["palavras"], *map(float, x.split("-")))
     if a.tirar_hesitacoes:
-        cortes = tirar_hesitacoes(cortes, dados["palavras"])
+        cortes = tirar_hesitacoes(cortes, dados["palavras"], a.video)
+    cortes = respeitar_pedacos(cortes, dados)
     fim_video = duracao(a.video)                  # a folga do corte pelo áudio não passa do fim do arquivo
     for c in cortes:
         c["e"] = min(c["e"], fim_video)

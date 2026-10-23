@@ -25,7 +25,14 @@ LT.FRASES += [("Livy", "LIV"), ("Toquem", "Toque"), ("descubrem", "descubra"), (
               ("o No Brasil.", "o do Brasil."), ("Florida,", "Flórida,"), ("PIB da Flórida Em", "PIB da Flórida em"), ("um a um,", "um O-1,"),
               ("entenerário", "itinerário"), ("Intinerário", "itinerário"), ("intenerário.", "itinerário."), ("transferência de executivo,", "transferência executiva,"), ("acho E os", "acho que os"), ("zonamento,", "zoneamento,"), ("PTU,", "IPTU,"), ("Tavstop,", "Tavistock,"),
               ("quadros", "quadras"), ("valiu", "avaliou"), ("momento e vou", "momento e voltar?"), ("O A1,", "O O-1,"), ("A1", "O-1"), ("Porque ao", "que é o"), ("QMK,", "Green Card,"), ("da onda que", "da onde"), ("revimorar", "vir morar"), ("a dez anos", "há dez anos"), ("O estimativo", "A estimativa"), ("milha a gasolina", "milha e gasolina"), ("Moto 3.", "O-3."), ("Moto", "O-3"), ("vicho", "visto"), ("lise", "lease"), ("Lizzie", "lease"), ("adição", "decisão"), ("põe a luz", "a luz"), ("O1", "O-1"),
-              ("Bib", "PIB"), ("Bibi", "PIB"), ("Florida.", "Flórida."), ("Florida", "Flórida"), ("que E os", "que os"), ("Flórida. Em", "Flórida em")]
+              ("Bib", "PIB"), ("Bibi", "PIB"), ("Florida.", "Flórida."), ("Florida", "Flórida"), ("que E os", "que os"), ("Flórida. Em", "Flórida em"),
+              ("PIB da E a Califórnia maior", "PIB da Califórnia é maior"), ("PIB da E a Califórnia", "PIB da Califórnia"), ("PIB da E a", "PIB da"), ("E a Califórnia é", "Califórnia é"),
+              ("que o da No Brasil.", "que o do Brasil."), ("que o No Brasil.", "que o do Brasil."), ("o da do Brasil.", "o do Brasil."),
+              ("do O ICR,", "do ITR,"), ("O ICR,", "ITR,"), ("ICR,", "ITR,"), ("ICR", "ITR"),
+              ("vir tudo estar,", "vir turistar,"), ("tudo estar,", "turistar,"),
+              # "o O" falado é o visto O-1 (o O-3 é o do cônjuge): na legenda, o nome oficial
+              ("aplica o O,", "aplica o O-1,"), ("aplica o O", "aplica o O-1"), ("exemplo, o O", "exemplo, o O-1"),
+              ("O O,", "O O-1,"), ("no O,", "no O-1,")]
 R1, R2, R3, R4 = "IMG_9401.MOV", "IMG_9402.MOV", "IMG_9405.MOV", "IMG_9406.MOV"
 PERMITIR = {"r4_imposto", "r7_esperar_eleicao", "r9_brasileiros_orlando", "r10_imigrante_sucesso",
             "r11_prestador_empresa", "r14_vaca_imposto", "r15_lake_nona"}   # paralelismo de estilo ("se você tiver resultado, se você tiver lucro"), revisado um a um
@@ -40,7 +47,7 @@ REELS = {
         (R1, 275.85, 283.40), (R1, 284.50, 285.40), (R1, 285.45, 289.35), (R1, 291.46, 301.15)]),
     "r3_florida_brasil": ("Flórida 🇺🇸 x Brasil 🇧🇷: qual economia é maior?", [
         (R2, 230.70, 231.62), (R2, 232.88, 237.95), (R2, 238.40, 244.45), (R2, 244.75, 245.90), (R2, 246.64, 257.35), (R2, 257.90, 260.66),
-        (R2, 260.86, 261.84), (R2, 261.94, 262.65), (R2, 273.00, 282.35)]),
+        (R2, 260.86, 261.76, "exato"), (R2, 261.95, 262.89, "exato"), (R2, 273.00, 282.35)]),
     "r4_imposto": ("Empresa nos EUA 🇺🇸: quando você paga imposto?", [
         (R3, 1.90, 10.50), (R3, 10.55, 14.45), (R3, 53.55, 66.25), (R3, 67.15, 77.70)]),
     "r5_vistos_empreendedor": ("Quais vistos pra empreendedor ir pros EUA 🇺🇸?", [
