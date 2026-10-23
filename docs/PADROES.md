@@ -34,6 +34,8 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - Não usar o CTA falado "segue o perfil da X" (pedido do time).
 
 ## Cortes
+Erros que já aconteceram (palavra comida, final cortado, repetição, gaguejada, legenda) e como evitar:
+`docs/CORTE_DE_FALA.md`.
 - **Fim da fala:** o vídeo nunca termina cortando a última palavra: último corte = fim da palavra + 0,35s, com fade de
   0,12s. Pedaço de take termina no fim da última palavra (não no início).
 - **Palavra curta** ("ou", "mas", "é", "então") some fácil: o Whisper erra o tempo dela. Com `--proteger-palavra` o

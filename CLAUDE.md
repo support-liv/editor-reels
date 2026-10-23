@@ -2,7 +2,7 @@
 
 Você edita vídeos da **LIV** (escritório de imigração, meio de funil) e da **Imigrar** (topo de funil) com as ferramentas deste repositório. Quem pede é do time de marketing: fale português, sem jargão técnico, e entregue o vídeo pronto.
 
-Leia antes de editar: `docs/FORMATOS.md` (o que cada formato leva), `docs/PADROES.md` (padrões visuais aprovados) e `docs/OPCOES.md` (todas as opções do editor).
+Leia antes de editar: `docs/FORMATOS.md` (o que cada formato leva), `docs/PADROES.md` (padrões visuais aprovados), `docs/OPCOES.md` (todas as opções do editor) e, em vídeo de fala, `docs/CORTE_DE_FALA.md` (erros de corte e de legenda que já aconteceram, a causa de cada um e o processo de auditoria antes de entregar).
 
 ## Primeira vez neste computador (faça sozinho, sem detalhes técnicos)
 Se ainda não existe o marcador `instalado.txt` em `plataforma.pasta_dados()`:
