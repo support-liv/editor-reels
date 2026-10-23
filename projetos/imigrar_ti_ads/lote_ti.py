@@ -56,7 +56,7 @@ ANUNCIOS = {
         ("IMG_4800.MOV", 4.05, 7.30), ("IMG_4800.MOV", 13.25, 20.95), ("IMG_4800.MOV", 21.70, 28.00)],
         [("bandeira_notebook", "IMG_4800.MOV", 17.1)]),
     "07_eng_software": (("Engenheiro de software: visto americano 🇺🇸 sem empresa?", "Engenheiro de software: precisa de sponsor nos EUA 🇺🇸?"), [
-        (LONGO, 28.10, 34.95), (LONGO, 69.45, 77.40), (LONGO, 145.55, 153.20), (LONGO, 161.25, 162.95),
+        (LONGO, 28.10, 34.95), (LONGO, 69.45, 77.40), (LONGO, 145.55, 153.20), (LONGO, 161.25, 162.85),
         (LONGO, 164.30, 168.40)],
         [("lucas_digitando", LONGO, 72.0), ("banco_bandeira", LONGO, 147.5)]),
     "08_dev_objecao": (("Desenvolvedor: sua área é comum demais pro Green Card?", "Dev: dá pra ter Green Card nos EUA 🇺🇸 sendo de TI?"), [
@@ -99,7 +99,7 @@ FRASES = [("Seu desenvolvedor no Brasil sabia", "Você é desenvolvedor no Brasi
           ("Colume", "Volume"), ("valia", "avalia"), ("Toquem,", "toque em"), ("façam", "faça"),
           ("recebem em em", "receba em"), ("recebem em", "receba em"), ("em em", "em"), ("Analise o seu", "que analisa o seu"),
           ("patrocida.", "patrocine."), ("vista.", "visto."), ("vista?", "visto?"), ("vistas.", "vistos."),
-          ("de vista", "de visto"), ("que Se precisa", "que precisa"), ("sorteiros", "sorteios"), ("wincard", "Green Card"), ("GwinCard", "Green Card"), ("Gwyncard", "Green Card")]
+          ("de vista", "de visto"), ("transferência de executivo,", "transferência executiva,"), ("acho E os", "acho que os"), ("que Se precisa", "que precisa"), ("sorteiros", "sorteios"), ("wincard", "Green Card"), ("GwinCard", "Green Card"), ("Gwyncard", "Green Card")]
 
 
 def corrigir_frases(pal):
@@ -204,15 +204,20 @@ def faixa(arq, a, b):
     # da primeira (pela transcrição literal do take), sem encostar na palavra vizinha. Fechar o pedaço no INÍCIO da
     # última palavra cortava o final dos vídeos ("ele é", "favorável", "acontecer").
     ps = palavras(arq)
-    dentro = [i for i, w in enumerate(ps) if a - 0.02 <= w["s"] < b - 0.03]
+    # palavra pertence ao pedaço se COMEÇA antes do fim marcado (0,03s de margem). Margem maior excluía palavra que era
+    # pra entrar ("novamente" no fim do R13). Fim marcado tem que ficar ANTES da palavra seguinte (ver 07: 162,85).
+    dentro = [i for i, w in enumerate(ps) if a - 0.05 <= w["s"] < b - 0.03]
     if dentro:
         i0, i1 = dentro[0], dentro[-1]
-        fim_pal = ps[i1]["e"]
+        # fim da palavra: o alinhado às vezes engole o silêncio seguinte (e a extensão pegava respiração, onde o Whisper
+        # ainda "ouvia" um "Então" fantasma); limita pelo fim do Whisper + 0,15s
+        fim_pal = min(ps[i1]["e"], ps[i1].get("e_whisper", 1e9) + 0.15)
         prox = ps[i1 + 1]["s"] if i1 + 1 < len(ps) else 1e9
         if fim_pal - b < 0.6:                            # palavra esticada demais = tempo errado: não confia
-            b = max(b, min(fim_pal + 0.30, prox - 0.05))
+            b = max(b, min(fim_pal + 0.20, prox - 0.08))
+        b = min(b, prox - 0.06)                          # nunca encosta na palavra seguinte
         ant = ps[i0 - 1]["e"] if i0 > 0 else 0.0
-        a = min(a, max(ps[i0]["s"] - 0.12, ant + 0.05))
+        a = min(a, max(ps[i0]["s"] - 0.12, ant + 0.03))  # o começo só recua (nunca anda pra depois do marcado)
     ini, fim = round(a * FPS) / FPS, round(b * FPS) / FPS
     ws = transcrever_janela(os.path.join(BRUTOS, arq), ini, fim)
     from auditar_fala import max_iguais
@@ -258,6 +263,13 @@ def montar(id_, pedacos):
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-display_rotation:v", "0", "-i", out + ".tmp.mov", "-c", "copy", out], check=True)
     os.remove(out + ".tmp.mov")
     pal = juntar_numeros(nomes(green_card(corrigir_frases(pal))))
+    # palavra de ligação solta no FIM do vídeo, depois de pausa ("...acabar o Brasil. Então"): começo da frase seguinte
+    # ou palavra que o Whisper inventou numa respiração. Sai (o editor não guarda o áudio dela).
+    soltas = {"entao", "e", "mas", "ai", "ne", "tipo", "bom", "o", "a", "que"}
+    from auditar_fala import norm
+    while len(pal) > 2 and norm(pal[-1]["w"]) in soltas and pal[-1]["s"] - pal[-2]["e"] > 0.2:
+        print(f"  palavra solta no fim tirada: «{pal[-1]['w']}»")
+        pal.pop()
     from auditar_fala import repeticoes
     reps = repeticoes(pal)
     if reps:
@@ -299,7 +311,10 @@ def main():
     for id_ in ids:
         ganchos, pedacos, brolls = ANUNCIOS[id_]
         print(f"\n=== {id_}")
-        video, mapa = montar(id_, pedacos)
+        try:
+            video, mapa = montar(id_, pedacos)
+        except SystemExit as e:                          # repetição: segue com os outros e relata
+            print("  PULADO:", e); continue
         if so_montar:
             print("  ", json.load(open(os.path.join(TRANSC, id_ + ".json")))["texto"])
             continue

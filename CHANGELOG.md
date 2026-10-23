@@ -10,7 +10,10 @@ Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 - Correção: o `--vad` era ligado depois do refinamento dos cortes (não tinha efeito).
 - Correção: queda de volume no meio da palavra ("propicia") deixava o 1º pedaço sem palavra "dona" e ele saía como hesitação, comendo o começo da palavra. Bloco que sobrepõe palavra alinhada nunca é hesitação.
 - Ambiente separado `.venv-whisperx` (o WhisperX traz versões próprias de torch/torchaudio); o `setup.sh` instala. Transcrições literais dos brutos alinhadas (`<base>.literal.json`; a original fica em `.literal.whisper.json`).
-- Auditoria (`projetos/imigrar_ti_ads/auditoria.py`) ganhou checagens exatas: corte caindo dentro de palavra (com voz) e palavra do trecho que sumiu do pronto.
+- Alinhador com trava: tempo fora de ordem ou >0,7s longe do Whisper fica com o do Whisper (no R1 ele jogou a frase final 4s pra trás).
+- Fim da palavra pelo detector de voz: o corte avança enquanto o Silero ouvir voz, até o fim alinhado (máx. 0,35s) — o "o" fraco de "visto" era cortado.
+- Pedaço de take: palavra entra se começa até 0,03s antes do fim marcado; o fim estica até o fim do Whisper + 0,15s (+0,20 de folga) e nunca encosta na palavra seguinte. Palavra de ligação solta no fim do vídeo ("Então", "e", "mas"...) depois de pausa sai: era começo da frase seguinte ou palavra que o Whisper inventou numa respiração.
+- Auditoria (`projetos/imigrar_ti_ads/auditoria.py`) ganhou checagens exatas: corte caindo dentro de palavra (com voz pelo Silero E pelo volume), palavra do trecho que sumiu do pronto e FALA FORA DO CORTE (voz do intermediário que não entrou no vídeo).
 
 ## 0.30 (22-23/10/2026) - Imigrar · TI (correções) e Ednaldo
 - **Correção: final da fala cortado.** Dois motivos: pedaços de take fechados no INÍCIO da última palavra (escolhidos pelo tempo de início do Whisper) e o último corte com só 0,08s depois da voz. Agora o `lote_ti.py` estende o pedaço até o fim da palavra (+0,30s, sem encostar na vizinha) e o editor leva o último corte até o fim da última palavra + 0,35s, com fade de 0,12s. Regra no CLAUDE.md.

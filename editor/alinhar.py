@@ -45,6 +45,15 @@ def main():
         for k in range(j, min(j + 3, len(ws))):
             if norm(ws[k]["word"]) == norm(pal[i]["w"]):
                 pares.append((i, ws[k])); j = k + 1; break
+    # trava: alinhamento que sai fora de ordem ou se afasta muito do Whisper é erro do alinhador (no R1 ele jogou a frase
+    # final 4s pra trás e o corte acabou antes dela). Nesses casos fica o tempo do Whisper.
+    ult_s = -1.0
+    validos = []
+    for i, w in pares:
+        if "start" in w and "end" in w and w["start"] >= ult_s - 0.02 and abs(w["start"] - pal[i]["s"]) <= 0.7 \
+                and w["end"] > w["start"]:
+            validos.append((i, w)); ult_s = w["start"]
+    pares = validos
     for i, w in pares:
         if "start" in w and "end" in w:
             if abs(pal[i]["s"] - w["start"]) > 0.03 or abs(pal[i]["e"] - w["end"]) > 0.03:

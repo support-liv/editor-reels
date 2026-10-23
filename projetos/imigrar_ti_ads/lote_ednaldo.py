@@ -23,7 +23,7 @@ LT.FRASES += [("Livy", "LIV"), ("Toquem", "Toque"), ("descubrem", "descubra"), (
               ("vidro", "visto"), ("vigiturista", "visto de turista"), ("aprender", "empreender"),
               ("vir em turista,", "vir turistar,"), ("Vistro", "visto"), ("Califórnia maior", "Califórnia é maior"),
               ("o No Brasil.", "o do Brasil."), ("Florida,", "Flórida,"), ("PIB da Flórida Em", "PIB da Flórida em"), ("um a um,", "um O-1,"),
-              ("entenerário", "itinerário"), ("zonamento,", "zoneamento,"), ("PTU,", "IPTU,"), ("Tavstop,", "Tavistock,"),
+              ("entenerário", "itinerário"), ("Intinerário", "itinerário"), ("intenerário.", "itinerário."), ("transferência de executivo,", "transferência executiva,"), ("acho E os", "acho que os"), ("zonamento,", "zoneamento,"), ("PTU,", "IPTU,"), ("Tavstop,", "Tavistock,"),
               ("quadros", "quadras"), ("valiu", "avaliou"), ("momento e vou", "momento e voltar?"), ("O A1,", "O O-1,"), ("A1", "O-1"), ("Porque ao", "que é o"), ("QMK,", "Green Card,"), ("da onda que", "da onde"), ("revimorar", "vir morar"), ("a dez anos", "há dez anos"), ("O estimativo", "A estimativa"), ("milha a gasolina", "milha e gasolina"), ("Moto 3.", "O-3."), ("Moto", "O-3"), ("vicho", "visto"), ("lise", "lease"), ("Lizzie", "lease"), ("adição", "decisão"), ("põe a luz", "a luz"), ("O1", "O-1"),
               ("Bib", "PIB"), ("Bibi", "PIB"), ("Florida.", "Flórida."), ("Florida", "Flórida"), ("que E os", "que os"), ("Flórida. Em", "Flórida em")]
 R1, R2, R3, R4 = "IMG_9401.MOV", "IMG_9402.MOV", "IMG_9405.MOV", "IMG_9406.MOV"

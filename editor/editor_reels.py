@@ -334,6 +334,12 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
                     # o fim alinhado às vezes engole o silêncio seguinte: o fim só estica 0,12s (o começo, 0,15s)
                     s2 = min(s, max(ws_ - 0.04, s - min(prot * 0.5, 0.15), c["s"]))
                     e2 = max(e, min(we_ + 0.03, e + 0.12, c["e"] + 0.05))
+                    if USAR_VAD:                         # final fraco da palavra ("vist-o"): avança enquanto o detector
+                        fe2 = int(e2 / 0.02)              # ouvir voz, até o fim alinhado dela (no máx. 0,35s)
+                        alvo = min(we_ + 0.03, e + 0.35, c["e"] + 0.05)
+                        while fe2 < len(fala_baixa) and fala_baixa[fe2] and (fe2 + 1) * 0.02 <= alvo:
+                            fe2 += 1
+                        e2 = max(e2, fe2 * 0.02)
                     if k + 1 < len(faixas):
                         e2 = min(e2, faixas[k + 1][0] - 0.02)
                     if k > 0:

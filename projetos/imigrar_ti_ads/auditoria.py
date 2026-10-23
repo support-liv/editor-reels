@@ -10,6 +10,7 @@ só vira alerta o que aparece nas duas leituras. Cada alerta é conferido de nov
 Uso: python3 projetos/imigrar_ti_ads/auditoria.py VIDEO.mp4 [...]     (o esperado vem de ~/Library/Caches/.../auditoria_esperado)
 """
 import difflib, json, os, re, subprocess, sys
+import numpy as np
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, AQUI)
@@ -102,7 +103,10 @@ def checagem_exata(nome):
     sys.path.insert(0, os.path.join(AQUI, "..", "..", "editor"))
     import editor_reels as E
     vn, _ = E.mascaras_vad(fonte)
-    com_voz = lambda t: bool(vn[max(0, int(t / 0.02) - 1):int(t / 0.02) + 2].any())
+    db, lim = E.energia_db(fonte)
+    nn = min(len(vn), len(db))
+    voz = vn[:nn] & (db[:nn] > lim - 8)          # os dois: o Silero sozinho ouve o burburinho do fundo como fala
+    com_voz = lambda t: bool(voz[max(0, int(t / 0.02) - 1):int(t / 0.02) + 2].any())
     lo, hi = min(c["s"] for c in cortes), max(c["e"] for c in cortes)
     for c in cortes:
         for w in P:
@@ -115,6 +119,25 @@ def checagem_exata(nome):
         t_out += round((c["e"] - c["s"]) * FPS) / FPS
     if id_do_video(nome) == "IMG_4811":                 # bruto inteiro com trechos: o intervalo tem fala de propósito fora
         return alertas
+    # FALA FORA DO CORTE: voz no intermediário (que só tem os trechos escolhidos) que não entrou no vídeo. No R1 o
+    # alinhador jogou a frase final pra trás e o corte acabou antes dela.
+    dentro_corte = np.zeros(nn, bool)
+    for c in cortes:
+        dentro_corte[int(c["s"] / 0.02):int(c["e"] / 0.02) + 1] = True
+    fora = voz & ~dentro_corte[:nn]
+    i = 0
+    while i < nn:
+        if fora[i]:
+            j = i
+            while j < nn and fora[j]:
+                j += 1
+            a_, b_ = i * 0.02, j * 0.02
+            ws = [w["w"] for w in P if w["s"] < b_ and w["e"] > a_]
+            fala = [w for w in ws if A.norm(w) and A.norm(w) not in HESIT]
+            if (b_ - a_ >= 0.30 and fala) or b_ - a_ >= 0.8:
+                alertas.append((a_, "FALA FORA DO CORTE", f"{a_:.2f}-{b_:.2f}s: «{' '.join(ws)[:60]}»", ""))
+            i = j
+        i += 1
     # palavra que estava dentro do intermediário e não está no pronto (o editor tirou): só hesitação pode sair
     dentro = [w for w in P if lo <= (w["s"] + w["e"]) / 2 <= hi]
     usadas = [A.norm(p["w"]) for p in esperadas]
