@@ -35,7 +35,8 @@ def max_iguais(ws):
 
 def transcrever_janela(src, ini, fim, literal=True):
     """palavras (tempo absoluto no arquivo) da janela ini-fim, transcrita sozinha. Cache por janela."""
-    chave = f"{os.path.basename(src)}_{ini:.3f}_{fim:.3f}{'' if literal else '_limpo'}.json"
+    # a data do arquivo entra na chave: vídeo renderizado de novo com o mesmo nome não pode reaproveitar a leitura antiga
+    chave = f"{os.path.basename(src)}_{int(os.path.getmtime(src))}_{ini:.3f}_{fim:.3f}{'' if literal else '_limpo'}.json"
     cache = os.path.join(CACHE, chave)
     if os.path.exists(cache):
         return json.load(open(cache))
@@ -57,10 +58,12 @@ def norm(w):
 
 
 def repeticoes(ws):
-    """[(i, n)] onde as n palavras a partir de i se repetem logo em seguida (n=1..5), ou com 1 palavra no meio."""
+    """[(i, n)] onde as n palavras a partir de i se repetem logo em seguida (n=1..10), ou com 1 palavra no meio.
+    Até 10: recomeço de frase inteira ("Comprar passagem pro Terminal 3 no impulso, | comprar passagem pro Terminal 3 no
+    impulso da eleição", 7 palavras) passava com o limite antigo de 5."""
     t = [norm(w["w"]) for w in ws]
     achou = []
-    for n in range(5, 0, -1):
+    for n in range(10, 0, -1):
         for i in range(len(t) - 2 * n + 1):
             a = t[i:i + n]
             if not all(a) or (n == 1 and len(a[0]) <= 2):

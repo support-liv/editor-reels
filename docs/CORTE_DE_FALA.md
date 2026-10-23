@@ -38,6 +38,19 @@ Por isso o editor corta pelo **áudio** (volume + detector de voz Silero), com o
 | Fim fraco cortado ("Unidos" no 01, "vist-o"), começo baixinho pela metade ("e outros" no r10) | Borda da palavra abaixo do limiar de volume | Fim avança até 0,55s e começo recua até 0,35s enquanto Silero **e** volume ouvem voz (0.32) |
 | Micro-corte de 20 ms com troca de zoom ("seu \| histórico") | Pedaços encostados depois de estender as bordas | Pedaços encostados viram um só (0.31-0.32) |
 
+## Narração gravada em sequência (vídeos narrados)
+
+Um áudio só com vários vídeos, com a pessoa refazendo a frase até sair: a transcrição do arquivo inteiro mostra uma
+versão "limpa", e as tentativas ficam escondidas (6 tentativas de "está trocando a ansiedade do noticiário" apareciam
+como uma pausa de 7s). Como fazer (`projetos/imigrar_narrados/lote_narrados.py`):
+
+- Escolha cada frase pela leitura **literal da janela** (não a do arquivo inteiro) e confirme pelo volume onde cada
+  tentativa começa e termina. Use a **última tentativa completa**.
+- Corte "exato" (4º item `"exato"`) nos recomeços colados ("O melhor momento para | pre- | para preparar"), sempre
+  no silêncio entre as tentativas.
+- A trava de repetição do lote barra o vídeo; não force: ache o recomeço e refaça o corte.
+- Comentário do narrador no áudio ("não, isso ficou ruim, não vou querer") vale como instrução: aquele trecho sai.
+
 ## Legenda (o Whisper escreve errado)
 
 - **Green Card**: "wincard", "win card", "going card", "Green Car", "brincardio", "QMK" → regra única no `lote_ti.py`.
@@ -57,6 +70,10 @@ Por isso o editor corta pelo **áudio** (volume + detector de voz Silero), com o
   bandeira. Nunca distorcer.
 - **Marca:** anúncio da Imigrar fica na identidade da Imigrar (Inter Tight, rosa/azul). A versão em serifa com tom
   pastel foi recusada.
+- **Cena deitada (vídeo do iPhone em HDR):** converter com `plataforma.entrada_hdr` (`-noautorotate` + giro no filtro)
+  deixa a matriz de rotação no arquivo novo, que já saiu de pé; quem lê depois gira de novo. Todo arquivo gerado assim
+  passa por `ffmpeg -display_rotation:v 0 -i ARQ -c copy` (`zerar_rotacao` no `lote_narrados.py`). Aconteceu no B-roll
+  da TI e de novo no 1º render dos narrados: confira um quadro de cada cena antes do render final.
 - **B-roll de contexto** quando a fala cita lugar/objeto (vacas, casas, Lake Nona): conferir o quadro (crop das vacas).
 
 ## Processo que funcionou

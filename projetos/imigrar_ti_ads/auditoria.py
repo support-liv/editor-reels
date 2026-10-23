@@ -77,7 +77,7 @@ HESIT = {"e", "ah", "eh", "hum", "hm", "ahn", "uhm", "ee", "eee", "aa", "ne", "e
 
 
 def id_do_video(nome):
-    for pre in ("imigrar_ti_", "imigrar_ednaldo_"):
+    for pre in ("imigrar_ti_", "imigrar_ednaldo_", "imigrar_narrado_"):
         if nome.startswith(pre):
             base = nome[len(pre):]
             return base[:-2] if base.endswith(("_A", "_B")) else base
@@ -100,6 +100,8 @@ def checagem_exata(nome):
     iid = id_do_video(nome)
     fonte = (os.path.expanduser(f"~/Library/Caches/editor-reels/ti_intermediarios/{iid}.mov") if iid != "IMG_4811"
              else "/Users/lucastoledo/Downloads/imigrar/ads/TI/IMG_4811.mov")
+    if not os.path.exists(fonte):                      # vídeos narrados (projetos/imigrar_narrados)
+        fonte = os.path.expanduser(f"~/Library/Caches/editor-reels/narrados_intermediarios/{iid}.mov")
     sys.path.insert(0, os.path.join(AQUI, "..", "..", "editor"))
     import editor_reels as E
     vn, _ = E.mascaras_vad(fonte)

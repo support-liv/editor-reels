@@ -2,6 +2,13 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.33 (23/10/2026) - Vídeos narrados (Imigrar)
+- **`projetos/imigrar_narrados/lote_narrados.py`**: vídeo narrado = narração gravada (melhor take de cada frase, pela transcrição literal alinhada) + cenas de bastidores ancoradas nas palavras da narração + legenda, gancho e CTA da Imigrar + trilha. Sem motion. A cena começa na palavra-âncora; cena curta vira câmera lenta (gravação em 60 fps); cena horizontal é recortada na vertical sem distorcer; HDR do iPhone vai para SDR com leve realce (`eq` contraste 1,05 / saturação 1,10). O editor roda com `--aperto 1.0 --punch 1.0` (a cena já é vertical: sem zoom nem recorte por rosto).
+- Trava de repetição (`auditar_fala.repeticoes`) agora pega recomeço de até 10 palavras (era 5): "Comprar passagem pro Terminal 3 no impulso, | comprar passagem pro Terminal 3 no impulso da eleição" passava.
+- Cache da transcrição por janela leva a data do arquivo: vídeo renderizado de novo com o mesmo nome reaproveitava a leitura antiga na auditoria.
+- Correção: cena do iPhone saía deitada no intermediário (matriz de rotação herdada do `-noautorotate`); o lote zera a rotação de cada trecho (`zerar_rotacao`). `--reusar-montagem` renderiza de novo sem remontar a narração.
+- Narração gravada em sequência (vários vídeos num áudio só, com recomeços): o Whisper normal esconde 5-6 tentativas da mesma frase dentro do tempo de uma palavra (em "está trocando a ansiedade do noticiário" havia 6). Sempre escolher o take pela leitura **literal** da janela e conferir o volume no ponto do corte.
+
 ## 0.32 (23/10/2026) - Emendas entre takes e palavras com número
 - **Alinhamento por pedaço (take):** o `lote_ti.py` grava na transcrição de onde veio cada palavra (`pedaco`) e os limites de cada take (`pedacos`). O `alinhar.py` alinha take por take e nunca joga uma palavra para o take vizinho (o "Unidos." do 06 terminava dentro do take seguinte; o "não é?" do R9 caía no take de depois e sumia da legenda).
 - **O corte nunca passa da emenda** (`respeitar_pedacos` no editor): a sobra do take vizinho tocava um pedacinho de sílaba antes da fala (R6, "que é o visto").
