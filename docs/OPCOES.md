@@ -62,7 +62,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 |---|---|
 | (padrão) | Corta onde a voz começa e termina de verdade e tira pausas internas acima de 0,25s |
 | `--respiro 0.5` | Mantém pausas internas até esse tamanho (s). Maior que 0,25 = fala mais natural (quem fala pausado); menor = mais enxuto. **Shorts: 0.18** |
-| `--tirar-hesitacoes` | Tira "éé", "hmm", "ah", "e..." esticado, "então, assim" seguido de pausa e voz sem palavra. Mostra no terminal o que tirou. Padrão nos shorts |
+| `--tirar-hesitacoes` | Tira "éé", "hmm", "ah", "e..." esticado, "então, assim" seguido de pausa, voz sem palavra, gaguejada curta ("o, o", "um, um") e recomeço colado ("é que, é que", "processo administrativo, processo administrativo"). Mostra no terminal o que tirou. Padrão nos shorts |
 | `--proteger-palavra 0.15` | Ambiente barulhento: o corte pelo áudio não come o fim fraco da palavra (estende até onde o Whisper diz que ela vai, no máximo esse tanto) |
 | `--alinhar` | Refaz o tempo de cada palavra com alinhamento forçado (WhisperX + wav2vec2 PT, precisão de 20-50 ms). O Whisper erra 0,1-0,5s e o corte comia palavra curta. Usa o ambiente `.venv-whisperx` (o `setup.sh` instala). Palavra com número (2025, E-2, O-1) fica com o tempo do Whisper; transcrição com `pedacos` (vídeo montado de vários takes) é alinhada take a take e o corte não passa da emenda |
 | `--vad` | Detector de voz neural (Silero) nas bordas da palavra: começo/fim fraco só conta como voz se o detector disser que é. A pausa continua pelo volume (no shopping o Silero ouve a conversa do fundo) |

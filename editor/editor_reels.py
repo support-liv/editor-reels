@@ -430,6 +430,38 @@ def tirar_hesitacoes(cortes, P, video=None):
         visto = cru(q + 1) == "O" or (cru(q) == "O" and not fim_frase(q))   # "aplica o O", "no O, o cônjuge": o visto
         if a_ in GAGUEJA and (a_ == b_ or (a_, b_) in GAGUEJA_PAR) and not visto:
             alvo.append(([q], P[q]["s"], P[q + 1]["s"] - 0.06))
+    # RECOMEÇO colado: a mesma sequência de 1-6 palavras dita duas vezes seguidas ("é que, é que mais pega", "processo
+    # administrativo, processo administrativo", "quando, é, quando você"), com no máximo uma hesitação no meio. Sai a 1ª
+    # (e a hesitação). Frase terminada ("dual intent. Dual intent é...") é estilo, não recomeço: fica.
+    ordem = sorted(mantidas)
+    hesit = lambda k: norm(P[k]["w"]) in SONS_HESITACAO or (norm(P[k]["w"]) in ("e", "ne") and P[k]["w"].rstrip()[-1:] in ",.")
+    ja = {q for qs, _, _ in alvo for q in qs}
+    k = 0
+    while k < len(ordem):
+        feito = False
+        for n in range(6, 0, -1):
+            a = ordem[k:k + n]
+            if len(a) < n or any(a[j + 1] != a[j] + 1 for j in range(n - 1)) or a[0] in ja:
+                continue
+            meio = 0
+            while k + n + meio < len(ordem) and meio < 2 and hesit(ordem[k + n + meio]):
+                meio += 1
+            b = ordem[k + n + meio:k + 2 * n + meio]
+            if len(b) < n or b[0] != a[-1] + 1 + meio or any(b[j + 1] != b[j] + 1 for j in range(n - 1)):
+                continue
+            ta, tb = [norm(P[q]["w"]) for q in a], [norm(P[q]["w"]) for q in b]
+            # não atravessa fim de frase ("com o L. É o L e o H-1B" virava "com o L e o H-1B") e "que que" é fala natural
+            if ta != tb or not all(ta) or ta == ["que"] or \
+                    any(P[q]["w"].rstrip().endswith((".", "?", "!")) for q in a):
+                continue
+            tira = a + ordem[k + n:k + n + meio]
+            alvo.append((tira, P[a[0]]["s"], P[b[0]]["s"] - 0.06))
+            ja.update(tira)
+            k += n + meio
+            feito = True
+            break
+        if not feito:
+            k += 1
     for c in cortes:
         idx = c["idx"]
         for j, q in enumerate(idx):

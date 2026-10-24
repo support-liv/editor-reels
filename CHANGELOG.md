@@ -2,6 +2,10 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.35 (24/10/2026) - Recomeço colado e cortes da LIV (Mari e Dra. Lívia)
+- **`--tirar-hesitacoes` tira recomeço colado:** a mesma sequência de 1 a 6 palavras dita duas vezes seguidas, com no máximo duas hesitações no meio ("é que, é que mais pega", "tem, tem uma instrução", "processo administrativo, processo administrativo", "quando, é, quando você", "mesmo ramo, é, é, mesmo ramo"). Sai a primeira ocorrência e a hesitação. Frase terminada seguida da mesma palavra é estilo e fica ("dual intent. Dual intent é duas intenções"). A fala rápida da Dra. Lívia tinha dezenas desses recomeços; cortar um a um à mão não escalava.
+- `projetos/mari_reuniao/lote_mari.py` (6 Reels da Mari) e `projetos/livia_consultoria/lote_livia.py` (Reels verticais + cortes longos 16:9 da Dra. Lívia, intermediário 4K para o vertical recortar sem perder nitidez). Reunião/consulta com cliente: nenhum corte leva nome, voz ou detalhe do caso do cliente, nem preço ou prazo.
+
 ## 0.34 (24/10/2026) - Narrados: corte na batida, punch-in e versão B
 - `lote_narrados.py` com `ritmo=True`: o plano de cortes do editor sai primeiro (narração sobre fundo preto); cada troca de cena vai para a batida da trilha mais próxima da palavra-âncora (até 0,30s antes / 0,15s depois; batidas pelo librosa a partir do `trilha_ss`); cena com mais de 2,4s ganha punch-in (recorte central 1,12x, mesma proporção) na batida do meio. O time achou os narrados parados: agora são 13-21 trocas por vídeo.
 - Versão B: `gancho_b` + `abertura_b` (outra cena no gancho); o resto do vídeo é igual ao A (teste A/B só do gancho).
