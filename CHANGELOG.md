@@ -2,6 +2,12 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.34 (24/10/2026) - Narrados: corte na batida, punch-in e versão B
+- `lote_narrados.py` com `ritmo=True`: o plano de cortes do editor sai primeiro (narração sobre fundo preto); cada troca de cena vai para a batida da trilha mais próxima da palavra-âncora (até 0,30s antes / 0,15s depois; batidas pelo librosa a partir do `trilha_ss`); cena com mais de 2,4s ganha punch-in (recorte central 1,12x, mesma proporção) na batida do meio. O time achou os narrados parados: agora são 13-21 trocas por vídeo.
+- Versão B: `gancho_b` + `abertura_b` (outra cena no gancho); o resto do vídeo é igual ao A (teste A/B só do gancho).
+- Trilha por vídeo com `trilha_abaixo`/`trilha_ducking` (repassados ao `trilhas.mixar`). Narração não tem pausa: com ducking forte (ratio 6) a trilha ficava ~30 dB sob a voz, inaudível. Narrado: base 12 LU abaixo e ducking 1.3 (~16 LU sob a fala), faixas de batida estável (auditor-de-trilha).
+- Cena por frase revisada (n1, n5, n6, n8): nada de cena "bonita" fora do assunto (Disney em "sair do Brasil", painel em "qual visto", camisa da seleção em "reclamando da política", mural relaxado em "tensão constante").
+
 ## 0.33 (23/10/2026) - Vídeos narrados (Imigrar)
 - **`projetos/imigrar_narrados/lote_narrados.py`**: vídeo narrado = narração gravada (melhor take de cada frase, pela transcrição literal alinhada) + cenas de bastidores ancoradas nas palavras da narração + legenda, gancho e CTA da Imigrar + trilha. Sem motion. A cena começa na palavra-âncora; cena curta vira câmera lenta (gravação em 60 fps); cena horizontal é recortada na vertical sem distorcer; HDR do iPhone vai para SDR com leve realce (`eq` contraste 1,05 / saturação 1,10). O editor roda com `--aperto 1.0 --punch 1.0` (a cena já é vertical: sem zoom nem recorte por rosto).
 - Trava de repetição (`auditar_fala.repeticoes`) agora pega recomeço de até 10 palavras (era 5): "Comprar passagem pro Terminal 3 no impulso, | comprar passagem pro Terminal 3 no impulso da eleição" passava.

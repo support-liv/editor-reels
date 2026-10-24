@@ -50,6 +50,10 @@ como uma pausa de 7s). Como fazer (`projetos/imigrar_narrados/lote_narrados.py`)
   no silêncio entre as tentativas.
 - A trava de repetição do lote barra o vídeo; não force: ache o recomeço e refaça o corte.
 - Comentário do narrador no áudio ("não, isso ficou ruim, não vou querer") vale como instrução: aquele trecho sai.
+- **Cena = o que a frase diz**, palavra por palavra: "sair do Brasil" é embarque/passaporte, "qual visto" é passaporte
+  na mão, "comenta" é alguém no celular, gancho sobre filhos abre nos filhos. Cena bonita fora do assunto o time vê na
+  hora. Monte a folha cena × frase (quadro de cada cena com o texto em que ela entra) antes de entregar.
+- **Ritmo:** troca de cena a cada 1,5-2,5s, na batida da trilha; trilha audível (~16 LU sob a voz, não 30).
 
 ## Legenda (o Whisper escreve errado)
 
