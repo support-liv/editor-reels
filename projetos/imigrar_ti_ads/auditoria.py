@@ -77,7 +77,7 @@ HESIT = {"e", "ah", "eh", "hum", "hm", "ahn", "uhm", "ee", "eee", "aa", "ne", "e
 
 
 def id_do_video(nome):
-    for pre in ("imigrar_ti_", "imigrar_ednaldo_", "imigrar_narrado_"):
+    for pre in ("imigrar_ti_", "imigrar_ednaldo_", "imigrar_narrado_", "liv_mari_"):
         if nome.startswith(pre):
             base = nome[len(pre):]
             return base[:-2] if base.endswith(("_A", "_B")) else base
