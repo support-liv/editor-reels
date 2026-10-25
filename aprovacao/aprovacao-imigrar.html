@@ -1,0 +1,652 @@
+<title>Aprovação Imigrar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap">
+<style>
+/* Layout: app de swipe — barra fina no topo, cartão do vídeo ocupando a tela com as informações e os botões
+   redondos por cima, barra de abas embaixo (Avaliar, Lotes, Resumo). Visual escuro neutro (nunca rosa sobre azul); rosa da
+   Imigrar na marca, na aba ativa e no botão principal; o vermelho de "reprovar" puxa para o laranja para não confundir com a marca. */
+:root {
+  --bg: #0b0d10;
+  --card: #15191e;
+  --surface: #1c2127;
+  --line: #2b323a;
+  --ink: #ffffff;
+  --ink-dim: #a9b0b8;
+  --accent: #f90d5b;
+  --rewind: #f5b13d;
+  --nope: #ff5a36;
+  --like: #2fd38a;
+  --sound: #5b9bff;
+  --display: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; overflow: hidden; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+button:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+svg { display: block; }
+.app {
+  height: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* topo */
+.topo { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding-block: 10px 8px; }
+.logo { font-family: var(--display); font-weight: 900; font-size: 24px; line-height: 1; color: var(--accent); letter-spacing: -0.03em; }
+.lote-chip {
+  justify-self: center; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-width: 0;
+  font-weight: 600; font-size: 14px; color: var(--ink); padding: 7px 12px; border-radius: 999px; background: var(--surface);
+}
+.lote-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contador { display: flex; align-items: center; gap: 10px; font-weight: 700; font-variant-numeric: tabular-nums; font-size: 14px; }
+.contador span { display: inline-flex; align-items: center; gap: 4px; }
+.contador .s { color: var(--like); }
+.contador .n { color: var(--nope); }
+.inicio { position: absolute; inset: 0; border-radius: 16px; overflow: hidden; background: var(--card); display: flex; flex-direction: column; justify-content: flex-end; }
+.mosaico { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; opacity: 0.55; }
+.mosaico img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.inicio::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(11, 13, 16, 0.98) 38%, rgba(11, 13, 16, 0.35)); }
+.inicio-txt { position: relative; z-index: 1; padding: 0 20px 22px; display: flex; flex-direction: column; gap: 12px; }
+.inicio-txt .eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #ff5c8f; font-weight: 700; }
+.inicio-txt .ola { font-size: 17px; font-weight: 600; color: var(--ink); }
+.inicio-txt h2 { margin: 0; font-family: var(--display); font-size: 38px; font-weight: 900; line-height: 0.98; letter-spacing: -0.03em; text-wrap: balance; }
+.inicio-txt h2 b { color: var(--accent); }
+.inicio-txt p { margin: 0; color: var(--ink-dim); font-size: 14px; line-height: 1.4; }
+.inicio-txt .btn { font-size: 17px; padding: 16px; }
+
+main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.aba { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+/* cartão */
+.palco { position: relative; flex: 1; min-height: 0; margin-inline: -8px; }
+.cartao {
+  position: absolute; inset: 0; border-radius: 16px; overflow: hidden; background: var(--card);
+  touch-action: pan-y; user-select: none; -webkit-user-select: none; will-change: transform;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+.fundo-borrado { position: absolute; inset: -20px; background-size: cover; background-position: center; filter: blur(22px) brightness(0.45); }
+.cartao video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: transparent; }
+.cartao.horizontal video { object-fit: contain; }
+.barras { position: absolute; top: 8px; left: 10px; right: 10px; display: grid; gap: 4px; z-index: 2; }
+.barras i { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.3); }
+.barras i.aprovado { background: var(--like); }
+.barras i.reprovado { background: var(--nope); }
+.barras i.atual { background: #fff; }
+.tempo { position: absolute; left: 10px; right: 10px; top: 16px; height: 2px; background: transparent; z-index: 2; }
+.tempo b { display: block; height: 100%; width: 0; background: rgba(255, 255, 255, 0.85); border-radius: 2px; }
+.sombra { position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 20%, rgba(0, 0, 0, 0)); pointer-events: none; }
+.info { position: absolute; left: 0; right: 0; bottom: 92px; padding: 0 16px; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+.info h2 { margin: 0; font-family: var(--display); font-size: 25px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5); }
+.info h2 small { font-family: var(--body); font-size: 17px; font-weight: 500; color: rgba(255, 255, 255, 0.85); margin-left: 6px; }
+.linha { display: flex; align-items: center; gap: 7px; font-size: 13.5px; color: rgba(255, 255, 255, 0.88); }
+.linha svg { flex: none; opacity: 0.9; }
+.linha.ok { color: var(--like); }
+.linha.nao { color: #ff9aa3; }
+.linha.nao span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.botoes { position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 18px; }
+.bt {
+  display: grid; place-items: center; border-radius: 50%; background: rgba(18, 21, 26, 0.72);
+  border: 1.5px solid rgba(255, 255, 255, 0.14); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: transform 0.12s;
+}
+.bt:active { transform: scale(0.9); }
+.bt.p { width: 46px; height: 46px; }
+.bt.g { width: 62px; height: 62px; }
+.bt.voltar { color: var(--rewind); }
+.bt.nope { color: var(--nope); border-color: rgba(255, 77, 94, 0.55); }
+.bt.som { color: var(--sound); }
+.bt.like { color: var(--like); border-color: rgba(47, 211, 138, 0.55); }
+.bt.nope.marcado { background: var(--nope); color: #fff; }
+.bt.like.marcado { background: var(--like); color: #062716; }
+.bt[disabled] { opacity: 0.35; cursor: default; }
+.play { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.play span { width: 74px; height: 74px; border-radius: 50%; background: rgba(0, 0, 0, 0.45); display: grid; place-items: center; }
+.carimbo {
+  position: absolute; top: 42px; padding: 4px 12px; border: 4px solid; border-radius: 10px; z-index: 3;
+  font-family: var(--display); font-weight: 900; font-size: 30px; line-height: 1; letter-spacing: 0.02em; text-transform: uppercase;
+  opacity: 0; pointer-events: none;
+}
+.carimbo.sim { left: 18px; color: var(--like); border-color: var(--like); transform: rotate(-14deg); }
+.carimbo.nao { right: 18px; color: var(--nope); border-color: var(--nope); transform: rotate(14deg); }
+.camada { position: absolute; inset: 0; pointer-events: none; transition: opacity 0.25s ease; }
+.camada .botoes { pointer-events: auto; }
+.cartao.limpo .camada { opacity: 0; }
+.cartao.limpo .camada .botoes { pointer-events: none; }
+.dica { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); font-size: 12px; color: rgba(255, 255, 255, 0.75);
+  background: rgba(0, 0, 0, 0.45); padding: 5px 10px; border-radius: 999px; pointer-events: none; transition: opacity 0.4s ease; white-space: nowrap; }
+.confirma-fundo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 25; display: grid; place-items: center;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.confirma { width: min(100%, 340px); background: var(--surface); border-radius: 22px; padding: 22px 18px 16px; display: flex; flex-direction: column; gap: 14px; text-align: center; }
+.confirma .selo-p { width: 56px; height: 56px; border-radius: 50%; background: rgba(47, 211, 138, 0.16); color: var(--like); display: grid; place-items: center; margin: 0 auto; }
+.confirma h3 { margin: 0; font-family: var(--display); font-size: 23px; letter-spacing: -0.02em; font-weight: 800; line-height: 1; }
+.confirma p { margin: 0; color: var(--ink-dim); font-size: 14px; line-height: 1.35; }
+.confirma .linha-btns { grid-template-columns: 1fr 1fr; }
+.btn.like { background: var(--like); color: #062716; }
+.vazio-cartao { position: absolute; inset: 0; border-radius: 16px; background: var(--card); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 24px; }
+.vazio-cartao strong { font-family: var(--display); font-size: 25px; font-weight: 800; line-height: 1; }
+.vazio-cartao span { color: var(--ink-dim); max-width: 30ch; line-height: 1.4; }
+
+/* abas */
+.tabbar { display: grid; grid-template-columns: repeat(3, 1fr); padding-block: 8px calc(8px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); margin-top: 10px; }
+.tab { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: #6f7780; padding-block: 4px; }
+.tab[aria-current="page"] { color: var(--accent); }
+
+/* listas */
+.rolagem { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-block: 6px 12px; }
+.titulo-aba { font-family: var(--display); font-size: 28px; letter-spacing: -0.02em; font-weight: 800; line-height: 1; margin: 6px 0 2px; }
+.sub { color: var(--ink-dim); font-size: 13px; margin: 0; }
+.lote { display: grid; grid-template-columns: 58px 1fr auto; gap: 12px; align-items: center; text-align: left; background: var(--surface); border-radius: 16px; padding: 10px; }
+.lote img { width: 58px; height: 80px; border-radius: 10px; object-fit: cover; background: var(--card); display: block; }
+.lote div { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.lote strong { font-family: var(--display); font-size: 17px; font-weight: 800; line-height: 1.05; }
+.lote div span { color: var(--ink-dim); font-size: 13px; }
+.chip { font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; white-space: nowrap; background: var(--card); color: var(--ink-dim); }
+.chip.novo { background: var(--accent); color: #fff; }
+.chip.andamento { background: rgba(249, 13, 91, 0.16); color: #ff5c8f; }
+.chip.ok { background: rgba(47, 211, 138, 0.14); color: var(--like); }
+.chip.atual { outline: 1.5px solid var(--accent); }
+.aviso { font-size: 13px; line-height: 1.4; background: rgba(255, 77, 94, 0.14); color: #ffb3ba; border-radius: 12px; padding: 10px 12px; margin: 0; }
+.quem { font-size: 12px; color: #6f7780; text-align: center; margin: 0; }
+
+/* resumo */
+.selo { width: 84px; height: 84px; border-radius: 50%; background: var(--like); color: #062716; display: grid; place-items: center; margin: 14px auto 0; }
+.grande { font-family: var(--display); font-size: 38px; letter-spacing: -0.03em; font-weight: 900; line-height: 0.95; text-align: center; margin: 0; }
+.centro { text-align: center; }
+.placar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.placar div { background: var(--surface); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 2px; }
+.placar b { font-family: var(--display); font-size: 30px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+.placar span { font-size: 12px; color: var(--ink-dim); }
+.placar .s b { color: var(--like); }
+.placar .n b { color: var(--nope); }
+.item { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; text-align: left; background: var(--surface); border-radius: 14px; padding: 8px; }
+.item img { width: 44px; height: 60px; border-radius: 8px; object-fit: cover; background: var(--card); }
+.item div { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.item strong { font-size: 14px; font-weight: 600; line-height: 1.25; }
+.item div span { font-size: 12.5px; color: #ff9aa3; }
+.btn { border-radius: 14px; padding: 14px 16px; background: var(--surface); font-weight: 600; text-align: center; }
+.btn.laranja { background: var(--accent); color: #fff; }
+
+/* motivo */
+.folha-fundo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 20; display: flex; align-items: flex-end; justify-content: center; }
+.folha {
+  width: 100%; max-width: 480px; background: var(--surface); border-radius: 22px 22px 0 0; display: flex; flex-direction: column; gap: 12px;
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.alca { width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 0 auto 4px; }
+.folha h3 { margin: 0; font-family: var(--display); font-size: 24px; letter-spacing: -0.02em; font-weight: 800; line-height: 1; }
+.folha .eyebrow { font-size: 12px; color: var(--ink-dim); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips button { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 8px 12px; font-size: 14px; }
+.chips button[aria-pressed="true"] { background: var(--nope); border-color: var(--nope); color: #fff; font-weight: 600; }
+.folha label { font-size: 13px; color: var(--ink-dim); }
+.folha textarea { width: 100%; box-sizing: border-box; min-height: 80px; resize: vertical; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; padding: 10px 12px; }
+.erro { color: #ffb3ba; font-size: 13px; min-height: 1em; margin: 0; }
+.linha-btns { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; }
+.btn.nope { background: var(--nope); color: #fff; }
+.salvando { position: fixed; left: 50%; transform: translateX(-50%); top: calc(56px + env(safe-area-inset-top, 0px)); background: rgba(0, 0, 0, 0.7); padding: 6px 12px; border-radius: 999px; font-size: 12px; z-index: 15; }
+@media (prefers-reduced-motion: reduce) { .cartao, .bt { transition: none !important; } }
+</style>
+
+<div class="app">
+  <header class="topo">
+    <span class="logo" aria-label="Imigrar">imigrar</span>
+    <button class="lote-chip" id="chip-lote" type="button"><span id="chip-texto">Lotes</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <span class="contador" id="contador"></span>
+  </header>
+
+  <main>
+    <section class="aba" id="aba-avaliar">
+      <div class="palco" id="palco"></div>
+    </section>
+    <section class="aba" id="aba-lotes" hidden>
+      <div class="rolagem" id="lista-lotes"></div>
+    </section>
+    <section class="aba" id="aba-resumo" hidden>
+      <div class="rolagem" id="resumo"></div>
+    </section>
+  </main>
+
+  <nav class="tabbar" aria-label="Seções">
+    <button class="tab" id="tab-avaliar" type="button" aria-current="page">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="6" y="3" width="12" height="17" rx="2.5"/><path d="M3.5 6.5v11M20.5 6.5v11" stroke-linecap="round"/></svg>
+      Avaliar
+    </button>
+    <button class="tab" id="tab-lotes" type="button">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Lotes
+    </button>
+    <button class="tab" id="tab-resumo" type="button">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1 1 2-2M3.5 12l1 1 2-2M3.5 18l1 1 2-2"/></svg>
+      Resumo
+    </button>
+  </nav>
+</div>
+
+<div class="folha-fundo" id="folha" hidden>
+  <form class="folha" id="form-motivo" novalidate>
+    <div class="alca"></div>
+    <span class="eyebrow" id="folha-video"></span>
+    <h3>Por que reprovar?</h3>
+    <div class="chips" id="chips" role="group" aria-label="Motivos rápidos"></div>
+    <label for="motivo-texto">Detalhe o que precisa mudar</label>
+    <textarea id="motivo-texto" placeholder="Ex.: em 0:12 a legenda escreve “wincard”; trocar o gancho"></textarea>
+    <p class="erro" id="motivo-erro" aria-live="polite"></p>
+    <div class="linha-btns">
+      <button type="button" class="btn" id="btn-cancelar">Cancelar</button>
+      <button type="submit" class="btn nope">Reprovar vídeo</button>
+    </div>
+  </form>
+</div>
+<div class="confirma-fundo" id="confirma" hidden>
+  <div class="confirma" role="dialog" aria-modal="true" aria-labelledby="confirma-titulo">
+    <div class="selo-p"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h3 id="confirma-titulo">Aprovar este vídeo?</h3>
+    <p id="confirma-video"></p>
+    <div class="linha-btns">
+      <button type="button" class="btn" id="confirma-nao">Cancelar</button>
+      <button type="button" class="btn like" id="confirma-sim">Aprovar</button>
+    </div>
+  </div>
+</div>
+<p class="salvando" id="salvando" hidden>Salvando…</p>
+
+<script>
+(() => {
+  "use strict";
+  const MOTIVOS = ["Legenda errada", "Corte no meio da fala", "Fala repetida", "Aparece dado de cliente",
+                   "Enquadramento", "Áudio", "Gancho", "Não vale publicar"];
+  const I = {
+    voltar: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 109-9 9.7 9.7 0 00-6.7 2.8L3 8"/><path d="M3 3v5h5"/></svg>',
+    nope: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    like: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.8 4.8L19.5 7"/></svg>',
+    somOn: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M19 5a10 10 0 010 14"/></svg>',
+    somOff: '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>',
+    filme: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M8 4v16M16 4v16M3 9h5M3 15h5M16 9h5M16 15h5"/></svg>',
+    pasta: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>',
+    ok: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    x: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    play: '<svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>',
+    check: '<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+  };
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  const fmt = (s) => { s = Math.round(Number(s) || 0); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+  const estado = { lotes: [], decisoes: {}, loteId: null, i: 0, eu: null, podeGravar: true, db: null, somLigado: true,
+                   interagiu: false, aba: "avaliar", carregou: false, iniciado: false };
+  let fila = Promise.resolve(), video = null, preVideo = null;
+
+  const lote = () => estado.lotes.find((l) => l.id === estado.loteId) || null;
+  const vids = () => (lote() && lote().videos) || [];
+  const itens = (id) => (estado.decisoes[id || estado.loteId] && estado.decisoes[id || estado.loteId].itens) || {};
+  const contagem = (l) => { const it = itens(l.id), vs = l.videos || [];
+    const s = vs.filter((v) => it[v.id] && it[v.id].status === "aprovado").length;
+    const n = vs.filter((v) => it[v.id] && it[v.id].status === "reprovado").length;
+    return { s, n, feitos: s + n, total: vs.length }; };
+
+  /* ---------- abas ---------- */
+  function irPara(aba) {
+    estado.aba = aba;
+    for (const a of ["avaliar", "lotes", "resumo"]) {
+      $("aba-" + a).hidden = a !== aba;
+      if (a === aba) $("tab-" + a).setAttribute("aria-current", "page"); else $("tab-" + a).removeAttribute("aria-current");
+    }
+    if (aba !== "avaliar" && video) video.pause();
+    if (aba === "avaliar") renderCartao();
+    if (aba === "lotes") renderLotes();
+    if (aba === "resumo") renderResumo();
+    renderTopo();
+  }
+  $("tab-avaliar").addEventListener("click", () => irPara("avaliar"));
+  $("tab-lotes").addEventListener("click", () => irPara("lotes"));
+  $("tab-resumo").addEventListener("click", () => irPara("resumo"));
+  $("chip-lote").addEventListener("click", () => irPara("lotes"));
+
+  function renderTopo() {
+    const l = lote();
+    $("chip-texto").textContent = l ? (l.titulo || "Lote") : "Escolha um lote";
+    const c = $("contador"); c.textContent = "";
+    if (l && estado.aba === "avaliar" && estado.iniciado && vids().length) {     // placar discreto: aprovados · reprovados
+      const k = contagem(l);
+      const s = el("span", "s"); s.innerHTML = I.ok; s.append(String(k.s)); s.setAttribute("aria-label", k.s + " aprovados");
+      const n = el("span", "n"); n.innerHTML = I.x; n.append(String(k.n)); n.setAttribute("aria-label", k.n + " reprovados");
+      c.append(s, n);
+    }
+  }
+
+  /* ---------- lotes ---------- */
+  function renderLotes() {
+    const box = $("lista-lotes"); box.textContent = "";
+    box.append(el("h1", "titulo-aba", "Lotes"), el("p", "sub", "Cada entrega de vídeos chega aqui como um lote."));
+    if (!estado.podeGravar) { const a = el("p", "aviso", "Você pode assistir, mas esta conta não registra decisões. Peça acesso de colaborador a quem enviou o link."); box.append(a); }
+    if (!estado.lotes.length) {
+      box.append(el("p", "sub", estado.db ? (estado.carregou ? "Nenhum lote ainda." : "Carregando…") : "Entre com a sua conta do Claude para ver os lotes."));
+    }
+    for (const l of estado.lotes) {
+      const k = contagem(l);
+      const b = el("button", "lote"); b.type = "button";
+      const img = el("img"); img.alt = ""; if (l.videos && l.videos[0] && l.videos[0].capa) img.src = l.videos[0].capa;
+      const d = el("div");
+      d.append(el("strong", null, l.titulo || "Lote"), el("span", null, (l.descricao || k.total + " vídeos") + (l.criadoEm ? " · " + l.criadoEm.split("-").reverse().join("/") : "")));
+      let chip;
+      if (!k.feitos) chip = el("span", "chip novo", "Novo");
+      else if (k.feitos < k.total) chip = el("span", "chip andamento", k.feitos + "/" + k.total);
+      else chip = el("span", "chip ok", "✓ " + k.s + " · ✕ " + k.n);
+      if (l.id === estado.loteId) chip.classList.add("atual");
+      b.append(img, d, chip);
+      b.addEventListener("click", () => abrirLote(l.id));
+      box.append(b);
+    }
+    const q = $("quem-txt"); if (q && q.textContent) box.append(el("p", "quem", q.textContent));
+  }
+
+  function abrirLote(id) {
+    estado.loteId = id;
+    const vs = vids(), it = itens(id);
+    const prox = vs.findIndex((v) => !it[v.id]);
+    if (prox === -1 && vs.length) { estado.i = 0; estado.iniciado = true; irPara("resumo"); return; }
+    estado.i = Math.max(0, prox);
+    estado.iniciado = false;                         // mostra a tela de início ("Você tem X vídeos para aprovar")
+    irPara("avaliar");
+  }
+
+  /* ---------- cartão ---------- */
+  function renderCartao() {
+    const palco = $("palco"); palco.textContent = "";
+    renderTopo();
+    const l = lote();
+    if (!l) {
+      const v = el("div", "vazio-cartao");
+      v.append(el("strong", null, estado.lotes.length ? "Escolha um lote" : (estado.carregou ? "Nenhum lote ainda" : "Carregando…")),
+               el("span", null, estado.db ? "Abra a aba Lotes e toque no lote que quer avaliar." : "Entre com a sua conta do Claude para ver e avaliar os vídeos."));
+      palco.append(v); return;
+    }
+    const vs = vids(); const v = vs[estado.i];
+    if (!v) { irPara("resumo"); return; }
+    if (!estado.iniciado) { renderInicio(palco, l); return; }
+    const dec = itens()[v.id];
+
+    const c = el("div", "cartao" + (v.orientacao === "horizontal" ? " horizontal" : ""));
+    if (v.orientacao === "horizontal" && v.capa) { const f = el("div", "fundo-borrado"); f.style.backgroundImage = "url(" + v.capa + ")"; c.append(f); }
+    video = document.createElement("video");
+    video.setAttribute("playsinline", ""); video.playsInline = true; video.preload = "auto";
+    if (v.capa) video.poster = v.capa;
+    video.src = v.src || ""; video.muted = !estado.somLigado;
+    const barras = el("div", "barras"); barras.style.gridTemplateColumns = "repeat(" + vs.length + ", 1fr)";
+    vs.forEach((x, k) => { const i = el("i"); const d = itens()[x.id]; i.className = k === estado.i ? "atual" : (d ? d.status : ""); barras.append(i); });
+    const tempo = el("div", "tempo"); const tb = el("b"); tempo.append(tb);
+    video.addEventListener("timeupdate", () => { if (video.duration) tb.style.width = (100 * video.currentTime / video.duration) + "%"; });
+    const sim = el("div", "carimbo sim", "Aprovado"), nao = el("div", "carimbo nao", "Reprovado");
+    const sombra = el("div", "sombra");
+    const info = el("div", "info");
+    const h = el("h2", null, v.titulo || v.gancho || v.id); h.append(el("small", null, (estado.i + 1) + "/" + vs.length));
+    const l1 = el("div", "linha"); l1.innerHTML = I.filme; l1.append(el("span", null, (v.formato || "") + " · " + fmt(v.duracao)));
+    info.append(h, l1);
+    if (dec && dec.status === "aprovado") { const l2 = el("div", "linha ok"); l2.innerHTML = I.ok; l2.append(el("span", null, "Aprovado")); info.append(l2); }
+    else if (dec) { const l2 = el("div", "linha nao"); l2.innerHTML = I.x; l2.append(el("span", null, "Reprovado: " + (dec.motivo || ""))); info.append(l2); }
+    else if (v.arquivo) { const l2 = el("div", "linha"); l2.innerHTML = I.pasta; l2.append(el("span", null, v.arquivo)); info.append(l2); }
+
+    const botoes = el("div", "botoes");
+    const bVoltar = el("button", "bt p voltar"); bVoltar.type = "button"; bVoltar.innerHTML = I.voltar; bVoltar.setAttribute("aria-label", "Voltar ao vídeo anterior");
+    const bNope = el("button", "bt g nope"); bNope.type = "button"; bNope.innerHTML = I.nope; bNope.setAttribute("aria-label", "Reprovar");
+    const bSom = el("button", "bt p som"); bSom.type = "button";
+    const bLike = el("button", "bt g like"); bLike.type = "button"; bLike.innerHTML = I.like; bLike.setAttribute("aria-label", "Aprovar");
+    const pintaSom = () => { bSom.innerHTML = estado.somLigado ? I.somOn : I.somOff; bSom.setAttribute("aria-label", estado.somLigado ? "Tirar o som" : "Ligar o som"); };
+    pintaSom();
+    bVoltar.disabled = estado.i === 0;
+    bNope.disabled = bLike.disabled = !estado.podeGravar;
+    if (dec) (dec.status === "aprovado" ? bLike : bNope).classList.add("marcado");
+    bVoltar.addEventListener("click", (e) => { e.stopPropagation(); if (estado.i > 0) { estado.i -= 1; renderCartao(); } });
+    bNope.addEventListener("click", (e) => { e.stopPropagation(); estado.interagiu = true; abrirMotivo(); });
+    bLike.addEventListener("click", (e) => { e.stopPropagation(); estado.interagiu = true; pedirConfirmacao(); });
+    bSom.addEventListener("click", (e) => { e.stopPropagation(); estado.somLigado = !estado.somLigado; video.muted = !estado.somLigado; pintaSom(); });
+    botoes.append(bVoltar, bNope, bSom, bLike);
+    for (const b of [bVoltar, bNope, bSom, bLike]) b.addEventListener("pointerdown", (e) => e.stopPropagation());
+
+    const play = el("div", "play"); play.hidden = true; const ps = el("span"); ps.innerHTML = I.play; play.append(ps);
+    // a faixa de baixo (título, arquivo, botões) some enquanto o vídeo roda: não parece parte do vídeo.
+    // Tocar na tela pausa e mostra; tocar de novo volta a rodar e esconde.
+    const camada = el("div", "camada"); camada.append(sombra, info, botoes);
+    const dica = el("div", "dica", "Toque na tela para avaliar");
+    video.addEventListener("pause", () => { play.hidden = false; c.classList.remove("limpo"); dica.style.opacity = "0"; });
+    video.addEventListener("ended", () => { play.hidden = false; c.classList.remove("limpo"); dica.style.opacity = "0"; });
+    video.addEventListener("play", () => { play.hidden = true; c.classList.add("limpo"); });
+    setTimeout(() => { dica.style.opacity = "0"; }, 3500);
+    c.append(video, barras, tempo, sim, nao, camada, play, dica);
+    palco.append(c);
+    arraste(c, sim, nao);
+    tocar();
+
+    const nx = vs[estado.i + 1];
+    if (preVideo) { preVideo.removeAttribute("src"); preVideo.load(); preVideo = null; }
+    if (nx && nx.src) { preVideo = document.createElement("video"); preVideo.preload = "auto"; preVideo.muted = true; preVideo.src = nx.src; }
+  }
+
+  function renderInicio(palco, l) {
+    const k = contagem(l), falta = k.total - k.feitos;
+    const ini = el("div", "inicio");
+    const mos = el("div", "mosaico");
+    (l.videos || []).filter((v) => v.capa).slice(0, 3).forEach((v) => { const im = el("img"); im.alt = ""; im.src = v.capa; mos.append(im); });
+    const t = el("div", "inicio-txt");
+    const h = el("h2"); h.append("Você tem ", el("b", null, String(falta)), falta === 1 ? " vídeo para aprovar" : " vídeos para aprovar");
+    const btn = el("button", "btn laranja", k.feitos ? "Continuar de onde parei" : "Começar agora"); btn.type = "button";
+    btn.addEventListener("click", () => { estado.iniciado = true; estado.interagiu = true; renderCartao(); });
+    if (estado.nome) t.append(el("span", "ola", "Olá, " + estado.nome.split(" ")[0] + "!"));
+    t.append(el("span", "eyebrow", l.titulo || "Lote"), h,
+             el("p", null, k.feitos ? "Você já avaliou " + k.feitos + " de " + k.total + ". Toque no vídeo para pausar e ver os botões; aprove ou reprove com o motivo."
+                                    : "Um vídeo por vez. Toque no vídeo para pausar e ver os botões; aprove ou reprove com o motivo."), btn);
+    ini.append(mos, t);
+    palco.append(ini);
+    btn.focus({ preventScroll: true });
+  }
+
+  function tocar() {
+    if (!video) return;
+    const p = video.play();
+    if (p && p.catch) p.catch(() => { if (!estado.interagiu && !video.muted) { video.muted = true; estado.somLigado = false; const s = document.querySelector(".bt.som"); if (s) s.innerHTML = I.somOff; video.play().catch(() => {}); } });
+  }
+
+  function voar(c, lado) {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    c.style.transition = "transform 0.22s ease";
+    c.style.transform = "translateX(" + (lado * 130) + "%) rotate(" + (lado * 16) + "deg)";
+  }
+
+  function arraste(c, sim, nao) {
+    const reduzir = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let x0 = 0, y0 = 0, dx = 0, ativo = false, moveu = false;
+    c.addEventListener("pointerdown", (e) => { ativo = true; moveu = false; x0 = e.clientX; y0 = e.clientY; dx = 0; c.setPointerCapture(e.pointerId); c.style.transition = "none"; });
+    c.addEventListener("pointermove", (e) => {
+      if (!ativo) return;
+      dx = e.clientX - x0;
+      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(e.clientY - y0)) moveu = true;
+      if (!moveu || !estado.podeGravar) return;
+      if (!reduzir) c.style.transform = "translateX(" + dx + "px) rotate(" + (dx / 20) + "deg)";
+      sim.style.opacity = String(Math.max(0, Math.min(1, dx / 100)));
+      nao.style.opacity = String(Math.max(0, Math.min(1, -dx / 100)));
+    });
+    const soltar = () => {
+      if (!ativo) return;
+      ativo = false; estado.interagiu = true;
+      if (!moveu) { if (video.paused) { video.muted = !estado.somLigado; video.play().catch(() => {}); } else video.pause(); return; }
+      c.style.transition = "transform 0.22s ease"; c.style.transform = "";
+      sim.style.opacity = "0"; nao.style.opacity = "0";
+      if (estado.podeGravar && dx > 100) pedirConfirmacao();
+      else if (estado.podeGravar && dx < -100) abrirMotivo();
+    };
+    c.addEventListener("pointerup", soltar);
+    c.addEventListener("pointercancel", soltar);
+  }
+
+  /* ---------- decisões ---------- */
+  function gravar(videoId, decisao) {
+    const id = estado.loteId, l = lote();
+    const atual = estado.decisoes[id] || { itens: {} };
+    const it = Object.assign({}, atual.itens || {}); it[videoId] = decisao;
+    const total = (l.videos || []).length;
+    const corpo = { itens: it, por: estado.eu, atualizadoEm: new Date().toISOString(), total };
+    if ((l.videos || []).every((v) => it[v.id])) corpo.concluidoEm = atual.concluidoEm || new Date().toISOString();
+    estado.decisoes[id] = corpo;
+    if (!estado.db) return;
+    $("salvando").hidden = false;
+    fila = fila.then(() => estado.db.collection("decisoes").doc(id).set(corpo))
+      .then(() => { $("salvando").hidden = true; })
+      .catch((e) => { $("salvando").hidden = true; if (e && e.code === "invalid_argument") { estado.podeGravar = false; renderCartao(); }
+        else { $("salvando").textContent = "Não salvou. Confira a internet e decida de novo."; $("salvando").hidden = false; setTimeout(() => { $("salvando").hidden = true; $("salvando").textContent = "Salvando…"; }, 4000); } });
+  }
+  function avancar() {
+    const vs = vids(), it = itens();
+    if (estado.i + 1 < vs.length) { estado.i += 1; renderCartao(); return; }
+    const prox = vs.findIndex((v) => !it[v.id]);
+    if (prox !== -1) { estado.i = prox; renderCartao(); return; }
+    if (video) video.pause();
+    irPara("resumo");
+  }
+  function aprovar() {
+    if (!estado.podeGravar) return;
+    const v = vids()[estado.i]; if (!v) return;
+    gravar(v.id, { status: "aprovado", motivo: "", em: new Date().toISOString(), por: estado.eu });
+    avancar();
+  }
+
+  function pedirConfirmacao() {
+    if (!estado.podeGravar) return;
+    const v = vids()[estado.i]; if (!v) return;
+    if (video) video.pause();
+    $("confirma-video").textContent = (estado.i + 1) + "/" + vids().length + " · " + (v.titulo || v.gancho || "");
+    $("confirma").hidden = false;
+    $("confirma-sim").focus();
+  }
+  const fecharConfirma = () => { $("confirma").hidden = true; };
+  $("confirma-nao").addEventListener("click", fecharConfirma);
+  $("confirma").addEventListener("click", (e) => { if (e.target === $("confirma")) fecharConfirma(); });
+  $("confirma-sim").addEventListener("click", () => {
+    fecharConfirma();
+    const c = document.querySelector(".cartao"), sim = c && c.querySelector(".carimbo.sim");
+    if (sim) sim.style.opacity = "1";
+    if (c) voar(c, 1);
+    setTimeout(aprovar, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 200);
+  });
+
+  const escolhidos = new Set();
+  function abrirMotivo() {
+    if (!estado.podeGravar) return;
+    const v = vids()[estado.i]; if (!v) return;
+    const dec = itens()[v.id];
+    escolhidos.clear();
+    if (dec && dec.status === "reprovado") (dec.motivos || []).forEach((m) => escolhidos.add(m));
+    $("folha-video").textContent = (estado.i + 1) + "/" + vids().length + " · " + (v.titulo || v.gancho || "");
+    const chips = $("chips"); chips.textContent = "";
+    for (const m of MOTIVOS) {
+      const b = el("button", null, m); b.type = "button"; b.setAttribute("aria-pressed", escolhidos.has(m) ? "true" : "false");
+      b.addEventListener("click", () => { if (escolhidos.has(m)) escolhidos.delete(m); else escolhidos.add(m); b.setAttribute("aria-pressed", escolhidos.has(m) ? "true" : "false"); $("motivo-erro").textContent = ""; });
+      chips.append(b);
+    }
+    $("motivo-texto").value = dec && dec.status === "reprovado" ? (dec.detalhe || "") : "";
+    $("motivo-erro").textContent = "";
+    if (video) video.pause();
+    $("folha").hidden = false;
+  }
+  const fechar = () => { $("folha").hidden = true; };
+  $("btn-cancelar").addEventListener("click", fechar);
+  $("folha").addEventListener("click", (e) => { if (e.target === $("folha")) fechar(); });
+  $("form-motivo").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const detalhe = $("motivo-texto").value.trim();
+    const motivos = MOTIVOS.filter((m) => escolhidos.has(m));
+    if (!motivos.length && !detalhe) { $("motivo-erro").textContent = "Escolha um motivo ou escreva o que precisa mudar."; return; }
+    const v = vids()[estado.i];
+    gravar(v.id, { status: "reprovado", motivos, detalhe, motivo: motivos.concat(detalhe ? [detalhe] : []).join(" · "), em: new Date().toISOString(), por: estado.eu });
+    fechar(); avancar();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (!$("confirma").hidden) { if (e.key === "Escape") fecharConfirma(); return; }
+    if (estado.aba !== "avaliar" || !$("folha").hidden || e.target.tagName === "TEXTAREA") return;
+    const q = (s) => document.querySelector(s);
+    if (e.key === "ArrowRight" && q(".bt.like")) q(".bt.like").click();
+    else if (e.key === "ArrowLeft" && q(".bt.nope")) q(".bt.nope").click();
+    else if ((e.key === "Backspace" || e.key === "ArrowUp") && q(".bt.voltar")) q(".bt.voltar").click();
+  });
+
+  /* ---------- resumo ---------- */
+  function renderResumo() {
+    const box = $("resumo"); box.textContent = "";
+    const l = lote();
+    if (!l) { box.append(el("h1", "titulo-aba", "Resumo"), el("p", "sub", "Escolha um lote na aba Lotes para ver o resumo.")); return; }
+    const k = contagem(l), it = itens(), vs = l.videos || [];
+    if (k.feitos === k.total && k.total) {
+      const plural = (n, um, varios) => n + " " + (n === 1 ? um : varios);
+      const s = el("div", "selo"); s.innerHTML = I.check; box.append(s, el("p", "grande", "Tudo certo!"),
+        el("p", "sub centro", "Você aprovou " + plural(k.s, "vídeo", "vídeos") + " e reprovou " + plural(k.n, "vídeo", "vídeos") +
+           " de “" + (l.titulo || "") + "”. As decisões ficaram salvas."));
+    } else {
+      box.append(el("h1", "titulo-aba", "Resumo"), el("p", "sub", (l.titulo || "") + " · faltam " + (k.total - k.feitos) + " vídeos"));
+    }
+    const pl = el("div", "placar");
+    const a = el("div", "s"); a.append(el("b", null, String(k.s)), el("span", null, "aprovados"));
+    const r = el("div", "n"); r.append(el("b", null, String(k.n)), el("span", null, "reprovados"));
+    const p = el("div"); p.append(el("b", null, String(k.total - k.feitos)), el("span", null, "pendentes"));
+    pl.append(a, r, p); box.append(pl);
+    const reprov = vs.filter((v) => it[v.id] && it[v.id].status === "reprovado");
+    if (reprov.length) {
+      box.append(el("p", "sub", "Reprovados (toque para rever)"));
+      for (const v of reprov) {
+        const b = el("button", "item"); b.type = "button";
+        const img = el("img"); img.alt = ""; if (v.capa) img.src = v.capa;
+        const d = el("div"); d.append(el("strong", null, v.titulo || v.gancho || v.id), el("span", null, it[v.id].motivo || ""));
+        b.append(img, d, el("span", "chip", (vs.indexOf(v) + 1) + "/" + vs.length));
+        b.addEventListener("click", () => { estado.i = vs.indexOf(v); estado.iniciado = true; irPara("avaliar"); });
+        box.append(b);
+      }
+    }
+    const pend = vs.findIndex((v) => !it[v.id]);
+    if (pend !== -1) { const b = el("button", "btn laranja", "Continuar avaliando"); b.type = "button"; b.addEventListener("click", () => { estado.i = pend; estado.iniciado = true; irPara("avaliar"); }); box.append(b); }
+    const de = el("button", "btn", "Rever o lote desde o início"); de.type = "button";
+    de.addEventListener("click", () => { estado.i = 0; estado.iniciado = true; irPara("avaliar"); });
+    const ls = el("button", "btn", "Ver todos os lotes"); ls.type = "button"; ls.addEventListener("click", () => irPara("lotes"));
+    box.append(de, ls);
+  }
+
+  /* ---------- dados ---------- */
+  const quem = el("span"); quem.id = "quem-txt"; quem.hidden = true; document.body.append(quem);
+  async function iniciar() {
+    irPara("avaliar");
+    if (!window.claude || !window.claude.use) return;
+    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    estado.db = db;
+    if (user) {
+      const me = await user.me(); estado.eu = me.id; estado.nome = me.name || "";
+      if (me.name) quem.textContent = "Avaliando como " + me.name;
+      if ((await user.can("data.write")) === false) estado.podeGravar = false;
+    }
+    if (!db) { estado.carregou = true; irPara(estado.aba); return; }
+    // abre direto no lote que falta avaliar, só depois de ter os lotes E as decisões (senão recomeçaria do 1º vídeo)
+    let temLotes = false, temDecisoes = false, roteado = false;
+    const rotear = () => {
+      if (roteado || !temLotes || !temDecisoes) return;
+      roteado = true;
+      const h = (location.hash || "").slice(1);
+      const alvo = estado.lotes.find((l) => l.id === h) || estado.lotes.find((l) => contagem(l).feitos < (l.videos || []).length) || null;
+      if (alvo) abrirLote(alvo.id); else irPara(estado.lotes.length ? "lotes" : "avaliar");
+    };
+    db.collection("lotes").orderBy("ordem", "desc").onSnapshot((snap) => {
+      estado.lotes = snap.docs.filter((d) => d.exists).map((d) => Object.assign({ id: d.id }, d.data()));
+      estado.carregou = true; temLotes = true;
+      if (!roteado) rotear(); else if (estado.aba === "lotes") renderLotes();
+    }, () => { estado.carregou = true; irPara("lotes"); });
+    db.collection("decisoes").onSnapshot((snap) => {
+      for (const d of snap.docs) if (d.exists && !(d.metadata && d.metadata.hasPendingWrites)) estado.decisoes[d.id] = d.data();
+      temDecisoes = true;
+      if (!roteado) { rotear(); return; }
+      if (estado.aba === "lotes") renderLotes();
+      else if (estado.aba === "resumo") renderResumo();
+    }, () => { temDecisoes = true; rotear(); });
+  }
+  iniciar();
+})();
+</script>

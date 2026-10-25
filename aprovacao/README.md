@@ -29,3 +29,11 @@ leia o artefato antes). Capacidades: `db` (regra: `lotes` só editores escrevem)
 4. Depois da avaliação, ler `decisoes/<id>` e refazer só os reprovados, pelo motivo.
 
 Quem avalia precisa de acesso de **Colaborador** no menu Compartilhar do artefato (Leitor só assiste).
+
+## Link da Imigrar (Marinna aprova)
+
+Artefato separado, na identidade da Imigrar (Inter Tight, rosa #F90D5B; fundo escuro neutro, nunca rosa sobre azul):
+**https://claude.ai/artifact/QUb2X8DWDM7EbLTXyqKbCk** ("Aprovação Imigrar"). Mesma tela, mesmo formato de dados e mesmo
+passo a passo do link da LIV, com banco e vídeos próprios. Fonte: `aprovacao-imigrar.html` (gerada a partir da página da
+LIV trocando marca, fonte e cores; a tela de início cumprimenta quem avalia pelo nome). Primeiro lote:
+`marinna-reuniao-estrategica` (os 6 Reels da Mari, de `Downloads/Mari IMG_5069/prontos`).
