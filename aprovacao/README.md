@@ -1,8 +1,9 @@
 # Aprovação de cortes (link no celular)
 
 Página publicada como artefato do Claude: **https://claude.ai/artifact/RfUp2o5YzHF9xLVc9pDucu**
-("Aprovação de Cortes LIV"). Visual de app de swipe (cartão em tela cheia, botões redondos sobre o vídeo, abas Avaliar · Lotes · Resumo). Um vídeo por vez: **Aprovar** (ou arrastar para a direita) passa
-para o próximo; **Reprovar** (ou arrastar para a esquerda) pede o motivo (atalhos + texto) e segue; **Voltar** reabre
+("Aprovação de Cortes LIV"). Visual de app de swipe (cartão em tela cheia, botões redondos sobre o vídeo, abas Avaliar · Lotes · Resumo). Um vídeo por vez; enquanto o vídeo roda, a faixa de baixo
+(título, arquivo, botões) some para não parecer parte do vídeo, e volta quando a pessoa toca na tela (pausa).
+**Aprovar** (ou arrastar para a direita) pede confirmação num balão e passa para o próximo; **Reprovar** (ou arrastar para a esquerda) pede o motivo (atalhos + texto) e segue; **Voltar** reabre
 o anterior para trocar a decisão; no fim aparece "Tudo certo!" com o placar e a lista dos reprovados. Uma pessoa avalia
 cada lote.
 
