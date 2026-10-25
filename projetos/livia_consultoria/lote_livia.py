@@ -131,7 +131,7 @@ def main():
         if id_ in VERTICAIS:
             editor += ["--gancho", VERTICAIS[id_][0], "--seg-gancho", "4.2", "--respiro", "0.22"]
         else:
-            editor += ["--layout", "youtube", "--sem-inscreva", "--respiro", "0.5"]
+            editor += ["--layout", "youtube", "--sem-inscreva", "--planos", "--respiro", "0.5"]
         LT.rodar_editor(editor, f"liv_livia_{id_}")
 
 

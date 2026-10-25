@@ -41,6 +41,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--colunas 3 --pessoas 3,1` | Live com N pessoas lado a lado: escolhe quem vai em cima e embaixo pela coluna (1 = esquerda) |
 | `--layout youtube` | Corte longo 16:9 1080p: a cena inteira da live, sem legenda e sem gancho, com a vinheta da marca na abertura (LIV). Tira só silêncios longos (respiro 0,8s). Gera junto um `.tempos.txt` com a minutagem de cada trecho, para os capítulos |
 | `--sem-vinheta` | No `youtube`, não põe a vinheta |
+| `--planos` | No `youtube`: plano aberto/fechado/médio alternando a cada corte, recortado em 16:9 em volta do rosto. Para gravação de uma pessoa (consulta, entrevista, fala pra câmera); live com tela compartilhada fica sem |
 | `--layout quadrado` | WhatsApp: 1080x1080, punch-in alternando por bloco de fala, legenda perto da base |
 | `--dinamico` | Troca o zoom a cada ~2,5s entre palavras, em 3 níveis, sem cortar a fala. Pra quem fala mais travado |
 | `--endireitar` | Quadrado: mede as verticais da cena e escolhe o ângulo de `--girar` sozinho. Só gira, nunca distorce |

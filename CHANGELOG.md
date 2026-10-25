@@ -4,6 +4,7 @@ Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
 ## 0.35 (24/10/2026) - Recomeço colado e cortes da LIV (Mari e Dra. Lívia)
 - **`--tirar-hesitacoes` tira recomeço colado:** a mesma sequência de 1 a 6 palavras dita duas vezes seguidas, com no máximo duas hesitações no meio ("é que, é que mais pega", "tem, tem uma instrução", "processo administrativo, processo administrativo", "quando, é, quando você", "mesmo ramo, é, é, mesmo ramo"). Sai a primeira ocorrência e a hesitação. Frase terminada seguida da mesma palavra é estilo e fica ("dual intent. Dual intent é duas intenções"). A fala rápida da Dra. Lívia tinha dezenas desses recomeços; cortar um a um à mão não escalava.
+- **`--planos`** (corte longo `--layout youtube`): a cada corte o plano muda (aberto, fechado, médio, fechado...), recortado em 16:9 em volta do rosto, sem distorcer; corte curto (<1,2s) mantém o plano anterior. O corte longo da Dra. Lívia saiu com a cena inteira parada (o modo foi feito para live com tela) e o time pediu o enquadramento dinâmico. Use em gravação de uma pessoa (consulta, entrevista); live com tela compartilhada continua sem.
 - `projetos/mari_reuniao/lote_mari.py` (6 Reels da Mari) e `projetos/livia_consultoria/lote_livia.py` (Reels verticais + cortes longos 16:9 da Dra. Lívia, intermediário 4K para o vertical recortar sem perder nitidez). Reunião/consulta com cliente: nenhum corte leva nome, voz ou detalhe do caso do cliente, nem preço ou prazo.
 
 ## 0.34 (24/10/2026) - Narrados: corte na batida, punch-in e versão B

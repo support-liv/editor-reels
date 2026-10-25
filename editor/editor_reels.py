@@ -1057,7 +1057,7 @@ def quadros(dec, fsize, n):
 
 # ---------------------------------------------------------------- 5. render
 def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=None,
-               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda", girar=0.0, dinamico=False, endireitar=False, vinheta=True, inscreva=True):
+               frac_base=None, frac_punch=None, seg_gancho=3.2, seg_cta=3.5, trocas=(), so_checar=False, y_legenda=0.62, estilo_caixa=None, layout=None, cima="esquerda", girar=0.0, dinamico=False, endireitar=False, vinheta=True, inscreva=True, planos=False):
     garantir_detector()
     W, H = tamanho_real(video)
     ent_args, ent_filtro = entrada_video(video)
@@ -1093,7 +1093,8 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     img_gancho = caixa_texto(gancho, marca, estilo=estilo_caixa) if gancho else None
     img_cta = caixa_texto(cta, marca, estilo=estilo_caixa) if cta else None
     if layout == "youtube":
-        return renderizar_youtube(video, cortes, saida, marca, vinheta=vinheta, so_checar=so_checar, inscreva=inscreva)
+        return renderizar_youtube(video, cortes, saida, marca, vinheta=vinheta, so_checar=so_checar, inscreva=inscreva,
+                                  planos=planos)
     if layout == "quadrado":
         return renderizar_quadrado(video, cortes, saida, grupos, marca, img_gancho, img_cta, total,
                                    seg_gancho, seg_cta, so_checar, girar=girar, dinamico=dinamico, endireitar=endireitar)
@@ -1300,9 +1301,31 @@ def montar_audio(video, cortes, tmp_v, saida, vinheta=None, seg_vinheta=0.0, sfx
     os.remove(tmp_v)
 
 # ---------------------------------------------------------------- 5a. corte longo do YouTube
-def renderizar_youtube(video, cortes, saida, marca, vinheta=True, so_checar=False, lado=(1920, 1080), inscreva=True):
+PLANOS_16X9 = {"aberto": 1.0, "medio": 0.76, "fechado": 0.58}   # largura do recorte (fração do quadro), sempre 16:9
+CICLO_PLANOS = ("aberto", "fechado", "medio", "fechado")
+
+
+def rosto_mediano(video, c):
+    """centro (cx, cy normalizados) do maior rosto no corte, amostrado a 2 quadros/s; None sem rosto."""
+    tmp = tempfile.mkdtemp()
+    run(["ffmpeg", "-v", "error", "-ss", f"{c['s']:.3f}", "-t", f"{max(0.5, c['e'] - c['s']):.3f}", "-i", video,
+         "-vf", "fps=2,scale=640:-2", "-q:v", "4", os.path.join(tmp, "%04d.jpg")])
+    imgs = sorted(os.listdir(tmp))
+    pts = []
+    for ln in _detectar([os.path.join(tmp, f) for f in imgs]):
+        fs = [f for f in json.loads(ln) if f[2] >= 0.03]
+        if fs:
+            pts.append(max(fs, key=lambda f: f[2] * f[3])[:2])
+    shutil.rmtree(tmp)
+    return tuple(np.median(np.array(pts), axis=0)) if pts else None
+
+
+def renderizar_youtube(video, cortes, saida, marca, vinheta=True, so_checar=False, lado=(1920, 1080), inscreva=True,
+                       planos=False):
     """corte longo 16:9: a cena da live inteira (sem recorte, sem legenda, sem gancho), com a vinheta
-    da marca na abertura. Grava ao lado um .tempos.txt com o tempo de cada trecho no vídeo final (capítulos)."""
+    da marca na abertura. Grava ao lado um .tempos.txt com o tempo de cada trecho no vídeo final (capítulos).
+    planos=True (--planos, gravação de uma pessoa): a cada corte o plano muda (aberto, fechado, médio, fechado...),
+    recortado em 16:9 em volta do rosto (sem distorcer); corte curto (<1,2s) mantém o plano do anterior."""
     W, H = lado
     arq_vin = VINHETA.get(marca) if vinheta else None
     seg_vin = 0.0
@@ -1335,14 +1358,29 @@ def renderizar_youtube(video, cortes, saida, marca, vinheta=True, so_checar=Fals
         for buf in quadros(dec, fsize, int(round(seg_vin * FPS))):
             enc.stdin.write(buf)
         dec.wait()
+    W0, H0 = tamanho_real(video)
+    k_plano, crop, plano = -1, "", "aberto"
     for ci, c in enumerate(cortes):
+        if planos and (ci == 0 or c["e"] - c["s"] >= 1.2):
+            k_plano += 1
+            plano = CICLO_PLANOS[k_plano % len(CICLO_PLANOS)]
+            r = rosto_mediano(video, c) if plano != "aberto" else None
+            crop = ""
+            if r:                                    # rosto a 38% (fechado) / 34% (médio) da altura do recorte
+                frac = PLANOS_16X9[plano]
+                cw, ch = int(W0 * frac) // 2 * 2, int(H0 * frac) // 2 * 2
+                x = min(max(r[0] * W0 - cw / 2, 0), W0 - cw)
+                y = min(max(r[1] * H0 - ch * (0.38 if plano == "fechado" else 0.34), 0), H0 - ch)
+                crop = f"crop={cw}:{ch}:{round(x)}:{round(y)},"
+            elif plano != "aberto":
+                plano = "aberto (sem rosto)"
         dec = subprocess.Popen(["ffmpeg", "-v", "fatal"] + ent_args + ["-ss", f"{c['s']:.3f}", "-t", f"{c['e'] - c['s'] + 0.2:.3f}",
-                                "-i", video, "-an", "-vf", ent_filtro + escala, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
+                                "-i", video, "-an", "-vf", ent_filtro + crop + escala, "-f", "rawvideo", "-pix_fmt", "bgr24", "-"],
                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         for buf in quadros(dec, fsize, n_quadros(c)):
             enc.stdin.write(buf)
         dec.wait()
-        print(f"  trecho {ci + 1}/{len(cortes)} ok")
+        print(f"  trecho {ci + 1}/{len(cortes)} ok" + (f" ({plano})" if planos else ""))
     enc.stdin.close(); enc.wait()
     montar_audio(video, cortes, tmp_v, saida, vinheta=arq_vin, seg_vinheta=seg_vin)
     if marca == "liv" and inscreva:                # balão "Inscreva-se" ~1/min, nunca em cima do banner da live
@@ -1939,6 +1977,8 @@ def main():
     ap.add_argument("--cta-rotulo", default="Comente", help="texto antes da palavra no --cta-animado")
     ap.add_argument("--sem-vinheta", action="store_true", help="youtube: não põe a vinheta da marca na abertura")
     ap.add_argument("--sem-inscreva", action="store_true", help="youtube (LIV): não põe o balão Inscreva-se")
+    ap.add_argument("--planos", action="store_true",
+                    help="youtube: alterna plano aberto/fechado/médio a cada corte, recortado em volta do rosto (uma pessoa)")
     ap.add_argument("--y-legenda", type=float, default=0.62, help="altura da legenda (fração da tela). Anúncio: 0.55")
     ap.add_argument("--so-checar-caixas", action="store_true", help="só diz se o gancho/CTA taparia um rosto")
     ap.add_argument("--sem-sobreposicao", action="store_true",
@@ -2079,7 +2119,7 @@ def main():
         BROLLS.append((os.path.abspath(arq), quando))
     renderizar(a.video, cortes, dados, saida, a.marca, a.gancho, "" if a.cta_animado else a.cta, a.pessoa, frac_base=a.aperto, trocas=a.trocar,
                so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima, girar=a.girar,
-               dinamico=a.dinamico, endireitar=a.endireitar, vinheta=not a.sem_vinheta, inscreva=not a.sem_inscreva,
+               dinamico=a.dinamico, endireitar=a.endireitar, vinheta=not a.sem_vinheta, inscreva=not a.sem_inscreva, planos=a.planos,
                seg_gancho=a.seg_gancho)
     animacoes = []
     for x in a.animacao:
