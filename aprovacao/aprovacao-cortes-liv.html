@@ -41,8 +41,20 @@ svg { display: block; }
   font-weight: 600; font-size: 14px; color: var(--ink); padding: 7px 12px; border-radius: 999px; background: var(--surface);
 }
 .lote-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.contador { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 14px; color: var(--ink-dim); }
-.contador b { color: var(--ink); }
+.contador { display: flex; align-items: center; gap: 10px; font-weight: 700; font-variant-numeric: tabular-nums; font-size: 14px; }
+.contador span { display: inline-flex; align-items: center; gap: 4px; }
+.contador .s { color: var(--like); }
+.contador .n { color: var(--nope); }
+.inicio { position: absolute; inset: 0; border-radius: 16px; overflow: hidden; background: var(--card); display: flex; flex-direction: column; justify-content: flex-end; }
+.mosaico { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; opacity: 0.55; }
+.mosaico img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.inicio::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(11, 13, 16, 0.98) 38%, rgba(11, 13, 16, 0.35)); }
+.inicio-txt { position: relative; z-index: 1; padding: 0 20px 22px; display: flex; flex-direction: column; gap: 12px; }
+.inicio-txt .eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+.inicio-txt h2 { margin: 0; font-family: var(--display); font-size: 46px; font-weight: 900; line-height: 0.92; text-wrap: balance; }
+.inicio-txt h2 b { color: var(--accent); }
+.inicio-txt p { margin: 0; color: var(--ink-dim); font-size: 14px; line-height: 1.4; }
+.inicio-txt .btn { font-size: 17px; padding: 16px; }
 
 main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .aba { flex: 1; min-height: 0; display: flex; flex-direction: column; }
@@ -264,7 +276,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
   const fmt = (s) => { s = Math.round(Number(s) || 0); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
   const estado = { lotes: [], decisoes: {}, loteId: null, i: 0, eu: null, podeGravar: true, db: null, somLigado: true,
-                   interagiu: false, aba: "avaliar", carregou: false };
+                   interagiu: false, aba: "avaliar", carregou: false, iniciado: false };
   let fila = Promise.resolve(), video = null, preVideo = null;
 
   const lote = () => estado.lotes.find((l) => l.id === estado.loteId) || null;
@@ -297,8 +309,11 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     const l = lote();
     $("chip-texto").textContent = l ? (l.titulo || "Lote") : "Escolha um lote";
     const c = $("contador"); c.textContent = "";
-    if (l && estado.aba === "avaliar" && vids().length) {
-      c.append(el("b", null, String(Math.min(estado.i + 1, vids().length))), "/" + vids().length);
+    if (l && estado.aba === "avaliar" && estado.iniciado && vids().length) {     // placar discreto: aprovados · reprovados
+      const k = contagem(l);
+      const s = el("span", "s"); s.innerHTML = I.ok; s.append(String(k.s)); s.setAttribute("aria-label", k.s + " aprovados");
+      const n = el("span", "n"); n.innerHTML = I.x; n.append(String(k.n)); n.setAttribute("aria-label", k.n + " reprovados");
+      c.append(s, n);
     }
   }
 
@@ -332,8 +347,9 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     estado.loteId = id;
     const vs = vids(), it = itens(id);
     const prox = vs.findIndex((v) => !it[v.id]);
-    if (prox === -1 && vs.length) { estado.i = 0; irPara("resumo"); return; }
+    if (prox === -1 && vs.length) { estado.i = 0; estado.iniciado = true; irPara("resumo"); return; }
     estado.i = Math.max(0, prox);
+    estado.iniciado = false;                         // mostra a tela de início ("Você tem X vídeos para aprovar")
     irPara("avaliar");
   }
 
@@ -350,6 +366,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     }
     const vs = vids(); const v = vs[estado.i];
     if (!v) { irPara("resumo"); return; }
+    if (!estado.iniciado) { renderInicio(palco, l); return; }
     const dec = itens()[v.id];
 
     const c = el("div", "cartao" + (v.orientacao === "horizontal" ? " horizontal" : ""));
@@ -406,6 +423,23 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     const nx = vs[estado.i + 1];
     if (preVideo) { preVideo.removeAttribute("src"); preVideo.load(); preVideo = null; }
     if (nx && nx.src) { preVideo = document.createElement("video"); preVideo.preload = "auto"; preVideo.muted = true; preVideo.src = nx.src; }
+  }
+
+  function renderInicio(palco, l) {
+    const k = contagem(l), falta = k.total - k.feitos;
+    const ini = el("div", "inicio");
+    const mos = el("div", "mosaico");
+    (l.videos || []).filter((v) => v.capa).slice(0, 3).forEach((v) => { const im = el("img"); im.alt = ""; im.src = v.capa; mos.append(im); });
+    const t = el("div", "inicio-txt");
+    const h = el("h2"); h.append("Você tem ", el("b", null, String(falta)), falta === 1 ? " vídeo para aprovar" : " vídeos para aprovar");
+    const btn = el("button", "btn laranja", k.feitos ? "Continuar de onde parei" : "Começar agora"); btn.type = "button";
+    btn.addEventListener("click", () => { estado.iniciado = true; estado.interagiu = true; renderCartao(); });
+    t.append(el("span", "eyebrow", l.titulo || "Lote"), h,
+             el("p", null, k.feitos ? "Você já avaliou " + k.feitos + " de " + k.total + ". Toque no vídeo para pausar e ver os botões; aprove ou reprove com o motivo."
+                                    : "Um vídeo por vez. Toque no vídeo para pausar e ver os botões; aprove ou reprove com o motivo."), btn);
+    ini.append(mos, t);
+    palco.append(ini);
+    btn.focus({ preventScroll: true });
   }
 
   function tocar() {
@@ -543,8 +577,10 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     if (!l) { box.append(el("h1", "titulo-aba", "Resumo"), el("p", "sub", "Escolha um lote na aba Lotes para ver o resumo.")); return; }
     const k = contagem(l), it = itens(), vs = l.videos || [];
     if (k.feitos === k.total && k.total) {
+      const plural = (n, um, varios) => n + " " + (n === 1 ? um : varios);
       const s = el("div", "selo"); s.innerHTML = I.check; box.append(s, el("p", "grande", "Tudo certo!"),
-        el("p", "sub centro", "Você avaliou os " + k.total + " vídeos de “" + (l.titulo || "") + "”. As decisões ficaram salvas."));
+        el("p", "sub centro", "Você aprovou " + plural(k.s, "vídeo", "vídeos") + " e reprovou " + plural(k.n, "vídeo", "vídeos") +
+           " de “" + (l.titulo || "") + "”. As decisões ficaram salvas."));
     } else {
       box.append(el("h1", "titulo-aba", "Resumo"), el("p", "sub", (l.titulo || "") + " · faltam " + (k.total - k.feitos) + " vídeos"));
     }
@@ -561,14 +597,14 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
         const img = el("img"); img.alt = ""; if (v.capa) img.src = v.capa;
         const d = el("div"); d.append(el("strong", null, v.titulo || v.gancho || v.id), el("span", null, it[v.id].motivo || ""));
         b.append(img, d, el("span", "chip", (vs.indexOf(v) + 1) + "/" + vs.length));
-        b.addEventListener("click", () => { estado.i = vs.indexOf(v); irPara("avaliar"); });
+        b.addEventListener("click", () => { estado.i = vs.indexOf(v); estado.iniciado = true; irPara("avaliar"); });
         box.append(b);
       }
     }
     const pend = vs.findIndex((v) => !it[v.id]);
-    if (pend !== -1) { const b = el("button", "btn laranja", "Continuar avaliando"); b.type = "button"; b.addEventListener("click", () => { estado.i = pend; irPara("avaliar"); }); box.append(b); }
+    if (pend !== -1) { const b = el("button", "btn laranja", "Continuar avaliando"); b.type = "button"; b.addEventListener("click", () => { estado.i = pend; estado.iniciado = true; irPara("avaliar"); }); box.append(b); }
     const de = el("button", "btn", "Rever o lote desde o início"); de.type = "button";
-    de.addEventListener("click", () => { estado.i = 0; irPara("avaliar"); });
+    de.addEventListener("click", () => { estado.i = 0; estado.iniciado = true; irPara("avaliar"); });
     const ls = el("button", "btn", "Ver todos os lotes"); ls.type = "button"; ls.addEventListener("click", () => irPara("lotes"));
     box.append(de, ls);
   }
