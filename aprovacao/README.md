@@ -4,8 +4,9 @@ Página publicada como artefato do Claude: **https://claude.ai/artifact/RfUp2o5Y
 ("Aprovação de Cortes LIV"). Abre numa tela de início ("Você tem X vídeos para aprovar" + "Começar agora"), com placar
 discreto de aprovados/reprovados no topo durante a avaliação. Visual de app de swipe (cartão em tela cheia, botões redondos sobre o vídeo, abas Avaliar · Lotes · Resumo). Um vídeo por vez; enquanto o vídeo roda, a faixa de baixo
 (título, arquivo, botões) some para não parecer parte do vídeo, e volta quando a pessoa toca na tela (pausa).
-**Aprovar** (ou arrastar para a direita) pede confirmação num balão e passa para o próximo; **Reprovar** (ou arrastar para a esquerda) pede o motivo (atalhos + texto) e segue; **Voltar** reabre
-o anterior para trocar a decisão; no fim aparece "Tudo certo!" dizendo quantos foram aprovados e reprovados, com o placar e a lista dos reprovados. Uma pessoa avalia
+**Aprovar** (ou arrastar para a direita) pede confirmação num balão e passa para o próximo; **Reprovar** (ou arrastar para a esquerda) pede o motivo (atalhos + texto) e segue; trocar de vídeo é como nos Stories e num slider: tocar na lateral esquerda volta, na direita avança (mesmo
+sem decidir), e as setas laterais aparecem com o vídeo pausado; ao chegar no fim, se algum vídeo ficou sem decisão, um
+aviso lista os pendentes e leva até eles; no fim aparece "Tudo certo!" dizendo quantos foram aprovados e reprovados, com o placar e a lista dos reprovados. Uma pessoa avalia
 cada lote.
 
 Fonte da página: `aprovacao-cortes-liv.html` (republicar com o Artifact tool passando o `url` acima; de outra conversa,

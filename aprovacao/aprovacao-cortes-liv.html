@@ -124,6 +124,17 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .confirma p { margin: 0; color: var(--ink-dim); font-size: 14px; line-height: 1.35; }
 .confirma .linha-btns { grid-template-columns: 1fr 1fr; }
 .btn.like { background: var(--like); color: #062716; }
+.lado { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center; background: rgba(18, 21, 26, 0.6); color: #fff; border: 1px solid rgba(255, 255, 255, 0.16);
+  pointer-events: auto; }
+.lado.esq { left: 10px; }
+.lado.dir { right: 10px; }
+.lado[disabled] { opacity: 0; pointer-events: none; }
+.cartao.limpo .camada .lado { pointer-events: none; }
+.pend-lista { display: flex; flex-direction: column; gap: 6px; text-align: left; max-height: 40vh; overflow-y: auto; }
+.pend-lista button { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: center; background: var(--card); border-radius: 12px; padding: 6px; text-align: left; }
+.pend-lista img { width: 34px; height: 46px; border-radius: 6px; object-fit: cover; background: var(--surface); }
+.pend-lista span { font-size: 13.5px; font-weight: 600; line-height: 1.25; }
 .vazio-cartao { position: absolute; inset: 0; border-radius: 16px; background: var(--card); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 24px; }
 .vazio-cartao strong { font-family: var(--display); font-size: 30px; font-weight: 800; line-height: 1; }
 .vazio-cartao span { color: var(--ink-dim); max-width: 30ch; line-height: 1.4; }
@@ -249,6 +260,17 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     <div class="linha-btns">
       <button type="button" class="btn" id="confirma-nao">Cancelar</button>
       <button type="button" class="btn like" id="confirma-sim">Aprovar</button>
+    </div>
+  </div>
+</div>
+<div class="confirma-fundo" id="pendentes" hidden>
+  <div class="confirma" role="dialog" aria-modal="true" aria-labelledby="pend-titulo">
+    <h3 id="pend-titulo">Faltam vídeos</h3>
+    <p id="pend-texto"></p>
+    <div class="pend-lista" id="pend-lista"></div>
+    <div class="linha-btns">
+      <button type="button" class="btn" id="pend-resumo">Ver resumo</button>
+      <button type="button" class="btn laranja" id="pend-ir">Avaliar agora</button>
     </div>
   </div>
 </div>
@@ -399,18 +421,25 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     bVoltar.disabled = estado.i === 0;
     bNope.disabled = bLike.disabled = !estado.podeGravar;
     if (dec) (dec.status === "aprovado" ? bLike : bNope).classList.add("marcado");
-    bVoltar.addEventListener("click", (e) => { e.stopPropagation(); if (estado.i > 0) { estado.i -= 1; renderCartao(); } });
+    bVoltar.addEventListener("click", (e) => { e.stopPropagation(); anterior(); });
     bNope.addEventListener("click", (e) => { e.stopPropagation(); estado.interagiu = true; abrirMotivo(); });
     bLike.addEventListener("click", (e) => { e.stopPropagation(); estado.interagiu = true; pedirConfirmacao(); });
     bSom.addEventListener("click", (e) => { e.stopPropagation(); estado.somLigado = !estado.somLigado; video.muted = !estado.somLigado; pintaSom(); });
-    botoes.append(bVoltar, bNope, bSom, bLike);
-    for (const b of [bVoltar, bNope, bSom, bLike]) b.addEventListener("pointerdown", (e) => e.stopPropagation());
+    botoes.append(bNope, bSom, bLike);
+    const setaE = el("button", "lado esq"); setaE.type = "button"; setaE.setAttribute("aria-label", "Vídeo anterior");
+    setaE.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
+    const setaD = el("button", "lado dir"); setaD.type = "button"; setaD.setAttribute("aria-label", "Próximo vídeo");
+    setaD.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+    setaE.disabled = estado.i === 0;
+    setaE.addEventListener("click", (e) => { e.stopPropagation(); anterior(); });
+    setaD.addEventListener("click", (e) => { e.stopPropagation(); proximo(); });
+    for (const b of [bNope, bSom, bLike, setaE, setaD]) b.addEventListener("pointerdown", (e) => e.stopPropagation());
 
     const play = el("div", "play"); play.hidden = true; const ps = el("span"); ps.innerHTML = I.play; play.append(ps);
     // a faixa de baixo (título, arquivo, botões) some enquanto o vídeo roda: não parece parte do vídeo.
     // Tocar na tela pausa e mostra; tocar de novo volta a rodar e esconde.
-    const camada = el("div", "camada"); camada.append(sombra, info, botoes);
-    const dica = el("div", "dica", "Toque na tela para avaliar");
+    const camada = el("div", "camada"); camada.append(sombra, info, botoes, setaE, setaD);
+    const dica = el("div", "dica", "Toque no meio para avaliar · nas laterais para trocar");
     video.addEventListener("pause", () => { play.hidden = false; c.classList.remove("limpo"); dica.style.opacity = "0"; });
     video.addEventListener("ended", () => { play.hidden = false; c.classList.remove("limpo"); dica.style.opacity = "0"; });
     video.addEventListener("play", () => { play.hidden = true; c.classList.add("limpo"); });
@@ -456,11 +485,11 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
   function arraste(c, sim, nao) {
     const reduzir = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let x0 = 0, y0 = 0, dx = 0, ativo = false, moveu = false;
-    c.addEventListener("pointerdown", (e) => { ativo = true; moveu = false; x0 = e.clientX; y0 = e.clientY; dx = 0; c.setPointerCapture(e.pointerId); c.style.transition = "none"; });
+    let x0 = 0, y0 = 0, dx = 0, ativo = false, moveu = false, ultimoX = 0;
+    c.addEventListener("pointerdown", (e) => { ativo = true; moveu = false; x0 = ultimoX = e.clientX; y0 = e.clientY; dx = 0; c.setPointerCapture(e.pointerId); c.style.transition = "none"; });
     c.addEventListener("pointermove", (e) => {
       if (!ativo) return;
-      dx = e.clientX - x0;
+      dx = e.clientX - x0; ultimoX = e.clientX;
       if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(e.clientY - y0)) moveu = true;
       if (!moveu || !estado.podeGravar) return;
       if (!reduzir) c.style.transform = "translateX(" + dx + "px) rotate(" + (dx / 20) + "deg)";
@@ -470,7 +499,13 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     const soltar = () => {
       if (!ativo) return;
       ativo = false; estado.interagiu = true;
-      if (!moveu) { if (video.paused) { video.muted = !estado.somLigado; video.play().catch(() => {}); } else video.pause(); return; }
+      if (!moveu) {
+        const r = c.getBoundingClientRect(), x = (ultimoX - r.left) / r.width;
+        if (x < 0.28) { anterior(); return; }
+        if (x > 0.72) { proximo(); return; }
+        if (video.paused) { video.muted = !estado.somLigado; video.play().catch(() => {}); } else video.pause();
+        return;
+      }
       c.style.transition = "transform 0.22s ease"; c.style.transform = "";
       sim.style.opacity = "0"; nao.style.opacity = "0";
       if (estado.podeGravar && dx > 100) pedirConfirmacao();
@@ -496,14 +531,37 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
       .catch((e) => { $("salvando").hidden = true; if (e && e.code === "invalid_argument") { estado.podeGravar = false; renderCartao(); }
         else { $("salvando").textContent = "Não salvou. Confira a internet e decida de novo."; $("salvando").hidden = false; setTimeout(() => { $("salvando").hidden = true; $("salvando").textContent = "Salvando…"; }, 4000); } });
   }
-  function avancar() {
-    const vs = vids(), it = itens();
-    if (estado.i + 1 < vs.length) { estado.i += 1; renderCartao(); return; }
-    const prox = vs.findIndex((v) => !it[v.id]);
-    if (prox !== -1) { estado.i = prox; renderCartao(); return; }
-    if (video) video.pause();
-    irPara("resumo");
+  function anterior() { if (estado.i > 0) { estado.i -= 1; renderCartao(); } }
+  function proximo() {
+    if (estado.i + 1 < vids().length) { estado.i += 1; renderCartao(); return; }
+    fimDoLote();
   }
+  function avancar() { proximo(); }
+  // chegou ao fim: se algum vídeo ficou sem decisão (a pessoa avançou pelas laterais), avisa antes do resumo
+  function fimDoLote() {
+    const vs = vids(), it = itens();
+    const pend = vs.filter((v) => !it[v.id]);
+    if (video) video.pause();
+    if (!pend.length) { irPara("resumo"); return; }
+    $("pend-titulo").textContent = pend.length === 1 ? "Falta 1 vídeo" : "Faltam " + pend.length + " vídeos";
+    $("pend-texto").textContent = (pend.length === 1 ? "Ele ficou" : "Eles ficaram") + " sem aprovar nem reprovar. Toque num deles ou avalie na ordem.";
+    const lst = $("pend-lista"); lst.textContent = "";
+    for (const v of pend) {
+      const b = el("button"); b.type = "button";
+      const im = el("img"); im.alt = ""; if (v.capa) im.src = v.capa;
+      b.append(im, el("span", null, (vs.indexOf(v) + 1) + "/" + vs.length + " · " + (v.titulo || v.gancho || v.id)));
+      b.addEventListener("click", () => { $("pendentes").hidden = true; estado.i = vs.indexOf(v); estado.iniciado = true; irPara("avaliar"); });
+      lst.append(b);
+    }
+    $("pendentes").hidden = false;
+    $("pend-ir").focus();
+  }
+  $("pend-ir").addEventListener("click", () => {
+    $("pendentes").hidden = true;
+    const vs = vids(), it = itens(), k = vs.findIndex((v) => !it[v.id]);
+    if (k !== -1) { estado.i = k; estado.iniciado = true; irPara("avaliar"); }
+  });
+  $("pend-resumo").addEventListener("click", () => { $("pendentes").hidden = true; irPara("resumo"); });
   function aprovar() {
     if (!estado.podeGravar) return;
     const v = vids()[estado.i]; if (!v) return;
@@ -563,11 +621,13 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   });
   document.addEventListener("keydown", (e) => {
     if (!$("confirma").hidden) { if (e.key === "Escape") fecharConfirma(); return; }
+    if (!$("pendentes").hidden) { if (e.key === "Escape") $("pendentes").hidden = true; return; }
     if (estado.aba !== "avaliar" || !$("folha").hidden || e.target.tagName === "TEXTAREA") return;
     const q = (s) => document.querySelector(s);
-    if (e.key === "ArrowRight" && q(".bt.like")) q(".bt.like").click();
-    else if (e.key === "ArrowLeft" && q(".bt.nope")) q(".bt.nope").click();
-    else if ((e.key === "Backspace" || e.key === "ArrowUp") && q(".bt.voltar")) q(".bt.voltar").click();
+    if (e.key === "ArrowRight") proximo();
+    else if (e.key === "ArrowLeft") anterior();
+    else if ((e.key === "a" || e.key === "A") && q(".bt.like")) q(".bt.like").click();
+    else if ((e.key === "r" || e.key === "R") && q(".bt.nope")) q(".bt.nope").click();
   });
 
   /* ---------- resumo ---------- */
