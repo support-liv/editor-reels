@@ -13,6 +13,22 @@ Fonte da página: `aprovacao-cortes-liv.html` (republicar com o Artifact tool pa
 leia o artefato antes). Capacidades: `db` (regra: `lotes` só editores escrevem), `user` (nome de quem avalia), `assets`
 (vídeos e capas).
 
+### Sem login (link aberto)
+
+Quem abre o link sem estar logado no Claude não lê o banco do artefato. Por isso os lotes também ficam **embutidos na
+página** (`<script type="application/json" id="dados-embutidos">`, uma lista com os docs de `lotes` + `id`): os vídeos
+e capas (`/_blob/...`) tocam para qualquer pessoa com o link. Dois modos:
+
+- **link** (logado e com permissão de gravar): lotes e decisões vêm do banco, como antes.
+- **local** (sem login, ou conta só de leitura, ou gravação recusada): as decisões ficam no aparelho (`localStorage`,
+  chave `aprovacao:lote:<id>`; o nome em `aprovacao:nome`) e sobrevivem a fechar e abrir o link. A tela de início avisa,
+  e o Resumo mostra "Seu nome" + **Copiar resumo**: um texto com o lote, quem avaliou, data, aprovados, reprovados com o
+  motivo e os sem decisão (com o nome do arquivo). Se o quadro bloquear a área de transferência, o texto aparece numa
+  caixa selecionada para copiar. A pessoa cola no WhatsApp/e-mail e manda.
+
+Sem login, o claude.ai mostra um aviso fixo embaixo ("Sign in to see this artifact's data"); a página sobe a barra de
+abas e a folha de motivo (`--folga`) para nada ficar por baixo dele.
+
 ## Dados (banco do artefato)
 
 - `lotes/<id>`: o lote. `titulo`, `descricao`, `marca`, `criadoEm`, `ordem` (maior aparece primeiro), `pasta` (onde
@@ -26,10 +42,14 @@ leia o artefato antes). Capacidades: `db` (regra: `lotes` só editores escrevem)
 1. Versões leves dos vídeos (limite de 15 MB por arquivo): Reels 720x1280, libx264 ~1,4 Mbps + AAC 96k,
    `-movflags +faststart`; longos 854x480 em 2 passadas com a taxa calculada para ~14 MB. Capa: um JPG por vídeo.
 2. Enviar como assets do artefato (`Artifact` publish com `url`, `asset: true`, `file_paths`; até ~40 MB por chamada).
-3. Gravar `lotes/<id>` com o `ArtifactData` (`set`), `ordem` maior que a dos anteriores. A página mostra sozinha.
-4. Depois da avaliação, ler `decisoes/<id>` e refazer só os reprovados, pelo motivo.
+3. Gravar `lotes/<id>` com o `ArtifactData` (`set`), `ordem` maior que a dos anteriores.
+4. **Embutir o lote na página** (lista em `dados-embutidos`, com o `id`) e republicar: sem isso, quem abre sem login
+   não vê o lote novo. Para tirar um lote antigo, tire das duas partes.
+5. Depois da avaliação, ler `decisoes/<id>` e refazer só os reprovados, pelo motivo. Quem avaliou sem login manda o
+   resumo copiado (não vai para o banco).
 
-Quem avalia precisa de acesso de **Colaborador** no menu Compartilhar do artefato (Leitor só assiste).
+Para gravar direto no link, quem avalia precisa estar logado e ter acesso de **Colaborador** no menu Compartilhar do
+artefato. Sem isso, avalia no modo local e manda o resumo.
 
 ## Link da Imigrar (Marinna aprova)
 

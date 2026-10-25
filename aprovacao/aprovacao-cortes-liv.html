@@ -7,6 +7,7 @@
 /* Layout: app de swipe — barra fina no topo, cartão do vídeo ocupando a tela com as informações e os botões
    redondos por cima, barra de abas embaixo (Avaliar, Lotes, Resumo). Visual escuro único; laranja da LIV na marca e na aba ativa. */
 :root {
+  --folga: 0px;              /* sem login, o claude.ai mostra um aviso fixo embaixo: a barra sobe para não ficar por baixo */
   --bg: #0b0d10;
   --card: #15191e;
   --surface: #1c2127;
@@ -26,7 +27,7 @@ html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; overflow: hidden; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
 button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
-button:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 svg { display: block; }
 .app {
   height: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column;
@@ -140,7 +141,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .vazio-cartao span { color: var(--ink-dim); max-width: 30ch; line-height: 1.4; }
 
 /* abas */
-.tabbar { display: grid; grid-template-columns: repeat(3, 1fr); padding-block: 8px calc(8px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); margin-top: 10px; }
+.tabbar { display: grid; grid-template-columns: repeat(3, 1fr); padding-block: 8px calc(8px + var(--folga) + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); margin-top: 10px; }
 .tab { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: #6f7780; padding-block: 4px; }
 .tab[aria-current="page"] { color: var(--accent); }
 
@@ -177,13 +178,20 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .item strong { font-size: 14px; font-weight: 600; line-height: 1.25; }
 .item div span { font-size: 12.5px; color: #ff9aa3; }
 .btn { border-radius: 14px; padding: 14px 16px; background: var(--surface); font-weight: 600; text-align: center; }
+.nota { font-size: 13px; line-height: 1.45; background: var(--surface); color: var(--ink-dim); border-radius: 12px; padding: 10px 12px; margin: 0; }
+.copiar { display: flex; flex-direction: column; gap: 10px; background: var(--surface); border-radius: 16px; padding: 14px; }
+.copiar .rotulo { font-size: 13px; font-weight: 600; }
+.campo { width: 100%; box-sizing: border-box; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; font-size: 16px; padding: 11px 12px; }
+.texto-resumo { font-size: 13px; line-height: 1.4; min-height: 170px; resize: vertical; }
+.copiar .btn { background: var(--bg); border: 1px solid var(--line); }
+.copiar .btn.laranja { background: var(--accent); border-color: transparent; }
 .btn.laranja { background: var(--accent); color: #1a0d05; }
 
 /* motivo */
 .folha-fundo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 20; display: flex; align-items: flex-end; justify-content: center; }
 .folha {
   width: 100%; max-width: 480px; background: var(--surface); border-radius: 22px 22px 0 0; display: flex; flex-direction: column; gap: 12px;
-  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(18px + var(--folga) + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
 }
 .alca { width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 0 auto 4px; }
 .folha h3 { margin: 0; font-family: var(--display); font-size: 30px; font-weight: 800; line-height: 1; }
@@ -196,7 +204,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .erro { color: #ffb3ba; font-size: 13px; min-height: 1em; margin: 0; }
 .linha-btns { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; }
 .btn.nope { background: var(--nope); color: #fff; }
-.salvando { position: fixed; left: 50%; transform: translateX(-50%); top: calc(56px + env(safe-area-inset-top, 0px)); background: rgba(0, 0, 0, 0.7); padding: 6px 12px; border-radius: 999px; font-size: 12px; z-index: 15; }
+.salvando { position: fixed; left: 50%; transform: translateX(-50%); top: calc(56px + env(safe-area-inset-top, 0px)); background: rgba(0, 0, 0, 0.7); padding: 6px 12px; border-radius: 14px; font-size: 12px; line-height: 1.35; text-align: center; max-width: calc(100vw - 40px); box-sizing: border-box; z-index: 15; }
 @media (prefers-reduced-motion: reduce) { .cartao, .bt { transition: none !important; } }
 </style>
 
@@ -276,6 +284,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 </div>
 <p class="salvando" id="salvando" hidden>Salvando…</p>
 
+<script type="application/json" id="dados-embutidos">[{"id": "livia-consulta-l1", "criadoEm": "2026-10-24", "descricao": "8 Reels e 2 longos", "marca": "LIV", "ordem": 1, "pasta": "Downloads/Livia HLV/prontos", "titulo": "Dra. Lívia · Consulta L-1", "videos": [{"arquivo": "liv_livia_v1_funcao_executiva.mp4", "capa": "/_blob/e4a5998fe1df2d048292dea8b16ddeda", "duracao": 44.8, "formato": "Reels", "gancho": "No L-1, o empresário pode pôr a mão na massa?", "id": "v1", "orientacao": "vertical", "src": "/_blob/e8f389e5276282f914573fcf3d4b2f38", "titulo": "Função executiva no L-1"}, {"arquivo": "liv_livia_v2_nvc.mp4", "capa": "/_blob/79a6eca2e3a1a461bf4679caab9e8584", "duracao": 58.1, "formato": "Reels", "gancho": "I-140 aprovado: o que acontece depois?", "id": "v2", "orientacao": "vertical", "src": "/_blob/0839562c078545d1b0eedd77380f7779", "titulo": "O que acontece no NVC"}, {"arquivo": "liv_livia_v3_eb1c.mp4", "capa": "/_blob/836ba096abbbd2d22034d20beb91916e", "duracao": 33.7, "formato": "Reels", "gancho": "O L-1 pode virar Green Card?", "id": "v3", "orientacao": "vertical", "src": "/_blob/1dad31b096c6263dc59d2488cf0e5018", "titulo": "L-1 para EB-1C"}, {"arquivo": "liv_livia_v4_dupla_intencao.mp4", "capa": "/_blob/e01f7825f30959dbf580f3af71e5cf79", "duracao": 56.8, "formato": "Reels", "gancho": "Tem processo de Green Card? Dá pra pedir o L-1?", "id": "v4", "orientacao": "vertical", "src": "/_blob/8f6615b000ebf6555b5c71b3a18b6a4c", "titulo": "Dupla intenção"}, {"arquivo": "liv_livia_v5_empresa_nova.mp4", "capa": "/_blob/65450f60baa3c1ad27ee09c109b7d885", "duracao": 50.3, "formato": "Reels", "gancho": "Empresa nova ou que já existe: qual é melhor pro L-1?", "id": "v5", "orientacao": "vertical", "src": "/_blob/85932066013c703ddf179550debcc091", "titulo": "Empresa nova ou existente"}, {"arquivo": "liv_livia_v6_renovacao.mp4", "capa": "/_blob/3bb2b70ec5d8ab05614b2417a28caec1", "duracao": 22.5, "formato": "Reels", "gancho": "L-1 de empresa nova: a renovação é mais difícil?", "id": "v6", "orientacao": "vertical", "src": "/_blob/5e84f850624746a09efbe7a74b6696c9", "titulo": "Renovação de empresa nova"}, {"arquivo": "liv_livia_v7_mesmo_grupo.mp4", "capa": "/_blob/32c30ea24bd8498a8ab71c5c438b1097", "duracao": 27, "formato": "Reels", "gancho": "Pro L-1, suas empresas precisam ser do mesmo grupo?", "id": "v7", "orientacao": "vertical", "src": "/_blob/13920bc9589270f5b8f189e11b5d81e9", "titulo": "Empresas do mesmo grupo"}, {"arquivo": "liv_livia_v8_entrevista_ingles.mp4", "capa": "/_blob/0fdd6edf25980f8bae35fd44c30855c0", "duracao": 37.7, "formato": "Reels", "gancho": "A entrevista do visto é em inglês?", "id": "v8", "orientacao": "vertical", "src": "/_blob/cd246d19fd3a8e349bfae8da40113f16", "titulo": "Entrevista em inglês"}, {"arquivo": "liv_livia_h1_l1_empresa.mp4", "capa": "/_blob/48bce0f73b651e84bfa925235b116eb7", "duracao": 214.5, "formato": "YouTube · longo", "gancho": "L-1: o que a imigração avalia na sua empresa", "id": "h1", "orientacao": "horizontal", "src": "/_blob/29d8fdafd782692aa70095dfe82b5228", "titulo": "L-1 na empresa (longo)"}, {"arquivo": "liv_livia_h2_l1_green_card.mp4", "capa": "/_blob/4dc95c7d175663815d2e504eb81da8d9", "duracao": 254.8, "formato": "YouTube · longo", "gancho": "L-1 e Green Card: dupla intenção, EB-1C, NVC e entrevista em inglês", "id": "h2", "orientacao": "horizontal", "src": "/_blob/6d49ea26deae75eb195014aa29070b5f", "titulo": "L-1 e Green Card (longo)"}]}]</script>
 <script>
 (() => {
   "use strict";
@@ -297,7 +306,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   const $ = (id) => document.getElementById(id);
   const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
   const fmt = (s) => { s = Math.round(Number(s) || 0); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
-  const estado = { lotes: [], decisoes: {}, loteId: null, i: 0, eu: null, podeGravar: true, db: null, somLigado: true,
+  const estado = { lotes: [], decisoes: {}, loteId: null, i: 0, eu: null, modo: "?", db: null, somLigado: true,
                    interagiu: false, aba: "avaliar", carregou: false, iniciado: false };
   let fila = Promise.resolve(), video = null, preVideo = null;
 
@@ -343,9 +352,9 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   function renderLotes() {
     const box = $("lista-lotes"); box.textContent = "";
     box.append(el("h1", "titulo-aba", "Lotes"), el("p", "sub", "Cada entrega de vídeos chega aqui como um lote."));
-    if (!estado.podeGravar) { const a = el("p", "aviso", "Você pode assistir, mas esta conta não registra decisões. Peça acesso de colaborador a quem enviou o link."); box.append(a); }
+    if (estado.modo === "local") box.append(el("p", "nota", AVISO_LOCAL));
     if (!estado.lotes.length) {
-      box.append(el("p", "sub", estado.db ? (estado.carregou ? "Nenhum lote ainda." : "Carregando…") : "Entre com a sua conta do Claude para ver os lotes."));
+      box.append(el("p", "sub", estado.carregou ? "Nenhum lote ainda." : "Carregando…"));
     }
     for (const l of estado.lotes) {
       const k = contagem(l);
@@ -383,7 +392,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     if (!l) {
       const v = el("div", "vazio-cartao");
       v.append(el("strong", null, estado.lotes.length ? "Escolha um lote" : (estado.carregou ? "Nenhum lote ainda" : "Carregando…")),
-               el("span", null, estado.db ? "Abra a aba Lotes e toque no lote que quer avaliar." : "Entre com a sua conta do Claude para ver e avaliar os vídeos."));
+               el("span", null, estado.lotes.length ? "Abra a aba Lotes e toque no lote que quer avaliar." : "Quando chegar um lote novo, ele aparece aqui."));
       palco.append(v); return;
     }
     const vs = vids(); const v = vs[estado.i];
@@ -419,7 +428,6 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     const pintaSom = () => { bSom.innerHTML = estado.somLigado ? I.somOn : I.somOff; bSom.setAttribute("aria-label", estado.somLigado ? "Tirar o som" : "Ligar o som"); };
     pintaSom();
     bVoltar.disabled = estado.i === 0;
-    bNope.disabled = bLike.disabled = !estado.podeGravar;
     if (dec) (dec.status === "aprovado" ? bLike : bNope).classList.add("marcado");
     bVoltar.addEventListener("click", (e) => { e.stopPropagation(); anterior(); });
     bNope.addEventListener("click", (e) => { e.stopPropagation(); estado.interagiu = true; abrirMotivo(); });
@@ -465,7 +473,9 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     btn.addEventListener("click", () => { estado.iniciado = true; estado.interagiu = true; renderCartao(); });
     t.append(el("span", "eyebrow", l.titulo || "Lote"), h,
              el("p", null, k.feitos ? "Você já avaliou " + k.feitos + " de " + k.total + ". Toque no vídeo para pausar e ver os botões; aprove ou reprove com o motivo."
-                                    : "Um vídeo por vez. Toque no vídeo para pausar e ver os botões; aprove ou reprove com o motivo."), btn);
+                                    : "Um vídeo por vez. Toque no vídeo para pausar e ver os botões; aprove ou reprove com o motivo."));
+    if (estado.modo === "local") t.append(el("p", "nota", AVISO_LOCAL));
+    t.append(btn);
     ini.append(mos, t);
     palco.append(ini);
     btn.focus({ preventScroll: true });
@@ -491,7 +501,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
       if (!ativo) return;
       dx = e.clientX - x0; ultimoX = e.clientX;
       if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(e.clientY - y0)) moveu = true;
-      if (!moveu || !estado.podeGravar) return;
+      if (!moveu) return;
       if (!reduzir) c.style.transform = "translateX(" + dx + "px) rotate(" + (dx / 20) + "deg)";
       sim.style.opacity = String(Math.max(0, Math.min(1, dx / 100)));
       nao.style.opacity = String(Math.max(0, Math.min(1, -dx / 100)));
@@ -508,8 +518,8 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
       }
       c.style.transition = "transform 0.22s ease"; c.style.transform = "";
       sim.style.opacity = "0"; nao.style.opacity = "0";
-      if (estado.podeGravar && dx > 100) pedirConfirmacao();
-      else if (estado.podeGravar && dx < -100) abrirMotivo();
+      if (dx > 100) pedirConfirmacao();
+      else if (dx < -100) abrirMotivo();
     };
     c.addEventListener("pointerup", soltar);
     c.addEventListener("pointercancel", soltar);
@@ -524,11 +534,11 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     const corpo = { itens: it, por: estado.eu, atualizadoEm: new Date().toISOString(), total };
     if ((l.videos || []).every((v) => it[v.id])) corpo.concluidoEm = atual.concluidoEm || new Date().toISOString();
     estado.decisoes[id] = corpo;
-    if (!estado.db) return;
+    if (estado.modo !== "link") { salvarLocal(id); return; }
     $("salvando").hidden = false;
     fila = fila.then(() => estado.db.collection("decisoes").doc(id).set(corpo))
       .then(() => { $("salvando").hidden = true; })
-      .catch((e) => { $("salvando").hidden = true; if (e && e.code === "invalid_argument") { estado.podeGravar = false; renderCartao(); }
+      .catch((e) => { $("salvando").hidden = true; if (e && (e.code === "invalid_argument" || e.code === "not_granted")) paraLocal(true);
         else { $("salvando").textContent = "Não salvou. Confira a internet e decida de novo."; $("salvando").hidden = false; setTimeout(() => { $("salvando").hidden = true; $("salvando").textContent = "Salvando…"; }, 4000); } });
   }
   function anterior() { if (estado.i > 0) { estado.i -= 1; renderCartao(); } }
@@ -563,14 +573,12 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   });
   $("pend-resumo").addEventListener("click", () => { $("pendentes").hidden = true; irPara("resumo"); });
   function aprovar() {
-    if (!estado.podeGravar) return;
     const v = vids()[estado.i]; if (!v) return;
     gravar(v.id, { status: "aprovado", motivo: "", em: new Date().toISOString(), por: estado.eu });
     avancar();
   }
 
   function pedirConfirmacao() {
-    if (!estado.podeGravar) return;
     const v = vids()[estado.i]; if (!v) return;
     if (video) video.pause();
     $("confirma-video").textContent = (estado.i + 1) + "/" + vids().length + " · " + (v.titulo || v.gancho || "");
@@ -590,7 +598,6 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
   const escolhidos = new Set();
   function abrirMotivo() {
-    if (!estado.podeGravar) return;
     const v = vids()[estado.i]; if (!v) return;
     const dec = itens()[v.id];
     escolhidos.clear();
@@ -640,7 +647,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
       const plural = (n, um, varios) => n + " " + (n === 1 ? um : varios);
       const s = el("div", "selo"); s.innerHTML = I.check; box.append(s, el("p", "grande", "Tudo certo!"),
         el("p", "sub centro", "Você aprovou " + plural(k.s, "vídeo", "vídeos") + " e reprovou " + plural(k.n, "vídeo", "vídeos") +
-           " de “" + (l.titulo || "") + "”. As decisões ficaram salvas."));
+           " de “" + (l.titulo || "") + "”. " + (estado.modo === "local" ? "Agora copie o resumo abaixo e envie para quem mandou o link." : "As decisões ficaram salvas.")));
     } else {
       box.append(el("h1", "titulo-aba", "Resumo"), el("p", "sub", (l.titulo || "") + " · faltam " + (k.total - k.feitos) + " vídeos"));
     }
@@ -649,6 +656,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     const r = el("div", "n"); r.append(el("b", null, String(k.n)), el("span", null, "reprovados"));
     const p = el("div"); p.append(el("b", null, String(k.total - k.feitos)), el("span", null, "pendentes"));
     pl.append(a, r, p); box.append(pl);
+    if (estado.modo === "local" && k.feitos) box.append(blocoCopiar(l));
     const reprov = vs.filter((v) => it[v.id] && it[v.id].status === "reprovado");
     if (reprov.length) {
       box.append(el("p", "sub", "Reprovados (toque para rever)"));
@@ -669,40 +677,102 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     box.append(de, ls);
   }
 
+  // sem login, as decisões ficam neste aparelho: a pessoa copia um resumo em texto e manda para quem enviou o link
+  function textoResumo(l, nome) {
+    const it = itens(l.id), vs = l.videos || [];
+    const linha = (v) => (vs.indexOf(v) + 1) + ". " + (v.titulo || v.gancho || v.id) + (v.arquivo ? " (" + v.arquivo + ")" : "");
+    const ap = vs.filter((v) => it[v.id] && it[v.id].status === "aprovado");
+    const rp = vs.filter((v) => it[v.id] && it[v.id].status === "reprovado");
+    const pd = vs.filter((v) => !it[v.id]);
+    const out = ["Aprovação de vídeos · " + (l.titulo || l.id)];
+    if (nome) out.push("Quem avaliou: " + nome);
+    out.push("Data: " + new Date().toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }));
+    out.push("", "✅ Aprovados (" + ap.length + ")"); ap.forEach((v) => out.push(linha(v)));
+    out.push("", "❌ Reprovados (" + rp.length + ")"); rp.forEach((v) => out.push(linha(v), "   Motivo: " + (it[v.id].motivo || "não informado")));
+    if (pd.length) { out.push("", "⏳ Sem decisão (" + pd.length + ")"); pd.forEach((v) => out.push(linha(v))); }
+    return out.join("\n");
+  }
+  function blocoCopiar(l) {
+    const box = el("div", "copiar");
+    box.append(el("p", "sub", "Sem login, as decisões ficaram só neste aparelho. Copie o resumo e envie para quem mandou o link (WhatsApp, e-mail…)."));
+    const rot = el("label", "rotulo", "Seu nome"); rot.htmlFor = "nome-avaliador";
+    const nome = el("input", "campo"); nome.id = "nome-avaliador"; nome.type = "text"; nome.autocomplete = "name"; nome.placeholder = "Seu nome";
+    nome.value = lerLocal("nome") || l.avaliadora || "";
+    nome.addEventListener("input", () => gravarLocal("nome", nome.value.trim()));
+    const k = contagem(l), btn = el("button", k.feitos === k.total ? "btn laranja" : "btn", "Copiar resumo");   // com pendentes, o principal é continuar btn.type = "button";
+    const ok = el("p", "sub centro"); ok.setAttribute("role", "status");
+    const area = el("textarea", "campo texto-resumo"); area.readOnly = true; area.hidden = true; area.setAttribute("aria-label", "Resumo para copiar");
+    btn.addEventListener("click", async () => {
+      const txt = textoResumo(l, nome.value.trim());
+      area.value = txt;
+      try { await navigator.clipboard.writeText(txt); area.hidden = true; ok.textContent = "Copiado! Agora é só colar na conversa e enviar."; }
+      catch (e) {                                     // a página roda num quadro que pode bloquear a área de transferência
+        area.hidden = false; area.focus(); area.select();
+        let copiou = false; try { copiou = document.execCommand("copy"); } catch (e2) { copiou = false; }
+        ok.textContent = copiou ? "Copiado! Agora é só colar na conversa e enviar." : "Toque e segure no texto abaixo para copiar.";
+      }
+    });
+    box.append(rot, nome, btn, ok, area);
+    return box;
+  }
+
   /* ---------- dados ---------- */
+  // os lotes também vêm embutidos na página, então os vídeos tocam sem login. Quem pode gravar no link usa o banco do
+  // artefato; os outros (sem login ou só leitura) decidem neste aparelho e copiam um resumo no fim.
+  const EMBUTIDOS = (() => { try { return JSON.parse($("dados-embutidos").textContent) || []; } catch (e) { return []; } })();
+  const AVISO_LOCAL = "Sem login, as decisões ficam só neste aparelho. No fim, copie o resumo e envie para quem mandou o link.";
+  function lerLocal(k) { try { return localStorage.getItem("aprovacao:" + k); } catch (e) { return null; } }
+  function gravarLocal(k, v) { try { localStorage.setItem("aprovacao:" + k, v); } catch (e) { /* sem armazenamento: vale só nesta visita */ } }
+  const salvarLocal = (id) => gravarLocal("lote:" + id, JSON.stringify(estado.decisoes[id] || {}));
+  function paraLocal(avisar) {
+    estado.modo = "local"; estado.carregou = true;
+    for (const id of Object.keys(estado.decisoes)) salvarLocal(id);
+    if (avisar) {
+      const t = $("salvando"); t.textContent = "Esta conta não grava no link: as decisões ficam neste aparelho. No fim, copie o resumo."; t.hidden = false;
+      setTimeout(() => { t.hidden = true; t.textContent = "Salvando…"; }, 5000);
+    }
+    if (estado.aba !== "avaliar") irPara(estado.aba); else if (!estado.iniciado) renderCartao();   // não reinicia o vídeo que está rodando
+  }
+  // abre direto no lote que falta avaliar; depois que a pessoa começou, só atualiza as outras abas
+  function rotear() {
+    if (estado.iniciado) { if (estado.aba === "lotes") renderLotes(); else if (estado.aba === "resumo") renderResumo(); return; }
+    const h = (location.hash || "").slice(1);
+    const alvo = estado.lotes.find((l) => l.id === h) || estado.lotes.find((l) => contagem(l).feitos < (l.videos || []).length) || null;
+    if (alvo) abrirLote(alvo.id); else irPara(estado.lotes.length ? "lotes" : "avaliar");
+  }
   const quem = el("span"); quem.id = "quem-txt"; quem.hidden = true; document.body.append(quem);
   async function iniciar() {
-    irPara("avaliar");
-    if (!window.claude || !window.claude.use) return;
-    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
-    estado.db = db;
+    estado.lotes = EMBUTIDOS.slice().sort((a, b) => (b.ordem || 0) - (a.ordem || 0));
+    for (const l of estado.lotes) { try { const d = JSON.parse(lerLocal("lote:" + l.id) || "null"); if (d && d.itens) estado.decisoes[l.id] = d; } catch (e) { /* ignora */ } }
+    estado.carregou = estado.lotes.length > 0;
+    rotear();
+    const [db, user] = window.claude && window.claude.use ? await Promise.all([window.claude.use("db"), window.claude.use("user")]) : [null, null];
+    let podeGravar = !!db;
     if (user) {
       const me = await user.me(); estado.eu = me.id;
       if (me.name) quem.textContent = "Avaliando como " + me.name;
-      if ((await user.can("data.write")) === false) estado.podeGravar = false;
+      if ((await user.can("data.write")) === false) podeGravar = false;
     }
-    if (!db) { estado.carregou = true; irPara(estado.aba); return; }
-    // abre direto no lote que falta avaliar, só depois de ter os lotes E as decisões (senão recomeçaria do 1º vídeo)
+    if (!db && !user) document.documentElement.style.setProperty("--folga", "86px");
+    if (!podeGravar) { paraLocal(false); return; }
+    estado.db = db; estado.modo = "link";
+    // só roteia de novo depois de ter os lotes E as decisões do banco (senão recomeçaria do 1º vídeo)
     let temLotes = false, temDecisoes = false, roteado = false;
-    const rotear = () => {
-      if (roteado || !temLotes || !temDecisoes) return;
-      roteado = true;
-      const h = (location.hash || "").slice(1);
-      const alvo = estado.lotes.find((l) => l.id === h) || estado.lotes.find((l) => contagem(l).feitos < (l.videos || []).length) || null;
-      if (alvo) abrirLote(alvo.id); else irPara(estado.lotes.length ? "lotes" : "avaliar");
-    };
+    const pronto = () => { if (roteado || !temLotes || !temDecisoes) return; roteado = true; rotear(); };
     db.collection("lotes").orderBy("ordem", "desc").onSnapshot((snap) => {
-      estado.lotes = snap.docs.filter((d) => d.exists).map((d) => Object.assign({ id: d.id }, d.data()));
+      const doBanco = snap.docs.filter((d) => d.exists).map((d) => Object.assign({ id: d.id }, d.data()));
+      if (doBanco.length) estado.lotes = doBanco;
       estado.carregou = true; temLotes = true;
-      if (!roteado) rotear(); else if (estado.aba === "lotes") renderLotes();
-    }, () => { estado.carregou = true; irPara("lotes"); });
+      if (!roteado) pronto(); else if (estado.aba === "lotes") renderLotes();
+    }, () => { estado.carregou = true; temLotes = true; pronto(); });
     db.collection("decisoes").onSnapshot((snap) => {
+      if (estado.modo !== "link") return;            // passou a gravar no aparelho: o banco não sobrescreve
       for (const d of snap.docs) if (d.exists && !(d.metadata && d.metadata.hasPendingWrites)) estado.decisoes[d.id] = d.data();
       temDecisoes = true;
-      if (!roteado) { rotear(); return; }
+      if (!roteado) { pronto(); return; }
       if (estado.aba === "lotes") renderLotes();
       else if (estado.aba === "resumo") renderResumo();
-    }, () => { temDecisoes = true; rotear(); });
+    }, () => { temDecisoes = true; pronto(); });
   }
   iniciar();
 })();

@@ -8,6 +8,7 @@
    redondos por cima, barra de abas embaixo (Avaliar, Lotes, Resumo). Visual escuro neutro (nunca rosa sobre azul); rosa da
    Imigrar na marca, na aba ativa e no botão principal; o vermelho de "reprovar" puxa para o laranja para não confundir com a marca. */
 :root {
+  --folga: 0px;              /* sem login, o claude.ai mostra um aviso fixo embaixo: a barra sobe para não ficar por baixo */
   --bg: #0b0d10;
   --card: #15191e;
   --surface: #1c2127;
@@ -27,7 +28,7 @@ html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; overflow: hidden; }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
 button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
-button:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 svg { display: block; }
 .app {
   height: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column;
@@ -142,7 +143,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .vazio-cartao span { color: var(--ink-dim); max-width: 30ch; line-height: 1.4; }
 
 /* abas */
-.tabbar { display: grid; grid-template-columns: repeat(3, 1fr); padding-block: 8px calc(8px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); margin-top: 10px; }
+.tabbar { display: grid; grid-template-columns: repeat(3, 1fr); padding-block: 8px calc(8px + var(--folga) + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); margin-top: 10px; }
 .tab { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: #6f7780; padding-block: 4px; }
 .tab[aria-current="page"] { color: var(--accent); }
 
@@ -179,13 +180,20 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .item strong { font-size: 14px; font-weight: 600; line-height: 1.25; }
 .item div span { font-size: 12.5px; color: #ff9aa3; }
 .btn { border-radius: 14px; padding: 14px 16px; background: var(--surface); font-weight: 600; text-align: center; }
+.nota { font-size: 13px; line-height: 1.45; background: var(--surface); color: var(--ink-dim); border-radius: 12px; padding: 10px 12px; margin: 0; }
+.copiar { display: flex; flex-direction: column; gap: 10px; background: var(--surface); border-radius: 16px; padding: 14px; }
+.copiar .rotulo { font-size: 13px; font-weight: 600; }
+.campo { width: 100%; box-sizing: border-box; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; font-size: 16px; padding: 11px 12px; }
+.texto-resumo { font-size: 13px; line-height: 1.4; min-height: 170px; resize: vertical; }
+.copiar .btn { background: var(--bg); border: 1px solid var(--line); }
+.copiar .btn.laranja { background: var(--accent); border-color: transparent; }
 .btn.laranja { background: var(--accent); color: #fff; }
 
 /* motivo */
 .folha-fundo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 20; display: flex; align-items: flex-end; justify-content: center; }
 .folha {
   width: 100%; max-width: 480px; background: var(--surface); border-radius: 22px 22px 0 0; display: flex; flex-direction: column; gap: 12px;
-  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(18px + var(--folga) + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
 }
 .alca { width: 40px; height: 5px; border-radius: 3px; background: var(--line); margin: 0 auto 4px; }
 .folha h3 { margin: 0; font-family: var(--display); font-size: 24px; letter-spacing: -0.02em; font-weight: 800; line-height: 1; }
@@ -198,7 +206,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .erro { color: #ffb3ba; font-size: 13px; min-height: 1em; margin: 0; }
 .linha-btns { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; }
 .btn.nope { background: var(--nope); color: #fff; }
-.salvando { position: fixed; left: 50%; transform: translateX(-50%); top: calc(56px + env(safe-area-inset-top, 0px)); background: rgba(0, 0, 0, 0.7); padding: 6px 12px; border-radius: 999px; font-size: 12px; z-index: 15; }
+.salvando { position: fixed; left: 50%; transform: translateX(-50%); top: calc(56px + env(safe-area-inset-top, 0px)); background: rgba(0, 0, 0, 0.7); padding: 6px 12px; border-radius: 14px; font-size: 12px; line-height: 1.35; text-align: center; max-width: calc(100vw - 40px); box-sizing: border-box; z-index: 15; }
 @media (prefers-reduced-motion: reduce) { .cartao, .bt { transition: none !important; } }
 </style>
 
@@ -278,6 +286,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 </div>
 <p class="salvando" id="salvando" hidden>Salvando…</p>
 
+<script type="application/json" id="dados-embutidos">[{"id": "marinna-reuniao-estrategica", "avaliadora": "Marinna", "criadoEm": "2026-10-25", "descricao": "6 Reels", "marca": "Imigrar", "ordem": 1, "pasta": "Downloads/Mari IMG_5069/prontos", "titulo": "Marinna · Reunião estratégica", "videos": [{"arquivo": "liv_mari_m1_sedutor.mp4", "capa": "/_blob/290c1049beef9e3ed5b55f7fcc76ef84", "duracao": 29.4, "formato": "Reels", "gancho": "Te prometeram Green Card rápido e fácil?", "id": "m1", "orientacao": "vertical", "src": "/_blob/6616902e5e599ff0165d4fd55edad8e9", "titulo": "Imigração não é sedutora"}, {"arquivo": "liv_mari_m2_carro_vida.mp4", "capa": "/_blob/2349f7696b9625d802010e7c31abca62", "duracao": 23.3, "formato": "Reels", "gancho": "Trocar de carro ou trocar de vida?", "id": "m2", "orientacao": "vertical", "src": "/_blob/a830655e8ea94d3ec6c5e34d57753415", "titulo": "Trocar de carro ou de vida"}, {"arquivo": "liv_mari_m3_diploma.mp4", "capa": "/_blob/f66db7cd686366c13d4b2ea6f7308611", "duracao": 43.3, "formato": "Reels", "gancho": "Seu diploma do Brasil vale nos EUA?", "id": "m3", "orientacao": "vertical", "src": "/_blob/18f2a98ee0a7c1e3b922647f8ff150af", "titulo": "Diploma do Brasil nos EUA"}, {"arquivo": "liv_mari_m4_contribuicao.mp4", "capa": "/_blob/feb8fecf5a4b34a97a9c78320e7823c1", "duracao": 44.5, "formato": "Reels", "gancho": "Sem faculdade, dá pra ter Green Card nos EUA?", "id": "m4", "orientacao": "vertical", "src": "/_blob/8e415bebd2a38fc0de09c926784b6732", "titulo": "Não é sobre a área"}, {"arquivo": "liv_mari_m5_etapas_eb2niw.mp4", "capa": "/_blob/ea8a37aae0da9688c804834d7b887419", "duracao": 33.7, "formato": "Reels", "gancho": "Quais são as etapas do EB-2 NIW?", "id": "m5", "orientacao": "vertical", "src": "/_blob/1c142482743dca7d0a15bd30f1092036", "titulo": "Etapas do EB-2 NIW"}, {"arquivo": "liv_mari_m6_estudo_perfil.mp4", "capa": "/_blob/4ab4384405cb585c0dea82f13e4b5efb", "duracao": 36.4, "formato": "Reels", "gancho": "Seu processo de Green Card é feito sob medida?", "id": "m6", "orientacao": "vertical", "src": "/_blob/7e6870c6a043dda530ccd1a669296c05", "titulo": "Processo sob medida"}]}]</script>
 <script>
 (() => {
   "use strict";
@@ -299,7 +308,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   const $ = (id) => document.getElementById(id);
   const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
   const fmt = (s) => { s = Math.round(Number(s) || 0); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
-  const estado = { lotes: [], decisoes: {}, loteId: null, i: 0, eu: null, podeGravar: true, db: null, somLigado: true,
+  const estado = { lotes: [], decisoes: {}, loteId: null, i: 0, eu: null, modo: "?", db: null, somLigado: true,
                    interagiu: false, aba: "avaliar", carregou: false, iniciado: false };
   let fila = Promise.resolve(), video = null, preVideo = null;
 
@@ -345,9 +354,9 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   function renderLotes() {
     const box = $("lista-lotes"); box.textContent = "";
     box.append(el("h1", "titulo-aba", "Lotes"), el("p", "sub", "Cada entrega de vídeos chega aqui como um lote."));
-    if (!estado.podeGravar) { const a = el("p", "aviso", "Você pode assistir, mas esta conta não registra decisões. Peça acesso de colaborador a quem enviou o link."); box.append(a); }
+    if (estado.modo === "local") box.append(el("p", "nota", AVISO_LOCAL));
     if (!estado.lotes.length) {
-      box.append(el("p", "sub", estado.db ? (estado.carregou ? "Nenhum lote ainda." : "Carregando…") : "Entre com a sua conta do Claude para ver os lotes."));
+      box.append(el("p", "sub", estado.carregou ? "Nenhum lote ainda." : "Carregando…"));
     }
     for (const l of estado.lotes) {
       const k = contagem(l);
@@ -385,7 +394,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     if (!l) {
       const v = el("div", "vazio-cartao");
       v.append(el("strong", null, estado.lotes.length ? "Escolha um lote" : (estado.carregou ? "Nenhum lote ainda" : "Carregando…")),
-               el("span", null, estado.db ? "Abra a aba Lotes e toque no lote que quer avaliar." : "Entre com a sua conta do Claude para ver e avaliar os vídeos."));
+               el("span", null, estado.lotes.length ? "Abra a aba Lotes e toque no lote que quer avaliar." : "Quando chegar um lote novo, ele aparece aqui."));
       palco.append(v); return;
     }
     const vs = vids(); const v = vs[estado.i];
@@ -421,7 +430,6 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     const pintaSom = () => { bSom.innerHTML = estado.somLigado ? I.somOn : I.somOff; bSom.setAttribute("aria-label", estado.somLigado ? "Tirar o som" : "Ligar o som"); };
     pintaSom();
     bVoltar.disabled = estado.i === 0;
-    bNope.disabled = bLike.disabled = !estado.podeGravar;
     if (dec) (dec.status === "aprovado" ? bLike : bNope).classList.add("marcado");
     bVoltar.addEventListener("click", (e) => { e.stopPropagation(); anterior(); });
     bNope.addEventListener("click", (e) => { e.stopPropagation(); estado.interagiu = true; abrirMotivo(); });
@@ -465,10 +473,12 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     const h = el("h2"); h.append("Você tem ", el("b", null, String(falta)), falta === 1 ? " vídeo para aprovar" : " vídeos para aprovar");
     const btn = el("button", "btn laranja", k.feitos ? "Continuar de onde parei" : "Começar agora"); btn.type = "button";
     btn.addEventListener("click", () => { estado.iniciado = true; estado.interagiu = true; renderCartao(); });
-    if (estado.nome) t.append(el("span", "ola", "Olá, " + estado.nome.split(" ")[0] + "!"));
+    const ola = estado.nome || l.avaliadora || ""; if (ola) t.append(el("span", "ola", "Olá, " + ola.split(" ")[0] + "!"));
     t.append(el("span", "eyebrow", l.titulo || "Lote"), h,
              el("p", null, k.feitos ? "Você já avaliou " + k.feitos + " de " + k.total + ". Toque no vídeo para pausar e ver os botões; aprove ou reprove com o motivo."
-                                    : "Um vídeo por vez. Toque no vídeo para pausar e ver os botões; aprove ou reprove com o motivo."), btn);
+                                    : "Um vídeo por vez. Toque no vídeo para pausar e ver os botões; aprove ou reprove com o motivo."));
+    if (estado.modo === "local") t.append(el("p", "nota", AVISO_LOCAL));
+    t.append(btn);
     ini.append(mos, t);
     palco.append(ini);
     btn.focus({ preventScroll: true });
@@ -494,7 +504,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
       if (!ativo) return;
       dx = e.clientX - x0; ultimoX = e.clientX;
       if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(e.clientY - y0)) moveu = true;
-      if (!moveu || !estado.podeGravar) return;
+      if (!moveu) return;
       if (!reduzir) c.style.transform = "translateX(" + dx + "px) rotate(" + (dx / 20) + "deg)";
       sim.style.opacity = String(Math.max(0, Math.min(1, dx / 100)));
       nao.style.opacity = String(Math.max(0, Math.min(1, -dx / 100)));
@@ -511,8 +521,8 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
       }
       c.style.transition = "transform 0.22s ease"; c.style.transform = "";
       sim.style.opacity = "0"; nao.style.opacity = "0";
-      if (estado.podeGravar && dx > 100) pedirConfirmacao();
-      else if (estado.podeGravar && dx < -100) abrirMotivo();
+      if (dx > 100) pedirConfirmacao();
+      else if (dx < -100) abrirMotivo();
     };
     c.addEventListener("pointerup", soltar);
     c.addEventListener("pointercancel", soltar);
@@ -527,11 +537,11 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     const corpo = { itens: it, por: estado.eu, atualizadoEm: new Date().toISOString(), total };
     if ((l.videos || []).every((v) => it[v.id])) corpo.concluidoEm = atual.concluidoEm || new Date().toISOString();
     estado.decisoes[id] = corpo;
-    if (!estado.db) return;
+    if (estado.modo !== "link") { salvarLocal(id); return; }
     $("salvando").hidden = false;
     fila = fila.then(() => estado.db.collection("decisoes").doc(id).set(corpo))
       .then(() => { $("salvando").hidden = true; })
-      .catch((e) => { $("salvando").hidden = true; if (e && e.code === "invalid_argument") { estado.podeGravar = false; renderCartao(); }
+      .catch((e) => { $("salvando").hidden = true; if (e && (e.code === "invalid_argument" || e.code === "not_granted")) paraLocal(true);
         else { $("salvando").textContent = "Não salvou. Confira a internet e decida de novo."; $("salvando").hidden = false; setTimeout(() => { $("salvando").hidden = true; $("salvando").textContent = "Salvando…"; }, 4000); } });
   }
   function anterior() { if (estado.i > 0) { estado.i -= 1; renderCartao(); } }
@@ -566,14 +576,12 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
   });
   $("pend-resumo").addEventListener("click", () => { $("pendentes").hidden = true; irPara("resumo"); });
   function aprovar() {
-    if (!estado.podeGravar) return;
     const v = vids()[estado.i]; if (!v) return;
     gravar(v.id, { status: "aprovado", motivo: "", em: new Date().toISOString(), por: estado.eu });
     avancar();
   }
 
   function pedirConfirmacao() {
-    if (!estado.podeGravar) return;
     const v = vids()[estado.i]; if (!v) return;
     if (video) video.pause();
     $("confirma-video").textContent = (estado.i + 1) + "/" + vids().length + " · " + (v.titulo || v.gancho || "");
@@ -593,7 +601,6 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
   const escolhidos = new Set();
   function abrirMotivo() {
-    if (!estado.podeGravar) return;
     const v = vids()[estado.i]; if (!v) return;
     const dec = itens()[v.id];
     escolhidos.clear();
@@ -643,7 +650,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
       const plural = (n, um, varios) => n + " " + (n === 1 ? um : varios);
       const s = el("div", "selo"); s.innerHTML = I.check; box.append(s, el("p", "grande", "Tudo certo!"),
         el("p", "sub centro", "Você aprovou " + plural(k.s, "vídeo", "vídeos") + " e reprovou " + plural(k.n, "vídeo", "vídeos") +
-           " de “" + (l.titulo || "") + "”. As decisões ficaram salvas."));
+           " de “" + (l.titulo || "") + "”. " + (estado.modo === "local" ? "Agora copie o resumo abaixo e envie para quem mandou o link." : "As decisões ficaram salvas.")));
     } else {
       box.append(el("h1", "titulo-aba", "Resumo"), el("p", "sub", (l.titulo || "") + " · faltam " + (k.total - k.feitos) + " vídeos"));
     }
@@ -652,6 +659,7 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     const r = el("div", "n"); r.append(el("b", null, String(k.n)), el("span", null, "reprovados"));
     const p = el("div"); p.append(el("b", null, String(k.total - k.feitos)), el("span", null, "pendentes"));
     pl.append(a, r, p); box.append(pl);
+    if (estado.modo === "local" && k.feitos) box.append(blocoCopiar(l));
     const reprov = vs.filter((v) => it[v.id] && it[v.id].status === "reprovado");
     if (reprov.length) {
       box.append(el("p", "sub", "Reprovados (toque para rever)"));
@@ -672,40 +680,102 @@ main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
     box.append(de, ls);
   }
 
+  // sem login, as decisões ficam neste aparelho: a pessoa copia um resumo em texto e manda para quem enviou o link
+  function textoResumo(l, nome) {
+    const it = itens(l.id), vs = l.videos || [];
+    const linha = (v) => (vs.indexOf(v) + 1) + ". " + (v.titulo || v.gancho || v.id) + (v.arquivo ? " (" + v.arquivo + ")" : "");
+    const ap = vs.filter((v) => it[v.id] && it[v.id].status === "aprovado");
+    const rp = vs.filter((v) => it[v.id] && it[v.id].status === "reprovado");
+    const pd = vs.filter((v) => !it[v.id]);
+    const out = ["Aprovação de vídeos · " + (l.titulo || l.id)];
+    if (nome) out.push("Quem avaliou: " + nome);
+    out.push("Data: " + new Date().toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }));
+    out.push("", "✅ Aprovados (" + ap.length + ")"); ap.forEach((v) => out.push(linha(v)));
+    out.push("", "❌ Reprovados (" + rp.length + ")"); rp.forEach((v) => out.push(linha(v), "   Motivo: " + (it[v.id].motivo || "não informado")));
+    if (pd.length) { out.push("", "⏳ Sem decisão (" + pd.length + ")"); pd.forEach((v) => out.push(linha(v))); }
+    return out.join("\n");
+  }
+  function blocoCopiar(l) {
+    const box = el("div", "copiar");
+    box.append(el("p", "sub", "Sem login, as decisões ficaram só neste aparelho. Copie o resumo e envie para quem mandou o link (WhatsApp, e-mail…)."));
+    const rot = el("label", "rotulo", "Seu nome"); rot.htmlFor = "nome-avaliador";
+    const nome = el("input", "campo"); nome.id = "nome-avaliador"; nome.type = "text"; nome.autocomplete = "name"; nome.placeholder = "Seu nome";
+    nome.value = lerLocal("nome") || l.avaliadora || "";
+    nome.addEventListener("input", () => gravarLocal("nome", nome.value.trim()));
+    const k = contagem(l), btn = el("button", k.feitos === k.total ? "btn laranja" : "btn", "Copiar resumo");   // com pendentes, o principal é continuar btn.type = "button";
+    const ok = el("p", "sub centro"); ok.setAttribute("role", "status");
+    const area = el("textarea", "campo texto-resumo"); area.readOnly = true; area.hidden = true; area.setAttribute("aria-label", "Resumo para copiar");
+    btn.addEventListener("click", async () => {
+      const txt = textoResumo(l, nome.value.trim());
+      area.value = txt;
+      try { await navigator.clipboard.writeText(txt); area.hidden = true; ok.textContent = "Copiado! Agora é só colar na conversa e enviar."; }
+      catch (e) {                                     // a página roda num quadro que pode bloquear a área de transferência
+        area.hidden = false; area.focus(); area.select();
+        let copiou = false; try { copiou = document.execCommand("copy"); } catch (e2) { copiou = false; }
+        ok.textContent = copiou ? "Copiado! Agora é só colar na conversa e enviar." : "Toque e segure no texto abaixo para copiar.";
+      }
+    });
+    box.append(rot, nome, btn, ok, area);
+    return box;
+  }
+
   /* ---------- dados ---------- */
+  // os lotes também vêm embutidos na página, então os vídeos tocam sem login. Quem pode gravar no link usa o banco do
+  // artefato; os outros (sem login ou só leitura) decidem neste aparelho e copiam um resumo no fim.
+  const EMBUTIDOS = (() => { try { return JSON.parse($("dados-embutidos").textContent) || []; } catch (e) { return []; } })();
+  const AVISO_LOCAL = "Sem login, as decisões ficam só neste aparelho. No fim, copie o resumo e envie para quem mandou o link.";
+  function lerLocal(k) { try { return localStorage.getItem("aprovacao:" + k); } catch (e) { return null; } }
+  function gravarLocal(k, v) { try { localStorage.setItem("aprovacao:" + k, v); } catch (e) { /* sem armazenamento: vale só nesta visita */ } }
+  const salvarLocal = (id) => gravarLocal("lote:" + id, JSON.stringify(estado.decisoes[id] || {}));
+  function paraLocal(avisar) {
+    estado.modo = "local"; estado.carregou = true;
+    for (const id of Object.keys(estado.decisoes)) salvarLocal(id);
+    if (avisar) {
+      const t = $("salvando"); t.textContent = "Esta conta não grava no link: as decisões ficam neste aparelho. No fim, copie o resumo."; t.hidden = false;
+      setTimeout(() => { t.hidden = true; t.textContent = "Salvando…"; }, 5000);
+    }
+    if (estado.aba !== "avaliar") irPara(estado.aba); else if (!estado.iniciado) renderCartao();   // não reinicia o vídeo que está rodando
+  }
+  // abre direto no lote que falta avaliar; depois que a pessoa começou, só atualiza as outras abas
+  function rotear() {
+    if (estado.iniciado) { if (estado.aba === "lotes") renderLotes(); else if (estado.aba === "resumo") renderResumo(); return; }
+    const h = (location.hash || "").slice(1);
+    const alvo = estado.lotes.find((l) => l.id === h) || estado.lotes.find((l) => contagem(l).feitos < (l.videos || []).length) || null;
+    if (alvo) abrirLote(alvo.id); else irPara(estado.lotes.length ? "lotes" : "avaliar");
+  }
   const quem = el("span"); quem.id = "quem-txt"; quem.hidden = true; document.body.append(quem);
   async function iniciar() {
-    irPara("avaliar");
-    if (!window.claude || !window.claude.use) return;
-    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
-    estado.db = db;
+    estado.lotes = EMBUTIDOS.slice().sort((a, b) => (b.ordem || 0) - (a.ordem || 0));
+    for (const l of estado.lotes) { try { const d = JSON.parse(lerLocal("lote:" + l.id) || "null"); if (d && d.itens) estado.decisoes[l.id] = d; } catch (e) { /* ignora */ } }
+    estado.carregou = estado.lotes.length > 0;
+    rotear();
+    const [db, user] = window.claude && window.claude.use ? await Promise.all([window.claude.use("db"), window.claude.use("user")]) : [null, null];
+    let podeGravar = !!db;
     if (user) {
       const me = await user.me(); estado.eu = me.id; estado.nome = me.name || "";
       if (me.name) quem.textContent = "Avaliando como " + me.name;
-      if ((await user.can("data.write")) === false) estado.podeGravar = false;
+      if ((await user.can("data.write")) === false) podeGravar = false;
     }
-    if (!db) { estado.carregou = true; irPara(estado.aba); return; }
-    // abre direto no lote que falta avaliar, só depois de ter os lotes E as decisões (senão recomeçaria do 1º vídeo)
+    if (!db && !user) document.documentElement.style.setProperty("--folga", "86px");
+    if (!podeGravar) { paraLocal(false); return; }
+    estado.db = db; estado.modo = "link";
+    // só roteia de novo depois de ter os lotes E as decisões do banco (senão recomeçaria do 1º vídeo)
     let temLotes = false, temDecisoes = false, roteado = false;
-    const rotear = () => {
-      if (roteado || !temLotes || !temDecisoes) return;
-      roteado = true;
-      const h = (location.hash || "").slice(1);
-      const alvo = estado.lotes.find((l) => l.id === h) || estado.lotes.find((l) => contagem(l).feitos < (l.videos || []).length) || null;
-      if (alvo) abrirLote(alvo.id); else irPara(estado.lotes.length ? "lotes" : "avaliar");
-    };
+    const pronto = () => { if (roteado || !temLotes || !temDecisoes) return; roteado = true; rotear(); };
     db.collection("lotes").orderBy("ordem", "desc").onSnapshot((snap) => {
-      estado.lotes = snap.docs.filter((d) => d.exists).map((d) => Object.assign({ id: d.id }, d.data()));
+      const doBanco = snap.docs.filter((d) => d.exists).map((d) => Object.assign({ id: d.id }, d.data()));
+      if (doBanco.length) estado.lotes = doBanco;
       estado.carregou = true; temLotes = true;
-      if (!roteado) rotear(); else if (estado.aba === "lotes") renderLotes();
-    }, () => { estado.carregou = true; irPara("lotes"); });
+      if (!roteado) pronto(); else if (estado.aba === "lotes") renderLotes();
+    }, () => { estado.carregou = true; temLotes = true; pronto(); });
     db.collection("decisoes").onSnapshot((snap) => {
+      if (estado.modo !== "link") return;            // passou a gravar no aparelho: o banco não sobrescreve
       for (const d of snap.docs) if (d.exists && !(d.metadata && d.metadata.hasPendingWrites)) estado.decisoes[d.id] = d.data();
       temDecisoes = true;
-      if (!roteado) { rotear(); return; }
+      if (!roteado) { pronto(); return; }
       if (estado.aba === "lotes") renderLotes();
       else if (estado.aba === "resumo") renderResumo();
-    }, () => { temDecisoes = true; rotear(); });
+    }, () => { temDecisoes = true; pronto(); });
   }
   iniciar();
 })();
