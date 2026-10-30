@@ -48,6 +48,7 @@ O arquivo sai em `./prontos/`.
 | [docs/ENQUADRAMENTO.md](docs/ENQUADRAMENTO.md) | Enquadramento da tela dividida (shorts de live): auditoria, guardrails e prévia antes do render |
 | [docs/PADROES.md](docs/PADROES.md) | Padrões visuais validados (legenda, gancho, bandeira, cor, anúncio x orgânico) e o porquê de cada um |
 | [docs/GRAVACAO.md](docs/GRAVACAO.md) | Como gravar para a edição sair melhor |
+| [docs/REPROVACOES.md](docs/REPROVACOES.md) | O que a revisão reprovou na Video Machine (liv.ai), por motivo, e a lição de cada um (`editor/licoes_da_aprovacao.py` traz as novas) |
 | [docs/NOVO_PROJETO.md](docs/NOVO_PROJETO.md) | Como montar o lote de um projeto novo |
 | [CHANGELOG.md](CHANGELOG.md) | O que mudou e por quê |
 

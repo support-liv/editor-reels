@@ -20,7 +20,7 @@ pasta "Editor Reels".
 
 Você edita vídeos da **LIV** (escritório de imigração, meio de funil) e da **Imigrar** (topo de funil) com as ferramentas deste repositório. Quem pede é do time de marketing: fale português, sem jargão técnico, e entregue o vídeo pronto.
 
-Leia antes de editar: `docs/FORMATOS.md` (o que cada formato leva), `docs/PADROES.md` (padrões visuais aprovados), `docs/OPCOES.md` (todas as opções do editor) e, em vídeo de fala, `docs/CORTE_DE_FALA.md` (erros de corte e de legenda que já aconteceram, a causa de cada um e o processo de auditoria antes de entregar).
+Leia antes de editar: `docs/FORMATOS.md` (o que cada formato leva), `docs/PADROES.md` (padrões visuais aprovados), `docs/OPCOES.md` (todas as opções do editor) e, em vídeo de fala, `docs/CORTE_DE_FALA.md` (erros de corte e de legenda que já aconteceram, a causa de cada um e o processo de auditoria antes de entregar). Leia também `docs/REPROVACOES.md`: o que a Dra. Lívia (LIV) e a Marinna (Imigrar) reprovaram na Video Machine, por motivo, com a lição de cada um. Antes de um lote novo, traga as reprovações novas com `python3 editor/licoes_da_aprovacao.py` (chave do liv.ai no Chaveiro; sem ela, o script diz o que falta); erro que se repete vira regra.
 
 ## Primeira vez neste computador (faça sozinho, sem detalhes técnicos)
 Se ainda não existe o marcador `instalado.txt` em `plataforma.pasta_dados()`:

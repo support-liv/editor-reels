@@ -2,6 +2,13 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.37 (30/10/2026) - Lições da aprovação (Video Machine)
+- **`editor/licoes_da_aprovacao.py`** lê no liv.ai as reprovações da Video Machine (rota `GET /api/aprovacao/ingest/reprovacoes`, mesma chave da ingestão, `APROVACAO_INGEST_TOKEN`) e acrescenta cada uma em **`docs/REPROVACOES.md`**, na seção do motivo que a revisora marcou, com o texto dela e a lição para o editor. Pedido do Lucas: o que a Dra. Lívia e a Marinna escrevem ao reprovar ficava só no liv.ai e o mesmo erro podia voltar.
+- **O guia só cresce.** Cada reprovação entra uma vez (o id da decisão vai anotado na linha), e a lição escrita à mão não é mexida. Reprovação desfeita ou trocada por aprovação não entra. Se a revisora reescreveu o motivo, vale só o mais novo. O placar no topo conta as vezes de cada motivo.
+- **Dado de cliente:** quando o motivo é "Aparece dado de cliente", o texto da revisora não vem para o guia (pode conter o próprio dado) e fica só no liv.ai.
+- **Chave no Chaveiro** (`editor-reels-aprovacao-ingest`), nunca em arquivo nem no chat. `--criar-chave` gera, guarda e copia a chave para colar no Easypanel; `--guardar-chave` abre uma janela do Mac para colar uma chave que já existe.
+- Teste com um liv.ai de mentira: `python3 editor/teste_licoes_da_aprovacao.py`.
+
 ## 0.36 (30/10/2026) - Entrevista andando: recorte que acompanha e prévia do recorte em pé (Imigrar, Ronei)
 - **`--crop-fixo` com zona morta:** o recorte segue parado enquanto o rosto fica no miolo (até 20% da largura do recorte para cada lado do centro) e só anda, devagar (média de ~2 s), quando o rosto vai para a borda. Na entrevista do Ronei, gravada andando, o recorte parado pela mediana do bloco deixava ele sair da cena ("em alguns momentos o Ronei some"); no R1, de 9% para 0% do tempo com o rosto fora do recorte. Rosto parado = mesmo resultado de antes.
 - **`--previa-enquadramento` também no vídeo em pé** (antes, só na tela dividida): folha com quadros do vídeo pronto (gancho, legenda, CTA e a interface do Instagram por cima), o tamanho do recorte aberto e fechado, quanto tempo o rosto fica fora do recorte e quanto o recorte anda (px/s). Usa o mesmo cálculo do render e sai sem renderizar. Serve para validar o recorte antes do render.
