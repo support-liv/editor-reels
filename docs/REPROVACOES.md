@@ -16,7 +16,10 @@ Cada linha traz: data · marca · lote · `arquivo` (título) · quem revisou: o
 por aprovação não entra. Quando o motivo é **dado de cliente**, o texto dela fica só no liv.ai.
 
 <!-- placar -->
-Nenhuma reprovação importada ainda.
+| Motivo | Vezes | Última |
+|---|---|---|
+| Não vale publicar | 1 | 29/10/2026 |
+| Sem atalho (só o texto) | 1 | 29/10/2026 |
 <!-- /placar -->
 
 ## Legenda errada
@@ -64,8 +67,10 @@ prazo. Ver `docs/FORMATOS.md` e `docs/PADROES.md`, e mostre os ganchos no plano 
 **Lição:** O trecho não se sustenta sozinho (assunto fraco, sem conclusão, repetido de outro corte, informação
 sensível). Cada corte precisa de uma ideia que vale por si, com começo, meio e fim. Na dúvida, ofereça menos cortes e
 mostre o texto de cada um no plano antes de renderizar.
+- 29/10/2026 · LIV · Cartas com Aline Monteiro · `R7B_carta_fraca.mp4` (R7B carta fraca) · Livia: “fala que passou.. como se deixasse que tivesse feito algo nao bom” <!-- r:7 v:17 em:2026-10-29T19:23:12.669Z -->
 
 ## Sem atalho (só o texto)
 
 **Lição:** A revisora escreveu sem escolher um atalho. Leia o texto: pedido que aparecer duas vezes vira regra no
 `CLAUDE.md` ou no doc do assunto, e a seção ganha a lição.
+- 29/10/2026 · LIV · Cartas com Aline Monteiro · `R8B_peso_do_especialista.mp4` (R8B peso do especialista) · Livia: “ficou confuso.” <!-- r:8 v:18 em:2026-10-29T19:24:20.285Z -->
