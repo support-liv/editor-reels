@@ -15,6 +15,10 @@ regra no `CLAUDE.md` ou no doc do assunto (`docs/CORTE_DE_FALA.md`, `docs/ENQUAD
 Cada linha traz: data · marca · lote · `arquivo` (título) · quem revisou: o texto dela. Reprovação desfeita ou trocada
 por aprovação não entra. Quando o motivo é **dado de cliente**, o texto dela fica só no liv.ai.
 
+**Aprovados com ajustes** (desde 30/10/2026): quando a revisora aprova a ideia mas pede para refinar ("faltou
+contexto"), o pedido entra nas seções **Ajuste · <motivo>**. O vídeo volta ao time e, com a versão nova (`_v2`), para
+ela validar; o ajuste fica no guia mesmo depois de aprovado, porque o erro aconteceu.
+
 <!-- placar -->
 | Motivo | Vezes | Última |
 |---|---|---|

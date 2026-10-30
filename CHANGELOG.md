@@ -2,6 +2,10 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.38 (30/10/2026) - Lições também dos "aprovados com ajustes"
+- A Video Machine ganhou a terceira decisão, **Aprovar com ajustes** (a Dra. Lívia aprovava vídeos em que queria pontuar observações, como "faltou contexto"). O `editor/licoes_da_aprovacao.py` agora pede reprovações e ajustes (`tipos=reprovado,ajustar`) e escreve os ajustes em seções próprias do `docs/REPROVACOES.md` (**Ajuste · Falta contexto**, **Ajuste · Gancho**…), cada uma com a lição para o editor. Ajuste conta mesmo depois de a versão nova ser aprovada: o erro aconteceu. Com o liv.ai de antes, segue só com as reprovações.
+- O teste (`editor/teste_licoes_da_aprovacao.py`) parte de um guia limpo: o do repositório já tem reprovações de verdade.
+
 ## 0.37 (30/10/2026) - Lições da aprovação (Video Machine)
 - **`editor/licoes_da_aprovacao.py`** lê no liv.ai as reprovações da Video Machine (rota `GET /api/aprovacao/ingest/reprovacoes`, mesma chave da ingestão, `APROVACAO_INGEST_TOKEN`) e acrescenta cada uma em **`docs/REPROVACOES.md`**, na seção do motivo que a revisora marcou, com o texto dela e a lição para o editor. Pedido do Lucas: o que a Dra. Lívia e a Marinna escrevem ao reprovar ficava só no liv.ai e o mesmo erro podia voltar.
 - **O guia só cresce.** Cada reprovação entra uma vez (o id da decisão vai anotado na linha), e a lição escrita à mão não é mexida. Reprovação desfeita ou trocada por aprovação não entra. Se a revisora reescreveu o motivo, vale só o mais novo. O placar no topo conta as vezes de cada motivo.

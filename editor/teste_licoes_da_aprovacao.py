@@ -7,7 +7,7 @@ Confere: chave no cabeçalho, paginação, só reprovação que ainda vale, a ma
 (com "também"), texto de dado de cliente fora do guia, motivo novo e sem atalho, placar, nada repetido na 2ª rodada,
 --ver sem gravar e as mensagens de erro (chave errada, liv.ai sem chave, rota ainda não publicada).
 """
-import contextlib, io, json, os, shutil, sys, tempfile, threading, urllib.parse
+import contextlib, io, json, os, re, shutil, sys, tempfile, threading, urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -97,7 +97,13 @@ def main():
     base = f"http://127.0.0.1:{servidor.server_address[1]}"
     pasta = tempfile.mkdtemp(prefix="licoes_")
     guia = os.path.join(pasta, "REPROVACOES.md")
-    shutil.copy(os.path.join(L.RAIZ, "docs", "REPROVACOES.md"), guia)
+    # o guia do repositório já tem reprovações de verdade: o teste parte do modelo, sem as linhas e com o placar zerado
+    modelo = open(os.path.join(L.RAIZ, "docs", "REPROVACOES.md"), encoding="utf-8").read()
+    modelo = "\n".join(l for l in modelo.splitlines() if not L.MARCA.search(l)) + "\n"
+    modelo = re.sub(r"(<!-- placar -->\n).*?(\n<!-- /placar -->)", lambda m: m.group(1) + "Nenhuma reprovação importada ainda." + m.group(2),
+                    modelo, flags=re.S)
+    with open(guia, "w", encoding="utf-8") as f:
+        f.write(modelo)
     original = open(guia, encoding="utf-8").read()
     chave = {"valor": CHAVE}
     L.PLAT.ler_segredo = lambda servico: chave["valor"] if servico == L.SERVICO_CHAVEIRO else None
@@ -168,6 +174,24 @@ def main():
         check("placar conta 2 no Gancho", "| Gancho | 2 | 30/10/2026 |" in texto2)
         check("o resto do guia ficou igual", texto2.replace(gancho, "").split("<!-- /placar -->")[1]
               == texto.replace(secao(texto, "Gancho"), "").split("<!-- /placar -->")[1])
+
+        # ── aprovar com ajustes (30/10/2026): seções próprias; valem mesmo depois de a versão nova ser aprovada ──
+        pedidos.clear()
+        DADOS.append(dict(rep(11, "2026-10-30T11:00:00.000Z", ["Falta contexto"], "Dizer para quem é.", 19, "R14.mp4",
+                              estado="aprovado"), tipo="ajustar"))
+        DADOS.append(dict(rep(12, "2026-10-30T11:01:00.000Z", ["Gancho"], "Gancho pode ser mais curto.", 20, "R15.mp4",
+                              estado="ajustar"), tipo="ajustar"))
+        c, s = rodar("--url", base, "--guia", guia)
+        texto3 = open(guia, encoding="utf-8").read()
+        check("pede reprovações e ajustes", pedidos and pedidos[0].get("tipos") == "reprovado,ajustar", str(pedidos[:1]))
+        check("ajuste entra mesmo com a versão nova já aprovada", "R14.mp4" in secao(texto3, L.AJUSTE + "Falta contexto"))
+        check("ajuste de Gancho vai para 'Ajuste · Gancho', não para a reprova",
+              "R15.mp4" in secao(texto3, L.AJUSTE + "Gancho") and "R15.mp4" not in secao(texto3, "Gancho"))
+        check("seção de ajuste nasce com a lição", "faltou situar quem assiste" in secao(texto3, L.AJUSTE + "Falta contexto"))
+        check("placar mostra os ajustes", "| Ajuste · Falta contexto | 1 | 30/10/2026 |" in texto3, texto3[:1500])
+        check("a saída separa reprovações e ajustes", "0 reprovação(ões) e 2 ajuste(s)" in s, s)
+        c, s = rodar("--url", base, "--guia", guia)
+        check("ajuste não entra duas vezes", c == 0 and "Nenhuma reprovação nova" in s and open(guia, encoding="utf-8").read() == texto3, s)
     finally:
         servidor.shutdown()
         shutil.rmtree(pasta, ignore_errors=True)

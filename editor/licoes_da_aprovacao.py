@@ -13,6 +13,9 @@ arquivo nem no chat: o --criar-chave copia direto para a área de transferência
 
 O guia só cresce: cada reprovação entra uma vez (pelo id da decisão, anotado na linha) e o texto escrito à mão (a lição
 de cada motivo) nunca é mexido. Reprovação desfeita ou trocada por aprovação não entra (a revisora voltou atrás).
+
+Desde 30/10/2026 entram também os "Aprovar com ajustes" (a ideia passou, mas faltou algo: contexto, legenda…), em seções
+próprias ("Ajuste · Falta contexto"). Ajuste conta mesmo depois de a versão nova ser aprovada: o erro aconteceu.
 """
 import argparse, datetime, json, os, re, secrets, subprocess, sys, urllib.error, urllib.parse, urllib.request
 
@@ -27,6 +30,7 @@ GUIA = os.path.join(RAIZ, "docs", "REPROVACOES.md")
 INICIO = "2026-10-01"          # a Video Machine começou a aprovar em out/2026
 SOBREPOSICAO_DIAS = 3          # pede de novo os últimos dias: decisão gravada fora de ordem não se perde (o id descarta a repetida)
 SEM_ATALHO = "Sem atalho (só o texto)"
+AJUSTE = "Ajuste · "            # prefixo das seções dos "aprovar com ajustes"
 DADO_DE_CLIENTE = "Aparece dado de cliente"
 MARCA = re.compile(r"<!-- r:(\d+) v:(\d+) em:([0-9T:.\-Z+]+) -->")
 
@@ -67,6 +71,35 @@ LICOES = {
         "A revisora escreveu sem escolher um atalho. Leia o texto: pedido que aparecer duas vezes vira regra no "
         "`CLAUDE.md` ou no doc do assunto, e a seção ganha a lição."),
 }
+
+
+# Lição de cada atalho de "Aprovar com ajustes" (MOTIVOS_DE_AJUSTE no liv.ai): o vídeo passou, mas voltou para refinar.
+LICOES_DE_AJUSTE = {
+    "Falta contexto": (
+        "Aprovado, mas faltou situar quem assiste. Nos primeiros segundos, diga para quem é (visto, fase do processo, "
+        "situação) e por que importa; corte que começa no meio da conversa ganha uma frase ou um texto na tela que dê o "
+        "contexto. Mostre no plano qual é o contexto de cada corte antes de renderizar."),
+    "Legenda": (
+        "Aprovado com legenda a corrigir: grafia de nomes e vistos no formato oficial, quebras e sincronia. Confira a "
+        "legenda inteira antes de entregar (`docs/CORTE_DE_FALA.md`)."),
+    "Gancho": (
+        "Aprovado, mas o gancho pode melhorar: pergunta curta, que não responde, ligada ao que o vídeo entrega "
+        "(`docs/FORMATOS.md`)."),
+    "Corte": (
+        "Aprovado com corte a refinar: início e fim no silêncio, sem respiro longo nem palavra cortada; confira as "
+        "emendas (`docs/CORTE_DE_FALA.md`)."),
+    "Texto na tela": (
+        "Aprovado com texto na tela a ajustar: ortografia, tamanho, área segura e nada tapando o rosto "
+        "(`docs/PADROES.md`)."),
+    "Áudio": "Aprovado com áudio a ajustar: volume da fala, trilha bem abaixo, sem chiado nem estalo.",
+    "Enquadramento": "Aprovado com enquadramento a ajustar: rosto centrado, legenda abaixo do queixo, verticais retas.",
+    SEM_ATALHO: "Pedido de ajuste só em texto: leia; o que se repetir vira regra no `CLAUDE.md` ou no doc do assunto.",
+}
+
+
+def _secao_da_entrada(r, motivo):
+    """Reprovação: a seção do motivo. Ajuste: a seção 'Ajuste · <motivo>'."""
+    return AJUSTE + motivo if r.get("tipo") == "ajustar" else motivo
 
 
 def _contexto_ssl():
@@ -148,7 +181,8 @@ def buscar(base, chave, desde, marca=None):
     """Todas as reprovações desde a data, página a página (pelo id da última)."""
     todas, depois_de = [], 0
     while True:
-        qs = {"desde": desde, "depoisDe": depois_de}
+        # o liv.ai de antes de 30/10/2026 ignora `tipos` e manda só as reprovações (sem o campo `tipo`)
+        qs = {"desde": desde, "depoisDe": depois_de, "tipos": "reprovado,ajustar"}
         if marca:
             qs["marca"] = marca
         dados = _pedir(f"{base.rstrip('/')}/api/aprovacao/ingest/reprovacoes?{urllib.parse.urlencode(qs)}", chave)
@@ -206,14 +240,17 @@ def ja_no_guia(texto):
 
 def novas(reprovacoes, ids):
     """Só reprovação que ainda vale; do mesmo vídeo, a mais nova (trocar o texto grava outra), e só se ela não está no guia.
-    A mais nova é escolhida antes de olhar o guia: escolhida depois, a antiga voltava na rodada seguinte."""
+    A mais nova é escolhida antes de olhar o guia: escolhida depois, a antiga voltava na rodada seguinte.
+    Ajuste vale sempre (a versão nova pode ter sido aprovada depois, mas o pedido aconteceu); do mesmo vídeo, o mais novo."""
     por_video = {}
     for r in reprovacoes:
-        if r["video"]["estadoAtual"] != "reprovado":
+        ajuste = r.get("tipo") == "ajustar"
+        if not ajuste and r["video"]["estadoAtual"] != "reprovado":
             continue
-        atual = por_video.get(r["video"]["id"])
+        chave = (ajuste, r["video"]["id"])
+        atual = por_video.get(chave)
         if atual is None or r["id"] > atual["id"]:
-            por_video[r["video"]["id"]] = r
+            por_video[chave] = r
     return sorted((r for r in por_video.values() if r["id"] not in ids), key=lambda r: r["id"])
 
 
@@ -226,7 +263,8 @@ def _secoes(texto):
 def acrescentar(texto, motivo, linhas):
     secoes = _secoes(texto)
     if motivo not in secoes:
-        licao = LICOES.get(motivo, "Motivo novo no liv.ai: escreva aqui a lição para o editor.")
+        licao = (LICOES_DE_AJUSTE.get(motivo[len(AJUSTE):]) if motivo.startswith(AJUSTE) else LICOES.get(motivo)) \
+            or "Motivo novo no liv.ai: escreva aqui a lição para o editor."
         bloco = f"## {motivo}\n\n**Lição:** {licao}\n\n" + "\n".join(linhas) + "\n"
         return texto.rstrip("\n") + "\n\n" + bloco
     ini, fim = secoes[motivo]
@@ -255,11 +293,12 @@ def com_placar(texto):
 
 
 def atualizar_guia(texto, entradas):
-    """Acrescenta cada reprovação na seção de cada motivo dela (sem atalho: na seção do texto livre)."""
+    """Acrescenta cada reprovação na seção de cada motivo dela (sem atalho: na seção do texto livre); ajuste, na seção
+    'Ajuste · <motivo>'."""
     por_motivo = {}
     for r in entradas:
         for motivo in (r["motivos"] or [SEM_ATALHO]):
-            por_motivo.setdefault(motivo, []).append(linha_do_guia(r, motivo))
+            por_motivo.setdefault(_secao_da_entrada(r, motivo), []).append(linha_do_guia(r, motivo))
     for motivo, linhas in por_motivo.items():
         texto = acrescentar(texto, motivo, linhas)
     return com_placar(texto), por_motivo
@@ -312,7 +351,9 @@ def main(argv=None):
 
     novo, por_motivo = atualizar_guia(texto, entradas)
     resumo = ", ".join(f"{m} ({len(l)})" for m, l in sorted(por_motivo.items(), key=lambda x: -len(x[1])))
-    print(f"{len(entradas)} reprovação(ões) nova(s) desde {desde}: {resumo}.")
+    n_ajustes = sum(1 for r in entradas if r.get("tipo") == "ajustar")
+    tipo = f"{len(entradas) - n_ajustes} reprovação(ões) e {n_ajustes} ajuste(s)" if n_ajustes else f"{len(entradas)} reprovação(ões)"
+    print(f"{tipo} novo(s) desde {desde}: {resumo}.")
     for motivo, linhas in por_motivo.items():
         print(f"\n## {motivo}")
         for l in linhas:
