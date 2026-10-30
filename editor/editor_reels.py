@@ -950,6 +950,7 @@ BROLLS = []                                       # [(arquivo, "12.5" ou "fonte:
 USAR_VAD = False                                  # --vad: detector de voz Silero no lugar do limiar de volume
 CROP_FIXO = False                                 # --crop-fixo: recorte parado em cada corte (selfie na mão)
 PUNCH = None                                      # --punch: fração do plano fechado em relação ao aberto (padrão 0,82)
+PREVIA_VERTICAL = None                            # --previa-enquadramento fora da tela dividida: folha do recorte em pé
 BROLL_LEGENDA = False                             # --broll-com-legenda: b-roll de imagem real (anúncio) mantém a legenda
 
 
@@ -1127,15 +1128,44 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
         else:
             ts, xy = trajetoria(video, c, pessoa, alvo_x)
         planos.append((frac, ts, xy))
+    seguidos = list(planos)                            # o rosto seguido, antes de parar o recorte (para a prévia)
     if CROP_FIXO:
-        # selfie na mão: recorte PARADO e igual em todo o bloco de fala (grupo). Seguir o rosto somava ao balanço da mão
-        # e tremia; posição por pedaço fazia a imagem pular a cada micro-corte do mesmo bloco.
+        # selfie na mão: recorte PARADO no bloco de fala (grupo). Seguir o rosto somava ao balanço da mão e tremia;
+        # posição por pedaço fazia a imagem pular a cada micro-corte do mesmo bloco.
         por_grupo = {}
         for ci, (c, (frac, ts, xy)) in enumerate(zip(cortes, planos)):
             por_grupo.setdefault(c.get("grupo", ci), []).append(xy)
-        for ci, c in enumerate(cortes):
-            frac = planos[ci][0]
-            planos[ci] = (frac, np.array([0.0]), np.median(np.vstack(por_grupo[c.get("grupo", ci)]), axis=0, keepdims=True))
+        mediana = {g: np.median(np.vstack(v), axis=0) for g, v in por_grupo.items()}
+        # Entrevista andando (Ronei, 30/10/2026: "em alguns momentos o Ronei some da cena"): o recorte fica parado
+        # enquanto o rosto está no miolo (folga de 20% da largura do recorte para cada lado do centro) e só anda,
+        # devagar (média de ~2 s), quando o rosto vai para a borda. Rosto parado = igual ao recorte fixo de antes.
+        def zona_morta(cis):
+            xs, cx = [], None
+            for ci in cis:
+                frac, ts, xy = planos[ci]
+                folga = 0.20 * caixa(0.5, 0.5, frac, W, H)[2] / W
+                for fx in xy[:, 0]:
+                    cx = mediana_g[0] if cx is None else cx
+                    cx = fx - folga if fx > cx + folga else fx + folga if fx < cx - folga else cx
+                    xs.append(cx)
+            xs = np.array(xs)
+            k = min(len(xs), 2 * AMOSTRAS_POR_SEG + 1)
+            if k > 1:
+                xs = np.convolve(np.pad(xs, (k // 2, k // 2), mode="edge"), np.ones(k) / k, mode="valid")[:len(xs)]
+            return xs
+        for g in por_grupo:
+            cis = [ci for ci, c in enumerate(cortes) if c.get("grupo", ci) == g]
+            seguem = [ci for ci in cis if len(planos[ci][1]) > 1]          # pergunta em quadro aberto não segue ninguém
+            mediana_g = mediana[g]
+            xs, pos = (zona_morta(seguem) if seguem else []), 0
+            for ci in cis:
+                frac, ts, xy = planos[ci]
+                if ci in seguem:
+                    n = len(xy)
+                    planos[ci] = (frac, ts, np.column_stack([xs[pos:pos + n], np.full(n, mediana_g[1])]))
+                    pos += n
+                else:
+                    planos[ci] = (frac, np.array([0.0]), mediana_g[None, :])
 
     def quadro_saida(t_out):
         """o frame final (sem textos) num instante do vídeo de saída."""
@@ -1193,6 +1223,9 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     print(f"  gancho: {desc(y_g, baixo_g)} | cta: {desc(y_c, baixo_c)}")
     if so_checar:
         return {"gancho_baixo": baixo_g, "cta_baixo": baixo_c}
+    if PREVIA_VERTICAL:
+        return previa_vertical(PREVIA_VERTICAL, cortes, planos, seguidos, quadro_saida, grupos, leg, total, W, H,
+                               (img_gancho, y_g, seg_gancho), (img_cta, y_c, seg_cta), y_leg, frac_base, frac_punch)
 
     tmp_v = saida + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24",
@@ -1597,6 +1630,75 @@ def conferir_enquadramento(relatorio, cortes):
     return avisos
 
 
+def previa_vertical(saida_img, cortes, planos, seguidos, quadro_saida, grupos, leg, total, W, H, gancho, cta, y_leg,
+                    frac_base, frac_punch):
+    """folha de conferência do recorte em pé ANTES de renderizar (--previa-enquadramento fora da tela dividida):
+    quadros do vídeo pronto com o gancho, a legenda, o CTA e a interface do Instagram por cima, e quanto tempo a pessoa
+    sai do recorte (entrevista andando: com o recorte parado, o rosto seguido escapa da caixa). Pedido do Lucas,
+    30/10/2026: "em alguns momentos o Ronei some da cena... dar um zoom out... gera o frame de sugestão de crop"."""
+    # 1) tempo fora: o rosto seguido (sem o recorte parado) contra a caixa que vai para a tela
+    fora, tot, acc, momentos = 0.0, 0.0, 0.0, []
+    for c, (frac, ts, xy), (_, ts1, xy1) in zip(cortes, planos, seguidos):
+        d = c["e"] - c["s"]
+        if len(ts1) > 1:                                   # pergunta em quadro aberto não tem rosto seguido
+            for t, (fx, _fy) in zip(ts1, xy1):
+                if t > d:
+                    break
+                x0, _y0, cw, _ch = caixa(np.interp(t, ts, xy[:, 0]), np.interp(t, ts, xy[:, 1]), frac, W, H)
+                tot += 1
+                if not (x0 + 0.12 * cw <= fx * W <= x0 + 0.88 * cw):     # centro do rosto a <12% da borda: meio rosto fora
+                    fora += 1
+                    momentos.append(acc + t)
+        acc += d
+    pct = fora / tot if tot else 0.0
+    # 2) quadros: gancho, o meio do vídeo, o CTA e os piores momentos fora do recorte
+    tempos = [min(1.0, total / 2)] + list(np.linspace(total * 0.15, total * 0.85, 5)) + [max(0.0, total - 1.0)]
+    for m in momentos[::max(1, len(momentos) // 2)][:2]:
+        tempos.append(m)
+    tempos = sorted(set(round(t, 2) for t in tempos))
+    fonte = ImageFont.truetype(MARCAS["imigrar"]["fonte"], 96)
+    img_g, y_g, seg_g = gancho
+    img_c, y_c, seg_c = cta
+    miniaturas = []
+    for t in tempos:
+        fr = quadro_saida(t)
+        if fr is None:
+            continue
+        fr = cv2.resize(fr, (OUT_W, OUT_H), interpolation=cv2.INTER_CUBIC)
+        mostra_g, mostra_c = img_g is not None and t < seg_g, img_c is not None and t > total - seg_c
+        g = next((g for g in grupos if g[0]["s"] <= t < g[-1]["e"] + 0.25), None)
+        if g and not (mostra_g or mostra_c):
+            colar(fr, leg.render(grupos.index(g), g, max((i for i, p in enumerate(g) if p["s"] <= t), default=0)), y_leg)
+        if mostra_g:
+            colar(fr, img_g, y_g)
+        if mostra_c:
+            colar(fr, img_c, y_c)
+        # interface do Instagram (Reels): barra de cima, botões à direita, nome e descrição embaixo
+        sombra = fr.copy()
+        for x0, y0, x1, y1 in ((0, 0, OUT_W, 250), (OUT_W - 130, 1080, OUT_W, 1700), (0, 1600, OUT_W - 130, OUT_H)):
+            cv2.rectangle(sombra, (x0, y0), (x1, y1), (60, 60, 60), -1)
+        fr = cv2.addWeighted(sombra, 0.45, fr, 0.55, 0)
+        escapou = any(abs(t - m) < 0.3 for m in momentos)
+        cv2.rectangle(fr, (0, 0), (OUT_W - 1, OUT_H - 1), (40, 40, 230) if escapou else (255, 255, 255), 14 if escapou else 4)
+        rot = Image.fromarray(cv2.cvtColor(fr, cv2.COLOR_BGR2RGB))
+        ImageDraw.Draw(rot).text((36, 120), f"{t:.1f}s" + ("  fora!" if escapou else ""), font=fonte,
+                                 fill=(255, 90, 90) if escapou else (255, 255, 255))
+        miniaturas.append(cv2.resize(cv2.cvtColor(np.asarray(rot), cv2.COLOR_RGB2BGR), (OUT_W // 4, OUT_H // 4)))
+    if not miniaturas:
+        return None
+    linha = np.hstack(miniaturas)
+    topo = Image.new("RGB", (linha.shape[1], 70), (24, 24, 24))
+    alt = lambda f: min(1.0, f / 0.93) if W * f * 16 / 9 > H else f * W * 16 / 9 / H
+    ImageDraw.Draw(topo).text((16, 14), f"recorte aberto {alt(frac_base):.0%} da altura · fechado {alt(frac_punch):.0%} · "
+                              f"rosto fora do recorte {pct:.0%} do tempo", font=ImageFont.truetype(fonte.path, 40), fill=(235, 235, 235))
+    cv2.imwrite(saida_img, np.vstack([cv2.cvtColor(np.asarray(topo), cv2.COLOR_RGB2BGR), linha]), [cv2.IMWRITE_JPEG_QUALITY, 85])
+    # quão rápido o recorte anda na tela (px do vídeo pronto por segundo): acima de ~150 a panorâmica aparece
+    vel = max((float(np.max(np.abs(np.diff(xy[:, 0])))) * W * AMOSTRAS_POR_SEG * OUT_W / caixa(0.5, 0.5, frac, W, H)[2]
+               for frac, ts, xy in planos if len(xy) > 1), default=0.0)
+    print(f"  rosto fora do recorte: {pct:.0%} do tempo ({fora:.0f} de {tot:.0f} amostras) | recorte anda no máximo {vel:.0f} px/s")
+    return saida_img
+
+
 def previa_enquadramento(video, cortes, saida_img):
     """folha de conferência ANTES de renderizar: 1 quadro (meio) de cada corte já montado na tela dividida, com as
     guias (margem do topo e faixa da legenda na divisa). Usa o último cálculo de ENQUADRAMENTO."""
@@ -1984,7 +2086,8 @@ def main():
     ap.add_argument("--sem-sobreposicao", action="store_true",
                     help="tela dividida: a live não tem chat/banner na parte de baixo; o recorte pode descer além de 70%%")
     ap.add_argument("--previa-enquadramento", metavar="ARQ.jpg",
-                    help="tela dividida: salva a folha de conferência do enquadramento (1 quadro por corte) e sai, sem renderizar")
+                    help="salva a folha de conferência do enquadramento e sai, sem renderizar (tela dividida: 1 quadro por "
+                         "corte; em pé: quadros com gancho, legenda, CTA e interface do Instagram, e o tempo com o rosto fora)")
     ap.add_argument("--exigir-enquadramento", action="store_true",
                     help="tela dividida: não renderiza se o guardrail de enquadramento der aviso (cabeça cortada, teto demais)")
     a = ap.parse_args()
@@ -2108,8 +2211,12 @@ def main():
             return
         if ENQUADRAMENTO.get("avisos"):
             sys.exit("\nEnquadramento com aviso (veja acima). Gere a prévia com --previa-enquadramento, ajuste e rode de novo.")
-    print("\nRenderizando...")
-    global SEM_LEGENDA, CAUDA, BROLL_LEGENDA, CROP_FIXO, PUNCH
+    if not a.previa_enquadramento:
+        print("\nRenderizando...")
+    global SEM_LEGENDA, CAUDA, BROLL_LEGENDA, CROP_FIXO, PUNCH, PREVIA_VERTICAL
+    if a.previa_enquadramento:                    # vertical: folha do recorte em pé, sem renderizar
+        PREVIA_VERTICAL = os.path.abspath(a.previa_enquadramento)
+        print("\nPrévia do enquadramento (sem renderizar)...")
     SEM_LEGENDA = a.sem_legenda
     BROLL_LEGENDA = a.broll_com_legenda
     CROP_FIXO, PUNCH = a.crop_fixo, a.punch
@@ -2121,6 +2228,9 @@ def main():
                so_checar=a.so_checar_caixas, y_legenda=a.y_legenda, estilo_caixa=a.cor_caixa, layout=a.layout, cima=a.cima, girar=a.girar,
                dinamico=a.dinamico, endireitar=a.endireitar, vinheta=not a.sem_vinheta, inscreva=not a.sem_inscreva, planos=a.planos,
                seg_gancho=a.seg_gancho)
+    if PREVIA_VERTICAL:
+        print(f"\nPrévia do enquadramento: {PREVIA_VERTICAL}")
+        return
     animacoes = []
     for x in a.animacao:
         arq, _, t = x.rpartition("@")

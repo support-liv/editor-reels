@@ -69,7 +69,8 @@ opção faz. Nada de jargão técnico na pergunta.
 - **Nomes de vistos sempre no formato oficial:** E-2, O-1, O-3, L-1, H-1B, EB-1, EB-2, EB-2 NIW, B1/B2, DS-160, Green
   Card. Nomes em inglês grafados certo na legenda (Lake Nona, Tavistock, USTA...). Confira a legenda inteira antes de
   entregar: o Whisper escreve "wincard", "Lequinona", "QMK".
-- **Selfie gravada na mão:** `--crop-fixo` (recorte parado por bloco; seguir o rosto treme) e legenda abaixo do queixo,
+- **Selfie gravada na mão:** `--crop-fixo` (recorte parado por bloco, que só anda se o rosto for para a borda; seguir o rosto
+  treme), prévia do recorte com `--previa-enquadramento` antes do render, e legenda abaixo do queixo,
   nunca na boca (anúncio de TI: `--aperto 0.80 --punch 0.72 --y-legenda 0.62`; selfie bem fechada: 0.66). Confira em
   quadros.
 - **CTA da campanha Imigrar (out/2026): PERFIL27** ("Comente PERFIL27"). Muda por campanha: confirme.

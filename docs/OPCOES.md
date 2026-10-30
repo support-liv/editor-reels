@@ -36,7 +36,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--layout dividido` | Live com duas pessoas lado a lado: uma em cima, outra embaixo, enquadramento fixo, legenda e tarja na divisa |
 | `--cima esquerda` / `direita` | Na tela dividida, quem da live vai em cima |
 | `--sem-sobreposicao` | Tela dividida: a live não tem chat/banner embaixo; o recorte pode descer além de 70% da altura (ver ENQUADRAMENTO.md) |
-| `--previa-enquadramento ARQ.jpg` | Tela dividida: salva a folha de conferência do enquadramento (1 quadro de cada corte, com as guias de margem e legenda) e sai, **sem renderizar** |
+| `--previa-enquadramento ARQ.jpg` | Salva a folha de conferência do enquadramento e sai, **sem renderizar**. Tela dividida: 1 quadro de cada corte, com as guias de margem e legenda. Em pé: quadros do vídeo pronto com gancho, legenda, CTA e a interface do Instagram, o tamanho do recorte, o tempo com o rosto fora do recorte e quanto o recorte anda |
 | `--exigir-enquadramento` | Tela dividida: não renderiza se o guardrail de enquadramento avisar (cabeça cortada, queixo fora, teto demais) |
 | `--colunas 3 --pessoas 3,1` | Live com N pessoas lado a lado: escolhe quem vai em cima e embaixo pela coluna (1 = esquerda) |
 | `--layout youtube` | Corte longo 16:9 1080p: a cena inteira da live, sem legenda e sem gancho, com a vinheta da marca na abertura (LIV). Tira só silêncios longos (respiro 0,8s). Gera junto um `.tempos.txt` com a minutagem de cada trecho, para os capítulos |
@@ -55,7 +55,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--pessoa direita` / `esquerda` | Duas pessoas: fecha em quem está desse lado |
 | `--pessoa voz` | Conversa: fecha em quem fala, pelo tom de voz (grave = 1ª da esquerda, aguda = 2ª) |
 | `--aperto 0.5` | Fração da largura original mantida (menor = mais fechado). Padrões: 0.93 solo, 0.55 com `--pessoa`, 0.34 com `voz` |
-| `--crop-fixo` | Selfie gravada na mão: o recorte fica parado em cada corte (seguir o rosto somava ao balanço da mão e a imagem tremia) |
+| `--crop-fixo` | Selfie gravada na mão: o recorte fica parado em cada bloco de fala (seguir o rosto somava ao balanço da mão e a imagem tremia); se o rosto vai para a borda (entrevista andando), anda devagar até ele voltar ao miolo |
 | `--punch 0.72` | Plano fechado = essa fração do aberto (padrão 0,82). Selfie aberta pede punch mais forte pra o zoom aparecer |
 
 ### Cortes pelo áudio

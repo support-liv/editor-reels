@@ -2,6 +2,10 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.36 (30/10/2026) - Entrevista andando: recorte que acompanha e prévia do recorte em pé (Imigrar, Ronei)
+- **`--crop-fixo` com zona morta:** o recorte segue parado enquanto o rosto fica no miolo (até 20% da largura do recorte para cada lado do centro) e só anda, devagar (média de ~2 s), quando o rosto vai para a borda. Na entrevista do Ronei, gravada andando, o recorte parado pela mediana do bloco deixava ele sair da cena ("em alguns momentos o Ronei some"); no R1, de 9% para 0% do tempo com o rosto fora do recorte. Rosto parado = mesmo resultado de antes.
+- **`--previa-enquadramento` também no vídeo em pé** (antes, só na tela dividida): folha com quadros do vídeo pronto (gancho, legenda, CTA e a interface do Instagram por cima), o tamanho do recorte aberto e fechado, quanto tempo o rosto fica fora do recorte e quanto o recorte anda (px/s). Usa o mesmo cálculo do render e sai sem renderizar. Serve para validar o recorte antes do render.
+
 ## 0.35 (24/10/2026) - Recomeço colado e cortes da LIV (Mari e Dra. Lívia)
 - **`--tirar-hesitacoes` tira recomeço colado:** a mesma sequência de 1 a 6 palavras dita duas vezes seguidas, com no máximo duas hesitações no meio ("é que, é que mais pega", "tem, tem uma instrução", "processo administrativo, processo administrativo", "quando, é, quando você", "mesmo ramo, é, é, mesmo ramo"). Sai a primeira ocorrência e a hesitação. Frase terminada seguida da mesma palavra é estilo e fica ("dual intent. Dual intent é duas intenções"). A fala rápida da Dra. Lívia tinha dezenas desses recomeços; cortar um a um à mão não escalava.
 - **`--planos`** (corte longo `--layout youtube`): a cada corte o plano muda (aberto, fechado, médio, fechado...), recortado em 16:9 em volta do rosto, sem distorcer; corte curto (<1,2s) mantém o plano anterior. O corte longo da Dra. Lívia saiu com a cena inteira parada (o modo foi feito para live com tela) e o time pediu o enquadramento dinâmico. Use em gravação de uma pessoa (consulta, entrevista); live com tela compartilhada continua sem.
