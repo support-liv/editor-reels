@@ -24,20 +24,19 @@
         border: 2px solid rgba(255, 255, 255, 0.32); background: rgba(255, 255, 255, 0.06); border-radius: 40px;
         padding: 16px 34px; color: #fff; font-size: 27px; font-weight: 600; letter-spacing: 0.18em; display: flex; align-items: center; gap: 18px; }
       #tag i { width: 12px; height: 12px; border-radius: 50%; background: #ff2d78; display: block; }
-      #jornada { position: absolute; left: 0; width: 1080px; top: 268px; text-align: center; color: rgba(255, 255, 255, 0.88);
+      #jornada { position: absolute; left: 0; width: 1080px; top: 206px; text-align: center; color: rgba(255, 255, 255, 0.88);
         font-size: 46px; font-weight: 400; letter-spacing: 0.42em; text-indent: 0.42em; }
       #jornada span { display: inline-block; }
       .titulo { position: absolute; left: 0; width: 1080px; text-align: center; overflow: hidden; }
-      .titulo > div { display: inline-block; font-family: "DIN Cond", "Inter Tight", sans-serif; font-weight: 700; line-height: 0.9; }
-      #t1 { top: 330px; } #t1 > div { color: #fff; font-size: 250px; }
-      #t2 { top: 548px; } #t2 > div { font-size: 250px;
+      .titulo > div { display: inline-block; font-family: "DIN Cond", "Inter Tight", sans-serif; font-weight: 700; line-height: 1.12; padding-top: 0.06em; }
+      #t1 { top: 268px; } #t1 > div { color: #fff; font-size: 250px; }
+      #t2 { top: 500px; } #t2 > div { font-size: 250px;
         background: linear-gradient(180deg, #ff4f8f 0%, #ff2d78 55%, #e0206a 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
       #pilula { white-space: nowrap;
-        background: linear-gradient(180deg, #ff4384 0%, #ff2d78 60%, #e81f6c 100%); border-radius: 70px; padding: 18px 56px 14px;
-        display: flex; align-items: baseline; gap: 22px; box-shadow: 0 18px 50px rgba(255, 45, 120, 0.35); }
-      #pilula .c { color: #fff; font-size: 52px; font-weight: 700; }
-      #pilula .p { color: #fff; font-family: "DIN Cond", "Inter Tight", sans-serif; font-size: 104px; line-height: 0.95; letter-spacing: 0.02em; }
-      #sub { position: absolute; left: 140px; width: 800px; top: 950px; text-align: center; color: rgba(255, 255, 255, 0.9);
+        background: linear-gradient(180deg, #ff4384 0%, #ff2d78 60%, #e81f6c 100%); border-radius: 70px; padding: 20px 60px 10px;
+        display: flex; align-items: baseline; gap: 26px; box-shadow: 0 18px 50px rgba(255, 45, 120, 0.35); }
+      #pilula span { color: #fff; font-family: "DIN Cond", "Inter Tight", sans-serif; font-size: 96px; line-height: 1.05; letter-spacing: 0.03em; }
+      #sub { position: absolute; left: 140px; width: 800px; top: 965px; text-align: center; color: rgba(255, 255, 255, 0.9);
         font-size: 40px; font-weight: 500; line-height: 1.25; text-wrap: balance; }
       #sub span { display: inline-block; }
       #fotobox { position: absolute; left: 0; width: 1080px; top: 1072px; height: 848px; }
@@ -54,11 +53,10 @@
           <div id="listras"></div>
           <div id="fotobox"><img id="foto" src="locais/jornada_hosts.png" alt="" /></div>
           <div id="base"></div>
-          <div class="centro" style="top:170px"><div id="tag"><i></i>CONEXÃO IMIGRAR · EDIÇÃO ESPECIAL</div></div>
           <div id="jornada"><span>J</span><span>O</span><span>R</span><span>N</span><span>A</span><span>D</span><span>A</span> <span>&nbsp;</span><span>D</span><span>O</span></div>
           <div class="titulo" id="t1"><div id="t1t">DENTISTA</div></div>
           <div class="titulo" id="t2"><div id="t2t">NOS EUA</div></div>
-          <div class="centro" style="top:805px"><div id="pilula"><span class="c">Comente</span><span class="p" id="palavra">JORNADA</span></div></div>
+          <div class="centro" style="top:790px"><div id="pilula"><span>COMENTE</span><span id="palavra">JORNADA</span></div></div>
           <div id="sub"><span>e</span> <span>saiba</span> <span>o</span> <span>que</span> <span>você</span> <span>precisa</span> <span>pra</span> <span>ser</span> <span>dentista</span> <span>nos</span> <span>EUA</span></div>
         </div>
       </div>
@@ -78,7 +76,6 @@
         // painel entra de baixo com um leve ângulo (como os blocos inclinados da landing) e assenta
         tl.fromTo("#cena", { yPercent: 100, rotate: -4, transformOrigin: "50% 100%" },
                   { yPercent: 0, rotate: 0, duration: 0.55, ease: "expo.out" }, 0.0);
-        tl.fromTo("#tag", { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.25);
         tl.fromTo("#jornada span", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", stagger: 0.025 }, 0.33);
         tl.fromTo("#t1t", { yPercent: 100 }, { yPercent: 0, duration: 0.55, ease: "expo.out" }, 0.45);
         tl.fromTo("#t2t", { yPercent: 100 }, { yPercent: 0, duration: 0.55, ease: "expo.out" }, 0.6);
