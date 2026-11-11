@@ -31,3 +31,6 @@ motion/.hyperframes/
 piloto/relatorio_darwin_*.md
 .venv/
 .venv-whisperx/
+
+# fontes do sistema e fotos de evento usadas só no render local (não vão pro repositório público)
+motion/locais/

@@ -47,6 +47,32 @@ LONGO = [
 ]
 TRECHOS = os.path.join(SAIDA, "trechos")
 CAUDA = 3.8
+# CTA do evento (nov/2026, pedido do Lucas): tela própria com a identidade da landing (motion/modelos/jornada_cta.html):
+# "Comente JORNADA / e saiba o que você precisa pra ser dentista nos EUA", ~4s logo após a fala. Vale pro YouTube e o
+# Instagram (a equipe responde o comentário com o link). JORNADA_CTA=canal volta ao antigo "Veja a live completa no canal".
+CTA_EVENTO = os.environ.get("JORNADA_CTA", "evento") == "evento"
+CAUDA_EVENTO = 4.1
+CTA_MOV = os.path.join(MOTION, "jornada_cta.mov")
+
+
+def motion_sem_cta(sid, fala):
+    """motion do short sem a cena de CTA antiga, com a duração da fala + a cauda do CTA do evento."""
+    import json
+    pasta = os.path.join(AQUI, "motion")
+    r = json.load(open(os.path.join(pasta, f"{sid}.json")))
+    r["cenas"] = [c for c in r["cenas"] if c.get("tipo") != "cta"]
+    r.update({"nome": f"dentista_{sid}_evento", "duracao": round(fala + CAUDA_EVENTO, 2), "fala": fala})
+    rot = os.path.join(pasta, f"{sid}_evento.json")
+    json.dump(r, open(rot, "w"), ensure_ascii=False, indent=1)
+    raiz_motion = os.path.join(AQUI, "..", "..", "motion")
+    rodar([sys.executable, os.path.join(raiz_motion, "gerar_liv.py"), rot])
+    mov = os.path.join(MOTION, f"dentista_{sid}_evento.mov")
+    subprocess.run(["npx", "hyperframes", "render", ".", "-c", f"modelos/dentista_{sid}_evento.html", "--format", "mov",
+                    "--workers", "1", "-o", mov], cwd=raiz_motion, check=True)
+    if not os.path.exists(CTA_MOV):
+        subprocess.run(["npx", "hyperframes", "render", ".", "-c", "modelos/jornada_cta.html", "--format", "mov",
+                        "--workers", "1", "-o", CTA_MOV], cwd=raiz_motion, check=True)
+    return mov
 # Os 15 shorts: cada trecho da lista (menos o cold open), do começo ao fim da frase do documento.
 # id, nome, frase de início, frase de fim, gancho, pessoas (colunas cima,baixo; None = Marinna sozinha, vertical em
 # tela cheia), tarja. Colunas da live: 1 = Júlia, 2 = Marinna, 3 = André. O arquivo do trecho vem de LONGO[1:].
@@ -204,6 +230,14 @@ def main():
         if modo == "palavras":
             rodar(cmd + ["--json-palavras", os.path.join(AQUI, "motion", "palavras", f"{sid}.json")])
             rodar(cmd + ["--tempos-palavras"])
+        elif CTA_EVENTO:
+            # duração exata da fala no short pronto; o CTA do evento entra 0,3s antes do fim dela (logo após a última palavra)
+            out = subprocess.run(cmd + ["--tempos-palavras"], capture_output=True, text=True, check=True).stdout
+            fala = float([l for l in out.splitlines() if l.startswith("DURACAO")][0].split()[1])
+            mov = motion_sem_cta(sid, fala)
+            cmd[cmd.index("--cauda") + 1] = str(CAUDA_EVENTO)
+            rodar(cmd + ["--broll", mov + "@0", "--broll", f"{CTA_MOV}@{fala - 0.3:.2f}",
+                         "--nome", f"{sid}_{nome}", "--saida", os.path.join(SAIDA, "shorts")])
         else:
             rodar(cmd + ["--broll", os.path.join(MOTION, f"dentista_{sid}.mov") + "@0",
                          "--nome", f"{sid}_{nome}", "--saida", os.path.join(SAIDA, "shorts")])

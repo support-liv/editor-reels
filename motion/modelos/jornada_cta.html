@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>jornada_cta (Conexão Imigrar · Jornada do Dentista nos EUA)</title>
+    <!-- CTA dos cortes da live "Jornada do Dentista nos EUA" (identidade da landing do evento). 4,4s, tela cheia.
+         Fonte condensada e foto dos apresentadores ficam em motion/locais/ (fora do Git: fonte do sistema e foto do evento). -->
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter Tight"; src: url("fontes/InterTight[wght].ttf") format("truetype"); font-weight: 300 900; }
+      @font-face { font-family: "DIN Cond"; src: url("locais/DINCondensedBold.ttf") format("truetype"); font-weight: 700; }
+      html, body { margin: 0; background: transparent; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: transparent; font-family: "Inter Tight", sans-serif; }
+      #fundo { position: absolute; inset: 0;
+        background:
+          radial-gradient(900px 700px at 85% 18%, rgba(255, 45, 120, 0.28), transparent 70%),
+          radial-gradient(800px 900px at 10% 85%, rgba(122, 60, 255, 0.30), transparent 70%),
+          linear-gradient(172deg, #0b0d2e 0%, #17143f 40%, #2e1250 72%, #4a1250 100%); }
+      #listras { position: absolute; left: -200px; top: 980px; width: 1500px; height: 900px; opacity: 0.035;
+        background: repeating-linear-gradient(180deg, #ffffff 0 46px, transparent 46px 92px); transform: rotate(-8deg); }
+      .centro { position: absolute; left: 0; width: 1080px; display: flex; justify-content: center; }
+      #tag { white-space: nowrap;
+        border: 2px solid rgba(255, 255, 255, 0.32); background: rgba(255, 255, 255, 0.06); border-radius: 40px;
+        padding: 16px 34px; color: #fff; font-size: 27px; font-weight: 600; letter-spacing: 0.18em; display: flex; align-items: center; gap: 18px; }
+      #tag i { width: 12px; height: 12px; border-radius: 50%; background: #ff2d78; display: block; }
+      #jornada { position: absolute; left: 0; width: 1080px; top: 268px; text-align: center; color: rgba(255, 255, 255, 0.88);
+        font-size: 46px; font-weight: 400; letter-spacing: 0.42em; text-indent: 0.42em; }
+      #jornada span { display: inline-block; }
+      .titulo { position: absolute; left: 0; width: 1080px; text-align: center; overflow: hidden; }
+      .titulo > div { display: inline-block; font-family: "DIN Cond", "Inter Tight", sans-serif; font-weight: 700; line-height: 0.9; }
+      #t1 { top: 330px; } #t1 > div { color: #fff; font-size: 250px; }
+      #t2 { top: 548px; } #t2 > div { font-size: 250px;
+        background: linear-gradient(180deg, #ff4f8f 0%, #ff2d78 55%, #e0206a 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      #pilula { white-space: nowrap;
+        background: linear-gradient(180deg, #ff4384 0%, #ff2d78 60%, #e81f6c 100%); border-radius: 70px; padding: 18px 56px 14px;
+        display: flex; align-items: baseline; gap: 22px; box-shadow: 0 18px 50px rgba(255, 45, 120, 0.35); }
+      #pilula .c { color: #fff; font-size: 52px; font-weight: 700; }
+      #pilula .p { color: #fff; font-family: "DIN Cond", "Inter Tight", sans-serif; font-size: 104px; line-height: 0.95; letter-spacing: 0.02em; }
+      #sub { position: absolute; left: 140px; width: 800px; top: 950px; text-align: center; color: rgba(255, 255, 255, 0.9);
+        font-size: 40px; font-weight: 500; line-height: 1.25; text-wrap: balance; }
+      #sub span { display: inline-block; }
+      #fotobox { position: absolute; left: 0; width: 1080px; top: 1072px; height: 848px; }
+      #foto { position: absolute; left: 50%; bottom: 0; width: 720px; transform: translateX(-50%); }
+      #base { position: absolute; left: 0; width: 1080px; bottom: 0; height: 360px;
+        background: linear-gradient(180deg, rgba(11, 13, 46, 0) 0%, rgba(20, 14, 52, 0.55) 60%, rgba(20, 14, 52, 0.85) 100%); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920" data-duration="4.4">
+      <div id="tudo" class="clip" style="position:absolute;inset:0" data-start="0" data-duration="4.4">
+        <div id="cena" style="position:absolute;inset:0">
+          <div id="fundo"></div>
+          <div id="listras"></div>
+          <div id="fotobox"><img id="foto" src="locais/jornada_hosts.png" alt="" /></div>
+          <div id="base"></div>
+          <div class="centro" style="top:170px"><div id="tag"><i></i>CONEXÃO IMIGRAR · EDIÇÃO ESPECIAL</div></div>
+          <div id="jornada"><span>J</span><span>O</span><span>R</span><span>N</span><span>A</span><span>D</span><span>A</span> <span>&nbsp;</span><span>D</span><span>O</span></div>
+          <div class="titulo" id="t1"><div id="t1t">DENTISTA</div></div>
+          <div class="titulo" id="t2"><div id="t2t">NOS EUA</div></div>
+          <div class="centro" style="top:805px"><div id="pilula"><span class="c">Comente</span><span class="p" id="palavra">JORNADA</span></div></div>
+          <div id="sub"><span>e</span> <span>saiba</span> <span>o</span> <span>que</span> <span>você</span> <span>precisa</span> <span>pra</span> <span>ser</span> <span>dentista</span> <span>nos</span> <span>EUA</span></div>
+        </div>
+      </div>
+      <audio id="s01" src="sfx/whoosh_grave.wav" data-start="0.00" data-duration="0.6" data-volume="0.45"></audio>
+      <audio id="s02" src="sfx/impacto.wav" data-start="0.50" data-duration="0.5" data-volume="0.18"></audio>
+      <audio id="s03" src="sfx/pop.wav" data-start="1.05" data-duration="0.3" data-volume="0.35"></audio>
+      <audio id="s04" src="sfx/sino.wav" data-start="1.15" data-duration="1.2" data-volume="0.3"></audio>
+    </div>
+    <script>
+      document.fonts.ready.then(() => {
+        // título nunca corta na lateral
+        ["t1t", "t2t"].forEach((id) => {
+          const el = document.getElementById(id); let tam = parseFloat(getComputedStyle(el).fontSize);
+          while (el.scrollWidth > 960 && tam > 120) { tam -= 4; el.style.fontSize = tam + "px"; }
+        });
+        const tl = gsap.timeline({ paused: true });
+        // painel entra de baixo com um leve ângulo (como os blocos inclinados da landing) e assenta
+        tl.fromTo("#cena", { yPercent: 100, rotate: -4, transformOrigin: "50% 100%" },
+                  { yPercent: 0, rotate: 0, duration: 0.55, ease: "expo.out" }, 0.0);
+        tl.fromTo("#tag", { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.25);
+        tl.fromTo("#jornada span", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", stagger: 0.025 }, 0.33);
+        tl.fromTo("#t1t", { yPercent: 100 }, { yPercent: 0, duration: 0.55, ease: "expo.out" }, 0.45);
+        tl.fromTo("#t2t", { yPercent: 100 }, { yPercent: 0, duration: 0.55, ease: "expo.out" }, 0.6);
+        tl.fromTo("#foto", { y: 140, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.7);
+        tl.fromTo("#pilula", { scale: 0.55, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.2)" }, 1.0);
+        tl.fromTo("#sub span", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", stagger: 0.04 }, 1.3);
+        // a palavra pulsa duas vezes (convite pra comentar)
+        tl.to("#pilula", { scale: 1.06, duration: 0.22, ease: "power2.out", yoyo: true, repeat: 1 }, 2.35);
+        tl.to("#pilula", { scale: 1.06, duration: 0.22, ease: "power2.out", yoyo: true, repeat: 1 }, 3.35);
+        // respiro de fundo: a foto aproxima devagar
+        tl.fromTo("#foto", { scale: 1 }, { scale: 1.035, duration: 3.6, ease: "sine.inOut", transformOrigin: "50% 100%" }, 0.8);
+        window.__timelines["main"] = tl;
+      });
+    </script>
+  </body>
+</html>
