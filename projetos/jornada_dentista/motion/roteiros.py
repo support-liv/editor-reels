@@ -142,8 +142,8 @@ ROTEIROS = {
                                                                {"titulo": "Carreira", "t": 37.5, "tam": 100}]}),
         cena(45.4, 56.2, "azul", "pontos", R("vocês precisam de", 45.6), L("duas engrenagens", 46.2, 310, cor="destaque", tam=110),
              {"tipo": "cartoes", "y": 470, "alt": 300, "itens": [
-                 {"titulo": "Imigração", "texto": "autorização de trabalho", "t": 47.9, "destaque_t": 49.6},
-                 {"titulo": "Carreira", "texto": "licenciamento", "t": 51.4, "destaque_t": 53.8}]},
+                 {"titulo": "Imigração", "texto": "autorização de trabalho", "t": 47.9, "destaque_t": 49.6, "icone": "engrenagem"},
+                 {"titulo": "Carreira", "texto": "licenciamento", "t": 51.4, "destaque_t": 53.8, "icone": "engrenagem"}]},
              L("no caso da odonto", 53.2, 820, tam=70, peso=700)),
         cena(56.2, 68.28, "rosa", "grade", R("André e Júlia", 56.3), L("especialistas", 56.9, 310, tam=120),
              L("nessa jornada", 59.4, 440, tam=110), L("do licenciamento.", 61.2, 570, tam=96),

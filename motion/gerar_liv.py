@@ -37,6 +37,7 @@ COR = {"azul": "#2c3642", "laranja": "#ff6e1f", "marrom": "#945943", "bege": "#f
 FUNDOS = {"azul": ("azul", "bege", "laranja", "bege", "laranja"),
           "bege": ("bege", "azul", "laranja", "marrom", "laranja"),
           "laranja": ("laranja", "branco", "azul", "branco", "azul")}
+ENGRENAGEM = "M86.5 43.8 L96.8 45.3 L96.8 54.7 L86.5 56.2 L83.2 66.4 L90.6 73.7 L85.1 81.3 L75.8 76.5 L67.2 82.8 L68.9 93.0 L60.0 95.9 L55.3 86.6 L44.7 86.6 L40.0 95.9 L31.1 93.0 L32.8 82.8 L24.2 76.5 L14.9 81.3 L9.4 73.7 L16.8 66.4 L13.5 56.2 L3.2 54.7 L3.2 45.3 L13.5 43.8 L16.8 33.6 L9.4 26.3 L14.9 18.7 L24.2 23.5 L32.8 17.2 L31.1 7.0 L40.0 4.1 L44.7 13.4 L55.3 13.4 L60.0 4.1 L68.9 7.0 L67.2 17.2 L75.8 23.5 L85.1 18.7 L90.6 26.3 L83.2 33.6 Z M50 35 A15 15 0 1 0 50 65 A15 15 0 1 0 50 35 Z"   # ícone de engrenagem (cartões com "icone": "engrenagem")
 ICONES = {
     "seta_dupla": ('0 0 300 170', '<path d="M0 0 L85 85 L0 170 H70 L155 85 L70 0 Z M140 0 L225 85 L140 170 H210 L295 85 L210 0 Z" fill="{d}"/>'),
     "seta_contorno": ('0 0 220 130', '<path d="M4 4 L64 65 L4 126 M64 4 L124 65 L64 126 M4 4 H64 M4 126 H64 M64 4 H124 M64 126 H124" stroke="{t}" stroke-width="3" fill="none"/>'),
@@ -338,7 +339,8 @@ def _etapas(e, eid, top, W, centro, fundo, ctexto, cdest):
                        f'stroke-dasharray="{passo - 52}" stroke-dashoffset="{passo - 52}"/>')
         svg.append(f'<circle cx="{x + 26}" cy="{cy}" r="26" fill="none" stroke="{sec}" stroke-width="4"/>'
                    f'<circle id="{eid}c{i}" cx="{x + 26}" cy="{cy}" r="0" fill="{dest}"/>')
-        divs.append(f'<div id="{eid}t{i}" style="position:absolute;left:{x + 80}px;top:{cy - 38}px;width:{W - x - 170}px;'
+        # texto longo nunca passa da borda: "fit" reduz a fonte até caber na largura (Jornada, 11/11)
+        divs.append(f'<div id="{eid}t{i}" class="fit" data-max="{W - x - 170}" style="position:absolute;left:{x + 80}px;top:{cy - 38}px;'
                     f'font-size:{e.get("tam", 66)}px;font-weight:800;color:{txt};white-space:nowrap">'
                     + _pals(it["texto"], f"{eid}t{i}w", it.get("_tempos") or [it["t"]] * len(it["texto"].split()), js, "acende") + '</div>'
                     f'<div id="{eid}n{i}" style="position:absolute;left:{x}px;top:{cy - 22}px;width:52px;text-align:center;font-size:32px;'
@@ -399,7 +401,7 @@ def _checklist(e, eid, top, W, centro, fundo, ctexto, cdest):
                  f'<svg width="62" height="62" viewBox="0 0 62 62"><rect x="2" y="2" width="58" height="58" rx="14" fill="none" stroke="{sec}" stroke-width="4"/>'
                  f'<path id="{eid}m{i}" d="{marca}" fill="none" stroke="{dest}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" '
                  f'stroke-dasharray="60" stroke-dashoffset="60"/></svg>'
-                 f'<span style="font-size:{e.get("tam", 66)}px;font-weight:800;color:{txt};white-space:nowrap">'
+                 f'<span class="fit" data-max="{W - x - 186}" style="display:inline-block;font-size:{e.get("tam", 66)}px;font-weight:800;color:{txt};white-space:nowrap">'
                  + _pals(it["texto"], f"{eid}r{i}w", it.get("_tempos") or [t] * len(it["texto"].split()), js) + '</span></div>')
         js.append(f'tl.fromTo("#{eid}r{i}", {{ opacity: 0, x: -30 }}, {{ opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }}, {t - 0.2:.2f});')
         js.append(f'tl.to("#{eid}m{i}", {{ strokeDashoffset: 0, duration: 0.3, ease: "power2.out" }}, {t + 0.1:.2f});')
@@ -458,8 +460,13 @@ def _cartoes(e, eid, top, W, centro, fundo, ctexto, cdest):
                  + (f'<div style="margin-top:20px;font-size:50px;font-weight:700;line-height:1.08;color:{COR[ct]}">'
                     + _pals(it["texto"], f"{eid}k{i}w", it.get("_tempos") or [it["t"] + 0.2] * len(it["texto"].split()), js) + '</div>' if it.get("texto") else "")
                  + f'<div id="{eid}x{i}" style="position:absolute;left:24px;right:24px;top:{alt // 2 - 5}px;height:10px;border-radius:5px;'
-                 f'background:{COR[cdest]};transform:scaleX(0);transform-origin:left center"></div></div>')
+                 f'background:{COR[cdest]};transform:scaleX(0);transform-origin:left center"></div>'
+                 + (f'<svg id="{eid}g{i}" viewBox="0 0 100 100" style="position:absolute;right:26px;bottom:24px;width:110px;height:110px;opacity:0.9">'
+                    f'<path d="{ENGRENAGEM}" fill="{COR[ct]}" fill-rule="evenodd"/></svg>' if it.get("icone") == "engrenagem" else "")
+                 + '</div>')
         js.append(f'tl.fromTo("#{eid}k{i}", {{ opacity: 0, y: 40 }}, {{ opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }}, {it["t"] - 0.15:.2f});')
+        if it.get("icone") == "engrenagem":         # "duas engrenagens": giram em sentidos opostos, como se estivessem encaixadas
+            js.append(f'tl.fromTo("#{eid}g{i}", {{ rotate: 0 }}, {{ rotate: {360 if i == 0 else -360}, duration: 8, ease: "none" }}, {it["t"] - 0.15:.2f});')
         sons.append(("tick", it["t"], 0.22, 0.03))
         if it.get("risco_t"):
             js.append(f'tl.to("#{eid}x{i}", {{ scaleX: 1, duration: 0.3, ease: "power2.out" }}, {it["risco_t"]:.2f});')
@@ -532,7 +539,7 @@ def _colunas(e, eid, top, W, centro, fundo, ctexto, cdest):
         h.append(f'<div id="{eid}c{i}" style="position:absolute;left:{x}px;top:10px;width:{larg}px;opacity:0">'
                  f'<div id="{eid}t{i}" class="fit" data-max="{larg}" data-grupo="{eid}" style="display:inline-block;white-space:nowrap;font-size:{it.get("tam", e.get("tam", 70))}px;font-weight:900;'
                  f'line-height:1.0;color:{dest}">{html.escape(it["titulo"])}</div>'
-                 + (f'<div style="margin-top:18px;font-size:{e.get("tam_texto", 48)}px;font-weight:700;line-height:1.1;color:{txt};white-space:nowrap">'
+                 + (f'<div style="margin-top:18px;font-size:{e.get("tam_texto", 48)}px;font-weight:700;line-height:1.1;color:{txt}">'
                     + _pals(it["texto"], f"{eid}c{i}w", it.get("_tempos") or [it["t"] + 0.2] * len(it["texto"].split()), js) + '</div>' if it.get("texto") else "")
                  + f'<div id="{eid}s{i}"{f' data-larg="{eid}t{i}"' if it.get("sub_titulo") else ""} style="margin-top:22px;width:180px;height:8px;border-radius:4px;'
                    f'background:{dest};transform:scaleX(0);transform-origin:{it.get("sub_origem", "left")}"></div>'

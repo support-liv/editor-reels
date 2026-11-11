@@ -181,13 +181,15 @@
        "titulo": "Imigração",
        "texto": "autorização de trabalho",
        "t": 47.9,
-       "destaque_t": 49.6
+       "destaque_t": 49.6,
+       "icone": "engrenagem"
       },
       {
        "titulo": "Carreira",
        "texto": "licenciamento",
        "t": 51.4,
-       "destaque_t": 53.8
+       "destaque_t": 53.8,
+       "icone": "engrenagem"
       }
      ]
     },

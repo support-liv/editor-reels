@@ -65,6 +65,12 @@ ESTILOS_CAIXA = {
 VINHETA = {"liv": os.path.join(os.path.dirname(AQUI), "assets", "vinheta_cortes_liv.mp4")}   # só corte longo do YouTube
 
 
+# kerning manual (fração do tamanho da fonte) dos pares em caixa alta que abrem sem o raqm
+KERN_CAIXA = {p: -0.075 for p in ("AV", "VA", "AW", "WA", "AY", "YA", "AT", "TA", "LT", "LV", "LY", "LW")}
+KERN_CAIXA.update({p: -0.05 for p in ("PA", "FA", "TÁ", "AÇ")})
+KERN_CAIXA.update({p: -0.03 for p in ("TO", "OT", "VO", "OV", "YO", "OY", "WO", "OW", "RV", "RT", "RY", "TÃ", "TÂ")})
+
+
 def fonte_marca(marca, tam, peso=None):
     """fonte oficial da marca no peso das legendas/caixas, no tamanho equivalente ao aprovado.
     peso: nome ("Black") ou número do eixo wght (650)."""
@@ -913,11 +919,15 @@ class Legenda:
 
 EMOJIS = {"🇺🇸": os.path.join(AQUI, "bandeira_eua.png"), "🇧🇷": os.path.join(AQUI, "bandeira_brasil.png"),
           "🇪🇺": os.path.join(AQUI, "bandeira_ue.png"), "🇵🇹": os.path.join(AQUI, "bandeira_portugal.png"),
-          "🇮🇹": os.path.join(AQUI, "bandeira_italia.png")}
+          "🇮🇹": os.path.join(AQUI, "bandeira_italia.png"),
+          # outros emojis desenhados na hora pelo sistema (não vão pro repositório): dente pros cortes de dentista
+          "🦷": os.path.join(PLAT.pasta_cache("emojis"), "dente.png")}
+BANDEIRAS = {"🇺🇸", "🇧🇷", "🇪🇺", "🇵🇹", "🇮🇹"}
 
 
 def _emoji(tok, altura):
     if not os.path.exists(EMOJIS[tok]):
+        os.makedirs(os.path.dirname(EMOJIS[tok]), exist_ok=True)
         PLAT.emoji_png(tok, EMOJIS[tok])               # bandeiras já vêm no repo (o Windows não desenha bandeira)
     im = Image.open(EMOJIS[tok]).convert("RGBA")
     im = im.crop(im.getbbox())
@@ -942,7 +952,7 @@ def caixa_texto(texto, marca, tam=52, estilo=None):
     d0 = ImageDraw.Draw(Image.new("RGB", (1, 1)))
     if not frase:
         texto = texto.upper()
-    if m.get("bandeiras") and not any(b_ in texto for b_ in EMOJIS):
+    if m.get("bandeiras") and not any(b_ in texto for b_ in BANDEIRAS):
         # "nos EUA?" -> "nos EUA 🇺🇸?". Uma bandeira só, depois da ÚLTIMA menção ao país: bandeira no meio da frase fica
         # ruim ("no Brasil 🇧🇷 vs EUA 🇺🇸"; regra do Lucas, 10/11/2026)
         ms = list(re.finditer(r"\b(EUA|Estados Unidos|Brasil)\b\*?", texto))
@@ -966,7 +976,14 @@ def caixa_texto(texto, marca, tam=52, estilo=None):
                 toks[k] = t[1:]; dentro = True
     esp = d0.textlength(" ", font=f)
     alt_emoji = int(tam * 1.05)
-    larg = lambda t: _emoji(t, alt_emoji).width if t in EMOJIS else d0.textlength(t, font=f)
+    # caixa alta sem o motor de layout (raqm) não tem kerning: "REVALIDAR" virava "REV ALIDAR" (Jornada, 11/11).
+    # Kerning manual nos pares que abrem demais e espaço entre palavras maior que o vão dessas letras.
+    kern = KERN_CAIXA if not frase else {}
+    if not frase:
+        esp = max(esp, tam * 0.30)
+    def larg_txt(t):
+        return d0.textlength(t, font=f) + sum(kern.get(t[i:i + 2], 0) for i in range(len(t) - 1)) * tam
+    larg = lambda t: _emoji(t, alt_emoji).width if t in EMOJIS else larg_txt(t)
     # pontuação que sobrou sozinha depois da bandeira ("EUA 🇺🇸?") cola sem espaço
     cola = lambda t: bool(re.fullmatch(r"[?!.,:;]+", t))
     linhas, l, lw = [], [], 0
@@ -1013,8 +1030,13 @@ def caixa_texto(texto, marca, tam=52, estilo=None):
             if t in EMOJIS:
                 e = _emoji(t, alt_emoji)
                 img.alpha_composite(e, (int(x), int(y + (tam - alt_emoji) / 2 + tam * 0.12)))
-            else:
+            elif not any(t[j:j + 2] in kern for j in range(len(t) - 1)):
                 d.text((x, y), t, font=f, fill=m["texto_caixa"])
+            else:                                       # letra a letra, com o kerning dos pares
+                xx = x
+                for j, ch in enumerate(t):
+                    d.text((xx, y), ch, font=f, fill=m["texto_caixa"])
+                    xx += d0.textlength(ch, font=f) + kern.get(t[j:j + 2], 0) * tam
     return img
 
 

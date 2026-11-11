@@ -56,9 +56,15 @@ CTA_MOV = os.path.join(MOTION, "jornada_cta.mov")
 
 
 def motion_sem_cta(sid, fala):
-    """motion do short sem a cena de CTA antiga, com a duração da fala + a cauda do CTA do evento."""
+    """motion do short sem a cena de CTA antiga, com a duração da fala + a cauda do CTA do evento.
+    Corte sem roteiro de motion (os extras): None (só o CTA)."""
     import json
     pasta = os.path.join(AQUI, "motion")
+    if not os.path.exists(os.path.join(pasta, f"{sid}.json")):
+        if not os.path.exists(CTA_MOV):
+            subprocess.run(["npx", "hyperframes", "render", ".", "-c", "modelos/jornada_cta.html", "--format", "mov",
+                            "--workers", "1", "-o", CTA_MOV], cwd=os.path.join(AQUI, "..", "..", "motion"), check=True)
+        return None
     r = json.load(open(os.path.join(pasta, f"{sid}.json")))
     r["cenas"] = [c for c in r["cenas"] if c.get("tipo") != "cta"]
     r.update({"nome": f"dentista_{sid}_evento", "duracao": round(fala + CAUDA_EVENTO, 2), "fala": fala})
@@ -73,43 +79,67 @@ def motion_sem_cta(sid, fala):
         subprocess.run(["npx", "hyperframes", "render", ".", "-c", "modelos/jornada_cta.html", "--format", "mov",
                         "--workers", "1", "-o", CTA_MOV], cwd=raiz_motion, check=True)
     return mov
+# Ganchos revistos em 11/11 (Lucas): mais topo de funil, falando com o dentista, 🦷 no fim em vários.
 # Os 15 shorts: cada trecho da lista (menos o cold open), do começo ao fim da frase do documento.
 # id, nome, frase de início, frase de fim, gancho, pessoas (colunas cima,baixo; None = Marinna sozinha, vertical em
 # tela cheia), tarja. Colunas da live: 1 = Júlia, 2 = Marinna, 3 = André. O arquivo do trecho vem de LONGO[1:].
 SHORTS = [
     ("S01", "voce_investiu_na_carreira", "mas eu quero que você pense", "espaço pra minha família",
-     "Você investiu tanto na carreira. É só isso que tem pra você?", None, "rosa"),
+     "Dentista, você investiu tanto na carreira. É só isso? 🦷", None, "rosa"),
     ("S02", "profissionais_qualificados", "profissionais qualificados", "não caiba nessa esfera mais",
-     "Qualificado, experiente… e sem espaço pra crescer?", None, "azul"),
+     "Dentista qualificado e sem espaço pra crescer? 🦷", None, "azul"),
     ("S03", "a_carreira_da_julia", "bom eu me formei em odontologia", "buco maxilo facial",
-     "Cirurgiã do Exército no Brasil. Por que ela mudou de rota?", "1,2", "branco"),
+     "Cirurgiã-dentista do Exército. Por que ela mudou de rota? 🦷", "1,2", "branco"),
     ("S04", "a_carreira_do_andre", "eu me formei também", "área da docência",
-     "13 anos de carreira e professor. Por que sonhar com os EUA 🇺🇸?", "3,2", "rosa"),
+     "Dentista há 13 anos e professor. Por que sonhar com os EUA 🇺🇸?", "3,2", "rosa"),
     ("S05", "sonho_pela_familia", "e surgiu esse sonho", "com a nossa família tudo isso",
      "Bem posicionados no Brasil. Por que olhar pros EUA 🇺🇸?", "3,1", "azul"),
     ("S06", "aprovados_no_board", "então nós fomos aprovados", "se organiza para aquilo",
-     "A prova do Board é só pra quem é gênio?", "3,2", "branco"),
+     "A prova do Board pra dentista é só pra gênio? 🦷", "3,2", "branco"),
     ("S07", "imigrar_e_revalidar", "porque geralmente é assim", "portas se abram para vocês",
-     "Imigrar e revalidar o diploma: qual vem primeiro?", "2,1", "rosa"),
+     "Dentista: imigrar ou revalidar o diploma primeiro? 🦷", "2,1", "rosa"),
     ("S08", "tinha_tempo_sobrando", "que essa era uma oportunidade", "fazer minha prova",
-     "Ela tinha tempo sobrando pra estudar pra prova?", "2,1", "azul"),
+     "Ela tinha tempo sobrando pra estudar pro Board? 🦷", "2,1", "azul"),
     ("S09", "bebe_e_a_prova", "não gente não tinha tempo", "alcançar o meu objetivo",
-     "Bebê de 1 ano e a prova do Board: como ela estudou?", "1,2", "branco"),
+     "Dentista, mãe de bebê e a prova do Board: como ela estudou? 🦷", "1,2", "branco"),
     ("S10", "ingles_basico", "foi um processo bem cansativo", "que eu precisava para a prova",
-     "Inglês básico dá pra passar na prova do Board?", "1,2", "rosa"),
+     "Inglês básico dá pra passar no Board de odontologia? 🦷", "1,2", "rosa"),
     ("S11", "o_que_e_o_inbde", "o que que é o", "cada estado tem sua legislação",
-     "Dentista brasileiro: você sabe o que é o INBDE?", "1,2", "azul"),
+     "Dentista brasileiro: você sabe o que é o INBDE? 🦷", "1,2", "azul"),
     ("S12", "dds_ou_aigd", "aqui nós vamos ter diferentes tipos", "dentro de cada estado nos estados unidos",
-     "DDS ou AIGD: qual licença pra atuar nos EUA 🇺🇸?", "3,2", "branco"),
+     "DDS ou AIGD: qual licença o dentista precisa nos EUA 🇺🇸?", "3,2", "branco"),
     ("S13", "financiamento_estudantil", "por isso que eu falo que o processo", "faculdade sem preocupação gente",
-     "Sem trabalhar, como pagar a faculdade de odontologia nos EUA 🇺🇸?", "2,1", "rosa"),
+     "Sem trabalhar, como pagar a faculdade de odontologia nos EUA 🇺🇸?", "3,2", "rosa"),   # quem fala é o André (11/11)
     ("S14", "nao_e_imediato", "então que não é imediato", "data de validade",
-     "Existe limite de idade pro dentista imigrar?", "2,1", "azul"),
+     "Existe limite de idade pro dentista imigrar? 🦷", "2,1", "azul"),
     ("S15", "genio_da_lampada", "porque a gente está aqui falando", "o repertório profissional e entender",
-     "Existe gênio da lâmpada pra carreira nos EUA 🇺🇸?", "2,1", "branco"),
+     "Existe gênio da lâmpada pra carreira do dentista nos EUA 🇺🇸?", "2,1", "branco"),
 ]
 
-TROCAS = ["Imigrarê=Imigrar", "Emigrareua=Imigrar", "Livre Immigration Law=LIV Immigration Law",
+# Cortes extras (11/11, "vamos ampliar"): mesmo formato dos SHORTS + (início, fim) na live. Sem roteiro de motion: só
+# gancho, legenda e o CTA do evento.
+EXTRAS = [
+    ("N01", "quanto_ganha_na_florida", "hoje com a prova do", "muito explorada por dentistas internacionais",
+     "Quanto ganha um dentista brasileiro na Flórida sem revalidar? 🦷", "3,2", "rosa", 2566.85, 2606.65),
+    ("N02", "regra_de_cada_estado", "você quer dizer", "esse ano são 12",
+     "Dentista: seu diploma valeria em qualquer estado dos EUA 🇺🇸?", "3,2", "azul", 2477.89, 2527.13),
+    ("N03", "idade_e_curriculo", "quando que a idade é um problema", "o que eu consigo",
+     "Existe idade certa pro dentista recomeçar fora do Brasil? 🦷", "2,1", "branco", 4053.59, 4114.65),
+    ("N05", "pagar_a_vista", "a gente está mudando da forma", "acontece com todo mundo da área",
+     "Dentista, por que pagar tudo à vista pode te atrapalhar nos EUA 🇺🇸?", "2,1", "rosa", 2766.43, 2828.27),
+    ("N06", "prova_tem_validade", "se eu começar pela flórida", "vocês têm aprovação ponto final",
+     "A prova americana do dentista tem prazo de validade? 🦷", "3,2", "azul", 2918.48, 2969.15),
+    ("N07", "prova_ou_visto", "não é fácil", "o processo está no nome dele",
+     "Dentista: o que vem primeiro, a prova ou o visto? 🦷", "1,2", "branco", 3478.94, 3538.81),
+    ("N08", "filho_ate_21", "existe um limitador", "próximas e próximas gerações",
+     "Dentista com filho adolescente: tem prazo pra levar a família? 🦷", "2,1", "rosa", 3739.94, 3782.29),
+    ("N09", "tempo_de_preparo", "eu vi que bastante gente perguntou", "ainda pede três anos",
+     "Quanto tempo o dentista leva pra se preparar pra prova americana? 🦷", "1,2", "azul", 4431.38, 4478.57),
+    ("N12", "visto_nao_basta", "a licença o processo de licenciamento", "que vai atrás da oportunidade",
+     "Dentista: ter o visto basta pra trabalhar nos EUA 🇺🇸?", "2,1", "branco", 3208.30, 3253.39),
+]
+
+TROCAS = ["INBDI=INBDE", "ANBDI=INBDE", "TOFEL=TOEFL", "na Flávia=na Flórida", "AGD=AEGD", "EGD=AEGD", "Imigrarê=Imigrar", "Emigrareua=Imigrar", "Livre Immigration Law=LIV Immigration Law",
           "Marina Damasio=Marinna Damásio", "Marina=Marinna", "Green Car=green card", "plantodontia=implantodontia",
           "implanta odontia=implantodontia",
           "INBD=INBDE", "DTS=DDS", "custa de revalidação=custo de revalidação", "beber de um ano=bebê de um ano",
@@ -209,7 +239,8 @@ def main():
     filtro = sys.argv[2:]
     os.makedirs(TRECHOS, exist_ok=True)
     os.makedirs(os.path.join(AQUI, "motion", "palavras"), exist_ok=True)
-    for (sid, nome, f_ini, f_fim, gancho, pessoas, cor), (a, b) in zip(SHORTS, LONGO[1:]):
+    todos = [(*sh, a, b) for sh, (a, b) in zip(SHORTS, LONGO[1:])] + EXTRAS
+    for sid, nome, f_ini, f_fim, gancho, pessoas, cor, a, b in todos:
         if filtro and sid not in filtro:
             continue
         arq = os.path.join(TRECHOS, f"{sid}_{nome}.mp4")
@@ -236,8 +267,10 @@ def main():
             fala = float([l for l in out.splitlines() if l.startswith("DURACAO")][0].split()[1])
             mov = motion_sem_cta(sid, fala)
             cmd[cmd.index("--cauda") + 1] = str(CAUDA_EVENTO)
-            rodar(cmd + ["--broll", mov + "@0", "--broll", f"{CTA_MOV}@{fala - 0.3:.2f}",
+            rodar(cmd + (["--broll", mov + "@0"] if mov else []) + ["--broll", f"{CTA_MOV}@{fala - 0.3:.2f}",
                          "--nome", f"{sid}_{nome}", "--saida", os.path.join(SAIDA, "shorts")])
+            if mov and os.path.exists(mov):          # o .mov do motion tem centenas de MB: some depois de usado (refeito se rodar de novo)
+                os.remove(mov)
         else:
             rodar(cmd + ["--broll", os.path.join(MOTION, f"dentista_{sid}.mov") + "@0",
                          "--nome", f"{sid}_{nome}", "--saida", os.path.join(SAIDA, "shorts")])
