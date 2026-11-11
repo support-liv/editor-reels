@@ -1,0 +1,18 @@
+{
+ "nome": "c1011_c8_o1_empresa_propria_cta",
+ "duracao": 63.95,
+ "fala": 60.15,
+ "cenas": [
+  {
+   "tipo": "cta",
+   "t0": 59.85,
+   "t1": 63.95,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84,
+   "base": 700
+  }
+ ]
+}

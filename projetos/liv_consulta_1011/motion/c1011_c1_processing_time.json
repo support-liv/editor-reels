@@ -1,0 +1,148 @@
+{
+ "cenas": [
+  {
+   "t0": 4.0,
+   "t1": 9.95,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "Processing Times",
+     "y": 250,
+     "t": 4.1
+    },
+    {
+     "tipo": "etapas",
+     "y": 330,
+     "itens": [
+      {
+       "texto": "categoria do visto",
+       "t": 4.5
+      },
+      {
+       "texto": "formulário",
+       "t": 6.45
+      },
+      {
+       "texto": "tipo da categoria",
+       "t": 7.93
+      },
+      {
+       "texto": "o prazo",
+       "t": 9.69
+      }
+     ],
+     "tam": 76,
+     "passo": 128
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "t0": 10.1,
+   "t1": 17.6,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "como ler o prazo",
+     "y": 250,
+     "t": 10.2
+    },
+    {
+     "tipo": "colunas",
+     "y": 330,
+     "alt": 200,
+     "itens": [
+      {
+       "titulo": "pra frente",
+       "t": 10.6,
+       "destaque_t": 10.84,
+       "sub_titulo": true,
+       "sub_origem": "left",
+       "sub_dur": 0.6
+      },
+      {
+       "titulo": "pra trás",
+       "t": 11.38,
+       "destaque_t": 11.4,
+       "sub_titulo": true,
+       "sub_origem": "right",
+       "sub_dur": 0.6
+      }
+     ],
+     "tam": 110,
+     "tam_texto": 64
+    },
+    {
+     "tipo": "linha",
+     "texto": "eles botam uma nota:",
+     "y": 560,
+     "t": 13.11,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "80% dos casos",
+     "y": 680,
+     "t": 14.56,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "nos últimos 6 meses",
+     "y": 800,
+     "t": 16.16,
+     "tam": 96
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "t0": 18.2,
+   "t1": 20.6,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "hoje",
+     "y": 250,
+     "t": 18.36
+    },
+    {
+     "tipo": "numero",
+     "y": 340,
+     "t": 19.2,
+     "numero": "30",
+     "rotulo": "meses",
+     "t_rotulo": 19.6
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "tipo": "cta",
+   "t0": 25.74,
+   "t1": 29.84,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84,
+   "base": 700
+  }
+ ],
+ "nome": "c1011_c1_processing_time",
+ "duracao": 29.84,
+ "fala": 26.04,
+ "palavras": "palavras/c1_processing_time.json",
+ "zona": [
+  300,
+  1460
+ ],
+ "centralizar_componentes": true
+}

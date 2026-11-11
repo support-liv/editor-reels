@@ -1,0 +1,166 @@
+{
+ "cenas": [
+  {
+   "t0": 4.3,
+   "t1": 10.9,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "O-1",
+     "y": 250,
+     "t": 4.41
+    },
+    {
+     "tipo": "linha",
+     "texto": "empresa no Brasil 🇧🇷",
+     "y": 330,
+     "t": 5.95,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "quer desenvolver projetos",
+     "y": 450,
+     "t": 7.73,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "nos EUA 🇺🇸",
+     "y": 560,
+     "t": 9.76,
+     "tam": 96,
+     "cor": "destaque"
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "t0": 11.2,
+   "t1": 17.0,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o nome disso",
+     "y": 250,
+     "t": 11.32
+    },
+    {
+     "tipo": "linha",
+     "texto": "foreign employer",
+     "y": 330,
+     "t": 13.83,
+     "tam": 96,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "empregador estrangeiro",
+     "y": 460,
+     "t": 15.97,
+     "tam": 96,
+     "peso": 700
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "t0": 19.9,
+   "t1": 29.0,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "precisa de um agente",
+     "y": 250,
+     "t": 20.36
+    },
+    {
+     "tipo": "cartoes",
+     "y": 330,
+     "alt": 320,
+     "itens": [
+      {
+       "titulo": "Pessoa",
+       "texto": "green card ou cidadão",
+       "t": 22.64,
+       "destaque_t": 23.43
+      },
+      {
+       "titulo": "Empresa",
+       "texto": "também pode ser o agente",
+       "t": 27.97,
+       "destaque_t": 28.4
+      }
+     ]
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "t0": 31.0,
+   "t1": 37.6,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o agente assina",
+     "y": 250,
+     "t": 31.22
+    },
+    {
+     "tipo": "linha",
+     "texto": "eu me responsabilizo",
+     "y": 330,
+     "t": 32.88,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "diante da imigração",
+     "y": 440,
+     "t": 34.58,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "pela empresa estrangeira",
+     "y": 540,
+     "t": 35.76,
+     "tam": 96,
+     "cor": "destaque"
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "tipo": "cta",
+   "t0": 44.43,
+   "t1": 48.53,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84,
+   "base": 700
+  }
+ ],
+ "nome": "c1011_c9_o1_empregador_estrangeiro",
+ "duracao": 48.53,
+ "fala": 44.73,
+ "palavras": "palavras/c9_o1_empregador_estrangeiro.json",
+ "zona": [
+  300,
+  1460
+ ],
+ "centralizar_componentes": true
+}

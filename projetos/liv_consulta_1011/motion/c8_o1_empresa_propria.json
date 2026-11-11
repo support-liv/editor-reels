@@ -1,0 +1,130 @@
+{
+ "cenas": [
+  {
+   "t0": 4.2,
+   "t1": 10.6,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o empregador no O-1",
+     "y": 250,
+     "t": 4.3
+    },
+    {
+     "tipo": "checklist",
+     "y": 330,
+     "itens": [
+      {
+       "texto": "empregador aqui",
+       "t": 4.4,
+       "ok": true
+      },
+      {
+       "texto": "uma empresa que você abriu",
+       "t": 6.49,
+       "ok": true
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "só que você não pode",
+     "y": 600,
+     "t": 8.09,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "ter o controle",
+     "y": 720,
+     "t": 9.0,
+     "tam": 110,
+     "cor": "destaque"
+    }
+   ]
+  },
+  {
+   "t0": 10.7,
+   "t1": 21.1,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "a lei foi atualizada",
+     "y": 250,
+     "t": 10.8,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "numero",
+     "y": 370,
+     "t": 11.92,
+     "numero": "2025",
+     "rotulo": "do O-1",
+     "t_rotulo": 13.08,
+     "tam": 260
+    },
+    {
+     "tipo": "linha",
+     "texto": "a empresa",
+     "y": 640,
+     "t": 15.06,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "é seu peticionário",
+     "y": 750,
+     "t": 17.58,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "sem ter o controle",
+     "y": 880,
+     "t": 19.43,
+     "tam": 110,
+     "cor": "destaque"
+    }
+   ]
+  },
+  {
+   "t0": 47.6,
+   "t1": 51.9,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "quem tem o controle",
+     "y": 250,
+     "t": 47.7
+    },
+    {
+     "tipo": "cartoes",
+     "y": 330,
+     "alt": 320,
+     "itens": [
+      {
+       "titulo": "Board",
+       "texto": "of directors",
+       "t": 48.18
+      },
+      {
+       "titulo": "Alguém",
+       "texto": "que pode te demitir",
+       "t": 49.88,
+       "destaque_t": 50.73
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

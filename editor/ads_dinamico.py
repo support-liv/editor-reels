@@ -20,10 +20,29 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.dirname(AQUI)
 W, H, FPS = 1080, 1920, 30
 CACHE = PLAT.pasta_cache("ads")
-COR = {"azul": (44, 54, 66), "laranja": (255, 110, 31), "bege": (255, 240, 230), "branco": (255, 255, 255),
-       "marrom": (148, 89, 67)}
-FONTE = os.path.join(RAIZ, "assets", "fontes", "DarkerGrotesque[wght].ttf")
+# identidade de cada marca. Os nomes das cores são papéis (o roteiro da LIV continua valendo): "azul" = fundo
+# escuro da marca, "laranja" = destaque, "bege" = texto claro. Na Imigrar: azul royal, rosa e branco.
+# "card" = cartão do CTA (fundo, texto, destaque). Imigrar: cartão branco, porque rosa sobre azul é proibido.
+MARCAS = {
+    "liv": {"cor": {"azul": (44, 54, 66), "laranja": (255, 110, 31), "bege": (255, 240, 230), "branco": (255, 255, 255),
+                    "marrom": (148, 89, 67)},
+            "fonte": "DarkerGrotesque[wght].ttf", "card": ("azul", "bege", "laranja")},
+    "imigrar": {"cor": {"azul": (14, 89, 197), "laranja": (249, 13, 91), "bege": (255, 255, 255), "branco": (255, 255, 255),
+                        "rosa": (249, 13, 91), "escuro": (20, 20, 20)},
+                "fonte": "InterTight[wght].ttf", "card": ("branco", "escuro", "rosa")},
+}
+COR, FONTE, CARD = {}, "", ()
 _fontes = {}
+
+
+def usar_marca(marca):
+    global COR, FONTE, CARD
+    m = MARCAS[marca]
+    COR, FONTE, CARD = dict(m["cor"]), os.path.join(RAIZ, "assets", "fontes", m["fonte"]), m["card"]
+    _fontes.clear()
+
+
+usar_marca("liv")
 
 
 def fonte(tam, peso=800):
@@ -436,20 +455,21 @@ def render_cta(c, p_seta):
     """card da marca: respiro igual em cima, embaixo e dos lados; ritmo vertical pelo desenho das letras;
     Light + Black da mesma família; seta laranja centrada na linha principal."""
     P = c.get("respiro", 64)                                 # respiro interno (igual nos 4 lados)
-    l1 = render_span(c["linha1"], c.get("tam1", 64), "bege", 400, -0.005)
+    fundo, texto, dest = CARD
+    l1 = render_span(c["linha1"], c.get("tam1", 64), texto, 400, -0.005)
     larg = SEGURA["x1"] - SEGURA["x0"]
     tam2 = c.get("tam2", 124)
     while True:                                              # linha principal + vão (= respiro) + seta cabem no card
-        l2 = render_span(c["linha2"], tam2, "bege", 900, -0.03)
+        l2 = render_span(c["linha2"], tam2, texto, 900, -0.03)
         if P + (_tinta(l2)[2] - _tinta(l2)[0]) + P + 80 + P <= larg or tam2 <= 80:
             break
         tam2 -= 4
-    l3 = render_span(c["linha3"], c.get("tam3", 50), "laranja", 600, 0.005)
+    l3 = render_span(c["linha3"], c.get("tam3", 50), dest, 600, 0.005)
     linhas = [(l1, _tinta(l1)), (l2, _tinta(l2)), (l3, _tinta(l3))]
     gaps = [int(tam2 * 0.22), int(tam2 * 0.26)]               # entre as linhas, proporcional à principal
     altura = 2 * P + sum(t[3] - t[1] for _, t in linhas) + sum(gaps)
     im = Image.new("RGBA", (larg, altura), (0, 0, 0, 0))
-    ImageDraw.Draw(im).rounded_rectangle((0, 0, larg - 1, altura - 1), radius=40, fill=COR["azul"] + (255,))
+    ImageDraw.Draw(im).rounded_rectangle((0, 0, larg - 1, altura - 1), radius=40, fill=COR[fundo] + (255,))
     y = P
     pos = []
     for k, (l, t) in enumerate(linhas):
@@ -462,7 +482,7 @@ def render_cta(c, p_seta):
         dy = int(8 * np.sin(p_seta * 8))
         cy = (pos[1][0] + pos[1][1]) // 2 + dy
         cx = larg - P - 40
-        d.line([(cx - 38, cy - 19), (cx, cy + 19), (cx + 38, cy - 19)], fill=COR["laranja"] + (a,), width=13, joint="curve")
+        d.line([(cx - 38, cy - 19), (cx, cy + 19), (cx + 38, cy - 19)], fill=COR[dest] + (a,), width=13, joint="curve")
     return im
 
 
@@ -494,7 +514,7 @@ def montar(rot, versao, saida, quadros_png=None):
     frente = [Linhas(b) for b in rot.get("frente", []) if versao == "A" or not b.get("so_A")]
     atras = ajustar_legibilidade(rot, atras, frente, ms, n, rot.get("limite_oculto", 0.18))
     faixa = Linhas(dividido["faixa"]) if dividido else None
-    # legenda: o padrão minimalista da LIV do editor (palavra falada em laranja), sem mexer no editor
+    # legenda: o padrão da marca no editor (LIV minimalista em laranja; Imigrar com a palavra falada em rosa)
     sys.path.insert(0, AQUI)
     import editor_reels as er
     ws = []
@@ -504,7 +524,7 @@ def montar(rot, versao, saida, quadros_png=None):
             w = w.replace(a_, b_)
         ws.append(dict(p, w=w))
     grupos = er.grupos_legenda(ws)
-    leg = er.Legenda("liv")
+    leg = er.Legenda(rot.get("marca", "liv"))
     letterings = [Lettering(b) for b in rot.get("lettering", [])]
     sem_leg = [(b.b.get("legenda_desde", b.b["t0"]) if b.b.get("legenda_desde") else b.b["t0"],
                 b.b["t1"]) for b in atras + frente if not b.b.get("legenda") and not b.b.get("legenda_desde")]
@@ -558,6 +578,8 @@ def montar(rot, versao, saida, quadros_png=None):
             q = br["f"].quadro(int((t - br["t0"]) * FPS)).astype(np.float32)
             if any(l.ativo(t) for l in letterings):
                 q = escurecer_base(q, br.get("veu", 0.62))
+        elif any(l.ativo(t) for l in letterings):           # lettering sobre a própria gravação (sem B-roll)
+            q = escurecer_base(q, rot.get("veu_lettering", 0.5))
         for l in letterings:
             l.desenhar(q, t)
         if dividido and dividido["t0"] <= t < dividido["t1"]:
@@ -646,6 +668,7 @@ if __name__ == "__main__":
     a = ap.parse_args()
     PLAT.limpar_temporarios()
     rot = carregar_roteiro(a.roteiro)
+    usar_marca(rot.get("marca", "liv"))
     rot["_ate"] = a.ate
     if a.se_ilegivel:
         for b in rot.get("atras", []):

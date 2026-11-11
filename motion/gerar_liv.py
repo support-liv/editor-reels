@@ -188,7 +188,7 @@ def batidas(c, falas):
 def alinhamento(c, i):
     """a maioria alinhada à esquerda; ~1 em 4 cenas centralizada (fixo por cena, reproduzível). CTA: esquerda."""
     if c.get("tipo") == "cta":
-        return False
+        return c.get("alinhar") == "centro"           # CTA: esquerda (padrão LIV) ou centro ("alinhar": "centro")
     if "alinhar" in c:
         return c["alinhar"] == "centro"
     return i % 2 == 1 if TEMA["marca"] == "imigrar" else i % 4 == 2
@@ -518,7 +518,9 @@ def _barra(e, eid, top, W, centro, fundo, ctexto, cdest):
 
 
 def _colunas(e, eid, top, W, centro, fundo, ctexto, cdest):
-    """duas colunas separadas por um fio fino (comparação sem card). risco_t risca; destaque_t sublinha."""
+    """duas colunas separadas por um fio fino (comparação sem card). risco_t risca; destaque_t sublinha.
+    Sublinhado do item: "sub_titulo": true = da largura do título (medida no navegador); "sub_origem": "right" = corre
+    do fim pro começo do texto (ex.: "pra trás"), "left" (padrão) = do começo pro fim ("pra frente")."""
     larg, alt = (W - 192 - 60) // 2, e.get("alt", 300)
     dest, txt = COR[cdest], COR[ctexto]
     h = [f'<div id="{eid}f" style="position:absolute;left:{W // 2 - 2}px;top:0;width:4px;height:{alt}px;background:{SEC[fundo]};'
@@ -528,17 +530,18 @@ def _colunas(e, eid, top, W, centro, fundo, ctexto, cdest):
     for i, it in enumerate(e["itens"][:2]):
         x = 96 if i == 0 else W // 2 + 30
         h.append(f'<div id="{eid}c{i}" style="position:absolute;left:{x}px;top:10px;width:{larg}px;opacity:0">'
-                 f'<div class="fit" data-max="{larg}" data-grupo="{eid}" style="display:inline-block;white-space:nowrap;font-size:{it.get("tam", 70)}px;font-weight:900;'
+                 f'<div id="{eid}t{i}" class="fit" data-max="{larg}" data-grupo="{eid}" style="display:inline-block;white-space:nowrap;font-size:{it.get("tam", e.get("tam", 70))}px;font-weight:900;'
                  f'line-height:1.0;color:{dest}">{html.escape(it["titulo"])}</div>'
-                 + (f'<div style="margin-top:18px;font-size:48px;font-weight:700;line-height:1.1;color:{txt}">'
+                 + (f'<div style="margin-top:18px;font-size:{e.get("tam_texto", 48)}px;font-weight:700;line-height:1.1;color:{txt};white-space:nowrap">'
                     + _pals(it["texto"], f"{eid}c{i}w", it.get("_tempos") or [it["t"] + 0.2] * len(it["texto"].split()), js) + '</div>' if it.get("texto") else "")
-                 + f'<div id="{eid}s{i}" style="margin-top:22px;width:180px;height:8px;border-radius:4px;background:{dest};transform:scaleX(0);transform-origin:left"></div>'
+                 + f'<div id="{eid}s{i}"{f' data-larg="{eid}t{i}"' if it.get("sub_titulo") else ""} style="margin-top:22px;width:180px;height:8px;border-radius:4px;'
+                   f'background:{dest};transform:scaleX(0);transform-origin:{it.get("sub_origem", "left")}"></div>'
                  f'<div id="{eid}x{i}" style="position:absolute;left:-10px;top:30px;width:{larg}px;height:9px;border-radius:5px;background:{dest};'
                  f'transform:scaleX(0);transform-origin:left"></div></div>')
         js.append(f'tl.fromTo("#{eid}c{i}", {{ opacity: 0, x: {-30 if i == 0 else 30} }}, {{ opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }}, {it["t"] - 0.1:.2f});')
         sons.append(("tick", it["t"], 0.22, 0.03))
         if it.get("destaque_t"):
-            js.append(f'tl.to("#{eid}s{i}", {{ scaleX: 1, duration: 0.4, ease: "power2.out" }}, {it["destaque_t"]:.2f});')
+            js.append(f'tl.to("#{eid}s{i}", {{ scaleX: 1, duration: {it.get("sub_dur", 0.4)}, ease: "power2.out" }}, {it["destaque_t"]:.2f});')
         if it.get("risco_t"):
             js.append(f'tl.to("#{eid}x{i}", {{ scaleX: 1, duration: 0.3, ease: "power2.out" }}, {it["risco_t"]:.2f});')
             js.append(f'tl.to("#{eid}c{i}", {{ opacity: 0.45, duration: 0.3 }}, {it["risco_t"] + 0.15:.2f});')
@@ -743,7 +746,8 @@ def gerar(r):
         pid = f"p{ci}"
         el = [f'<div class="painel" id="{pid}" style="top:{top}px;height:{h}px">',
               f'<svg class="forma" viewBox="0 0 {W} {h}" style="height:{h}px"><path d="{forma}" fill="{COR[fundo]}"/>'
-              + (f'<path d="{borda}" stroke="{COR[cborda]}" stroke-width="16" fill="none"/></svg>' if TEMA["marca"] == "liv" else
+              + ('</svg>' if c.get("limpo") else            # "limpo": só o fundo liso e o texto (sem fio, faixa nem textura)
+                 f'<path d="{borda}" stroke="{COR[cborda]}" stroke-width="16" fill="none"/></svg>' if TEMA["marca"] == "liv" else
                f'<path d="{borda}" transform="translate(0,-70)" stroke="{COR[cborda]}" stroke-width="60" fill="none"/>'
                f'<path d="{borda}" transform="translate(0,-150)" stroke="{COR[FUNDOS[c.get("cor", "azul")][1]]}" stroke-width="18" fill="none"/></svg>'
                # textura presa dentro da forma do painel (não vaza na transição nem sobra na tela depois que a cena sai)
@@ -760,7 +764,8 @@ def gerar(r):
             som("whoosh", entra, 0.35, 0.5)
         else:                                            # entra rápido e assenta; faixas do fundo correm na cena toda
             js.append(f'tl.fromTo("#{pid}", {{ y: {y_ini} }}, {{ y: 0, duration: 0.45, ease: "expo.out" }}, {entra:.2f});')
-            js.extend(anim_fundo(c, ci, pid, W, entra, t1 - t0 + 0.8))
+            if not c.get("limpo"):
+                js.extend(anim_fundo(c, ci, pid, W, entra, t1 - t0 + 0.8))
             som("whoosh_grave", entra, 0.45, 0.6)
         if t1 < dur - 0.05:
             if coberto:                                  # o próximo painel sobe por cima: este some depois
@@ -772,18 +777,21 @@ def gerar(r):
             base = 1130 if modo == "baixo" else (330 if modo == "cheio" else 250)
             if modo == "cheio" and r.get("tela_dividida"):
                 base = 680                                   # sem legenda competindo: o CTA fica no meio da zona segura
+            base = c.get("base", base)                       # roteiro escolhe (ex.: CTA no meio da tela)
             c["elementos"] = ([] if TEMA["marca"] != "liv" else
                               [{"tipo": "icone", "icone": "losangos", "x": 96, "y": base + 10, "tam": 60, "t": t0 + 0.15}]) + [
                 {"tipo": "linha", "texto": c.get("acima", "Comente"), "y": base + 50, "t": t0 + 0.2, "cor": "texto", "tam": 84, "sync": False},
                 {"tipo": "linha", "texto": c["palavra"], "y": base + 140, "t": t0 + 0.4, "cor": "destaque", "tam": 132, "sync": False},
+            ] + ([                                                   # linha de baixo é opcional ("texto": "")
                 {"tipo": "linha", "texto": c["texto"], "y": base + 285, "t": t0 + 0.75, "cor": "texto", "tam": c.get("tam_texto", 52), "peso": 700, "sync": False},
                 {"tipo": "sub", "y": base + 285 + int(c.get("tam_texto", 52) * 1.05) + 22, "largura": 300, "t": t0 + 1.0},
-            ]
-            c["elementos"][-1]["sob"] = len(c["elementos"]) - 2      # o fio mede o texto de baixo ("no canal")
+            ] if c.get("texto") else [])
+            if c.get("texto"):
+                c["elementos"][-1]["sob"] = len(c["elementos"]) - 2  # o fio mede o texto de baixo ("no canal")
             som("sino", t0 + 0.4, 0.3, 1.2)
         centro = alinhamento(c, ci)
         if modo == "cheio" and c.get("tipo") != "cta":
-            centralizar_vertical(c.get("elementos", []), *TEMA["zona"])
+            centralizar_vertical(c.get("elementos", []), *r.get("zona", TEMA["zona"]))
         for ei, e in enumerate(c.get("elementos", [])):
             eid = f"{pid}e{ei}"
             t = e.get("t", t0)
@@ -852,6 +860,10 @@ def gerar(r):
                 js.append(f'tl.fromTo("#{eid}", {{ opacity: 0, y: 30 }}, {{ opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }}, {t:.2f});')
             elif e["tipo"] in COMPONENTES:
                 h_, j_, s_ = COMPONENTES[e["tipo"]](e, eid, loc(e["y"]), W, centro, fundo, ctexto, cdest)
+                # componente centralizado de verdade (o conteúdo medido no navegador, não a caixa de largura cheia):
+                # opt-in pelo roteiro ("centralizar_componentes": true) ou pelo elemento ("cx": true), em cena centralizada
+                if e.get("cx", centro and r.get("centralizar_componentes")) and e["tipo"] in ("colunas", "checklist", "etapas"):   # barra já ocupa a largura toda
+                    h_ = h_.replace(f'<div id="{eid}"', f'<div id="{eid}" data-cx="1"', 1)
                 el.append(h_); js.extend(j_)
                 for a in s_:
                     som(*a)
@@ -926,6 +938,10 @@ def gerar(r):
           const menor = Math.min(...els.map((el) => parseFloat(el.style.fontSize)));
           els.forEach((el) => {{ el.style.fontSize = menor + "px"; }});
         }});
+        // sublinhado da largura exata do título (colunas com "sub_titulo"), medido depois do ajuste de tamanho
+        document.querySelectorAll("[data-larg]").forEach((b) => {{
+          const alvo = document.getElementById(b.dataset.larg); if (alvo) b.style.width = alvo.offsetWidth + "px";
+        }});
         // colunas: o fio fica no meio do vão real entre as duas colunas (mesma margem dos dois lados),
         // medido pelo fim do conteúdo da esquerda, não pelo meio da tela
         document.querySelectorAll("[data-colunas]").forEach((box) => {{
@@ -947,6 +963,23 @@ def gerar(r):
           fio.style.left = xf + "px";
           dir.style.left = (xf + 4 + vao) + "px"; dir.style.width = (x1 - xf - 4 - vao) + "px";
           esq.style.width = we + "px";
+        }});
+        // componente centralizado: mede a união do conteúdo visível (texto pelas letras, traços do SVG) e desloca a
+        // caixa inteira pra que o meio do conteúdo fique no meio da tela (colunas, checklist, etapas, barra)
+        const raiz = document.getElementById("root").getBoundingClientRect(), esc = raiz.width / {W};
+        document.querySelectorAll("[data-cx]").forEach((box) => {{
+          let l = 1e9, r = -1e9;
+          box.querySelectorAll("*").forEach((n) => {{
+            if (n.children.length) return;
+            let rc;
+            if (n instanceof SVGElement) rc = n.getBoundingClientRect();
+            else {{ const rg = document.createRange(); rg.selectNodeContents(n); rc = rg.getBoundingClientRect(); }}
+            if (rc.width < 1) return;
+            l = Math.min(l, rc.left); r = Math.max(r, rc.right);
+          }});
+          if (r < l) return;
+          const desl = (raiz.left + raiz.width / 2 - (l + r) / 2) / esc;
+          box.style.left = (parseFloat(box.style.left || 0) + desl) + "px";
         }});
         // sublinhado e risco do tamanho exato do texto (linha inteira ou uma palavra), alinhado à esquerda ou
         // centralizado: posição somada pela cadeia de offsetParent até o pai do traço (sem transform no meio)
@@ -999,7 +1032,7 @@ def conferir_ritmo(r):
             avisos.append(f"{nome}: {c['t1'] - ts[-1]:.1f}s parado no fim (máx 1,2)")
         els = [dict(e) for e in c.get("elementos", [])]   # confere já centralizado, como vai sair
         if c.get("painel", "cheio") == "cheio":
-            centralizar_vertical(els, *TEMA["zona"])
+            centralizar_vertical(els, *r.get("zona", TEMA["zona"]))
         for e in els:
             y0, y1 = extensao(e)
             if y0 < 160 or y1 > 1480:

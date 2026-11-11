@@ -11,7 +11,8 @@ sys.path.insert(0, os.path.join(RAIZ, "editor"))
 import plataforma as PLAT
 
 BRUTOS = "/Users/lucastoledo/Downloads/imigrar/ads/TI"
-SAIDA = os.path.join(BRUTOS, "_em_revisao")      # só vai pra prontos/ depois de aprovado na auditoria
+SAIDA = os.path.join(BRUTOS, "_em_revisao")
+AUDIO = {}   # arquivo bruto -> WAV tratado com a mesma duração (o montar pega o áudio dele no lugar do áudio do bruto)      # só vai pra prontos/ depois de aprovado na auditoria
 TRANSC = os.path.join(RAIZ, "editor", "transcricoes")
 INTER = PLAT.pasta_cache("ti_intermediarios")
 BROLL = PLAT.pasta_cache("broll_ti")
@@ -238,6 +239,7 @@ def montar(id_, pedacos):
     """intermediário (vídeo SDR + áudio) e a transcrição dele, deslocando as palavras dos brutos."""
     out = os.path.join(INTER, id_ + ".mov")
     entradas, filtros, pal, mapa, segs, t = [], [], [], [], [], 0.0
+    ni = 0                                   # índice da entrada no ffmpeg (o áudio tratado entra como entrada à parte)
     for k, (arq, a, b, *modo) in enumerate(pedacos):
         src = os.path.join(BRUTOS, arq)
         ini, fim, ws = faixa(arq, a, b, exato="exato" in modo)
@@ -247,9 +249,15 @@ def montar(id_, pedacos):
         hdr = st.get("color_transfer") in ("arib-std-b67", "smpte2084")
         args, filtro = PLAT.entrada_hdr(st) if hdr else ([], "")
         entradas += [*args, "-ss", f"{ini:.3f}", "-t", f"{dur:.3f}", "-i", src]
-        filtros.append(f"[{k}:v]{filtro}scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},"
+        iv = ia = ni
+        ni += 1
+        if arq in AUDIO:                     # trilha tratada (ex.: Adobe Enhance), mesma duração e sincronia do bruto
+            entradas += ["-ss", f"{ini:.3f}", "-t", f"{dur:.3f}", "-i", AUDIO[arq]]
+            ia = ni
+            ni += 1
+        filtros.append(f"[{iv}:v]{filtro}scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS},"
                        f"format=yuv420p,setsar=1,trim=duration={dur:.3f},setpts=PTS-STARTPTS[v{k}];"
-                       f"[{k}:a]aresample=48000,aformat=channel_layouts=mono,atrim=duration={dur:.3f},asetpts=PTS-STARTPTS,"
+                       f"[{ia}:a]aresample=48000,aformat=channel_layouts=mono,atrim=duration={dur:.3f},asetpts=PTS-STARTPTS,"
                        f"afade=t=in:d=0.012,afade=t=out:st={max(0, dur - 0.012):.3f}:d=0.012[a{k}]")
         seg0 = len(pal)
         for w in ws:

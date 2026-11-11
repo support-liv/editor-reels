@@ -1,0 +1,142 @@
+{
+ "cenas": [
+  {
+   "t0": 4.3,
+   "t1": 11.9,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "pediu a troca",
+     "y": 250,
+     "t": 4.4
+    },
+    {
+     "tipo": "linha",
+     "texto": "sem resposta",
+     "y": 330,
+     "t": 4.98,
+     "tam": 96
+    },
+    {
+     "tipo": "contador",
+     "y": 450,
+     "t": 5.54,
+     "dur": 1.2,
+     "de": 0,
+     "ate": 1,
+     "sufixo": " ano e pouco",
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "muitos oficiais entendem",
+     "y": 620,
+     "t": 7.22,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "nesse momento",
+     "y": 720,
+     "t": 8.99,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "o tempo retroage",
+     "y": 830,
+     "t": 10.59,
+     "tam": 96,
+     "cor": "destaque"
+    }
+   ]
+  },
+  {
+   "t0": 14.9,
+   "t1": 22.9,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "olhe o seu I-94",
+     "y": 250,
+     "t": 15.08,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "degraus",
+     "y": 330,
+     "itens": [
+      {
+       "texto": "entrou em janeiro",
+       "t": 16.82
+      },
+      {
+       "texto": "prazo até junho",
+       "t": 18.61
+      },
+      {
+       "texto": "esperou até o outro ano",
+       "t": 20.11
+      },
+      {
+       "texto": "negado",
+       "t": 22.61
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 25.0,
+   "t1": 33.6,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "presença ilegal",
+     "y": 250,
+     "t": 25.55,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "desde o fim do I-94",
+     "y": 380,
+     "t": 26.72,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "barra",
+     "y": 520,
+     "itens": [
+      {
+       "texto": "mais de 6 meses",
+       "t": 30.31
+      },
+      {
+       "texto": "mais de 1 ano",
+       "t": 31.51
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "banimento",
+     "y": 760,
+     "t": 32.77,
+     "tam": 110,
+     "cor": "destaque"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+{
+ "nome": "c1011_c5_i94_banimento_cta",
+ "duracao": 41.18,
+ "fala": 37.38,
+ "cenas": [
+  {
+   "tipo": "cta",
+   "t0": 37.08,
+   "t1": 41.18,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84
+  }
+ ]
+}

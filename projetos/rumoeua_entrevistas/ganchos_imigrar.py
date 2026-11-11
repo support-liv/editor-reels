@@ -1,0 +1,53 @@
+"""Ganchos da versão Imigrar dos cortes (Lucas, 09/11/2026: "pegue o corte, troque o hook").
+Regras: balão da Imigrar (caixa alta, sem marca-texto, bandeira escrita no texto), pergunta/loop que NÃO entrega a
+resposta do vídeo, público com formação/dinheiro (nada de "babá", "piso" no gancho).
+10/11: bandeira SÓ NO FIM do gancho (no meio fica ruim); nada de "marceneiro" no gancho (atrai público errado)."""
+GANCHOS = {
+    # João Paulo (carro e rua, Miami)
+    "r01_metromover": "Isso é de graça nos EUA 🇺🇸. No Brasil 🇧🇷 seria impensável",
+    "r02_restaurante_visto": "O caminho mais inesperado pro Green Card 🇺🇸",
+    "r03_governador": "O que um governador nos EUA 🇺🇸 perguntou pra ele?",
+    "r04_sequestro": "O dia em que ele decidiu sair do Brasil 🇧🇷",
+    "r04b_sequestro": "Todo brasileiro faz isso sem perceber 🇧🇷",
+    "r05_choque_cultural": "O choque cultural nos EUA 🇺🇸 que ninguém te conta",
+    "r06_fiscal": "O que um fiscal fez com ele nos EUA 🇺🇸",
+    "r07_custo_recomeco": "Quanto custa recomeçar a vida nos EUA 🇺🇸?",
+    "r08_networking": "Por que o networking do brasileiro não funciona nos EUA 🇺🇸?",
+    "r09_porta_destrancada": "O hábito que ele perdeu quando saiu do Brasil 🇧🇷",
+    "r10_rede_apoio": "O que ninguém te avisa antes de sair do Brasil 🇧🇷",
+    "r11_dinheiro_paz": "O que o dinheiro não compra no Brasil 🇧🇷?",
+    "r12_recado_2012": "O conselho que ele queria ter ouvido antes de ir pros EUA 🇺🇸",
+    "r19_500_funcionarios": "Ele tinha 500 funcionários no Brasil 🇧🇷. Por que largou tudo?",
+    "r20_visto_negado": "O visto dele foi negado. O que aconteceu depois? 🇺🇸",
+    "r21_imigrantes": "Os EUA 🇺🇸 ainda abrem a porta pra imigrante?",
+    "r22_rio_que_deu_certo": "A cidade dos EUA 🇺🇸 que lembra o Rio de Janeiro",
+    "r23_saudade": "Do que se sente falta depois de 14 anos fora do Brasil 🇧🇷?",
+    # Marinna (condomínio, Orlando)
+    "r13_achar_trilha": "O mais difícil de morar nos EUA 🇺🇸 não é o inglês",
+    "r14_ser_mae": "Por que ela não queria ter filhos no Brasil 🇧🇷?",
+    "r15_gemeos": "Como é criar gêmeos nos EUA 🇺🇸?",
+    "r16_disney_quintal": "O que os filhos dela vão ter nos EUA 🇺🇸 que ela não teve?",
+    "r17_nada_cai_do_ceu": "Onde a maioria dos brasileiros erra nos EUA 🇺🇸",
+    "r18_criar_filhos": "Vale a pena criar filhos nos EUA 🇺🇸?",
+    "r24_rede_apoio_mae": "Criar filho longe da família: o lado que ninguém mostra 🇺🇸",
+    "r25_curriculo": "Nos EUA 🇺🇸 você escolhe o que seu filho estuda?",
+    "r26_escola_futuro": "Escola pública, privada ou em casa nos EUA 🇺🇸?",
+    "r27_mae_brasileira": "O que toda mãe brasileira precisa saber antes de ir pros EUA 🇺🇸",
+    "r28_trabalhou_de_tudo": "Ela trabalhou de tudo nos EUA 🇺🇸. Menos uma coisa",
+    # entrevistas curtas (Patrícia, Letícia, Nathália, Alfredo, trânsito)
+    "c01_patricia_salario": "Quanto ganha uma coordenadora de operações nos EUA 🇺🇸?",
+    "c02_patricia_empresaria": "Por que ela desistiu de empreender no Brasil 🇧🇷?",
+    "c03_patricia_seguranca": "O que ela faz nos EUA 🇺🇸 que no Brasil 🇧🇷 não fazia",
+    "c04_patricia_filha": "A filha dela chegou nos EUA com 15 anos. E agora? 🇺🇸",
+    "c05_leticia_baba": "Quanto ela ganha por mês nos EUA 🇺🇸?",
+    "c10_leticia_brasil_eua": "O que mais surpreendeu ela nos EUA 🇺🇸?",
+    "c06_nathalia_qi": "No Brasil 🇧🇷 é quem você conhece. E nos EUA 🇺🇸?",
+    "c11_nathalia_salario": "Quanto ganha uma gerente comercial nos EUA 🇺🇸?",
+    "c07_alfredo_piso": "Quanto lucra por mês um empresário brasileiro nos EUA 🇺🇸?",
+    "c08_alfredo_empreender": "As 2 maiores diferenças entre Brasil 🇧🇷 e EUA 🇺🇸 pra ele",
+    "c12_patricia_ingles": "Por que o green card não basta nos EUA 🇺🇸?",
+    "c13_patricia_dica": "O primeiro passo antes de se mudar pros EUA 🇺🇸",
+    "c14_nathalia_dica": "O erro de quem vem pros EUA 🇺🇸 sem plano",
+    "c15_alfredo_dica": "O que ninguém conta sobre o começo nos EUA 🇺🇸",
+    "c09_transito": "Como é o trânsito num país que funciona? 🇺🇸",
+}

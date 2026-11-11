@@ -1,0 +1,18 @@
+{
+ "nome": "c1011_c2_visto_entrevista_cta",
+ "duracao": 49.14,
+ "fala": 45.34,
+ "cenas": [
+  {
+   "tipo": "cta",
+   "t0": 45.04,
+   "t1": 49.14,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84,
+   "base": 700
+  }
+ ]
+}

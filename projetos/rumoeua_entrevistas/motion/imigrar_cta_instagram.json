@@ -1,0 +1,20 @@
+{
+ "nome": "imigrar_cta_instagram",
+ "marca": "imigrar",
+ "duracao": 3.8,
+ "tela_dividida": true,
+ "cenas": [
+  {
+   "tipo": "cta",
+   "t0": 0.35,
+   "t1": 3.8,
+   "painel": "cheio",
+   "acima": "Siga o perfil",
+   "palavra": "@imigrar.eua",
+   "texto": "no Instagram",
+   "tam_texto": 84,
+   "alinhar": "centro"
+  }
+ ],
+ "fala": 0.0
+}

@@ -26,7 +26,14 @@ const candidatos = [process.env.EDITOR_REELS_DIR, join(mesa(), "editor-reels"), 
 const pasta = candidatos.find((p) => existsSync(join(p, "servidor_mcp", "servidor.py")));
 
 function python() {
-  if (!WIN) return ["python3", []];
+  if (!WIN) {
+    // o primeiro python3 do PATH pode ser um Python novo (ex.: Homebrew) sem os pacotes do editor:
+    // usa o primeiro que já tem os pacotes instalados pelo setup.sh
+    const opcoes = ["python3", "/Library/Frameworks/Python.framework/Versions/Current/bin/python3", "/usr/local/bin/python3",
+      "python3.14", "python3.13", "python3.12", "/opt/homebrew/bin/python3"];
+    const ok = opcoes.find((c) => spawnSync(c, ["-c", "import numpy, mcp"], { timeout: 20000 }).status === 0);
+    return [ok || "python3", []];
+  }
   const r = spawnSync("py", ["-3.12", "--version"], { encoding: "utf8" });
   return r.status === 0 ? ["py", ["-3.12", "-X", "utf8"]] : ["python", ["-X", "utf8"]];
 }

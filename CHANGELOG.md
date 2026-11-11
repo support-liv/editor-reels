@@ -2,6 +2,46 @@
 
 Cada mudança com o motivo, para o time entender por que o editor faz o que faz.
 
+## 0.44 (10-11/11/2026) - padrão dos Reels da LIV, gancho embaixo, motion centralizado e mais contido
+- **Padrão dos Reels da LIV** registrado no CLAUDE.md ("Reels da LIV"):
+  - sem logo, gancho embaixo e CTA no meio da tela;
+  - recorte parado nas consultas da Dra. Lívia;
+  - uma versão por corte, com motion só onde ilustra;
+  - emendas conferidas na transcrição literal.
+- **Cobertura de motion da LIV** de 25-70% para 15-50% (`motion/cobertura.py`). Pedido do Lucas: motion só nas partes mais importantes, nunca o vídeo quase todo.
+- **CTA Instagram da Imigrar:** "Siga o perfil @imigrar.eua", sem "no Instagram", para servir também no TikTok. As 81 versões Instagram no cartão foram refeitas.
+- **gerar_liv:**
+  - CTA sem a linha de baixo (`"texto": ""`);
+  - colunas com sublinhado da largura do título e com direção (`sub_titulo`, `sub_origem`).
+- **Entrevistas:**
+  - perguntas do entrevistador enxutas;
+  - recorte no entrevistado também na pergunta, quando os dois andam lado a lado;
+  - áudio do Adobe Enhance via `LT.AUDIO`.
+- **Bandeira automática do gancho (rumo.eua):** uma só, depois da última menção ao país. Antes saía "no Brasil 🇧🇷 vs EUA 🇺🇸", com bandeira no meio (regra do Lucas: bandeira só no fim).
+- **`--gancho-embaixo`** no editor: o balão do gancho fica sempre embaixo, longe da testa. Pedido do Lucas nos cortes da consulta de 10/11, em que a Dra. Lívia fica enquadrada mais no alto.
+- **gerar_liv:** três opções que só valem quando o roteiro pede (os roteiros antigos não mudam):
+  - `"zona": [topo, base]` escolhe a faixa em que o bloco da cena é centralizado na vertical.
+  - `"centralizar_componentes": true` (ou `"cx": true` no elemento) centraliza o conteúdo de colunas, checklist e etapas pela medida real do texto. Antes, as colunas ficavam encostadas à esquerda com um vão vazio à direita.
+  - `"base"` na cena do CTA põe o "Comente PALAVRA" no meio da tela.
+- **Colunas:** tamanho do título (`tam`) e do texto (`tam_texto`) configuráveis.
+
+## 0.43 (06/11/2026) - marca rumo.eua (perfil do Lucas), legenda clean
+- **Nova marca `--marca rumoeua`** para o perfil rumo.eua (público jovem, recém-formado ou já formado com dinheiro, curioso sobre a vida nos EUA; contrastes Brasil x EUA). Por enquanto só neste computador.
+- **Legenda clean:** como foi falada (sem caixa alta), Inter Tight semi-negrito (650), branca, palavra falada em amarelo ouro #FFD23F, só sombra suave (sem contorno nem caixa). Escolhida entre 3 testes (minúscula leve, caixa alta, marca-texto).
+- Tarjas de gancho/CTA da marca: branco, amarelo e escuro (`--cor-caixa`). O gancho sai como frase (sem caixa alta, Inter Tight 800) e `*palavra*` no `--gancho` ganha marca-texto amarelo.
+
+## 0.42 (06/11/2026) - servidor abre mesmo com um Python novo no Mac
+- **Correção:** o `servidor_mcp/iniciar.mjs` usava o primeiro `python3` do PATH. Quando o Homebrew instalou o Python 3.15 (sem os pacotes do editor), o servidor caía ao abrir. Agora ele usa o primeiro Python que já tem os pacotes do `setup.sh`.
+
+## 0.41 (16/10/2026) - anúncio dinâmico na Imigrar
+- **Novo: `"marca": "imigrar"` no roteiro do `ads_dinamico.py`.** Fonte Inter Tight, azul royal, rosa e branco, legenda da Imigrar (palavra falada em rosa) e cartão do CTA branco com destaque rosa (rosa sobre azul é proibido). Os nomes de cor do roteiro viram papéis ("azul" = fundo, "laranja" = destaque, "bege" = texto claro), então os roteiros da LIV continuam iguais. Motivo: o formato só existia na identidade da LIV.
+- **Lettering sem B-roll:** o lettering pode entrar por cima da própria gravação, com o mesmo véu suave (`veu_lettering`, padrão 0,5). Exemplo: `projetos/ads_imigrar/curbside.py`.
+
+## 0.40 (09/10/2026) - CTA falado sem imagem congelada
+- **Regra nova:** quando o apresentador fala o CTA no vídeo (entrevista de rua), o balão do `--cta-animado` entra por cima da fala, sem `--cauda`. Motivo: a cauda congelava as pessoas no último quadro e o time achou artificial. Registrado em `CLAUDE.md`, `docs/FORMATOS.md` e `docs/PADROES.md`.
+
+## 0.39 (09/10/2026) - abertura forte nos shorts
+- **Nova etapa obrigatória: abertura.** Antes de cortar shorts/reels/stories/anúncio, o Claude lê como cada um começaria e sugere, com opções, uma abertura que prenda nos primeiros 3 a 5s: frase forte na frente (trecho curioso do próprio short abrindo o vídeo, via `--trechos` fora de ordem), pergunta na frente, corte seco + zoom (`--dinamico`) ou manter. Motivo: short que abre com "então…" ou contexto perde a pessoa antes do gancho fazer efeito. Regra em `CLAUDE.md` (passo 3) e padrão em `docs/PADROES.md` → "Abertura".
 ## 0.38 (30/10/2026) - Lições também dos "aprovados com ajustes"
 - A Video Machine ganhou a terceira decisão, **Aprovar com ajustes** (a Dra. Lívia aprovava vídeos em que queria pontuar observações, como "faltou contexto"). O `editor/licoes_da_aprovacao.py` agora pede reprovações e ajustes (`tipos=reprovado,ajustar`) e escreve os ajustes em seções próprias do `docs/REPROVACOES.md` (**Ajuste · Falta contexto**, **Ajuste · Gancho**…), cada uma com a lição para o editor. Ajuste conta mesmo depois de a versão nova ser aprovada: o erro aconteceu. Com o liv.ai de antes, segue só com as reprovações.
 - O teste (`editor/teste_licoes_da_aprovacao.py`) parte de um guia limpo: o do repositório já tem reprovações de verdade.

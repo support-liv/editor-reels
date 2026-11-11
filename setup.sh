@@ -18,8 +18,16 @@ echo "Instalando pacotes Python..."
 python3 -m pip install -r requirements.txt --quiet && ok "pacotes"
 
 echo "Instalando o corte preciso (WhisperX + Silero VAD, ambiente separado)..."
-[ -x .venv-whisperx/bin/python ] || python3 -m venv .venv-whisperx
-.venv-whisperx/bin/pip install -q whisperx silero-vad && ok "WhisperX + Silero (--alinhar, --vad)"
+# o WhisperX ainda não roda em Python 3.14+: com o uv, o ambiente usa Python 3.12 (baixado sozinho)
+UV=$(command -v uv || echo "$HOME/.local/bin/uv")
+if [ -x "$UV" ]; then
+  [ -x .venv-whisperx/bin/python ] || "$UV" venv -q -p 3.12 .venv-whisperx
+  "$UV" pip install -q -p .venv-whisperx/bin/python whisperx silero-vad && ok "WhisperX + Silero (--alinhar, --vad)"
+else
+  [ -x .venv-whisperx/bin/python ] || python3 -m venv .venv-whisperx
+  .venv-whisperx/bin/pip install -q whisperx silero-vad && ok "WhisperX + Silero (--alinhar, --vad)" \
+    || echo "  ! WhisperX não instalou (precisa de Python até 3.13): instale o uv (brew install uv) e rode o setup de novo"
+fi
 
 echo "Compilando os utilitários do macOS..."
 swiftc -O editor/rostos.swift -o editor/rostos && ok "detector de rostos"

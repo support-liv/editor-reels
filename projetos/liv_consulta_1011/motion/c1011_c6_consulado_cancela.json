@@ -1,0 +1,87 @@
+{
+ "cenas": [
+  {
+   "t0": 15.3,
+   "t1": 22.6,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "nem sempre",
+     "y": 250,
+     "t": 15.45
+    },
+    {
+     "tipo": "cartoes",
+     "y": 330,
+     "alt": 320,
+     "itens": [
+      {
+       "titulo": "Visto F",
+       "texto": "negado",
+       "t": 16.52
+      },
+      {
+       "titulo": "Turismo",
+       "texto": "cancelado junto",
+       "t": 17.56,
+       "risco_t": 19.64
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "a maioria: só o F negado",
+     "y": 720,
+     "t": 20.62,
+     "tam": 96,
+     "cor": "destaque"
+    }
+   ]
+  },
+  {
+   "t0": 23.0,
+   "t1": 27.2,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "mas teve um período",
+     "y": 250,
+     "t": 23.45
+    },
+    {
+     "tipo": "linha",
+     "texto": "querendo brecar",
+     "y": 330,
+     "t": 25.45,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "a entrada",
+     "y": 460,
+     "t": 26.21,
+     "tam": 110,
+     "cor": "destaque"
+    }
+   ]
+  },
+  {
+   "tipo": "cta",
+   "t0": 40.67,
+   "t1": 44.77,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84
+  }
+ ],
+ "nome": "c1011_c6_consulado_cancela",
+ "duracao": 44.77,
+ "fala": 40.97,
+ "palavras": "palavras/c6_consulado_cancela.json"
+}

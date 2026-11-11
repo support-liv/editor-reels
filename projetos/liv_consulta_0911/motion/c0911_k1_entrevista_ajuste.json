@@ -1,0 +1,189 @@
+{
+ "cenas": [
+  {
+   "t0": 6.4,
+   "t1": 12.8,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "na entrevista no Brasil, revendo",
+     "y": 250,
+     "t": 6.59
+    },
+    {
+     "tipo": "etapas",
+     "y": 330,
+     "itens": [
+      {
+       "texto": "o mérito",
+       "t": 8.63
+      },
+      {
+       "texto": "a proposta",
+       "t": 9.85
+      },
+      {
+       "texto": "interesse nacional",
+       "t": 11.36
+      }
+     ],
+     "tam": 76,
+     "passo": 128
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "t0": 13.1,
+   "t1": 21.2,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "aqui nos EUA 🇺🇸",
+     "y": 250,
+     "t": 13.26
+    },
+    {
+     "tipo": "linha",
+     "texto": "a entrevista de ajuste",
+     "y": 330,
+     "t": 14.36,
+     "tam": 96
+    },
+    {
+     "tipo": "linha",
+     "texto": "é diferente",
+     "y": 450,
+     "t": 15.21,
+     "tam": 110,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "o mais forte",
+     "y": 600,
+     "t": 17.8,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "no I-485",
+     "y": 710,
+     "t": 19.57,
+     "tam": 120,
+     "cor": "destaque"
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "t0": 28.3,
+   "t1": 36.5,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o oficial vai olhar",
+     "y": 250,
+     "t": 28.71
+    },
+    {
+     "tipo": "linha",
+     "texto": "as questões de",
+     "y": 330,
+     "t": 29.17,
+     "tam": 84,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "inadmissibilidade",
+     "y": 430,
+     "t": 29.25,
+     "tam": 110,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "o seu histórico",
+     "y": 580,
+     "t": 33.49,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "nos EUA 🇺🇸 esse tempo",
+     "y": 700,
+     "t": 35.15,
+     "tam": 96,
+     "peso": 700
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "t0": 40.0,
+   "t1": 48.9,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "leve em mãos",
+     "y": 250,
+     "t": 40.59
+    },
+    {
+     "tipo": "checklist",
+     "y": 330,
+     "itens": [
+      {
+       "texto": "o I-20 com as datas",
+       "t": 41.8,
+       "ok": true
+      },
+      {
+       "texto": "a instituição",
+       "t": 43.72,
+       "ok": true
+      },
+      {
+       "texto": "as provas",
+       "t": 45.8,
+       "ok": true
+      }
+     ],
+     "tam": 78,
+     "passo": 120
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "tipo": "cta",
+   "t0": 49.42,
+   "t1": 53.52,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84,
+   "base": 700
+  }
+ ],
+ "nome": "c0911_k1_entrevista_ajuste",
+ "duracao": 53.52,
+ "fala": 49.72,
+ "palavras": "palavras/k1_entrevista_ajuste.json",
+ "zona": [
+  300,
+  1460
+ ],
+ "centralizar_componentes": true
+}

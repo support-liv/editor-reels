@@ -1,0 +1,122 @@
+{
+ "cenas": [
+  {
+   "t0": 5.9,
+   "t1": 11.4,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "todo mundo que entra",
+     "y": 250,
+     "t": 6.22,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "nos EUA 🇺🇸",
+     "y": 360,
+     "t": 7.3,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "numero",
+     "y": 480,
+     "t": 8.29,
+     "numero": "90",
+     "rotulo": "dias",
+     "t_rotulo": 8.67
+    },
+    {
+     "tipo": "linha",
+     "texto": "já pede pra trocar",
+     "y": 820,
+     "t": 9.05,
+     "tam": 96,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "ou ajustar status",
+     "y": 920,
+     "t": 9.77,
+     "tam": 96,
+     "cor": "destaque"
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "t0": 17.4,
+   "t1": 23.4,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "nos primeiros 90 dias",
+     "y": 250,
+     "t": 17.55
+    },
+    {
+     "tipo": "checklist",
+     "y": 330,
+     "itens": [
+      {
+       "texto": "pedir a troca",
+       "t": 17.83,
+       "ok": false
+      },
+      {
+       "texto": "filho na escola",
+       "t": 18.33,
+       "ok": false
+      }
+     ],
+     "tam": 78,
+     "passo": 120
+    },
+    {
+     "tipo": "linha",
+     "texto": "jamais como turista",
+     "y": 600,
+     "t": 20.07,
+     "tam": 96,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "pode prejudicar lá na frente",
+     "y": 720,
+     "t": 21.61,
+     "tam": 96,
+     "peso": 700
+    }
+   ],
+   "alinhar": "centro"
+  },
+  {
+   "tipo": "cta",
+   "t0": 29.24,
+   "t1": 33.34,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84,
+   "base": 700
+  }
+ ],
+ "nome": "c1011_c4_regra_90_dias",
+ "duracao": 33.34,
+ "fala": 29.54,
+ "palavras": "palavras/c4_regra_90_dias.json",
+ "zona": [
+  300,
+  1460
+ ],
+ "centralizar_componentes": true
+}

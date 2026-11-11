@@ -30,7 +30,7 @@ Os formatos que o time publica, e como cada um é editado. Definidos com o time 
 - 30 a 50s: gancho, desenvolvimento, CTA.
 - **Gancho:** só a pergunta ou a curiosidade, nunca a resposta (ver PADROES.md).
 - **CTA por canal:** YouTube Shorts (corte de live) = "Veja a live completa no canal"; Instagram = palavra-chave de automação ou link na bio. Perguntar o canal no briefing.
-- **CTA:** **depois da fala final**, numa cauda de 3-4s (`--cauda 3.8`), em cena animada de tela cheia (versão enxuta e com motion). Em Reels feitos fora de live, pode ser a caixa de texto no fim. Padrão: "Link na bio". Quando a campanha usa automação, é uma **palavra-chave** ("Comente PERFIL para uma análise do seu perfil"). A palavra **muda por campanha e por vídeo**: sempre confirmar. Às vezes a pessoa também fala o CTA no vídeo.
+- **CTA:** **depois da fala final**, numa cauda de 3-4s (`--cauda 3.8`), em cena animada de tela cheia (versão enxuta e com motion). Em Reels feitos fora de live, pode ser a caixa de texto no fim. Padrão: "Link na bio". Quando a campanha usa automação, é uma **palavra-chave** ("Comente PERFIL para uma análise do seu perfil"). A palavra **muda por campanha e por vídeo**: sempre confirmar. Às vezes a pessoa também fala o CTA no vídeo: aí **não tem cauda nem imagem congelada** (sem `--cauda`); o balão `--cta-animado` entra por cima enquanto ela fala o CTA e o vídeo termina com a fala (entrevista de rua da Imigrar, out/2026).
 - Entregas junto: legenda do post e hashtags.
 
 ### Stories

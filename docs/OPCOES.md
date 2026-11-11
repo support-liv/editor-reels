@@ -57,6 +57,7 @@ python3 editor/editor_reels.py VIDEO [opções]
 | `--aperto 0.5` | Fração da largura original mantida (menor = mais fechado). Padrões: 0.93 solo, 0.55 com `--pessoa`, 0.34 com `voz` |
 | `--crop-fixo` | Selfie gravada na mão: o recorte fica parado em cada bloco de fala (seguir o rosto somava ao balanço da mão e a imagem tremia); se o rosto vai para a borda (entrevista andando), anda devagar até ele voltar ao miolo |
 | `--punch 0.72` | Plano fechado = essa fração do aberto (padrão 0,82). Selfie aberta pede punch mais forte pra o zoom aparecer |
+| `--gancho-embaixo` | Balão do gancho sempre embaixo (um pouco abaixo da legenda), longe da testa, quando a pessoa fica enquadrada no alto. Sem a opção, ele só desce quando taparia um rosto |
 
 ### Cortes pelo áudio
 | Opção | O que faz |

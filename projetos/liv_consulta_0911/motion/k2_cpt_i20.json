@@ -1,0 +1,24 @@
+{
+ "cenas": [
+  {"t0": 4.3, "t1": 9.9, "painel": "cheio", "cor": "bege", "elementos": [
+    {"tipo": "rotulo", "texto": "OPT x CPT", "y": 250, "t": 4.4},
+    {"tipo": "colunas", "y": 330, "alt": 300, "itens": [
+      {"titulo": "OPT", "texto": "só o emprego", "t": 4.5, "destaque_t": 5.4},
+      {"titulo": "CPT", "texto": "durante o curso", "t": 6.39, "destaque_t": 8.05}]}]},
+  {"t0": 12.0, "t1": 15.6, "painel": "cheio", "cor": "azul", "elementos": [
+    {"tipo": "rotulo", "texto": "pra imigração", "y": 250, "t": 12.4},
+    {"tipo": "linha", "texto": "o que você precisa?", "y": 330, "t": 13.02, "tam": 96, "peso": 700},
+    {"tipo": "linha", "texto": "I-20 válido", "y": 460, "t": 14.55, "tam": 130, "cor": "destaque"}]},
+  {"t0": 15.6, "t1": 22.9, "painel": "cheio", "cor": "bege", "elementos": [
+    {"tipo": "rotulo", "texto": "quem cuida do CPT", "y": 250, "t": 15.71},
+    {"tipo": "cartoes", "y": 330, "alt": 320, "itens": [
+      {"titulo": "Escola", "texto": "autoriza o CPT", "t": 16.55, "destaque_t": 18.46},
+      {"titulo": "Imigração", "texto": "não é a alçada", "t": 21.18, "risco_t": 22.24}]}]},
+  {"t0": 23.0, "t1": 30.6, "painel": "cheio", "cor": "azul", "elementos": [
+    {"tipo": "rotulo", "texto": "a imigração quer saber", "y": 250, "t": 23.17},
+    {"tipo": "checklist", "y": 330, "itens": [
+      {"texto": "cumpria o I-20?", "t": 25.75, "ok": true},
+      {"texto": "estudo com CPT?", "t": 28.2, "ok": true}]},
+    {"tipo": "linha", "texto": "pronto.", "y": 620, "t": 29.54, "tam": 110, "cor": "destaque"}]}
+ ]
+}

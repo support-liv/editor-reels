@@ -31,10 +31,19 @@ opção faz. Nada de jargão técnico na pergunta.
    canal"; Instagram palavra-chave, sempre confirmar), **quer trilha sonora?**, **quer motion/animações?**, live solo em
    720p (fundo desfocado x tela cheia), nomes com grafia duvidosa ("Livre" = LIV, "Marina Damás" = Marinna Damásio).
    Não pergunte o que o vídeo já responde nem o que tem padrão.
-3. **Mostrar o plano e validar antes de renderizar:** cortes com o texto de cada um, ganchos, CTAs; quadros de
+3. **Abertura de cada short/reels (etapa obrigatória, antes de cortar):** os 3 primeiros segundos prendem ou perdem a
+   pessoa. Para cada short, leia como ele começaria e, se a fala abre devagar ("então…", "bom, é…", contexto), sugira
+   uma abertura forte e pergunte com opções (recomendação marcada, uma frase do que cada uma faz, ver
+   `docs/PADROES.md` → "Abertura"): (a) **frase forte na frente** — o momento mais curioso/polêmico do próprio trecho
+   abre o vídeo e depois volta ao começo (`--trechos` fora de ordem, sem entregar a resposta); (b) **pergunta na
+   frente** (do entrevistador ou da própria pessoa); (c) **corte seco + zoom** — tira o começo morto e troca o
+   enquadramento nos primeiros 3s (`--dinamico`); (d) manter como está (só quando já abre forte). Em todas, o
+   `--gancho` em texto continua. Mostre a frase de abertura escolhida de cada short no plano. Vale para shorts,
+   reels, stories e anúncio; não vale para corte longo do YouTube nem vídeo produzido com cartela.
+4. **Mostrar o plano e validar antes de renderizar:** cortes com o texto de cada um, ganchos, CTAs; quadros de
    conferência quando houver design (texto, motion, card). Renderize só depois do ok.
-4. **Renderizar, conferir e entregar** (ver "Conferência"). Diga onde estão os arquivos.
-5. **Oferecer o próximo passo — sempre.** Depois da entrega, pergunte com opções o que faz sentido, por exemplo:
+5. **Renderizar, conferir e entregar** (ver "Conferência"). Diga onde estão os arquivos.
+6. **Oferecer o próximo passo — sempre.** Depois da entrega, pergunte com opções o que faz sentido, por exemplo:
    - "Quer agendar no YouTube?" → se sim: gera título, descrição no padrão, tags e hashtags, mostra a lista com as
      datas (LIV: shorts no dia seguinte ao último agendado, 12h; longos privados. Imigrar: perguntar a data), espera o
      ok e sobe pelo Studio em segundo plano;
@@ -45,7 +54,7 @@ opção faz. Nada de jargão técnico na pergunta.
 
 ## Regras que nunca mudam
 - **Gancho só pergunta, nunca responde.** A resposta está no vídeo.
-- **Bandeira depois da palavra** ("americano 🇺🇸"), nunca no lugar dela.
+- **Bandeira depois da palavra** ("americano 🇺🇸"), nunca no lugar dela, e **uma só, no fim do gancho** (nunca no meio: "no Brasil 🇧🇷 vs EUA 🇺🇸" ficava ruim). A bandeira automática do editor já sai assim.
 - **Nunca distorcer a imagem** (perspectiva, esticar, mudar proporção). Câmera torta: só girar (`--endireitar` ou `--girar`).
 - **Live com 2 pessoas não tem crop** (tela dividida fixa). Fala pra câmera e entrevista são dinâmicas.
 - **Shorts de live (tela dividida): prévia do enquadramento antes de renderizar** (`--previa-enquadramento`), mande
@@ -74,6 +83,39 @@ opção faz. Nada de jargão técnico na pergunta.
   nunca na boca (anúncio de TI: `--aperto 0.80 --punch 0.72 --y-legenda 0.62`; selfie bem fechada: 0.66). Confira em
   quadros.
 - **CTA da campanha Imigrar (out/2026): PERFIL27** ("Comente PERFIL27"). Muda por campanha: confirme.
+
+## Reels da LIV (padrão aprovado em nov/2026, consultas e entrevistas)
+- **Sem logo da LIV** no vídeo. Balão do gancho sempre na cor padrão da LIV (só a Imigrar alterna cores).
+- **Enquadramento:** pessoa centralizada na vertical, sem sobra acima da cabeça e sem rosto gigante; nunca barra preta
+  nem fundo desfocado. Consulta da Dra. Lívia: **recorte parado, sem seguir o rosto** (`--centro X,Y` no ponto médio do
+  rosto, medido em amostras), só alternando aberto/fechado. Bruto 16:9 1080p: `--aperto 0.82 --punch 0.90`.
+- **Gancho embaixo** (`--gancho-embaixo`) quando a pessoa fica enquadrada no alto: o balão não fica na testa.
+- **CTA "Comente PALAVRA"** em tela cheia **no meio da tela** (cena do CTA com `"base": 700`), entrando ~0,35s depois da
+  última palavra (sem cena parada). A palavra muda por campanha: confirmar (ex.: PERFIL27).
+- **Uma versão por corte:** motion só nos cortes em que dá para desenhar o raciocínio (processo, prazo, número,
+  estrutura, comparação); os outros saem só com legenda. Nada de versão "com e sem motion" do mesmo corte.
+- **Motion centralizado** na vertical e na horizontal (roteiro com `"zona": [300, 1460]`, `"centralizar_componentes":
+  true` e cenas `"alinhar": "centro"`), componentes grandes, e **cobertura contida** (LIV 15-50% do vídeo, só as partes
+  mais importantes; nunca o vídeo quase todo em motion). Modelo pronto: `projetos/liv_consulta_1011/lote_consulta_1011.py`
+  (reusado em `projetos/liv_consulta_0911/`).
+- **Consulta com cliente:** nenhum corte com nome, voz ou dado do cliente (família, datas, empresa, valores); só a
+  explicação geral da Dra. Lívia.
+- **Emendas sem comer palavra:** confira cada limite na transcrição literal (`auditar_fala.transcrever_janela`) e no
+  vídeo pronto. Pedaço "exato" muito curto (< ~0,5s) confunde a transcrição (a palavra some ou vira outra): junte num
+  trecho maior ou dê ~0,1s de folga antes da 1ª palavra.
+
+## Entrevistas (rumo.eua / Imigrar)
+- **Perguntas do entrevistador enxutas:** só o essencial, sem vício, respiro ou explicação ("Projeção de faturamento
+  pra 2027?"), em pedaços separados da resposta.
+- Entrevista andando lado a lado (bruto 16:9): o vertical não cabe os dois; o recorte fica no entrevistado
+  (`"pessoa": "esquerda"/"direita"`) também enquanto o Lucas pergunta.
+- Áudio ruim: trate a trilha inteira no Adobe Enhance Speech, confira a sincronia (0 ms) e aponte no lote
+  (`LT.AUDIO = {bruto: wav_tratado}`). B-roll do próprio local (fachada, interior) com a legenda por cima
+  (`--broll arq@fonte:SEG --broll-com-legenda`), recortado em pé e em SDR antes.
+- **CTA da Imigrar no Instagram:** "Siga o perfil @imigrar.eua" (sem "no Instagram": o mesmo arquivo serve pro TikTok);
+  YouTube: "Inscreva-se no canal Imigrar EUA". rumo.eua: só "Siga @rumo.eua".
+- Entregas no cartão (`/Volumes/Untitled/...`) quando o disco do Mac está cheio; os intermediários de
+  `~/Library/Caches/editor-reels/ti_intermediarios` podem ser apagados (são refeitos a cada render).
 
 ## Corrigir um ponto que a pessoa apontou ("em 0:26 ele trava")
 O tempo que a pessoa fala é do vídeo **pronto**. Converta para o bruto somando a duração dos cortes (`--so-cortes` mostra o plano). No bruto, olhe a energia do áudio e as palavras do Whisper em volta; se precisar, retranscreva só aquele trecho. Tire o trecho exato com `--tirar "a-b"`. Mudou o respiro de alguém? `--respiro`.
@@ -109,10 +151,10 @@ Cada projeto tem um lote em `projetos/<nome>/lote_*.py` com os trechos, ganchos 
 - **Variar a cada vídeo:** a rota BR → EUA e os cards não são padrão. Use etapas, checklist, cartoes, degraus, barra, colunas, numero, anel, contador conforme a fala; rota só quando a fala é sobre ir de um lugar a outro. O gerador avisa repetição.
 - **Imigrar explora mais** (`"marca": "imigrar"` no roteiro): interfaces (`chat`, `status`, `notificacao`, `busca`), contadores, marca-texto, painel diagonal. Nunca rosa sobre azul nem azul sobre rosa; fundo animado muda a cada cena; conteúdo no meio da tela, não no canto de cima.
 - **Design:** itens equivalentes (títulos de colunas e cartões) sempre no mesmo tamanho de fonte; o fio entre colunas com a mesma margem dos dois lados (medido pelo texto, nunca posição fixa).
-- **Quantidade de motion varia no lote (shorts com motion):** nunca todos com a mesma cobertura. Antes dos roteiros, `python3 motion/cobertura.py plano --marca <liv|imigrar> --fala ID=seg ...` sorteia uma meta por short (uns com pouco, outros com muito; Imigrar mais alto, LIV mais contido); o motion entra onde o assunto pede ilustração (lista, número, etapa, comparação, processo, prazo) e o resto fica com a pessoa. Depois, `motion/cobertura.py conferir projetos/<p>/motion/*.json` tem que passar sem o aviso de lote padronizado.
+- **Quantidade de motion varia no lote (shorts com motion):** nunca todos com a mesma cobertura. Antes dos roteiros, `python3 motion/cobertura.py plano --marca <liv|imigrar> --fala ID=seg ...` sorteia uma meta por short (uns com pouco, outros com muito; Imigrar mais alto, LIV mais contido); o motion entra onde o assunto pede ilustração (lista, número, etapa, comparação, processo, prazo) e o resto fica com a pessoa (LIV: 15-50%, só as partes mais importantes). Depois, `motion/cobertura.py conferir projetos/<p>/motion/*.json` tem que passar sem o aviso de lote padronizado.
 - **Tela dividida:** motion sempre em tela cheia (nunca cobrir o rosto de um e deixar o outro).
-- **Motion na tela = sem legenda.** O editor tira a legenda sozinho enquanto o motion cobre a tela; o conteúdo da cena fica centralizado na vertical na zona segura (200-1300 px). Maioria alinhada à esquerda, ~1 em 4 cenas centralizada.
-- **CTA nos shorts:** depois da fala final, numa cauda de 3-4s (`--cauda 3.8`) com o CTA animado em tela cheia; vale para a versão A e a B.
+- **Motion na tela = sem legenda.** O editor tira a legenda sozinho enquanto o motion cobre a tela; o conteúdo da cena fica centralizado na vertical na zona segura (200-1300 px). Maioria alinhada à esquerda, ~1 em 4 cenas centralizada. **Reels da LIV: tudo centralizado** (ver "Reels da LIV").
+- **CTA nos shorts:** depois da fala final, numa cauda de 3-4s (`--cauda 3.8`) com o CTA animado em tela cheia; vale para a versão A e a B. **Exceção: quando o apresentador fala o CTA no vídeo** (entrevista de rua, "comente PERFIL27…"): **sem cauda e sem imagem congelada**; o balão do CTA (`--cta-animado`) entra por cima enquanto ele fala e o vídeo termina com a fala.
 - A pessoa fica na tela no gancho, nos momentos de confiança e no CTA; o B-roll entra nos conceitos, listas, números e comparações.
 - Ao criar um modelo novo, confira quadros do resultado e registre em `motion/README.md`.
 

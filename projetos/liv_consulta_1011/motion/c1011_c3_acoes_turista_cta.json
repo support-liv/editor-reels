@@ -1,0 +1,18 @@
+{
+ "nome": "c1011_c3_acoes_turista_cta",
+ "duracao": 64.96,
+ "fala": 61.16,
+ "cenas": [
+  {
+   "tipo": "cta",
+   "t0": 60.86,
+   "t1": 64.96,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84,
+   "base": 700
+  }
+ ]
+}

@@ -1,0 +1,163 @@
+{
+ "cenas": [
+  {
+   "t0": 5.6,
+   "t1": 10.4,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "antes de pedir a troca",
+     "y": 250,
+     "t": 5.77
+    },
+    {
+     "tipo": "linha",
+     "texto": "pense em",
+     "y": 330,
+     "t": 7.26,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "todas as ações",
+     "y": 440,
+     "t": 8.02,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "de um turista",
+     "y": 570,
+     "t": 8.97,
+     "tam": 110,
+     "cor": "destaque"
+    }
+   ]
+  },
+  {
+   "t0": 14.4,
+   "t1": 19.4,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "o que pesa contra",
+     "y": 250,
+     "t": 14.55
+    },
+    {
+     "tipo": "checklist",
+     "y": 330,
+     "itens": [
+      {
+       "texto": "filho na escola",
+       "t": 15.75,
+       "ok": false
+      },
+      {
+       "texto": "carro por 1 ano",
+       "t": 17.48,
+       "ok": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 27.8,
+   "t1": 31.6,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "tudo isso",
+     "y": 330,
+     "t": 28.2,
+     "tam": 110
+    },
+    {
+     "tipo": "linha",
+     "texto": "é contra você",
+     "y": 460,
+     "t": 28.84,
+     "tam": 110,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "não a favor",
+     "y": 600,
+     "t": 30.47,
+     "tam": 96,
+     "peso": 700
+    }
+   ]
+  },
+  {
+   "t0": 35.8,
+   "t1": 44.0,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "convencer o oficial",
+     "y": 250,
+     "t": 36.0,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "etapas",
+     "y": 380,
+     "itens": [
+      {
+       "texto": "em certo momento",
+       "t": 37.32
+      },
+      {
+       "texto": "mudou de ideia",
+       "t": 38.47
+      },
+      {
+       "texto": "estava com o visto certo",
+       "t": 40.45
+      },
+      {
+       "texto": "veio turistar de fato",
+       "t": 42.23
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 51.4,
+   "t1": 54.2,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "linha",
+     "texto": "misrepresentation",
+     "y": 330,
+     "t": 51.67,
+     "tam": 96,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "linha",
+     "texto": "fraude",
+     "y": 460,
+     "t": 52.75,
+     "tam": 110
+    }
+   ]
+  }
+ ]
+}

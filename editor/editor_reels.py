@@ -18,7 +18,7 @@ import argparse, json, os, re, shutil, subprocess, sys, tempfile, unicodedata
 import numpy as np
 import cv2
 import plataforma as PLAT
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 OUT_W, OUT_H, FPS = 1080, 1920, 30
@@ -39,6 +39,14 @@ MARCAS = {
                 "fonte": os.path.join(FONTES, "DarkerGrotesque[wght].ttf"), "peso": "Black", "escala": 1.35,
                 # LIV é clean: sem contorno nem sombra no texto. A legenda vai num bloco sólido azul (como as etiquetas do manual)
                 "legenda": "bloco", "bloco": (44, 54, 66), "texto_legenda": (255, 240, 230)},
+    # rumo.eua (perfil do Lucas, público jovem): clean. Legenda em minúscula, Inter Tight semi-negrito, branca, palavra
+    # falada em amarelo ouro, só uma sombra suave (sem contorno, sem caixa). Gancho/CTA em caixa branca com texto escuro.
+    "rumoeua": {"destaque": (255, 210, 63), "caixa": (255, 255, 255), "texto_caixa": (22, 22, 22),
+                "fonte": os.path.join(FONTES, "InterTight[wght].ttf"), "peso": "Black", "escala": 1.63,
+                "legenda": "clean", "peso_legenda": 650,
+                # gancho/CTA como frase (sem caixa alta), peso 800; *palavra* ganha seleção de texto do iPhone em
+                # amarelo (só o fundo claro, sem alças); EUA/Estados Unidos/Brasil ganham a bandeira sozinhos
+                "caixa_frase": True, "peso_caixa": 800, "marcador": "selecao", "bandeiras": True, "escala_caixa": 0.85},
 }
 # estilos da tarja (gancho/CTA): cor de fundo, cor do texto, só com cores da paleta de cada marca
 ESTILOS_CAIXA = {
@@ -49,16 +57,24 @@ ESTILOS_CAIXA = {
                 "laranja": ((255, 110, 31), (255, 255, 255)),
                 "bege": ((255, 240, 230), (44, 54, 66)),
                 "marrom": ((148, 89, 67), (255, 255, 255))},
+    "rumoeua": {"branco": ((255, 255, 255), (22, 22, 22)),       # rumo.eua: branco, amarelo ouro #FFD23F, quase preto
+                "amarelo": ((255, 210, 63), (22, 22, 22)),
+                "escuro": ((22, 22, 22), (255, 255, 255))},
 }
 
 VINHETA = {"liv": os.path.join(os.path.dirname(AQUI), "assets", "vinheta_cortes_liv.mp4")}   # só corte longo do YouTube
 
 
-def fonte_marca(marca, tam):
-    """fonte oficial da marca no peso das legendas/caixas, no tamanho equivalente ao aprovado."""
+def fonte_marca(marca, tam, peso=None):
+    """fonte oficial da marca no peso das legendas/caixas, no tamanho equivalente ao aprovado.
+    peso: nome ("Black") ou número do eixo wght (650)."""
     m = MARCAS[marca]
     f = ImageFont.truetype(m["fonte"], int(round(tam * m["escala"])))
-    f.set_variation_by_name(m["peso"])
+    p = peso or m["peso"]
+    if isinstance(p, (int, float)):
+        f.set_variation_by_axes([p])
+    else:
+        f.set_variation_by_name(p)
     return f
 
 
@@ -407,7 +423,7 @@ def refinar_cortes(video, cortes, P, pausa_max=0.25, antes=0.05, depois=0.10):
 
 HESITACOES = False                                # --tirar-hesitacoes
 COLUNAS = (2, None)                               # --colunas N --pessoas cima,baixo (live com N pessoas lado a lado)
-SONS_HESITACAO = {"ah", "eh", "ha", "hum", "hm", "hmm", "ahn", "uhm", "uh", "ehh", "ee", "eee", "aa"}
+SONS_HESITACAO = {"ah", "eh", "ha", "hum", "hm", "hmm", "ahn", "ahm", "ehm", "uhm", "uh", "ehh", "ee", "eee", "aa"}
 GAGUEJA = {"o", "a", "os", "as", "um", "uma", "de", "do", "da", "no", "na", "e", "pra", "com", "em"}
 GAGUEJA_PAR = {("uma", "um"), ("um", "uma"), ("o", "a"), ("a", "o"), ("do", "da"), ("da", "do"), ("no", "na"),
                ("na", "no"), ("os", "as"), ("as", "os")}
@@ -451,6 +467,9 @@ def tirar_hesitacoes(cortes, P, video=None):
                 continue
             ta, tb = [norm(P[q]["w"]) for q in a], [norm(P[q]["w"]) for q in b]
             # não atravessa fim de frase ("com o L. É o L e o H-1B" virava "com o L e o H-1B") e "que que" é fala natural
+            # "passo a passo a seguir", "dia a dia a dia", "cara a cara a": expressão "X a X", não recomeço
+            if n == 2 and ta[1] == "a":
+                continue
             if ta != tb or not all(ta) or ta == ["que"] or \
                     any(P[q]["w"].rstrip().endswith((".", "?", "!")) for q in a):
                 continue
@@ -843,7 +862,7 @@ class Legenda:
         self.cor = MARCAS[marca]["destaque"]
         self.m = MARCAS[marca]
         self.tam = int(round(tam * MARCAS[marca]["escala"]))
-        self.f = fonte_marca(marca, tam)
+        self.f = fonte_marca(marca, tam, MARCAS[marca].get("peso_legenda"))
         self.cache = {}
 
     def render(self, gi, grupo, ativo):
@@ -851,7 +870,10 @@ class Legenda:
             return self.cache[(gi, ativo)]
         img = Image.new("RGBA", (OUT_W, 200), (0, 0, 0, 0))
         d = ImageDraw.Draw(img)
-        palavras = [limpar(p["w"]) for p in grupo]
+        if self.m.get("legenda") == "clean":               # como foi falado (sem caixa alta); correções valem igual
+            palavras = [CORRECOES.get(limpar(p["w"]), re.sub(r"[.,!:;?]+$", "", p["w"])) for p in grupo]
+        else:
+            palavras = [limpar(p["w"]) for p in grupo]
         esp = int(self.tam * 0.28)
         larg = [d.textlength(w, font=self.f) for w in palavras]
         linhas, linha, lw = [], [], 0
@@ -874,11 +896,17 @@ class Legenda:
             for i in ln:
                 if bloco:
                     d.text((x, y), palavras[i], font=self.f, fill=self.cor if i == ativo else self.m["texto_legenda"])
+                elif self.m.get("legenda") == "clean":       # sem contorno: a sombra suave entra no fim
+                    d.text((x, y), palavras[i], font=self.f, fill=self.cor if i == ativo else (255, 255, 255))
                 else:
                     d.text((x, y), palavras[i], font=self.f, fill=self.cor if i == ativo else (255, 255, 255),
                            stroke_width=max(4, round(self.tam * 0.12)), stroke_fill=(0, 0, 0))
                 x += larg[i] + esp
             y += passo
+        if self.m.get("legenda") == "clean":                # sombra suave e difusa (dá leitura no fundo claro)
+            al = img.split()[3].filter(ImageFilter.GaussianBlur(self.tam * 0.16)).point(lambda v: int(v * 0.55))
+            sombra = Image.new("RGBA", img.size, (0, 0, 0, 0)); sombra.putalpha(al)
+            img = Image.alpha_composite(sombra, img)
         self.cache[(gi, ativo)] = img
         return img
 
@@ -903,45 +931,113 @@ def caixa_texto(texto, marca, tam=52, estilo=None):
         if estilo not in ESTILOS_CAIXA[marca]:
             sys.exit(f'--cor-caixa {estilo} não é da {marca}: use {", ".join(ESTILOS_CAIXA[marca])}')
         m["caixa"], m["texto_caixa"] = ESTILOS_CAIXA[marca][estilo]
-    f = fonte_marca(marca, tam)
+    frase = m.get("caixa_frase")
+    fator = 1.0
+    if tam == 52 and m.get("escala_caixa"):          # marca com caixa menor (gancho e CTA)
+        fator = m["escala_caixa"]
+        tam = round(52 * fator)
+    f = fonte_marca(marca, tam, m.get("peso_caixa"))
+    s_cx = tam / 52                                   # margens e cantos acompanham o tamanho do texto
     tam = f.size
     d0 = ImageDraw.Draw(Image.new("RGB", (1, 1)))
-    texto = texto.upper()
+    if not frase:
+        texto = texto.upper()
+    if m.get("bandeiras") and not any(b_ in texto for b_ in EMOJIS):
+        # "nos EUA?" -> "nos EUA 🇺🇸?". Uma bandeira só, depois da ÚLTIMA menção ao país: bandeira no meio da frase fica
+        # ruim ("no Brasil 🇧🇷 vs EUA 🇺🇸"; regra do Lucas, 10/11/2026)
+        ms = list(re.finditer(r"\b(EUA|Estados Unidos|Brasil)\b\*?", texto))
+        if ms:
+            ult = ms[-1]
+            texto = texto[:ult.end()] + (" 🇧🇷" if ult.group(1) == "Brasil" else " 🇺🇸") + texto[ult.end():]
     for bandeira in EMOJIS:
         texto = texto.replace(bandeira, f" {bandeira} ")
     toks = texto.split()
+    marcados = set()                                  # *palavra*: marca-texto da cor de destaque (só na caixa em frase)
+    if frase:                                         # *uma* ou *várias palavras*: abre no "*" e fecha no próximo
+        dentro = False
+        for k, t in enumerate(toks):
+            abre = t.startswith("*")
+            mm = re.fullmatch(r"\*?(.+?)\*([?!.,:;]*)", t)
+            if abre or dentro:
+                marcados.add(k)
+            if mm:                                    # fecha aqui
+                toks[k] = mm.group(1).lstrip("*") + mm.group(2); dentro = False
+            elif abre:
+                toks[k] = t[1:]; dentro = True
     esp = d0.textlength(" ", font=f)
     alt_emoji = int(tam * 1.05)
     larg = lambda t: _emoji(t, alt_emoji).width if t in EMOJIS else d0.textlength(t, font=f)
     # pontuação que sobrou sozinha depois da bandeira ("EUA 🇺🇸?") cola sem espaço
     cola = lambda t: bool(re.fullmatch(r"[?!.,:;]+", t))
     linhas, l, lw = [], [], 0
-    for t in toks:
+    idx, idl = [], []
+    for k, t in enumerate(toks):
         w = larg(t)
-        if l and not cola(t) and lw + esp + w > OUT_W - 200:
-            linhas.append(l); l, lw = [], 0
+        if l and not cola(t) and lw + esp + w > (OUT_W - 200) * fator:
+            if t in EMOJIS and len(l) > 1:            # bandeira nunca fica sozinha: desce junto com a palavra de antes
+                pw, pk = l.pop(), idl.pop()
+                linhas.append(l); idx.append(idl); l, lw, idl = [pw], larg(pw), [pk]
+            else:
+                linhas.append(l); idx.append(idl); l, lw, idl = [], 0, []
         lw += (esp if l and not cola(t) else 0) + w
-        l.append(t)
-    linhas.append(l)
+        l.append(t); idl.append(k)
+    linhas.append(l); idx.append(idl)
     lh = int(tam * 1.3)
-    h = lh * len(linhas) + 50
+    selecao = frase and marcados and m.get("marcador") == "selecao"
+    mt = round(25 * s_cx)
+    h = lh * len(linhas) + 2 * mt
     wl = [sum(larg(t) for t in ln) + esp * sum(1 for k, t in enumerate(ln) if k and not cola(t)) for ln in linhas]
     img = Image.new("RGBA", (OUT_W, h), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    x0 = (OUT_W - max(wl)) / 2 - 36
-    d.rounded_rectangle([x0, 0, OUT_W - x0, h], radius=26, fill=m["caixa"] + (245,))
+    x0 = (OUT_W - max(wl)) / 2 - round(36 * s_cx)
+    d.rounded_rectangle([x0, 0, OUT_W - x0, h], radius=round(26 * s_cx), fill=m["caixa"] + (245,))
+    # posição de cada palavra (para a seleção cobrir o trecho todo, com os espaços entre as palavras)
+    pos = {}
     for i, ln in enumerate(linhas):
-        x, y = (OUT_W - wl[i]) / 2, 25 + i * lh
+        x, y = (OUT_W - wl[i]) / 2, mt + i * lh
         for k, t in enumerate(ln):
             if k and cola(t):
                 x -= esp
+            pos[idx[i][k]] = (x, y)
+            x += larg(t) + esp
+    if selecao:
+        _selecao_ios(img, d, f, tam, toks, marcados, pos, idx, m["destaque"])
+    for i, ln in enumerate(linhas):
+        for k, t in enumerate(ln):
+            x, y = pos[idx[i][k]]
+            if idx[i][k] in marcados and not selecao:
+                pal = re.sub(r"[?!.,:;]+$", "", t)
+                bb = d.textbbox((x, y), pal, font=f)
+                d.rounded_rectangle([bb[0] - tam * 0.12, bb[1] - tam * 0.1, bb[2] + tam * 0.12, bb[3] + tam * 0.12],
+                                    radius=int(tam * 0.18), fill=m["destaque"] + (255,))
             if t in EMOJIS:
                 e = _emoji(t, alt_emoji)
                 img.alpha_composite(e, (int(x), int(y + (tam - alt_emoji) / 2 + tam * 0.12)))
             else:
                 d.text((x, y), t, font=f, fill=m["texto_caixa"])
-            x += larg(t) + esp
     return img
+
+
+def _selecao_ios(img, d, f, tam, toks, marcados, pos, idx, cor):
+    """seleção de texto do iPhone na cor da marca: fundo claro atrás das palavras marcadas (uma faixa por linha,
+    cobrindo os espaços entre elas), sem as alças (o Lucas preferiu só o amarelo)."""
+    sem_pont = lambda t: re.sub(r"[?!.,:;]+$", "", t)
+    faixas = []                                         # [(x0, x1, topo, base)] por linha, em ordem
+    for ids in idx:
+        sel = [k for k in ids if k in marcados and toks[k] not in EMOJIS]
+        if not sel:
+            continue
+        a = d.textbbox(pos[sel[0]], sem_pont(toks[sel[0]]), font=f)
+        b = d.textbbox(pos[sel[-1]], sem_pont(toks[sel[-1]]), font=f)
+        y = pos[sel[0]][1]
+        faixas.append((a[0] - tam * 0.06, b[2] + tam * 0.06, y + tam * 0.08, y + tam * 1.22))
+    if not faixas:
+        return
+    fundo = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    df = ImageDraw.Draw(fundo)
+    for x0, x1, topo, base in faixas:
+        df.rectangle([x0, topo, x1, base], fill=cor + (115,))
+    img.alpha_composite(fundo)
 
 
 CAUDA = 0.0                                       # --cauda: segundos extras no fim (último quadro parado, silêncio) pro CTA
@@ -949,7 +1045,9 @@ SEM_LEGENDA = False                               # --sem-legenda: o vídeo de o
 BROLLS = []                                       # [(arquivo, "12.5" ou "fonte:8.4")] vindos do --broll
 USAR_VAD = False                                  # --vad: detector de voz Silero no lugar do limiar de volume
 CROP_FIXO = False                                 # --crop-fixo: recorte parado em cada corte (selfie na mão)
+CENTRO = None                                     # --centro X,Y: câmera no tripé, recorte parado nesse ponto (sem seguir rosto)
 PUNCH = None                                      # --punch: fração do plano fechado em relação ao aberto (padrão 0,82)
+GANCHO_EMBAIXO = False                            # --gancho-embaixo: balão do gancho sempre no lugar da legenda
 PREVIA_VERTICAL = None                            # --previa-enquadramento fora da tela dividida: folha do recorte em pé
 BROLL_LEGENDA = False                             # --broll-com-legenda: b-roll de imagem real (anúncio) mantém a legenda
 
@@ -1125,6 +1223,10 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
             alvo_x = mapa_voz[voz_grupo[g]]
         if c.get("perg") and (pessoa or mapa_voz):
             frac, ts, xy = 1.0, np.array([0.0]), np.array([[0.5, 0.5]])   # quadro aberto com todos
+        elif CENTRO:
+            # tripé com duas pessoas: o detector perdia quem estava de perfil/óculos na borda e fechava no Lucas.
+            # Ponto fixo no meio da dupla: o fechado aproxima sem cortar ninguém
+            ts, xy = np.array([0.0]), np.array([CENTRO])
         else:
             ts, xy = trajetoria(video, c, pessoa, alvo_x)
         planos.append((frac, ts, xy))
@@ -1218,6 +1320,8 @@ def renderizar(video, cortes, dados, saida, marca, gancho="", cta="", pessoa=Non
     # 2) gancho e CTA: em cima, ou no lugar da legenda se forem tapar um rosto
     y_leg = int(OUT_H * y_legenda)
     y_g, baixo_g = escolher_posicao(img_gancho, [t for t in (0.3, 1.6, 2.9) if t < total])
+    if GANCHO_EMBAIXO and img_gancho is not None:     # pessoa enquadrada no alto: o balão vai embaixo, longe da testa
+        y_g, baixo_g = y_leg + 160 - img_gancho.height // 2, True    # um pouco abaixo da legenda: folga do queixo
     y_c, baixo_c = escolher_posicao(img_cta, [max(0, total - x) for x in (3.2, 1.8, 0.4)])
     desc = lambda y, meio: "embaixo (tapava rosto)" if meio else "em cima"
     print(f"  gancho: {desc(y_g, baixo_g)} | cta: {desc(y_c, baixo_c)}")
@@ -2020,6 +2124,7 @@ def main():
     ap.add_argument("--gancho", default="", help="texto no topo nos primeiros 3s")
     ap.add_argument("--seg-gancho", type=float, default=3.2, help="segundos do balão do gancho na tela (padrão 3,2)")
     ap.add_argument("--cta", default="", help="texto no topo nos últimos 3,5s")
+    ap.add_argument("--escala-caixa", type=float, help="tamanho da caixa do gancho/CTA (1 = padrão da marca; 0.9 = 10%% menor)")
     ap.add_argument("--trechos", help='faixas do original em segundos, ex: "124-166.6,1048-1053"')
     ap.add_argument("--comecar")
     ap.add_argument("--terminar")
@@ -2028,6 +2133,8 @@ def main():
                     help="cena com duas pessoas: fecha nessa. 'voz': conversa, fecha em quem fala (esquerda=grave, 2a=aguda)")
     ap.add_argument("--aperto", type=float, help="fração da largura original mantida (menor = mais fechado)")
     ap.add_argument("--manter-perguntas", action="store_true", help="não tira as falas que terminam em ?")
+    ap.add_argument("--perguntas-auto", action="store_true",
+                    help="entrevista: cada frase que termina em '?' (e o 'uma dica pra quem...') é do entrevistador e fica em quadro aberto")
     ap.add_argument("--pergunta", help='faixas que são a pergunta do entrevistador (ficam em quadro aberto), ex: "169.8-173.5"')
     ap.add_argument("--trocar", action="append", default=[], help='corrige a legenda: "um gente sério=com gente séria"')
     ap.add_argument("--nome", help="nome do arquivo final (sem extensão)")
@@ -2067,8 +2174,11 @@ def main():
                     help="refaz o tempo de cada palavra com alinhamento forçado (WhisperX): o corte não come palavra curta")
     ap.add_argument("--vad", action="store_true",
                     help="decide onde há voz com o detector neural Silero (ruído de shopping/carro não engana)")
+    ap.add_argument("--centro", help="câmera parada: recorte fixo centrado em X,Y (fração do quadro, ex.: 0.33,0.27)")
     ap.add_argument("--crop-fixo", action="store_true",
                     help="selfie na mão: o recorte fica parado em cada corte (seguir o rosto somava ao balanço e tremia)")
+    ap.add_argument("--gancho-embaixo", action="store_true",
+                    help="balão do gancho sempre embaixo, no lugar da legenda (pessoa enquadrada no alto)")
     ap.add_argument("--punch", type=float, help="plano fechado = esta fração do aberto (padrão 0,82; 0,70 = zoom bem visível)")
     ap.add_argument("--broll-com-legenda", action="store_true",
                     help="b-roll de imagem real (anúncio): a legenda continua por cima (motion de tela cheia tira a legenda)")
@@ -2132,10 +2242,25 @@ def main():
     perguntas = [tuple(map(float, x.split("-"))) for x in a.pergunta.split(",")] if a.pergunta else []
     ordem = perguntas + (trechos or [])
     perguntas = perguntas + perguntas_inline
+    if a.perguntas_auto:
+        # frase = da palavra depois de um ponto final/interrogação até a próxima; é pergunta se termina em "?" ou é o
+        # "uma dica pra quem tá pensando em vir" (o Whisper põe ponto). Fica em quadro aberto com as duas pessoas.
+        P_, ini = dados["palavras"], 0
+        for k, p in enumerate(P_):
+            fim = p["w"].rstrip()[-1:] in ".?!"
+            if fim or k == len(P_) - 1:
+                frase = " ".join(q["w"] for q in P_[ini:k + 1]).lower()
+                ult = norm(p["w"])
+                pergunta = (p["w"].rstrip().endswith("?") and ult not in ("né", "ne", "entendeu", "sabe", "tá", "ta")
+                            and len(frase.split()) <= 16)        # resposta longa terminando em "né?" não é pergunta
+                if pergunta or "dica pra quem" in frase or "dica para quem" in frase:
+                    perguntas.append((P_[ini]["s"], p["e"]))
+                ini = k + 1
+        print(f"  perguntas (quadro aberto): {len(perguntas)}")
     # com --proteger-palavra o plano pelo Whisper não corta pausa: quem corta é o áudio (refinar_cortes). O Whisper
     # erra o tempo de palavra curta ("ou" marcado 0,5s depois) e o "buraco" entre palavras tinha voz que sumia.
     pausa_plano = 1.5 if a.proteger_palavra and not a.sem_ajuste_audio else 0.35
-    if trechos or perguntas:
+    if trechos or (perguntas and not a.perguntas_auto):
         # respeita a ordem escrita (pergunta, resposta, outra pergunta... podem estar fora de ordem)
         cortes = []
         for t in ordem:
@@ -2146,7 +2271,7 @@ def main():
                     c["quem"] = forcar[t]
             cortes += novos
     else:
-        cortes = plano_de_cortes(dados, a.comecar, a.terminar, a.remover,
+        cortes = plano_de_cortes(dados, a.comecar, a.terminar, a.remover, perguntas=perguntas,
                                  tirar_perguntas=not a.manter_perguntas, max_pausa=pausa_plano)
     if a.layout == "youtube" and not a.respiro:
         a.respiro = 0.8                           # corte longo: só tira silêncio de verdade, a conversa fica natural
@@ -2217,9 +2342,15 @@ def main():
     if a.previa_enquadramento:                    # vertical: folha do recorte em pé, sem renderizar
         PREVIA_VERTICAL = os.path.abspath(a.previa_enquadramento)
         print("\nPrévia do enquadramento (sem renderizar)...")
+    if a.escala_caixa:
+        MARCAS[a.marca]["escala_caixa"] = a.escala_caixa
     SEM_LEGENDA = a.sem_legenda
     BROLL_LEGENDA = a.broll_com_legenda
     CROP_FIXO, PUNCH = a.crop_fixo, a.punch
+    global GANCHO_EMBAIXO
+    GANCHO_EMBAIXO = a.gancho_embaixo
+    global CENTRO
+    CENTRO = [float(v) for v in a.centro.split(",")] if a.centro else None
     CAUDA = a.cauda
     for x in a.broll:
         arq, _, quando = x.rpartition("@")

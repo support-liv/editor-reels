@@ -33,6 +33,13 @@ Como fazer uma cena:
 ## Gerador de B-roll da LIV
 `python3 motion/gerar_liv.py roteiro.json` monta o HTML a partir de um roteiro (cenas com tempo, painel `cheio`/`baixo`/`cima`, cor e elementos: `rotulo`, `linha`, `sub`, `risco`, `icone`, e `cta`). Exemplos em `projetos/live80/motion/`. Tempos das palavras: `editor_reels.py VIDEO --trechos ... --tempos-palavras`.
 
+### Centralizar (LIV, pedido de 10/11/2026)
+No roteiro: `"zona": [300, 1460]` (o bloco de cada cena fica centralizado nessa faixa, meio ~880 px) e `"centralizar_componentes": true`.
+Com isso, em cena `"alinhar": "centro"`, colunas, checklist e etapas ficam no meio da tela pela medida real do conteúdo.
+O CTA aceita `"base": 700` para ficar no meio da tela e `"texto": ""` para não ter a linha de baixo (ex.: "Siga o perfil @imigrar.eua").
+Colunas: `"sub_titulo": true` faz o sublinhado da largura do título; `"sub_origem": "right"` faz ele correr do fim pro começo ("pra trás"), `"left"` (padrão) do começo pro fim ("pra frente").
+**Cobertura LIV: 15-50% do vídeo** (`cobertura.py`), só nas partes mais importantes (Lucas, 11/11/2026). Exemplo: `projetos/liv_consulta_1011/lote_consulta_1011.py`.
+
 ### Sublinhado e risco: sempre presos ao texto
 `sub` (sublinhado) e `risco` são **medidos no navegador** a partir da linha de texto, nunca por `x`/`largura` fixos
 (antes, ficavam longe da palavra ou maiores que ela: LIVE 81). Sem configurar nada:

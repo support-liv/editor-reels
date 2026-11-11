@@ -12,7 +12,7 @@ Imigrar explora mais (faixa mais alta); LIV é mais contida.
 """
 import argparse, glob, json, os, random, statistics as st
 
-FAIXA = {"imigrar": (0.40, 0.90), "liv": (0.25, 0.70)}
+FAIXA = {"imigrar": (0.40, 0.90), "liv": (0.15, 0.50)}   # LIV: só as partes mais importantes (Lucas, 11/11/2026)
 SEG_CENA = 7.0                       # duração típica de uma cena de motion
 
 

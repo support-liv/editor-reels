@@ -1,0 +1,22 @@
+{
+ "nome": "imigrar_cta_youtube_preto",
+ "marca": "imigrar",
+ "duracao": 3.8,
+ "tela_dividida": true,
+ "cenas": [
+  {
+   "tipo": "cta",
+   "t0": 0.35,
+   "t1": 3.8,
+   "painel": "cheio",
+   "acima": "Inscreva-se",
+   "palavra": "no canal",
+   "texto": "Imigrar EUA",
+   "tam_texto": 84,
+   "alinhar": "centro",
+   "cor": "preto",
+   "limpo": true
+  }
+ ],
+ "fala": 0.0
+}

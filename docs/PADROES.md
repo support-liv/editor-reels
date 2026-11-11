@@ -14,6 +14,7 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 ## Legenda
 - **LIV: sem contorno e sem sombra no texto** (é clean). Texto bege num bloco sólido azul #2C3642 arredondado, palavra falada em laranja.
 - **Imigrar:** texto branco com contorno preto, palavra falada em rosa.
+- **rumo.eua:** legenda clean, como foi falada (sem caixa alta), Inter Tight 650 branca, palavra falada em amarelo ouro #FFD23F, só sombra suave.
 - **Fonte e cores da marca, sempre** (legenda, gancho e CTA): LIV em Darker Grotesque Black, Imigrar em Inter Tight Black (`assets/fontes/`). O tamanho equivale aos 38 px aprovados em Arial Black (a primeira versão era 58; foi reduzida 35% a pedido do time).
 - Caixa alta, até 3 palavras ou 18 caracteres por vez, palavra falada na cor de destaque da marca, contorno preto.
 - Altura: **62%** da tela nos Reels orgânicos. **55%** em anúncio (o Meta cobre mais a parte de baixo com botão e texto). **64%** em selfie (o rosto ocupa o meio da tela; a legenda fica abaixo do queixo).
@@ -28,10 +29,25 @@ Decisões tomadas e aprovadas na edição dos vídeos do IN26 (set/2026). Mude s
 - **O gancho nunca entrega a resposta.** Ele é a pergunta ou a curiosidade; a resposta está no vídeo e a pessoa precisa assistir pra saber. Nada de "Mito.", "não define você", "é porque precisam" no gancho.
 - **Bandeira:** 🇺🇸 e 🇧🇷 sempre **depois** da palavra que complementam ("americano 🇺🇸", "nos EUA 🇺🇸?", "no Brasil 🇧🇷"). Nunca substituem a palavra: sozinha, a bandeira não é entendida de primeira.
 
+## Abertura (os 3 primeiros segundos dos shorts/reels)
+- **Etapa obrigatória antes de cortar:** o Claude lê como cada short começaria e sugere a abertura, com opções, antes de renderizar.
+- A primeira palavra entra em até **0,3s** (sem respiro no começo) e nos primeiros **3 a 5s** já tem um motivo para ficar: uma pergunta, uma frase curiosa ou uma mudança visual.
+- Começo morto sai: "então…", "bom, é…", "como eu falei", apresentação, contexto antes da ideia.
+- Tipos de abertura (do mais forte ao mais simples):
+  1. **Frase forte na frente:** o trecho mais curioso/polêmico do próprio short (1 a 3s) abre o vídeo e depois o short volta ao começo. Em `--trechos`, a faixa da frase vem primeiro (`"52.4-55.1,30-80"`). A frase **provoca, não responde** (mesma regra do gancho) e não pode ficar repetida logo em seguida: tire-a do trecho principal.
+  2. **Pergunta na frente:** a pergunta do entrevistador (`a-b?`) ou a própria pessoa perguntando.
+  3. **Corte seco + zoom:** começa direto na ideia e troca o enquadramento nos primeiros 3s (`--dinamico`).
+  4. **Manter:** só quando o short já abre forte.
+- O `--gancho` em texto entra junto em todas, e os dois não podem dizer a mesma coisa com as mesmas palavras.
+- Não vale para corte longo do YouTube (abre com a vinheta) nem para vídeo produzido com cartela.
+
 ## CTA
 - Reels orgânico: caixa "Quer saber se existe um caminho pro seu perfil? Link na bio" nos últimos 3,5s.
 - Anúncio: **sem caixa**. A pessoa fala o CTA e o Meta coloca o botão.
 - Não usar o CTA falado "segue o perfil da X" (pedido do time).
+- **Reels da LIV (nov/2026):** "Comente PALAVRA" em tela cheia, no meio da tela, ~0,35s depois da última palavra.
+- **Imigrar:** YouTube "Inscreva-se no canal Imigrar EUA"; Instagram/TikTok "Siga o perfil @imigrar.eua" (sem "no Instagram").
+- **CTA falado pelo apresentador** (entrevista de rua): o balão "Comente PALAVRA" (`--cta-animado`) entra **enquanto ele fala**, sem `--cauda`. Nunca congelar a imagem no fim com as pessoas paradas (pedido do time, out/2026).
 
 ## Cortes
 Erros que já aconteceram (palavra comida, final cortado, repetição, gaguejada, legenda) e como evitar:
@@ -48,6 +64,8 @@ Erros que já aconteceram (palavra comida, final cortado, repetição, gaguejada
 - Nunca usar take em que a pessoa está lendo o celular (auditoria de olhar).
 - **Shorts: fala enxuta.** `--tirar-hesitacoes --respiro 0.18`: sem "éé"/"então, assim" e com pausas de no máximo 0,18s.
 - Pergunta do entrevistador: fica no vídeo quando vira gancho ("pergunta + resposta"). Em cena com várias pessoas, aparece em quadro aberto.
+- **Pergunta enxuta:** só o essencial, sem respiro nem explicação (corte as partes prolixas da pergunta).
+- **Emenda conferida:** cada limite de pedaço na transcrição literal e no vídeo pronto; pedaço muito curto (< 0,5s) confunde a transcrição.
 
 ## Tela dividida (live com duas pessoas)
 - Quem vai em cima é escolhido com `--cima` (na Plano EUA 2027: a Dra. Lívia). Cada metade é 1080x960.
@@ -81,6 +99,8 @@ Erros que já aconteceram (palavra comida, final cortado, repetição, gaguejada
 - Entrevistado de um lado (`--pessoa direita`): 55% da largura, centrado no rosto dele.
 - Conversa (`--pessoa voz`): 34% da largura, fecha em quem fala pelo tom de voz (medido no bloco inteiro). Voz aguda acima de 200 Hz = 2ª pessoa da esquerda.
 - Rosto a ~38% do topo do quadro.
+- **Consulta da Dra. Lívia (LIV): recorte parado** (`--centro X,Y`), sem seguir o rosto; sem sobra acima da cabeça e sem rosto gigante; nunca barra preta nem fundo desfocado.
+- **Sem logo** nos Reels da LIV. Gancho embaixo (`--gancho-embaixo`) quando a pessoa fica no alto do quadro.
 
 ## Conteúdo (Imigrar / LIV)
 - Imigrar é topo de funil; LIV é meio. Entrevistados que não são da LIV não dão orientação jurídica: nos vídeos da LIV, a informação técnica entra como "o que a LIV explicou pra gente".

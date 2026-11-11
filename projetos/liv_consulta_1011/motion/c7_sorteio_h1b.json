@@ -1,0 +1,137 @@
+{
+ "cenas": [
+  {
+   "t0": 4.3,
+   "t1": 12.4,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "H-1B",
+     "y": 250,
+     "t": 4.4
+    },
+    {
+     "tipo": "linha",
+     "texto": "sorteio no começo do ano",
+     "y": 330,
+     "t": 5.53,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "etapas",
+     "y": 460,
+     "itens": [
+      {
+       "texto": "março: abre o registro",
+       "t": 8.05
+      },
+      {
+       "texto": "abril: fecha",
+       "t": 9.44
+      },
+      {
+       "texto": "sorteio",
+       "t": 11.04
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "t0": 12.8,
+   "t1": 22.5,
+   "painel": "cheio",
+   "cor": "bege",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "como é a seleção hoje",
+     "y": 250,
+     "t": 13.13
+    },
+    {
+     "tipo": "linha",
+     "texto": "níveis de salário",
+     "y": 330,
+     "t": 14.63,
+     "tam": 96,
+     "cor": "destaque"
+    },
+    {
+     "tipo": "degraus",
+     "y": 460,
+     "itens": [
+      {
+       "texto": "nível 1",
+       "t": 16.27
+      },
+      {
+       "texto": "nível 2",
+       "t": 16.47
+      },
+      {
+       "texto": "nível 3",
+       "t": 16.79
+      },
+      {
+       "texto": "nível 4",
+       "t": 17.15
+      }
+     ]
+    },
+    {
+     "tipo": "linha",
+     "texto": "quanto mais alto o salário",
+     "y": 920,
+     "t": 17.69,
+     "tam": 96,
+     "peso": 700
+    },
+    {
+     "tipo": "linha",
+     "texto": "mais chances",
+     "y": 1010,
+     "t": 20.3,
+     "tam": 96,
+     "cor": "destaque"
+    }
+   ]
+  },
+  {
+   "t0": 22.7,
+   "t1": 27.9,
+   "painel": "cheio",
+   "cor": "azul",
+   "elementos": [
+    {
+     "tipo": "rotulo",
+     "texto": "na prática",
+     "y": 250,
+     "t": 22.76
+    },
+    {
+     "tipo": "colunas",
+     "y": 330,
+     "alt": 300,
+     "itens": [
+      {
+       "titulo": "Nível 2",
+       "texto": "2 sorteios",
+       "t": 23.58,
+       "destaque_t": 24.91
+      },
+      {
+       "titulo": "Nível 3",
+       "texto": "3 sorteios",
+       "t": 25.87,
+       "destaque_t": 27.02
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

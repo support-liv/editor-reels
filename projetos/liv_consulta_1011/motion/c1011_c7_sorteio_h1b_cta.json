@@ -1,0 +1,18 @@
+{
+ "nome": "c1011_c7_sorteio_h1b_cta",
+ "duracao": 47.75,
+ "fala": 43.95,
+ "cenas": [
+  {
+   "tipo": "cta",
+   "t0": 43.65,
+   "t1": 47.75,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84,
+   "base": 700
+  }
+ ]
+}

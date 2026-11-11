@@ -1,0 +1,18 @@
+{
+ "nome": "c1011_c1_processing_time_cta",
+ "duracao": 29.84,
+ "fala": 26.04,
+ "cenas": [
+  {
+   "tipo": "cta",
+   "t0": 25.74,
+   "t1": 29.84,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84,
+   "base": 700
+  }
+ ]
+}

@@ -1,0 +1,18 @@
+{
+ "nome": "c1011_c6_consulado_cancela_cta",
+ "duracao": 44.77,
+ "fala": 40.97,
+ "cenas": [
+  {
+   "tipo": "cta",
+   "t0": 40.67,
+   "t1": 44.77,
+   "painel": "cheio",
+   "acima": "Comente",
+   "palavra": "PERFIL27",
+   "texto": "para uma análise do seu perfil",
+   "tam_texto": 84,
+   "base": 700
+  }
+ ]
+}
